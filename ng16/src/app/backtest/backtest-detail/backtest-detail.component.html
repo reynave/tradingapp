@@ -1,0 +1,159 @@
+<div class="container-fluid">
+    <div class="row g-1">
+        <div class="col-9">
+            <input class="form-control form-control-sm" placeholder="" [(ngModel)]="item.name" (change)="onUpdate()">
+        </div>
+        <div class="col-3">
+            <select class="form-control form-control-sm" [(ngModel)]="item.permissionId" (change)="onUpdate()">
+                <option value="1">Private</option>
+                <option value="20">Share</option>
+                <option value="30">Share + Comments</option>
+            </select>
+        </div>
+    </div>
+    <div class="row g-2">
+        <div class="col-7">
+            <div class="border my-3" *ngFor="let x of detail; let i = index">
+
+                <div class="row g-1">
+                    <div class="col-2">
+                        <select class="form-control form-control-sm">
+                            <option>XAUUSD</option>
+                            <option>EURUSD</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <select class="form-control form-control-sm">
+                            <option>BUY</option>
+                            <option>SELL</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <input type="number" class="form-control form-control-sm" placeholder="SL">
+                    </div>
+
+                    <div class="col-2">
+
+                        <input type="number" class="form-control form-control-sm" placeholder="RR">
+                    </div>
+
+                    <div class="col-2">
+
+                        <input type="number" class="form-control form-control-sm" placeholder="TP">
+                    </div>
+
+                    <div class="col-2">
+                        <select class="form-control form-control-sm">
+                            <option>WIN</option>
+                            <option>LOSS</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row g-1">
+                    <div class="col-5">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" name="openDate" [(ngModel)]="x.openDate" (ngModelChange)="copyToOpenDate(x,i)" ngbDatepicker #od="ngbDatepicker" placeholder="Open Order">
+                            <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="od.toggle()" type="button"></button>
+                            <input type="time" class="form-control form-control-sm" [(ngModel)]="x.openTime" name="openTime">
+                        </div>
+                    </div>
+                    <div class="col-5">
+
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" name="closeDate" [(ngModel)]="x.closeDate" ngbDatepicker #cd="ngbDatepicker" placeholder="Close Order" [minDate]="x.openDate">
+                            <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="cd.toggle()" type="button"></button>
+                            <input type="time" class="form-control form-control-sm" [(ngModel)]="x.closeTime" name="closeTime">
+                        </div>
+                    </div>
+
+                    <div class="col-2 text-end"> 
+                        <a >Images</a>
+                    </div> 
+                </div>
+                <div class="row g-1">
+                    <div class="col-6">
+                        <a >Notes</a>
+                    </div>
+                    <div class="col-6 text-end">
+                        <a >Remove</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-grid py-1">
+                        <button type="button" class="btn btn-primary">ADD ITEMS</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-5 border">
+            <google-chart style='height: 400px; width: 100%; border:1px solid #f00' [title]="chart.title" [type]="chart.type" [data]="chart.data" [options]="chart.options">
+            </google-chart>
+
+            <div>
+                <table class="table table-sm">
+                    <tbody>
+                        <tr>
+                            <td>Winrate </td>
+                            <td>: 42%</td>
+                        </tr>
+                        <tr>
+                            <td>Total Win</td>
+                            <td>: 20 pip</td>
+                        </tr>
+                        <tr>
+                            <td>Total Loss</td>
+                            <td>: 20 pip</td>
+                        </tr>
+
+                        <tr>
+                            <td>Total Pip</td>
+                            <td>: 20 pip</td>
+                        </tr>
+                        <tr>
+                            <td>Consecutive Win</td>
+                            <td>: 3x</td>
+                        </tr>
+                        <tr>
+                            <td>Consecutive Loss</td>
+                            <td>: 6x</td>
+                        </tr>
+
+                        <tr>
+                            <td>Avarage Trading Time</td>
+                            <td>: 5 hours</td>
+                        </tr>
+                        <tr>
+                            <td>Max Trading Time</td>
+                            <td>: 2 hours</td>
+                        </tr>
+                        <tr>
+                            <td>Min Trading Time</td>
+                            <td>: 15 hours</td>
+                        </tr>
+
+                        <tr>
+                            <td>Avarage Holding Time</td>
+                            <td>: 5 days</td>
+                        </tr>
+
+                        <tr>
+                            <td>Max Holding Time</td>
+                            <td>: 1 days</td>
+                        </tr>
+                        <tr>
+                            <td>Min Holding Time</td>
+                            <td>: 25 days</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{{item | json}}
