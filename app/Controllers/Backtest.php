@@ -35,11 +35,62 @@ class Backtest extends BaseController
         return $this->response->setJSON($data);
     }
 
-    function onSubmit() {
-        $data = array(
+    function onSubmit()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
             "error" => true,
-            "request" =>  $this->request->getVar(),
-        );
+            "post" => $post,
+        ];
+        if ($post) {
+            $data = [
+                "error" => false,
+                "post" => $post,
+            ];
+            foreach ($post['detail'] as $row) {
+                $this->db->table("backtest_detail")->update([
+                    "marketId" => $row['marketId'],
+                    "sl" => $row['sl'],
+                    "rr" => $row['rr'],
+                    "tp" => $row['tp'],
+ 
+                    "closeDate" => $row['closeDate']['year'] . "-" . $row['closeDate']['month'] . "-" . $row['closeDate']['day'] . " " . $row['closeTime'] . ":00",
+                   
+                    "openDate" => $row['openDate']['year'] . "-" . $row['openDate']['month'] . "-" . $row['openDate']['day'] . " " . $row['openTime'] . ":00",
+                    "note" => "",
+                    "resultId" => $row['resultId'],
+                    "positionId" => $row['positionId'],
+
+                    "update_date" => date("Y-m-d H:i:s"),
+                ], "id = '" . $row['id'] . "' ");
+            }
+        }
+
+        return $this->response->setJSON($data);
+    }
+
+    function fnAddItems()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $data = [
+                "error" => false,
+                "post" => $post,
+            ];  
+            $this->db->table("backtest_detail")->insert([
+                "backtestId" => $post['id'],
+                "presence" => 1,
+                "input_date" => date("Y-m-d H:i:s"),
+                "update_date" => date("Y-m-d H:i:s"), 
+            ]);
+        }
+
         return $this->response->setJSON($data);
     }
 }
