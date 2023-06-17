@@ -149,11 +149,18 @@ export class BacktestDetailComponent implements OnInit {
 
   summary: any = {
     i: 0,
+    winrate : 0,
+    win : 0,
+    loss : 0,
     totalPip: 0,
     consecutiveWin: 0,
     consecutiveLoss: 0,
     averageRr: 0,
     avaregeTradingTime: 0,
+    longestTradingTime : 0,
+    fasterTradingTime : 9999999,
+    bestWin : 0,
+    worstLoss : 0,
   }
 
   onCalculation() { 
@@ -166,6 +173,7 @@ export class BacktestDetailComponent implements OnInit {
     this.summary.averageRr = 0;
     let saveWin = 0;
     let i = 0;
+    let win = 0;
     let hourDifference = 0;
     this.deleteAll = false;
 
@@ -173,6 +181,7 @@ export class BacktestDetailComponent implements OnInit {
     let totalPip = 0;
     chartData.push([0, 0 ]);
     this.detail.forEach((el: any) => {
+
       totalPip += parseFloat(el['tp']);
       chartData.push([i+1, totalPip ]);
 
@@ -188,12 +197,26 @@ export class BacktestDetailComponent implements OnInit {
         this.detail[i]['resultId'] = 0;
       }
 
+
+      if(this.summary.bestWin < parseFloat(el['tp']) ){
+        this.summary.bestWin = parseFloat(el['tp']);
+      }
+      if(this.summary.worstLoss > parseFloat(el['tp'])  &&  parseFloat(el['tp']) < 0){
+        this.summary.worstLoss = parseFloat(el['tp']);
+      }
+
+
       this.detail[i]['tradingTime'] = parseFloat(this.detail[i]['tradingTime']).toFixed(0);
 
       if (el['resultId'] > 0) {
         saveWin++;
+        this.summary.win++;
       } else {
         saveWin = 0;
+      }
+
+      if (el['resultId'] < 0) {
+        this.summary.loss++;
       }
 
       if (el['resultId'] < 0) {
@@ -214,12 +237,21 @@ export class BacktestDetailComponent implements OnInit {
         minute: el['closeTime'].split(":")[1],
       }
       hourDifference += this.functionsService.getHourDifference(el['openDate'], openTime, el['closeDate'], closeTime);
-    
-      
+     
       this.detail[i]['tradingTime'] = hourDifference;
+
+      if(this.summary.longestTradingTime < hourDifference){
+        this.summary.longestTradingTime = hourDifference;
+      }
+      if(this.summary.fasterTradingTime > hourDifference){
+        this.summary.fasterTradingTime = hourDifference;
+      }
+
       i++;
 
     });
+    console.log(saveWin);
+    this.summary.winrate = (this.summary.win / i) * 100; 
     this.summary.avaregeTradingTime = hourDifference / i;
     this.summary.averageRr = this.summary.totalRr / i;
     this.summary.averagePip = this.summary.totalPip / i;
