@@ -171,9 +171,14 @@ export class BacktestDetailComponent implements OnInit {
     this.summary.consecutiveLoss = 0;
     this.summary.averagePip = 0;
     this.summary.averageRr = 0;
+
+    this.summary.win = 0;
+    this.summary.loss = 0; 
+    
+
     let saveWin = 0;
     let i = 0;
-    let win = 0;
+   
     let hourDifference = 0;
     this.deleteAll = false;
 
