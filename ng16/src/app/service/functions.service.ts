@@ -14,7 +14,7 @@ export class FunctionsService {
     closeTime: { hour: number; minute: number | undefined;},  
   ) {
     const openDateTime = new Date(openDate.year, openDate.month - 1, openDate.day, openTime.hour, openTime.minute,0);
-    console.log(openDateTime, openDate,openTime);
+    //console.log(openDateTime, openDate,openTime);
     const closeDateTime = new Date(closeDate.year, closeDate.month - 1, closeDate.day, closeTime.hour, closeTime.minute);
     // const openDateTime = this.createValidDate(openDate.year, openDate.month - 1, openDate.day, openTime.hour, openTime.minute);
     // console.log(openDateTime);

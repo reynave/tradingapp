@@ -5,7 +5,7 @@ import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service';
 
 import { ActivatedRoute } from '@angular/router';
-import { NgbAlertModule, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 export class Model {
   constructor(
@@ -47,13 +47,13 @@ export class BacktestDetailComponent implements OnInit {
     private http: HttpClient,
     private functionsService: FunctionsService,
     private configService: ConfigService,
-    
+    private modalService: NgbModal,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
-    
+
     this.market();
     this.httpGet();
   }
@@ -75,10 +75,11 @@ export class BacktestDetailComponent implements OnInit {
       data => {
         this.detail = data['detail'].map((item: any) => ({
           ...item,
+          checkbox: false,
           openDate: {
             year: new Date(item.openDate).getFullYear(),
             month: new Date(item.openDate).getMonth() + 1,
-            day: new Date(item.openDate).getDate(), 
+            day: new Date(item.openDate).getDate(),
           },
           closeDate: {
             year: new Date(item.closeDate).getFullYear(),
@@ -101,9 +102,11 @@ export class BacktestDetailComponent implements OnInit {
     )
   }
 
+
+
   fnAddItems() {
     const body = {
-      id: this.id, 
+      id: this.id,
     }
     this.http.post<any>(environment.api + 'backtest/fnAddItems', body,
       { headers: this.configService.headers() }
@@ -151,9 +154,9 @@ export class BacktestDetailComponent implements OnInit {
     consecutiveWin: 0,
     consecutiveLoss: 0,
     averageRr: 0,
-    avaregeTradingTime : 0,
+    avaregeTradingTime: 0,
   }
-
+  deleteAll : boolean = false;
   onCalculation() {
     this.summary.totalPip = 0;
     this.summary.totalRr = 0;
@@ -165,20 +168,22 @@ export class BacktestDetailComponent implements OnInit {
     let saveWin = 0;
     let i = 0;
     let hourDifference = 0;
+    this.deleteAll = false;
     this.detail.forEach((el: any) => {
+      if(el['checkbox'] == true) this.deleteAll = true;
       this.summary.totalPip += parseFloat(el['tp']);
-      this.summary.totalRr += parseFloat(el['rr']); 
-      this.detail[i]['tp'] =  this.detail[i]['rr'] *  this.detail[i]['sl'];
-      if(this.detail[i]['tp']<0) {
+      this.summary.totalRr += parseFloat(el['rr']);
+      this.detail[i]['tp'] = this.detail[i]['rr'] * this.detail[i]['sl'];
+      if (this.detail[i]['tp'] < 0) {
         this.detail[i]['resultId'] = -1;
-      }else  if(this.detail[i]['tp']>0) {
+      } else if (this.detail[i]['tp'] > 0) {
         this.detail[i]['resultId'] = 1;
-      }else if(this.detail[i]['tp'] == 0){
+      } else if (this.detail[i]['tp'] == 0) {
         this.detail[i]['resultId'] = 0;
       }
-    
-      
-     
+
+
+
       if (el['resultId'] > 0) {
         saveWin++;
       } else {
@@ -191,32 +196,30 @@ export class BacktestDetailComponent implements OnInit {
         this.summary.consecutiveLoss = 1;
       }
 
-      if( this.summary.consecutiveWin < saveWin){
+      if (this.summary.consecutiveWin < saveWin) {
         this.summary.consecutiveWin = saveWin;
       }
       let openTime = {
-        hour : el['openTime'].split(":")[0],
+        hour: el['openTime'].split(":")[0],
         minute: el['closeTime'].split(":")[1],
       }
       let closeTime = {
-        hour : el['closeTime'].split(":")[0],
+        hour: el['closeTime'].split(":")[0],
         minute: el['closeTime'].split(":")[1],
       }
-      hourDifference += this.functionsService.getHourDifference(el['openDate'],openTime, el['closeDate'],closeTime);
+      hourDifference += this.functionsService.getHourDifference(el['openDate'], openTime, el['closeDate'], closeTime);
       console.log(hourDifference);
-  
+
       i++;
-      
+
     });
     this.summary.avaregeTradingTime = hourDifference / i;
     this.summary.averageRr = this.summary.totalRr / i;
     this.summary.averagePip = this.summary.totalPip / i;
   }
 
- 
-
   onUpdate() {
-   this.onCalculation();
+    this.onCalculation();
     this.chart.data = [
       [1, 137.8,],
       [2, 130.9,],
@@ -236,5 +239,30 @@ export class BacktestDetailComponent implements OnInit {
       }, 2000);
     }
 
+  }
+
+  fnDeleteAll() {
+    if (confirm("Delete selected ?")) { 
+      this.loading = true;
+      const body = {
+        detail: this.detail,
+      }
+      console.log(body);
+      this.http.post<any>(environment.api + 'backtest/fnDeleteAll', body,
+        { headers: this.configService.headers() }
+      ).subscribe(
+        data => {
+          console.log(data);
+          this.httpGet();
+        },
+        e => {
+          console.log(e);
+        },
+      );
+    }
+  }
+
+  open(content: any) {
+    this.modalService.open(content, { size: 'xl' });
   }
 }

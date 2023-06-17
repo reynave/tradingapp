@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { GoogleChartsModule } from 'angular-google-charts';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,7 +30,8 @@ import { BacktestDetailComponent } from './backtest/backtest-detail/backtest-det
     NgbModule,
     FormsModule,
     HttpClientModule,
-    GoogleChartsModule
+    GoogleChartsModule,
+    EditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

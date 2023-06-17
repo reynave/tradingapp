@@ -14,10 +14,9 @@
     <div class="row g-2">
 
         <div class="col-5 border">
-            <google-chart style='height: 300px; width: 100%;' 
-            [title]="chart.title" [type]="chart.type" [data]="chart.data" [options]="chart.options">
+            <google-chart style='height: 300px; width: 100%;' [title]="chart.title" [type]="chart.type" [data]="chart.data" [options]="chart.options">
             </google-chart>
-{{summary |json}}
+            {{summary |json}}
             <div>
                 <table class="table table-sm">
                     <tbody>
@@ -29,7 +28,7 @@
                             <td>Total Pip</td>
                             <td>: {{summary.totalPip}} pip</td>
                         </tr>
-                       <tr>
+                        <tr>
                             <td>Average Pip</td>
                             <td>: {{summary.averagePip | number : '1.2-2'}} pip</td>
                         </tr>
@@ -37,7 +36,7 @@
                             <td>Average RR</td>
                             <td>: {{summary.averageRr | number : '1.2-2'}} pip</td>
                         </tr>
-                      
+
                         <tr>
                             <td>Consecutive win</td>
                             <td>: {{summary.consecutiveWin}}</td>
@@ -77,21 +76,21 @@
                 </table>
             </div>
         </div>
-        <div class="col-7">
+        <div class="col-7"> 
             <div class="border my-3" *ngFor="let x of detail; let i = index">
 
                 <div class="row g-1">
                     <div class="col-2">
                         <select class="form-control form-control-sm" [(ngModel)]="x.marketId" name="marketId" (change)="onUpdate()">
-                            <option *ngFor="let x of selectMarket" [value]="x.id">{{x.name}}</option> 
+                            <option *ngFor="let x of selectMarket" [value]="x.id">{{x.name}}</option>
                         </select>
                     </div>
                     <div class="col-2">
-                      
-                          <select class="form-control form-control-sm" [(ngModel)]="x.positionId" name="positionId" (change)="onUpdate()">
+
+                        <select class="form-control form-control-sm" [(ngModel)]="x.positionId" name="positionId" (change)="onUpdate()">
                             <option value="1">BUY</option>
                             <option value="2">SELL</option>
-                        </select>  
+                        </select>
                     </div>
                     <div class="col-2">
                         <input type="number" class="form-control form-control-sm" placeholder="SL" [(ngModel)]="x.sl" name="sl" (change)="onUpdate()">
@@ -108,21 +107,20 @@
                     </div>
 
                     <div class="col-2">
-                         <select class="form-control form-control-sm" [(ngModel)]="x.resultId" name="resultId" disabled (change)="onUpdate()">
+                        <select class="form-control form-control-sm" [(ngModel)]="x.resultId" name="resultId" disabled (change)="onUpdate()">
                             <option value="">-</option>
-                            <option value="1">WIN</option> 
-                            <option value="0">BEP</option>  
+                            <option value="1">WIN</option>
+                            <option value="0">BEP</option>
                             <option value="-1">LOSS</option>
-                        </select>  
-                     
+                        </select>
+
                     </div>
 
                 </div>
                 <div class="row g-1">
                     <div class="col-5">
                         <div class="input-group">
-                            <input type="text" class="form-control form-control-sm" name="openDate" 
-                            [(ngModel)]="x.openDate" (ngModelChange)="copyToOpenDate(x,i)" ngbDatepicker #od="ngbDatepicker" placeholder="Open Order">
+                            <input type="text" class="form-control form-control-sm" name="openDate" [(ngModel)]="x.openDate" (ngModelChange)="copyToOpenDate(x,i)" ngbDatepicker #od="ngbDatepicker" placeholder="Open Order">
                             <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="od.toggle()" type="button"></button>
 
                             <input type="time" class="form-control form-control-sm" [(ngModel)]="x.openTime" (change)="onUpdate()" name="openTime">
@@ -131,8 +129,7 @@
                     <div class="col-5">
 
                         <div class="input-group">
-                            <input type="text" class="form-control form-control-sm" name="closeDate" 
-                            [(ngModel)]="x.closeDate"  (ngModelChange)="onUpdate()" ngbDatepicker #cd="ngbDatepicker" placeholder="Close Order" [minDate]="x.openDate">
+                            <input type="text" class="form-control form-control-sm" name="closeDate" [(ngModel)]="x.closeDate" (ngModelChange)="onUpdate()" ngbDatepicker #cd="ngbDatepicker" placeholder="Close Order" [minDate]="x.openDate">
                             <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="cd.toggle()" type="button"></button>
 
                             <input type="time" class="form-control form-control-sm" [(ngModel)]="x.closeTime" (change)="onUpdate()" name="closeTime">
@@ -144,29 +141,58 @@
                     </div>
                 </div>
                 <div class="row g-1">
-                    <div class="col-6">
-                        <a>Notes</a>
+                    <div class="col-12">
+                        <input type="checkbox" [(ngModel)]="x.checkbox" (change)="onCalculation()">
+                        <a class="btn btn-primary" (click)="open(content)">Notes</a>
                     </div>
-                    <div class="col-6 text-end">
-                        <a>Remove</a>
-                    </div>
+                    
                 </div>
 
             </div>
 
-          
+
             <div class="row">
                 <div class="col-12">
-                    <div class="d-grid py-1">
+                    <div class="d-grid py-1" *ngIf="deleteAll"> 
+                        
+                        <button type="button" class="btn btn-danger" (click)="fnDeleteAll()">REMOVE</button> 
+                    </div>
+                    <div class="d-grid py-1"> 
                         <button type="button" class="btn btn-primary" (click)="fnAddItems()">ADD ITEMS</button>
                     </div>
                 </div>
             </div>
-          <div class="lh-1">
-            <code> {{detail | json}}</code>
-          </div>
+            <div class="lh-1">
+                <code> {{detail | json}}</code>
+            </div>
         </div>
 
     </div>
 </div>
 {{item | json}}
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <div class="modal-title" id="modal-basic-title">Notes</div>
+        <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div >
+        <editor apiKey="cc5hqwaiqsocbfakkn5qpug7r9bx5zioxppbw9h6w4gd0286" [init]="{
+     height: 500,
+     menubar: false,
+     plugins: [
+       'advlist autolink lists link image charmap print preview anchor',
+       'searchreplace visualblocks code fullscreen',
+       'insertdatetime media table paste code help wordcount'
+     ],
+     toolbar:
+       'undo redo | formatselect | bold italic backcolor | \
+       alignleft aligncenter alignright alignjustify | \
+       bullist numlist outdent indent | removeformat | help'
+   }"></editor>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+</ng-template>
