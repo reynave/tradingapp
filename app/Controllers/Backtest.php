@@ -29,7 +29,49 @@ class Backtest extends BaseController
                 "error" => false,
                 "id"    =>  $id,
                 "item"  => $this->db->query("SELECT * from backtest where id = '$id' ")->getResultArray()[0],
-                "detail" => $this->db->query("SELECT *, false as 'checkbox' from backtest_detail where backtestId = '$id' and presence = 1 ")->getResultArray(),
+                "detail" => $this->db->query("SELECT *, time_to_sec(timediff(closeDate, openDate )) / 3600  AS 'tradingTime', false as 'checkbox' from backtest_detail where backtestId = '$id' and presence = 1 ")->getResultArray(),
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+    public function detailImages()
+    {
+        $data = array(
+            "error" => true,
+            "request" =>  $this->request->getVar(),
+        );
+
+        $data = array(
+            "detailImages" => $this->db->query("SELECT * FROM 
+            backtest_detail_images WHERE backtestDetailId = '" . $data['request']['id'] . "' AND presence = 1 ORDER BY sorting ASC
+            ")->getResultArray(),
+        );
+
+        return $this->response->setJSON($data);
+    }
+
+    function removeImages()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+
+            $this->db->table("backtest_detail_images")->update([
+                "presence" => 0,
+                "update_date" => date("Y-m-d H:i:s"),
+            ], "id = '" . $post['id'] . "' ");
+
+
+            $data = array(
+                "error" => false,
+                "detailImages" => $this->db->query("SELECT * FROM 
+                    backtest_detail_images WHERE backtestDetailId = '" .$post['backtestDetailId'] . "' AND presence = 1 ORDER BY sorting ASC
+                ")->getResultArray(),
             );
         }
         return $this->response->setJSON($data);

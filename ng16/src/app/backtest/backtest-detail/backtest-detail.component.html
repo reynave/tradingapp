@@ -76,7 +76,7 @@
                 </table>
             </div>
         </div>
-        <div class="col-7"> 
+        <div class="col-7">
             <div class="border my-3" *ngFor="let x of detail; let i = index">
 
                 <div class="row g-1">
@@ -131,21 +131,25 @@
                         <div class="input-group">
                             <input type="text" class="form-control form-control-sm" name="closeDate" [(ngModel)]="x.closeDate" (ngModelChange)="onUpdate()" ngbDatepicker #cd="ngbDatepicker" placeholder="Close Order" [minDate]="x.openDate">
                             <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="cd.toggle()" type="button"></button>
-
                             <input type="time" class="form-control form-control-sm" [(ngModel)]="x.closeTime" (change)="onUpdate()" name="closeTime">
                         </div>
                     </div>
 
                     <div class="col-2 text-end">
-                        <a>Images</a>
+                      
                     </div>
                 </div>
                 <div class="row g-1">
-                    <div class="col-12">
+                    <div class="col-6">
                         <input type="checkbox" [(ngModel)]="x.checkbox" (change)="onCalculation()">
-                        <a class="btn btn-primary" (click)="open(content)">Notes</a>
+                        <a class="btn btn-primar btn-smy" (click)="open(content)">Notes</a>
+
+                        <span>Total Trading Time :  {{x.tradingTime }} hours</span>
                     </div>
-                    
+                    <div class="col-6 text-end">
+                        <a class="btn btn-primary btn-sm" (click)="openImg(galleries, x)">Images</a>
+                    </div>
+
                 </div>
 
             </div>
@@ -153,11 +157,11 @@
 
             <div class="row">
                 <div class="col-12">
-                    <div class="d-grid py-1" *ngIf="deleteAll"> 
-                        
-                        <button type="button" class="btn btn-danger" (click)="fnDeleteAll()">REMOVE</button> 
+                    <div class="d-grid py-1" *ngIf="deleteAll">
+
+                        <button type="button" class="btn btn-danger" (click)="fnDeleteAll()">REMOVE</button>
                     </div>
-                    <div class="d-grid py-1"> 
+                    <div class="d-grid py-1">
                         <button type="button" class="btn btn-primary" (click)="fnAddItems()">ADD ITEMS</button>
                     </div>
                 </div>
@@ -177,7 +181,7 @@
         <div class="modal-title" id="modal-basic-title">Notes</div>
         <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
-    <div >
+    <div>
         <editor apiKey="cc5hqwaiqsocbfakkn5qpug7r9bx5zioxppbw9h6w4gd0286" [init]="{
      height: 500,
      menubar: false,
@@ -195,4 +199,45 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
     </div>
+</ng-template>
+
+<ng-template #galleries let-modal>
+    <div class="modal-header">
+        <div class="modal-title" id="modal-basic-title">Images </div>
+        <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row" *ngIf="detailSelect">
+            <div class="col-md col-12" *ngFor="let x of detailSelect">
+                <a class="btn btn-sm" (click)="removeImages(x);">Remove</a>
+                <img [src]="x.img" class="w-100 p-1 bg-light border" (click)="openFullscreen(fullScreenContent,x.img)">
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <div class="row">
+            <div class="col-8">
+                <input type="file" class="form-control form-control-sm mb-1" (change)="onFileSelected($event)">
+
+            </div>
+            <div class="col-4">
+                <div class="d-grid">
+                    <button type="button" class="btn btn-outline-dark btn-sm py-1" (click)="modal.close('Save click')">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</ng-template>
+
+
+<ng-template #fullScreenContent let-modal>
+    <div class="modal-header"> 
+        <button type="button" class="btn-close" aria-label="Close" (click)="backGalleries(galleries)"></button>
+    </div>
+    <div class="modal-body">
+        <img [src]="detailImageUrl" class="w-100">
+    </div>
+
 </ng-template>

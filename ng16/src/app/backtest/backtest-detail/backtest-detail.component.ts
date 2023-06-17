@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment.development';
 import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 export class Model {
@@ -27,17 +27,14 @@ export class BacktestDetailComponent implements OnInit {
   detail: any = [];
   selectMarket: any = [];
   myTimeout: any;
+  detailSelect: any = [];
+  httpNote: string = "";
+  fileName = "";
+  deleteAll: boolean = false;
   chart: any = {
     title: "linechart",
     type: "LineChart",
-    data: [
-      [1, 137.8,],
-      [2, 30.9,],
-      [3, 25.4,],
-      [4, 11.7,],
-      [5, 11.9,],
-      [6, 8.8,],
-    ],
+    data: [],
     options: {
       legend: { position: 'none' },
       //https://developers.google.com/chart/interactive/docs/gallery/linechart
@@ -48,14 +45,14 @@ export class BacktestDetailComponent implements OnInit {
     private functionsService: FunctionsService,
     private configService: ConfigService,
     private modalService: NgbModal,
-    private route: ActivatedRoute
+    private ativatedRoute: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'];
-
+    this.id = this.ativatedRoute.snapshot.params['id']; 
     this.market();
-    this.httpGet();
+    this.httpGet(); 
   }
 
   market() {
@@ -76,6 +73,7 @@ export class BacktestDetailComponent implements OnInit {
         this.detail = data['detail'].map((item: any) => ({
           ...item,
           checkbox: false,
+
           openDate: {
             year: new Date(item.openDate).getFullYear(),
             month: new Date(item.openDate).getMonth() + 1,
@@ -135,6 +133,7 @@ export class BacktestDetailComponent implements OnInit {
     ).subscribe(
       data => {
         console.log(data);
+        this.httpGet();
       },
       e => {
         console.log(e);
@@ -156,8 +155,8 @@ export class BacktestDetailComponent implements OnInit {
     averageRr: 0,
     avaregeTradingTime: 0,
   }
-  deleteAll : boolean = false;
-  onCalculation() {
+
+  onCalculation() { 
     this.summary.totalPip = 0;
     this.summary.totalRr = 0;
 
@@ -169,8 +168,15 @@ export class BacktestDetailComponent implements OnInit {
     let i = 0;
     let hourDifference = 0;
     this.deleteAll = false;
+
+    const chartData: number[][] = [];
+    let totalPip = 0;
+    chartData.push([0, 0 ]);
     this.detail.forEach((el: any) => {
-      if(el['checkbox'] == true) this.deleteAll = true;
+      totalPip += parseFloat(el['tp']);
+      chartData.push([i+1, totalPip ]);
+
+      if (el['checkbox'] == true) this.deleteAll = true;
       this.summary.totalPip += parseFloat(el['tp']);
       this.summary.totalRr += parseFloat(el['rr']);
       this.detail[i]['tp'] = this.detail[i]['rr'] * this.detail[i]['sl'];
@@ -182,7 +188,7 @@ export class BacktestDetailComponent implements OnInit {
         this.detail[i]['resultId'] = 0;
       }
 
-
+      this.detail[i]['tradingTime'] = parseFloat(this.detail[i]['tradingTime']).toFixed(0);
 
       if (el['resultId'] > 0) {
         saveWin++;
@@ -208,27 +214,23 @@ export class BacktestDetailComponent implements OnInit {
         minute: el['closeTime'].split(":")[1],
       }
       hourDifference += this.functionsService.getHourDifference(el['openDate'], openTime, el['closeDate'], closeTime);
-      console.log(hourDifference);
-
+    
+      
+      this.detail[i]['tradingTime'] = hourDifference;
       i++;
 
     });
     this.summary.avaregeTradingTime = hourDifference / i;
     this.summary.averageRr = this.summary.totalRr / i;
     this.summary.averagePip = this.summary.totalPip / i;
+    console.log(chartData);
+
+    this.chart.data = chartData;
+    
   }
 
   onUpdate() {
-    this.onCalculation();
-    this.chart.data = [
-      [1, 137.8,],
-      [2, 130.9,],
-      [3, 25.4,],
-      [4, 11.7,],
-      [5, 11.9,],
-      [6, 128.8,],
-    ];
-
+    this.onCalculation();  
     console.log("waiting...", this.waiting);
     if (this.waiting == false) {
       this.waiting = true;
@@ -242,7 +244,7 @@ export class BacktestDetailComponent implements OnInit {
   }
 
   fnDeleteAll() {
-    if (confirm("Delete selected ?")) { 
+    if (confirm("Delete selected ?")) {
       this.loading = true;
       const body = {
         detail: this.detail,
@@ -263,6 +265,96 @@ export class BacktestDetailComponent implements OnInit {
   }
 
   open(content: any) {
+    console.log(this.detailSelect);
     this.modalService.open(content, { size: 'xl' });
+  }
+
+  backtestDetailId: string = "";
+  openImg(content: any, x: any) {
+    this.detailSelect = x;
+    console.log(this.detailSelect);
+    this.backtestDetailId = x.id;
+    this.router.navigate(['backtest', this.id], { queryParams: { backtestDetailId: x.id } }).then(
+      () => {
+        this.http.get<any>(environment.api + 'backtest/detailImages?id=' + x.id,
+          { headers: this.configService.headers() }
+        ).subscribe(
+          data => {
+            console.log(data);
+            this.detailSelect = data['detailImages'];
+            this.modalService.open(content, { size: 'xl' });
+          },
+          e => {
+            console.log(e);
+          },
+        );
+      }
+    )
+  }
+
+  removeImages(x: any) {
+    const body = {
+      id: x.id,
+      backtestDetailId: x.backtestDetailId,
+    }
+    this.http.post<any>(environment.api + 'backtest/removeImages?', body,
+      { headers: this.configService.headers() }
+    ).subscribe(
+      data => {
+        console.log(data);
+        this.detailSelect = data['detailImages'];
+      },
+      e => {
+        console.log(e);
+      },
+    );
+  }
+
+  detailImageUrl: string = "";
+  openFullscreen(content: any, url: string) {
+    this.modalService.dismissAll();
+    this.detailImageUrl = url;
+    this.modalService.open(content, { fullscreen: true });
+  }
+
+  backGalleries(content: any){
+    this.modalService.dismissAll();
+    this.modalService.open(content, { size: 'xl' });
+  }
+
+ 
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.httpNote = "Upload..";
+      console.log(file);
+      this.fileName = file.name;
+      const formData = new FormData();
+
+      formData.append("userfile", file);
+      formData.append("backtestDetailId", this.backtestDetailId);
+      formData.append("table", "pages");
+      formData.append("token", "123");
+      const upload$ = this.http.post(environment.api + "/upload/uploadImages", formData);
+      upload$.subscribe(
+        data => {
+          console.log(data);
+          this.httpNote = "";
+          this.http.get<any>(environment.api + 'backtest/detailImages?id=' + this.backtestDetailId,
+            { headers: this.configService.headers() }
+          ).subscribe(
+            data => {
+              this.detailSelect = data['detailImages'];
+            },
+            e => {
+              console.log(e);
+            },
+          );
+        },
+        e => {
+          this.httpNote = "Upload error!";
+          console.log(e)
+        });
+    }
   }
 }
