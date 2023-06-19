@@ -1,15 +1,34 @@
+import { Injectable } from '@angular/core'; 
 import { HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService {
-
+  private tokenKey : string = "mirrelTradingAppV1";
   constructor() { }
 
-  getToken(){
-    return "123";
+  setToken(token: string): Observable<boolean> {
+    try {
+      localStorage.setItem(this.tokenKey, token);
+      return of(true); // Mengembalikan Observable yang mengirimkan nilai boolean true
+    } catch (error) {
+      return of(false); // Mengembalikan Observable yang mengirimkan nilai boolean false jika terjadi kesalahan
+    }
+  }
+
+  
+  account(){
+    const jwtObj = this.getToken().split("."); 
+
+    return JSON.parse(atob(jwtObj[1]));
+  }
+
+ 
+
+  getToken() : any {
+    return localStorage.getItem(this.tokenKey);
   }
 
   headers() { 

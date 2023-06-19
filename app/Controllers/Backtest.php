@@ -90,6 +90,12 @@ class Backtest extends BaseController
                 "error" => false,
                 "post" => $post,
             ];
+            $this->db->table("backtest")->update([
+                "name" => $post['item']['name'], 
+                "permissionId" => $post['item']['permissionId'],  
+                "update_date" => date("Y-m-d H:i:s"),
+            ], "id = '" . $post['id'] . "' ");
+
             foreach ($post['detail'] as $row) {
                 $this->db->table("backtest_detail")->update([
                     "marketId" => $row['marketId'],

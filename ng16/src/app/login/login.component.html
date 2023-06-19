@@ -1,1 +1,30 @@
-<p>login works!</p>
+<div class="mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <form (ngSubmit)="onSubmit()" #myForm="ngForm" autocomplete="off">
+                    <div class="form-group mb-3"> 
+                        <input type="email" class="form-control " id="floatingInput" placeholder="name@example.com" required
+                            [(ngModel)]="model.email" name="email" #email="ngModel" email autocomplete="false">
+                        <div>
+                            <small [hidden]="email.valid || email.pristine" class="text-danger"> Email is required </small>
+                        </div>
+                    </div>
+                    <div class="form-group  mb-3">
+                        <input type="password" class="form-control  " id="floatingPassword" placeholder="Password" required
+                            [(ngModel)]="model.passw" name="passw" #passw="ngModel" autocomplete="false">
+                        <div>
+                            <small [hidden]="passw.valid || passw.pristine" class="text-danger"> Password is required
+                            </small>
+                        </div>
+                    </div>
+                    <div class="d-grid"> 
+                        <button class="btn btn-primary btn-user  mb-3" [disabled]="!myForm.form.valid" type="submit">Sign  in</button>
+                    </div>
+                    <div>{{note}}</div>
+    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
