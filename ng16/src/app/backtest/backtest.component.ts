@@ -10,7 +10,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./backtest.component.css']
 })
 export class BacktestComponent implements OnInit {
- 
+  items : any = [];
+  loading : boolean = false;
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
@@ -18,7 +19,38 @@ export class BacktestComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.httpGet();
+  }
 
+  httpGet(){
+    this.http.get<any>(environment.api+"backtest/index",{
+      headers : this.configService.headers()
+    }).subscribe(
+      data=>{
+        this.items = data['items'];
+        console.log(data);
+      },
+      e=>{
+        console.log(e);
+      }
+    )
+  }
+
+  onCreateNew(){
+    const body ={
+      insert : true,
+    }
+    this.http.post<any>(environment.api+"backtest/onCreateNew",body,{
+      headers : this.configService.headers()
+    }).subscribe(
+      data=>{
+     //   this.items = data['items'];
+        this.httpGet();
+      },
+      e=>{
+        console.log(e);
+      }
+    )
   }
 
 }

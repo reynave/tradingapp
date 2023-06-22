@@ -1,7 +1,21 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <input class="form-control form-control-sm" >
+            <table class="table table-sm">
+                <tbody>
+                    <tr *ngFor="let x of items">
+                        <td> <a [routerLink]="[ '/backtest', x.id ]">{{x.name}}</a></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><button type="button" (click)="onCreateNew();" class="btn btn-primary">New backtest</button></td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
+
+
+         
     </div>
 </div>

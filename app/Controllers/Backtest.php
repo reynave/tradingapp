@@ -8,28 +8,79 @@ class Backtest extends BaseController
 {
     public function index()
     {
+        $items = $this->db->query("SELECT * FROM 
+             backtest WHERE presence = 1 and accountId = '" . model("Core")->accountId() . "'
+             ORDER BY input_date ASC
+        ")->getResultArray();
         $data = array(
             "error" => false,
-            "request" =>  $this->request->getVar(),
+            "items" => $items,
+            "header" => model("Core")->header()
         );
         return $this->response->setJSON($data);
     }
 
+    function onCreateNew()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+
+            $this->db->table("backtest")->insert([
+                "id" => time(),
+                "name" => "New",
+                "accountId" => model("Core")->accountId(),
+                "presence" => 1,
+                "update_date" => date("Y-m-d H:i:s"),
+            ]);
+
+
+            $data = array(
+                "error" => false,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
 
     public function detail()
     {
         $data = array(
             "error" => true,
-            "request" =>  $this->request->getVar(),
+            "request" => $this->request->getVar(),
         );
 
-        if ($data['request']['id'] && model("Core")->select("id", "backtest", "id='" . $data['request']['id'] . "' and presence = 1")) {
-            $id = model("Core")->select("id", "backtest", "id='" . $data['request']['id'] . "' and presence = 1");
+        $id = model("Core")->select("id", "backtest", "id='" . $data['request']['id'] . "' and presence = 1");
+        if ($data['request']['id'] && $id) {
+
+            $c = "SELECT f, name FROM backtest_custom_field WHERE backtestId = $id ORDER BY sorting ASC ";
+            $backtest_custom_field = $this->db->query($c)->getResultArray();
+
+            $customField = "";
+            foreach ($backtest_custom_field as $r) {
+                $customField .= ", f" . $r['f'];
+            } 
+            $q = "SELECT backtestId, positionId,  marketId, openDate, closeDate,  sl, rr,  tp,  resultId, note,
+            time_to_sec(timediff(closeDate, openDate )) / 3600  AS 'tradingTime', false AS 'checkbox' $customField 
+            FROM backtest_detail 
+            where backtestId = '$id' and presence = 1";
+
+            // $q = "SELECT *, 
+            //    time_to_sec(timediff(closeDate, openDate )) / 3600  AS 'tradingTime', false AS 'checkbox' 
+            //    FROM backtest_detail 
+            //    where backtestId = '$id' and presence = 1";
+            $detail = $this->db->query($q)->getResultArray();
+
             $data = array(
                 "error" => false,
-                "id"    =>  $id,
-                "item"  => $this->db->query("SELECT * from backtest where id = '$id' ")->getResultArray()[0],
-                "detail" => $this->db->query("SELECT *, time_to_sec(timediff(closeDate, openDate )) / 3600  AS 'tradingTime', false as 'checkbox' from backtest_detail where backtestId = '$id' and presence = 1 ")->getResultArray(),
+                "id" => $id,
+                "item" => $this->db->query("SELECT * from backtest where id = '$id' ")->getResultArray()[0],
+                "detail" => $detail,
+                "customField" => $backtest_custom_field,
+                "q" => $q,
             );
         }
         return $this->response->setJSON($data);
@@ -39,7 +90,7 @@ class Backtest extends BaseController
     {
         $data = array(
             "error" => true,
-            "request" =>  $this->request->getVar(),
+            "request" => $this->request->getVar(),
         );
 
         $data = array(
@@ -70,7 +121,7 @@ class Backtest extends BaseController
             $data = array(
                 "error" => false,
                 "detailImages" => $this->db->query("SELECT * FROM 
-                    backtest_detail_images WHERE backtestDetailId = '" .$post['backtestDetailId'] . "' AND presence = 1 ORDER BY sorting ASC
+                    backtest_detail_images WHERE backtestDetailId = '" . $post['backtestDetailId'] . "' AND presence = 1 ORDER BY sorting ASC
                 ")->getResultArray(),
             );
         }
@@ -91,8 +142,8 @@ class Backtest extends BaseController
                 "post" => $post,
             ];
             $this->db->table("backtest")->update([
-                "name" => $post['item']['name'], 
-                "permissionId" => $post['item']['permissionId'],  
+                "name" => $post['item']['name'],
+                "permissionId" => $post['item']['permissionId'],
                 "update_date" => date("Y-m-d H:i:s"),
             ], "id = '" . $post['id'] . "' ");
 

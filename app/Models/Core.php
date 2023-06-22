@@ -32,9 +32,19 @@ class Core extends Model
         }
         return   $data;
     }
-   
+    function header(){
+        if(service('request')->getHeaderLine('Token')) {
+            $jwtObj = explode('.', service('request')->getHeaderLine('Token'));
+            $user = base64_decode($jwtObj[1]); 
+            $data = json_decode($user , true);
+        }else{
+            $data = false;
+        }
+      
+        return   $data;
+    }
     function accountId() {
-        return "S01";
+        return self::header() != false ? self::header()['account']['id'] : "";
     }
 
 

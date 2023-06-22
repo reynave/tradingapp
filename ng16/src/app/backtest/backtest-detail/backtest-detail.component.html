@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <div class="row g-1">
+    <div class="row g-2 mb-3">
         <div class="col-9">
             <input class="form-control form-control-sm" placeholder="" [(ngModel)]="item.name" (change)="onUpdate()">
         </div>
@@ -11,7 +11,12 @@
             </select>
         </div>
     </div>
-    <div class="row g-2">
+    <div class="row g-2 mb-3">
+        <div class="col-12">
+            <input class="form-control" >
+        </div>
+    </div>
+    <div class="row g-2 mb-3">
 
         <div class="col-5 border">
             <google-chart style='height: 300px; width: 100%;' [title]="chart.title" [type]="chart.type" [data]="chart.data" [options]="chart.options">
@@ -168,7 +173,7 @@
                     </div>
                 </div>
                 <div class="row g-1">
-                    <div class="col-6">
+                    <div class="col-12">
                         <input type="checkbox" [(ngModel)]="x.checkbox" (change)="onCalculation()">
                         <a class="btn btn-primar btn-smy" (click)="open(content)">Notes</a>
 
@@ -177,8 +182,18 @@
                     
 
                 </div>
+                <div class="row">
+                    <div class="col" *ngIf="x.hasOwnProperty('f1')" >
+                        {{x.f1 }} {{x.hasOwnProperty('f1')}}
+                    </div>
 
+                    <div class="col" *ngIf="x.hasOwnProperty('f2')" >
+                        {{x.f2 }} {{x.hasOwnProperty('f2')}}
+                    </div>
+                     
+                </div>
             </div>
+          
 
 
             <div class="row">

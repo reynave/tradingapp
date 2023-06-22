@@ -31,6 +31,7 @@ export class BacktestDetailComponent implements OnInit {
   httpNote: string = "";
   fileName = "";
   deleteAll: boolean = false;
+  customField : any = [];
   chart: any = {
     title: "linechart",
     type: "LineChart",
@@ -70,6 +71,7 @@ export class BacktestDetailComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
+        this.customField = data['customField'];
         this.detail = data['detail'].map((item: any) => ({
           ...item,
           checkbox: false,
