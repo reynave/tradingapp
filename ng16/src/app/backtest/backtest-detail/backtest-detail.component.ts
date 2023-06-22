@@ -102,7 +102,13 @@ export class BacktestDetailComponent implements OnInit {
     )
   }
 
+  getObjectKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
 
+  test(obj:number){
+    return "Testny "+obj;
+  }
 
   fnAddItems() {
     const body = {

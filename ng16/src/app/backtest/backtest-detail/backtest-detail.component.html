@@ -183,12 +183,26 @@
 
                 </div>
                 <div class="row">
-                    <div class="col" *ngIf="x.hasOwnProperty('f1')" >
+                    <div class="col" *ngFor="let n of customField">
+                        <ng-container *ngFor="let key of getObjectKeys(n)">
+                          {{ key }}: {{ n[key] }} 
+
+                        {{test(n[key])}}
+                        </ng-container>
+                      </div>
+                </div>
+
+                <div class="row">
+                    <div class="col order-2" *ngIf="x.hasOwnProperty('f1')" >
                         {{x.f1 }} {{x.hasOwnProperty('f1')}}
                     </div>
 
-                    <div class="col" *ngIf="x.hasOwnProperty('f2')" >
+                    <div class="col order-1" *ngIf="x.hasOwnProperty('f2')" >
                         {{x.f2 }} {{x.hasOwnProperty('f2')}}
+                    </div>
+
+                    <div class="col" *ngIf="x.hasOwnProperty('f3')" >
+                        {{x.f3 }} {{x.hasOwnProperty('f3')}}
                     </div>
                      
                 </div>

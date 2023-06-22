@@ -56,7 +56,7 @@ class Backtest extends BaseController
         $id = model("Core")->select("id", "backtest", "id='" . $data['request']['id'] . "' and presence = 1");
         if ($data['request']['id'] && $id) {
 
-            $c = "SELECT f, name FROM backtest_custom_field WHERE backtestId = $id ORDER BY sorting ASC ";
+            $c = "SELECT f, name, sorting FROM backtest_custom_field WHERE backtestId = $id ORDER BY sorting ASC ";
             $backtest_custom_field = $this->db->query($c)->getResultArray();
 
             $customField = "";
