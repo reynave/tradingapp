@@ -167,7 +167,7 @@ throw new Error('Method not implemented.');
     );
   }
 
-  onSubmit() {
+  onSubmit(reload : boolean = true) {
     clearTimeout(this.myTimeout);
     this.loading = true;
     const body = {
@@ -181,7 +181,10 @@ throw new Error('Method not implemented.');
     ).subscribe(
       data => {
         console.log(data);
-        this.httpGet();
+        if(reload == true){
+          this.httpGet();
+        }
+       
       },
       e => {
         console.log(e);

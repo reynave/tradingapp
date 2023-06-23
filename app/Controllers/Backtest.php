@@ -101,6 +101,19 @@ class Backtest extends BaseController
         if ($this->db->fieldExists('f445', 'backtest_detail')) {
             echo "esis";
         }
+        $n = 1;
+        $max = 0;
+        do {
+
+            if ($this->db->fieldExists("f$n", 'backtest_detail')) {
+                $max++;
+            } else {
+                break;
+            }
+            $n++;
+        } while (true);
+
+        echo $max;
     }
     function addCustomField()
     {
@@ -112,7 +125,18 @@ class Backtest extends BaseController
         ];
         if ($post) {
             $total = model("Core")->select("count(id)", "backtest_custom_field", "backtestId= " . $post['id']);
-            $max = 4;
+            $n = 1;
+            $max = 0;
+            do { 
+                if ($this->db->fieldExists("f$n", 'backtest_detail')) {
+                    $max++;
+                } else {
+                    break;
+                }
+                $n++;
+            } while (true);
+
+
             if ($total < $max) {
 
 
@@ -141,14 +165,14 @@ class Backtest extends BaseController
                         "post" => $post,
                     );
                 }
-            }else{
+            } else {
                 $data = array(
                     "error" => true,
                     "post" => $post,
                     "note" => "Max $max",
                 );
             }
-           
+
         }
         return $this->response->setJSON($data);
     }
@@ -162,10 +186,10 @@ class Backtest extends BaseController
         ];
         if ($post) {
             if (model("Core")->select("accountId", "backtest", "id= '" . $post['id'] . "' ") == model("Core")->accountId()) {
-                $f = model("Core")->select("f","backtest_custom_field","id = ".$post['bcfId'] );
+                $f = model("Core")->select("f", "backtest_custom_field", "id = " . $post['bcfId']);
                 $this->db->table("backtest_detail")->update([
-                    "f".$f  => "",
-                ]," backtestId = '".$post['id']."' ");
+                    "f" . $f => "",
+                ], " backtestId = '" . $post['id'] . "' ");
 
                 $this->db->table("backtest_custom_field")->delete([
                     "id" => $post['bcfId'],
