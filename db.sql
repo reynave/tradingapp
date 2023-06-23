@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Server version:               10.4.28-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win64
--- HeidiSQL Version:             12.2.0.6576
+-- HeidiSQL Version:             12.4.0.6659
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `account` (
 
 -- Dumping data for table tradingbook.account: ~1 rows (approximately)
 INSERT INTO `account` (`id`, `name`, `email`, `password`, `presence`, `status`, `input_date`, `update_date`) VALUES
-	('1', 'Felix', 'user@mirrel.com', '4297f44b13955235245b2497399d7a93', 1, 1, '2022-01-01 00:00:00', '2022-01-01 00:00:00');
+	('230101.0001', 'Felix', 'cso1@email.com', '4297f44b13955235245b2497399d7a93', 1, 1, '2022-01-01 00:00:00', '2022-01-01 00:00:00');
 
 -- Dumping structure for table tradingbook.account_login
 CREATE TABLE IF NOT EXISTS `account_login` (
@@ -39,15 +39,17 @@ CREATE TABLE IF NOT EXISTS `account_login` (
   `getUserAgent` varchar(250) NOT NULL DEFAULT '',
   `input_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Dumping data for table tradingbook.account_login: ~4 rows (approximately)
+-- Dumping data for table tradingbook.account_login: ~5 rows (approximately)
 INSERT INTO `account_login` (`id`, `accountId`, `ip`, `getUserAgent`, `input_date`) VALUES
 	(2, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:06:55'),
 	(3, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:07:17'),
 	(4, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:08:47'),
 	(5, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:41:39'),
-	(6, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:50:53');
+	(6, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:50:53'),
+	(7, '1', '::1', 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1', '2023-06-22 10:44:37'),
+	(8, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-22 17:25:53');
 
 -- Dumping structure for table tradingbook.backtest
 CREATE TABLE IF NOT EXISTS `backtest` (
@@ -60,12 +62,41 @@ CREATE TABLE IF NOT EXISTS `backtest` (
   `presence` int(1) NOT NULL DEFAULT 1,
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `url` (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table tradingbook.backtest: ~0 rows (approximately)
+-- Dumping data for table tradingbook.backtest: ~3 rows (approximately)
 INSERT INTO `backtest` (`id`, `accountId`, `name`, `url`, `permissionId`, `version`, `presence`, `input_date`, `update_date`) VALUES
-	('12', '230101.0001', 'name234343', '', 30, '', 1, '2023-01-01 00:00:00', '2023-06-18 16:44:27');
+	('12', '230101.0001', 'smart moeny concepts', '42341234', 20, '', 1, '2023-01-01 00:00:00', '2023-06-23 19:39:53'),
+	('1687542398', '230101.0001', 'New', '6495da7e4d4be', 0, '', 1, '2023-01-01 00:00:00', '2023-06-23 17:46:38'),
+	('1687542499', '230101.0001', 'New', '6495dae30723f', 20, '', 1, '2023-01-01 00:00:00', '2023-06-23 18:52:18');
+
+-- Dumping structure for table tradingbook.backtest_custom_field
+CREATE TABLE IF NOT EXISTS `backtest_custom_field` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `backtestId` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `f` int(2) NOT NULL DEFAULT 0,
+  `name` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `iType` varchar(250) NOT NULL,
+  `sorting` int(3) NOT NULL DEFAULT 99,
+  `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  `input_by` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  `update_by` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table tradingbook.backtest_custom_field: ~8 rows (approximately)
+INSERT INTO `backtest_custom_field` (`id`, `backtestId`, `f`, `name`, `iType`, `sorting`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
+	(29, '1687542499', 1, 'custom Field 1', 'text', 10, '2023-06-23 19:23:32', '230101.0001', '2023-01-01 00:00:00', ''),
+	(32, '1687542499', 3, 'custom Field 3', 'text', 30, '2023-06-23 19:24:07', '230101.0001', '2023-01-01 00:00:00', ''),
+	(33, '1687542499', 2, 'custom Field 2', 'text', 20, '2023-06-23 19:24:10', '230101.0001', '2023-01-01 00:00:00', ''),
+	(34, '1687542499', 4, 'custom Field 4', 'text', 40, '2023-06-23 19:24:12', '230101.0001', '2023-01-01 00:00:00', ''),
+	(35, '12', 1, 'custom Field 1', 'text', 10, '2023-06-23 19:28:58', '230101.0001', '2023-01-01 00:00:00', ''),
+	(36, '12', 2, 'custom Field 2', 'text', 20, '2023-06-23 19:28:59', '230101.0001', '2023-01-01 00:00:00', ''),
+	(37, '12', 3, 'custom Field 3', 'text', 30, '2023-06-23 19:29:05', '230101.0001', '2023-01-01 00:00:00', ''),
+	(38, '12', 4, 'custom Field 4', 'text', 40, '2023-06-23 19:30:38', '230101.0001', '2023-01-01 00:00:00', '');
 
 -- Dumping structure for table tradingbook.backtest_detail
 CREATE TABLE IF NOT EXISTS `backtest_detail` (
@@ -80,24 +111,29 @@ CREATE TABLE IF NOT EXISTS `backtest_detail` (
   `tp` float(5,2) NOT NULL DEFAULT 0.00,
   `resultId` int(2) NOT NULL DEFAULT 0,
   `note` varchar(250) NOT NULL DEFAULT '',
+  `f1` text NOT NULL,
+  `f2` text NOT NULL,
+  `f3` text NOT NULL,
+  `f4` text NOT NULL,
   `presence` int(1) NOT NULL DEFAULT 1,
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table tradingbook.backtest_detail: ~10 rows (approximately)
-INSERT INTO `backtest_detail` (`id`, `backtestId`, `positionId`, `marketId`, `openDate`, `closeDate`, `sl`, `rr`, `tp`, `resultId`, `note`, `presence`, `input_date`, `update_date`) VALUES
-	(1, '12', 1, 2, '2023-01-02 06:05:00', '2023-01-02 20:34:00', 13.00, 3.00, 39.00, 1, '', 1, '2023-01-01 00:00:00', '2023-06-18 16:44:27'),
-	(2, '12', 1, 4, '2022-12-02 04:04:00', '2022-12-08 18:25:00', 19.00, 5.00, 95.00, 1, '', 1, '2023-01-01 00:00:00', '2023-06-18 16:44:27'),
-	(3, '12', 2, 5, '2021-06-11 00:00:00', '2021-06-13 18:25:00', 20.00, -1.00, -20.00, -1, '', 1, '2023-01-01 00:00:00', '2023-06-18 16:44:27'),
-	(4, '12', 1, 2, '2020-01-02 00:00:00', '2020-01-08 18:25:00', 21.00, 2.00, 42.00, 1, '', 1, '2023-06-16 17:18:03', '2023-06-18 16:44:27'),
-	(5, '12', 1, 2, '2020-01-02 00:00:00', '2020-01-04 18:25:00', 1.00, -2.00, -2.00, -1, '', 0, '2023-06-16 17:18:16', '2023-06-17 05:45:36'),
-	(6, '12', 2, 3, '2020-01-30 00:00:00', '2020-02-01 18:25:00', 1.00, 3.00, 3.00, 1, '', 0, '2023-06-16 17:18:26', '2023-06-17 05:45:36'),
-	(7, '12', 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', 0, '2023-06-16 18:56:19', '2023-06-17 05:45:27'),
-	(8, '12', 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', 0, '2023-06-17 05:34:28', '2023-06-17 05:45:27'),
-	(9, '12', 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, 2.00, 42.00, 1, '', 1, '2023-06-17 05:54:41', '2023-06-18 16:44:27'),
-	(10, '12', 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', 0, '2023-06-17 19:10:26', '2023-06-17 19:10:32');
+-- Dumping data for table tradingbook.backtest_detail: ~11 rows (approximately)
+INSERT INTO `backtest_detail` (`id`, `backtestId`, `positionId`, `marketId`, `openDate`, `closeDate`, `sl`, `rr`, `tp`, `resultId`, `note`, `f1`, `f2`, `f3`, `f4`, `presence`, `input_date`, `update_date`) VALUES
+	(1, '12', 1, 2, '2023-01-13 06:05:00', '2023-01-13 20:34:00', 15.00, 3.00, 45.00, 1, '', 'FOMC', 'toka boca', 'akao', 'abc', 1, '2023-01-01 00:00:00', '2023-06-23 19:39:53'),
+	(2, '12', 1, 4, '2022-12-02 04:04:00', '2022-12-08 18:25:00', 19.00, 5.00, 95.00, 1, '', 'CPI', 'Bearsih', '', '', 1, '2023-01-01 00:00:00', '2023-06-23 19:39:53'),
+	(3, '12', 2, 5, '2021-06-11 00:00:00', '2021-06-13 18:25:00', 20.00, -1.00, -20.00, -1, '', '', '', '', '', 1, '2023-01-01 00:00:00', '2023-06-23 19:39:53'),
+	(4, '12', 1, 2, '2020-01-02 00:00:00', '2020-01-08 18:25:00', 21.00, 2.00, 42.00, 1, '', '', '', '', '', 1, '2023-06-16 17:18:03', '2023-06-23 19:39:53'),
+	(5, '12', 1, 2, '2020-01-02 00:00:00', '2020-01-04 18:25:00', 1.00, -2.00, -2.00, -1, '', '', '', '', '', 0, '2023-06-16 17:18:16', '2023-06-17 05:45:36'),
+	(6, '12', 2, 3, '2020-01-30 00:00:00', '2020-02-01 18:25:00', 1.00, 3.00, 3.00, 1, '', '', '', '', '', 0, '2023-06-16 17:18:26', '2023-06-17 05:45:36'),
+	(7, '12', 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', 0, '2023-06-16 18:56:19', '2023-06-17 05:45:27'),
+	(8, '12', 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', 0, '2023-06-17 05:34:28', '2023-06-17 05:45:27'),
+	(9, '12', 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, 2.00, 42.00, 1, '', '', '', '', '', 1, '2023-06-17 05:54:41', '2023-06-23 19:39:53'),
+	(10, '12', 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', 0, '2023-06-17 19:10:26', '2023-06-17 19:10:32'),
+	(11, '1687542499', 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', 'agasdf', '123123', '43434234', '', 1, '2023-06-23 17:48:26', '2023-06-23 18:52:18');
 
 -- Dumping structure for table tradingbook.backtest_detail_images
 CREATE TABLE IF NOT EXISTS `backtest_detail_images` (
@@ -111,10 +147,10 @@ CREATE TABLE IF NOT EXISTS `backtest_detail_images` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table tradingbook.backtest_detail_images: ~11 rows (approximately)
+-- Dumping data for table tradingbook.backtest_detail_images: ~13 rows (approximately)
 INSERT INTO `backtest_detail_images` (`id`, `backtestDetailId`, `img`, `sorting`, `presence`, `input_date`, `update_date`) VALUES
 	(1, '1', 'https://pbs.twimg.com/media/FygoJc1agAIYbCM?format=jpg&name=medium', 1, 1, '2023-01-01 00:00:00', '2023-01-01 00:00:00'),
-	(2, '1', 'https://static.sextb.net/actor/kanna-shinozaki.jpg', 2, 1, '2023-01-01 00:00:00', '2023-06-17 13:03:08'),
+	(2, '1', 'https://static.sextb.net/actor/kanna-shinozaki.jpg', 2, 0, '2023-01-01 00:00:00', '2023-06-23 18:19:39'),
 	(3, '1', 'https://i.pinimg.com/564x/66/ba/00/66ba0049462f33036bba3989e9f6c5bf.jpg', 3, 1, '2023-01-01 00:00:00', '2023-01-01 00:00:00'),
 	(4, '1', 'https://i.pinimg.com/564x/66/ba/00/66ba0049462f33036bba3989e9f6c5bf.jpg', 3, 0, '2023-01-01 00:00:00', '2023-06-17 13:05:51'),
 	(5, '1', 'https://static.sextb.net/actor/kanna-shinozaki.jpg', 2, 0, '2023-01-01 00:00:00', '2023-06-17 13:04:27'),
