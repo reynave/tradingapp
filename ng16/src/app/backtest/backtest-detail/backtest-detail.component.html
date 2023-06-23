@@ -10,16 +10,16 @@
                 <option value="30">Share + Comments</option>
             </select>
         </div>
-    </div>
-    <div class="row g-2 mb-3">
-        <div class="col-12">
-            <input class="form-control" >
+        <div class="col-12" *ngIf="item.permissionId > 10">
+            Url share : {{item.url}}
         </div>
     </div>
+
     <div class="row g-2 mb-3">
 
         <div class="col-5 border">
-            <google-chart style='height: 300px; width: 100%;' [title]="chart.title" [type]="chart.type" [data]="chart.data" [options]="chart.options">
+            <google-chart style='height: 300px; width: 100%;' [title]="chart.title" [type]="chart.type"
+                [data]="chart.data" [options]="chart.options">
             </google-chart>
             {{summary |json}}
             <div>
@@ -104,40 +104,74 @@
         </div>
 
         <div class="col-7">
+            <div class="border">
+                <small>Custom Field</small>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>name</th>
+                            <th>type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of customField">
+                            <td>{{x.f}}</td>
+                            <td>{{x.name}}</td>
+                            <td>{{x.iType}}</td>
+                            <td><a (click)="removeCustomeFlied(x);" ><i class="bi bi-trash-fill"></i></a></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">
+                                <a class="btn btn-sm" (click)="addCustomField()">addCustomField</a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
             <div class="border mb-3" *ngFor="let x of detail; let i = index">
 
                 <div class="row g-1">
                     <div class="col-2">
                         <small>Market</small>
-                        <select class="form-control form-control-sm" [(ngModel)]="x.marketId" name="marketId" (change)="onUpdate()">
+                        <select class="form-control form-control-sm" [(ngModel)]="x.marketId" name="marketId"
+                            (change)="onUpdate()">
                             <option *ngFor="let x of selectMarket" [value]="x.id">{{x.name}}</option>
                         </select>
                     </div>
                     <div class="col-2">
                         <small>Position</small>
-                        <select class="form-control form-control-sm" [(ngModel)]="x.positionId" name="positionId" (change)="onUpdate()">
+                        <select class="form-control form-control-sm" [(ngModel)]="x.positionId" name="positionId"
+                            (change)="onUpdate()">
                             <option value="1">BUY</option>
                             <option value="2">SELL</option>
                         </select>
                     </div>
                     <div class="col-2">
                         <small>Stop Loss</small>
-                        <input type="number" class="form-control form-control-sm" placeholder="SL" [(ngModel)]="x.sl" name="sl" (change)="onUpdate()">
+                        <input type="number" class="form-control form-control-sm" placeholder="SL" [(ngModel)]="x.sl"
+                            name="sl" (change)="onUpdate()">
                     </div>
 
                     <div class="col-2">
                         <small>Risk Ratio</small>
-                        <input type="number" class="form-control form-control-sm" placeholder="RR" [(ngModel)]="x.rr" name="rr" (change)="onUpdate()">
+                        <input type="number" class="form-control form-control-sm" placeholder="RR" [(ngModel)]="x.rr"
+                            name="rr" (change)="onUpdate()">
                     </div>
 
                     <div class="col-2">
                         <small>Take Profit</small>
-                        <input type="text" class="form-control form-control-sm" placeholder="TP" [(ngModel)]="x.tp" name="tp" readonly>
+                        <input type="text" class="form-control form-control-sm" placeholder="TP" [(ngModel)]="x.tp"
+                            name="tp" readonly>
                     </div>
 
                     <div class="col-2">
                         <small>Result</small>
-                        <select class="form-control form-control-sm" [(ngModel)]="x.resultId" name="resultId" disabled (change)="onUpdate()">
+                        <select class="form-control form-control-sm" [(ngModel)]="x.resultId" name="resultId" disabled
+                            (change)="onUpdate()">
                             <option value="">-</option>
                             <option value="1">WIN</option>
                             <option value="0">BEP</option>
@@ -147,21 +181,29 @@
                     </div>
 
                 </div>
-                
+
                 <div class="row g-1">
                     <div class="col-5">
                         <div class="input-group">
-                            <input type="text" class="form-control form-control-sm" name="openDate" [(ngModel)]="x.openDate" (ngModelChange)="copyToOpenDate(x,i)" ngbDatepicker #od="ngbDatepicker" placeholder="Open Order">
-                            <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="od.toggle()" type="button"></button>
+                            <input type="text" class="form-control form-control-sm" name="openDate"
+                                [(ngModel)]="x.openDate" (ngModelChange)="copyToOpenDate(x,i)" ngbDatepicker
+                                #od="ngbDatepicker" placeholder="Open Order">
+                            <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="od.toggle()"
+                                type="button"></button>
 
-                            <input type="time" class="form-control form-control-sm" [(ngModel)]="x.openTime" (change)="onUpdate()" name="openTime">
+                            <input type="time" class="form-control form-control-sm" [(ngModel)]="x.openTime"
+                                (change)="onUpdate()" name="openTime">
                         </div>
                     </div>
-                    <div class="col-5"> 
+                    <div class="col-5">
                         <div class="input-group">
-                            <input type="text" class="form-control form-control-sm" name="closeDate" [(ngModel)]="x.closeDate" (ngModelChange)="onUpdate()" ngbDatepicker #cd="ngbDatepicker" placeholder="Close Order" [minDate]="x.openDate">
-                            <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="cd.toggle()" type="button"></button>
-                            <input type="time" class="form-control form-control-sm" [(ngModel)]="x.closeTime" (change)="onUpdate()" name="closeTime">
+                            <input type="text" class="form-control form-control-sm" name="closeDate"
+                                [(ngModel)]="x.closeDate" (ngModelChange)="onUpdate()" ngbDatepicker #cd="ngbDatepicker"
+                                placeholder="Close Order" [minDate]="x.openDate">
+                            <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="cd.toggle()"
+                                type="button"></button>
+                            <input type="time" class="form-control form-control-sm" [(ngModel)]="x.closeTime"
+                                (change)="onUpdate()" name="closeTime">
                         </div>
                     </div>
 
@@ -169,7 +211,7 @@
                         <div class="d-grid">
                             <a class="btn btn-primary btn-sm" (click)="openImg(galleries, x)">Images</a>
                         </div>
-                     
+
                     </div>
                 </div>
                 <div class="row g-1">
@@ -177,37 +219,39 @@
                         <input type="checkbox" [(ngModel)]="x.checkbox" (change)="onCalculation()">
                         <a class="btn btn-primar btn-smy" (click)="open(content)">Notes</a>
 
-                        <span>Total Trading Time :  {{x.tradingTime }} hours</span>
+                        <span>Total Trading Time : {{x.tradingTime }} hours</span>
                     </div>
-                    
+
 
                 </div>
-                <div class="row">
-                    <div class="col" *ngFor="let n of customField">
-                        <ng-container *ngFor="let key of getObjectKeys(n)">
-                          {{ key }}: {{ n[key] }} 
 
-                        {{test(n[key])}}
-                        </ng-container>
-                      </div>
-                </div>
+                <div class="row g-1">
+                    <div class="col" *ngFor="let n of customField;  let a = index">
+                        {{customField[a]['name']}} {{customField[a]['iType']}}
+                        <!-- {{valueFromCustomField( customField[a]['f'], i )}} -->
 
-                <div class="row">
-                    <div class="col order-2" *ngIf="x.hasOwnProperty('f1')" >
-                        {{x.f1 }} {{x.hasOwnProperty('f1')}}
+                        <div *ngIf="customField[a]['f'] == '1'">
+                            <input [type]="customField[a]['iType']" class="form-control form-control-sm"
+                                (change)="onUpdate()" [(ngModel)]="x.f1" name="f1">
+                        </div>
+                        <div *ngIf="customField[a]['f'] == '2'">
+                            <input [type]="customField[a]['iType']" class="form-control form-control-sm"
+                                (change)="onUpdate()" [(ngModel)]="x.f2" name="f2">
+                        </div>
+                        <div *ngIf="customField[a]['f'] == '3'">
+                            <input [type]="customField[a]['iType']" class="form-control form-control-sm"
+                                (change)="onUpdate()" [(ngModel)]="x.f3" name="f3">
+                        </div>
+                        <div *ngIf="customField[a]['f'] == '4'">
+                            <input [type]="customField[a]['iType']" class="form-control form-control-sm"
+                                (change)="onUpdate()" [(ngModel)]="x.f4" name="f4">
+                        </div>
                     </div>
 
-                    <div class="col order-1" *ngIf="x.hasOwnProperty('f2')" >
-                        {{x.f2 }} {{x.hasOwnProperty('f2')}}
-                    </div>
 
-                    <div class="col" *ngIf="x.hasOwnProperty('f3')" >
-                        {{x.f3 }} {{x.hasOwnProperty('f3')}}
-                    </div>
-                     
                 </div>
             </div>
-          
+
 
 
             <div class="row">
@@ -234,7 +278,8 @@
 <ng-template #content let-modal>
     <div class="modal-header">
         <div class="modal-title" id="modal-basic-title">Notes</div>
-        <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <button type="button" class="btn-close btn-sm" aria-label="Close"
+            (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div>
         <editor apiKey="cc5hqwaiqsocbfakkn5qpug7r9bx5zioxppbw9h6w4gd0286" [init]="{
@@ -259,7 +304,8 @@
 <ng-template #galleries let-modal>
     <div class="modal-header">
         <div class="modal-title" id="modal-basic-title">Images </div>
-        <button type="button" class="btn-close btn-sm" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        <button type="button" class="btn-close btn-sm" aria-label="Close"
+            (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
         <div class="row" *ngIf="detailSelect">
@@ -278,7 +324,8 @@
             </div>
             <div class="col-4">
                 <div class="d-grid">
-                    <button type="button" class="btn btn-outline-dark btn-sm py-1" (click)="modal.close('Save click')">Close</button>
+                    <button type="button" class="btn btn-outline-dark btn-sm py-1"
+                        (click)="modal.close('Save click')">Close</button>
                 </div>
             </div>
         </div>
@@ -288,7 +335,7 @@
 
 
 <ng-template #fullScreenContent let-modal>
-    <div class="modal-header"> 
+    <div class="modal-header">
         <button type="button" class="btn-close" aria-label="Close" (click)="backGalleries(galleries)"></button>
     </div>
     <div class="modal-body">

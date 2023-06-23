@@ -33,6 +33,7 @@ class Backtest extends BaseController
             $this->db->table("backtest")->insert([
                 "id" => time(),
                 "name" => "New",
+                "url" => uniqid(),
                 "accountId" => model("Core")->accountId(),
                 "presence" => 1,
                 "update_date" => date("Y-m-d H:i:s"),
@@ -56,22 +57,18 @@ class Backtest extends BaseController
         $id = model("Core")->select("id", "backtest", "id='" . $data['request']['id'] . "' and presence = 1");
         if ($data['request']['id'] && $id) {
 
-            $c = "SELECT f, name, sorting FROM backtest_custom_field WHERE backtestId = $id ORDER BY sorting ASC ";
+            $c = "SELECT id,f, name, iType FROM backtest_custom_field WHERE backtestId = $id ORDER BY sorting ASC ";
             $backtest_custom_field = $this->db->query($c)->getResultArray();
 
             $customField = "";
             foreach ($backtest_custom_field as $r) {
                 $customField .= ", f" . $r['f'];
-            } 
-            $q = "SELECT backtestId, positionId,  marketId, openDate, closeDate,  sl, rr,  tp,  resultId, note,
+            }
+            $q = "SELECT id, backtestId, positionId,  marketId, openDate, closeDate,  sl, rr,  tp,  resultId, note,
             time_to_sec(timediff(closeDate, openDate )) / 3600  AS 'tradingTime', false AS 'checkbox' $customField 
             FROM backtest_detail 
             where backtestId = '$id' and presence = 1";
 
-            // $q = "SELECT *, 
-            //    time_to_sec(timediff(closeDate, openDate )) / 3600  AS 'tradingTime', false AS 'checkbox' 
-            //    FROM backtest_detail 
-            //    where backtestId = '$id' and presence = 1";
             $detail = $this->db->query($q)->getResultArray();
 
             $data = array(
@@ -85,6 +82,104 @@ class Backtest extends BaseController
         }
         return $this->response->setJSON($data);
     }
+
+
+
+    function table()
+    {
+        $fields = $this->db->getFieldNames('backtest_detail');
+        $arr = array();
+        $i = 4;
+        for ($n = 1; $n <= $i; $n++) {
+            $arr[] = $n;
+        }
+        print_r($arr);
+        foreach ($fields as $field) {
+            echo $field . "<br>";
+        }
+
+        if ($this->db->fieldExists('f445', 'backtest_detail')) {
+            echo "esis";
+        }
+    }
+    function addCustomField()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $total = model("Core")->select("count(id)", "backtest_custom_field", "backtestId= " . $post['id']);
+            $max = 4;
+            if ($total < $max) {
+
+
+                $i = 1;
+                for ($n = 1; $n <= $max; $n++) {
+                    if (!model("Core")->select("id", "backtest_custom_field", "backtestId = '" . $post['id'] . "' AND f = " . $n)) {
+                        $i = $n;
+                        break;
+                    }
+
+                }
+
+                if ($this->db->fieldExists("f$i", 'backtest_detail')) {
+
+                    $this->db->table("backtest_custom_field")->insert([
+                        "f" => $i,
+                        "name" => "custom Field $i",
+                        "iType" => "text",
+                        "sorting" => $i * 10,
+                        "backtestId" => $post['id'],
+                        "input_by" => model("Core")->accountId(),
+                        "input_date" => date("Y-m-d H:i:s"),
+                    ]);
+                    $data = array(
+                        "error" => false,
+                        "post" => $post,
+                    );
+                }
+            }else{
+                $data = array(
+                    "error" => true,
+                    "post" => $post,
+                    "note" => "Max $max",
+                );
+            }
+           
+        }
+        return $this->response->setJSON($data);
+    }
+    function removeCustomeFlied()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            if (model("Core")->select("accountId", "backtest", "id= '" . $post['id'] . "' ") == model("Core")->accountId()) {
+                $f = model("Core")->select("f","backtest_custom_field","id = ".$post['bcfId'] );
+                $this->db->table("backtest_detail")->update([
+                    "f".$f  => "",
+                ]," backtestId = '".$post['id']."' ");
+
+                $this->db->table("backtest_custom_field")->delete([
+                    "id" => $post['bcfId'],
+                ]);
+                $data = array(
+                    "error" => false,
+                    "post" => $post,
+                );
+
+            }
+        }
+        return $this->response->setJSON($data);
+    }
+
 
     public function detailImages()
     {
@@ -153,7 +248,6 @@ class Backtest extends BaseController
                     "sl" => $row['sl'],
                     "rr" => $row['rr'],
                     "tp" => $row['tp'],
-
                     "closeDate" => $row['closeDate']['year'] . "-" . $row['closeDate']['month'] . "-" . $row['closeDate']['day'] . " " . $row['closeTime'] . ":00",
 
                     "openDate" => $row['openDate']['year'] . "-" . $row['openDate']['month'] . "-" . $row['openDate']['day'] . " " . $row['openTime'] . ":00",
@@ -163,6 +257,16 @@ class Backtest extends BaseController
 
                     "update_date" => date("Y-m-d H:i:s"),
                 ], "id = '" . $row['id'] . "' ");
+
+                // Update custom Field
+                for ($i = 1; $i <= 4; $i++) {
+                    if (isset($row['f' . $i])) {
+                        $this->db->table("backtest_detail")->update([
+                            "f" . $i => $row['f' . $i],
+                        ], "id = '" . $row['id'] . "' ");
+                    }
+                }
+
             }
         }
 

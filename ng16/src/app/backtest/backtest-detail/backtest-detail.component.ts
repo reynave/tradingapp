@@ -11,6 +11,7 @@ export class Model {
   constructor(
     public name: string,
     public permissionId: number,
+    public url : string,
   ) { }
 }
 
@@ -20,7 +21,10 @@ export class Model {
   styleUrls: ['./backtest-detail.component.css']
 })
 export class BacktestDetailComponent implements OnInit {
-  item = new Model("", 0);
+getProperties(_t195: any): any {
+throw new Error('Method not implemented.');
+}
+  item = new Model("", 0,"");
   id: string = "";
   waiting: boolean = false;
   loading: boolean = false;
@@ -93,6 +97,7 @@ export class BacktestDetailComponent implements OnInit {
 
         this.item.name = data['item']['name'];
         this.item.permissionId = data['item']['permissionId'];
+        this.item.url = environment.api+'?share='+data['item']['url'];
         //this.detail = mappedData;
         console.log(data);
       },
@@ -101,14 +106,49 @@ export class BacktestDetailComponent implements OnInit {
       }
     )
   }
+  addCustomField(){
+    const body = {
+      id: this.id,
+    }
+    this.http.post<any>(environment.api + 'backtest/addCustomField', body,
+      { headers: this.configService.headers() }
+    ).subscribe(
+      data => {
+        console.log(data);
+        this.httpGet();
+      },
+      e => {
+        console.log(e);
+      },
+    );
+  }
 
+  removeCustomeFlied(x:any){
+    const body = {
+      bcfId: x.id,
+      id : this.id,
+    }
+    console.log(body);
+    this.http.post<any>(environment.api + 'backtest/removeCustomeFlied', body,
+      { headers: this.configService.headers() }
+    ).subscribe(
+      data => {
+        console.log(data);
+        this.httpGet();
+      },
+      e => {
+        console.log(e);
+      },
+    );
+  }
   getObjectKeys(obj: any): string[] {
     return Object.keys(obj);
   }
 
-  test(obj:number){
-    return "Testny "+obj;
+  valueFromCustomField(field:string , index : number){
+    return this.detail[index]["f"+field]; 
   }
+ 
 
   fnAddItems() {
     const body = {
