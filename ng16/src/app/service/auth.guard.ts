@@ -12,10 +12,7 @@ export class authGuard {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    
-   
-    console.log( this.config.account() );
-
+     
 
     if (this.config.getToken()) {
       return true;

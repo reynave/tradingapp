@@ -9,13 +9,20 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td><button type="button" (click)="onCreateNew();" class="btn btn-primary">New backtest</button></td>
+                        <td><button type="button" (click)="onCreateNew();" class="btn btn-primary">New backtest</button>
+                        </td>
                     </tr>
                 </tfoot>
             </table>
         </div>
+        <div class="col-12">
+            <button type="button" (click)="test();">test</button>
+            <div>
+                <canvas id="canvas">{{chart}}</canvas>
+            </div>
+        </div>
 
 
-         
+
     </div>
 </div>

@@ -1,5 +1,8 @@
 <div class="container-fluid">
     <div class="row g-2 mb-3">
+        <div class="col-12">
+            <a class="btn" (click)="back()">back</a>
+        </div>
         <div class="col-9">
             <input class="form-control form-control-sm" placeholder="" [(ngModel)]="item.name" (change)="onUpdate()">
         </div>
@@ -18,9 +21,9 @@
     <div class="row g-2 mb-3">
 
         <div class="col-5 border">
-            <google-chart style='height: 300px; width: 100%;' [title]="chart.title" [type]="chart.type"
-                [data]="chart.data" [options]="chart.options">
-            </google-chart>
+            <div>
+                <canvas id="canvas">{{chart}}</canvas>
+            </div>
             {{summary |json}}
             <div>
                 <table class="table table-sm">
@@ -48,12 +51,12 @@
 
 
                         <tr>
-                            <td>Best of Win</td>
+                            <td>Best Win</td>
                             <td>: {{summary.bestWin | number : '1.2-2'}} pip</td>
                         </tr>
 
                         <tr>
-                            <td>Worst of Loss</td>
+                            <td>Worst Loss</td>
                             <td class="text-danger">: {{summary.worstLoss | number : '1.2-2'}} pip</td>
                         </tr>
 
@@ -73,7 +76,11 @@
                         </tr>
                         <tr>
                             <td>Longest Trading Time</td>
-                            <td>: {{summary.longestTradingTime}} hours</td>
+                            <td>: {{summary.longestTradingTime}} hours
+
+                                {{functionsService.hourToDays(123)}}
+                                
+                            </td>
                         </tr>
                         <tr>
                             <td>Faster Trading Time</td>
@@ -119,7 +126,7 @@
                             <td>{{x.f}}</td>
                             <td>{{x.name}}</td>
                             <td>{{x.iType}}</td>
-                            <td><a (click)="removeCustomeFlied(x);" ><i class="bi bi-trash-fill"></i></a></td>
+                            <td><a (click)="removeCustomeFlied(x);"><i class="bi bi-trash-fill"></i></a></td>
                         </tr>
                     </tbody>
                     <tfoot>

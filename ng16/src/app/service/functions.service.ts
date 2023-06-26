@@ -33,4 +33,8 @@ export class FunctionsService {
   
     return new Date(year, validMonth, day, validHour, validMinute);
   }
+
+  hourToDays(val : number){
+    return "gagaggag";
+  }
 }

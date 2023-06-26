@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
 import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service';
-
+import Chart from 'chart.js/auto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -11,7 +11,9 @@ export class Model {
   constructor(
     public name: string,
     public permissionId: number,
-    public url : string,
+    public url: string,
+    public borderColor: string,
+    public backgroundColor: string, 
   ) { }
 }
 
@@ -21,10 +23,10 @@ export class Model {
   styleUrls: ['./backtest-detail.component.css']
 })
 export class BacktestDetailComponent implements OnInit {
-getProperties(_t195: any): any {
-throw new Error('Method not implemented.');
-}
-  item = new Model("", 0,"");
+  getProperties(_t195: any): any {
+    throw new Error('Method not implemented.');
+  }
+  item = new Model("", 0, "","","");
   id: string = "";
   waiting: boolean = false;
   loading: boolean = false;
@@ -35,19 +37,17 @@ throw new Error('Method not implemented.');
   httpNote: string = "";
   fileName = "";
   deleteAll: boolean = false;
-  customField : any = [];
-  chart: any = {
-    title: "linechart",
-    type: "LineChart",
+  customField: any = [];
+  chart: any = [];
+  chartJsData = {
     data: [],
-    options: {
-      legend: { position: 'none' },
-      //https://developers.google.com/chart/interactive/docs/gallery/linechart
-    }
+    label: [],
   }
+  detailImageUrl: string = "";
+  backtestDetailId: string = "";
   constructor(
     private http: HttpClient,
-    private functionsService: FunctionsService,
+    public functionsService: FunctionsService,
     private configService: ConfigService,
     private modalService: NgbModal,
     private ativatedRoute: ActivatedRoute,
@@ -55,11 +55,36 @@ throw new Error('Method not implemented.');
   ) { }
 
   ngOnInit(): void {
-    this.id = this.ativatedRoute.snapshot.params['id']; 
-    this.market();
-    this.httpGet(); 
-  }
+    this.chart = new Chart('canvas', {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'Load data',
+              data: [],
+            },
+          ],
+        },
+        options: {
+          // animation: {
+          //   duration: 0
+          // },
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+    });
 
+    this.id = this.ativatedRoute.snapshot.params['id'];
+    this.market();
+    this.httpGet();
+  }
+  back() {
+    history.back();
+  }
   market() {
     this.http.get<any>(environment.api + "market/index", {
       headers: this.configService.headers(),
@@ -93,20 +118,24 @@ throw new Error('Method not implemented.');
           openTime: item.openDate.split(" ")[1].substring(0, 5),
           closeTime: item.closeDate.split(" ")[1].substring(0, 5),
         }));
-        this.onCalculation();
 
         this.item.name = data['item']['name'];
         this.item.permissionId = data['item']['permissionId'];
-        this.item.url = environment.api+'?share='+data['item']['url'];
-        //this.detail = mappedData;
-        console.log(data);
+        this.item.borderColor = data['item']['borderColor'];
+        this.item.backgroundColor = data['item']['backgroundColor'];
+        
+        this.item.url = environment.api + '?share=' + data['item']['url'];
+
+        this.onCalculation();
+
       },
       e => {
         console.log(e);
       }
     )
   }
-  addCustomField(){
+
+  addCustomField() {
     const body = {
       id: this.id,
     }
@@ -123,10 +152,10 @@ throw new Error('Method not implemented.');
     );
   }
 
-  removeCustomeFlied(x:any){
+  removeCustomeFlied(x: any) {
     const body = {
       bcfId: x.id,
-      id : this.id,
+      id: this.id,
     }
     console.log(body);
     this.http.post<any>(environment.api + 'backtest/removeCustomeFlied', body,
@@ -141,14 +170,14 @@ throw new Error('Method not implemented.');
       },
     );
   }
+
   getObjectKeys(obj: any): string[] {
     return Object.keys(obj);
   }
 
-  valueFromCustomField(field:string , index : number){
-    return this.detail[index]["f"+field]; 
+  valueFromCustomField(field: string, index: number) {
+    return this.detail[index]["f" + field];
   }
- 
 
   fnAddItems() {
     const body = {
@@ -167,7 +196,7 @@ throw new Error('Method not implemented.');
     );
   }
 
-  onSubmit(reload : boolean = true) {
+  onSubmit(reload: boolean = true) {
     clearTimeout(this.myTimeout);
     this.loading = true;
     const body = {
@@ -175,16 +204,14 @@ throw new Error('Method not implemented.');
       item: this.item,
       detail: this.detail,
     }
-    console.log("onSubmit", body);
     this.http.post<any>(environment.api + 'backtest/onSubmit', body,
       { headers: this.configService.headers() }
     ).subscribe(
       data => {
-        console.log(data);
-        if(reload == true){
+        if (reload == true) {
           this.httpGet();
         }
-       
+
       },
       e => {
         console.log(e);
@@ -200,46 +227,47 @@ throw new Error('Method not implemented.');
 
   summary: any = {
     i: 0,
-    winrate : 0,
-    win : 0,
-    loss : 0,
+    winrate: 0,
+    win: 0,
+    loss: 0,
     totalPip: 0,
     consecutiveWin: 0,
     consecutiveLoss: 0,
     averageRr: 0,
     avaregeTradingTime: 0,
-    longestTradingTime : 0,
-    fasterTradingTime : 9999999,
-    bestWin : 0,
-    worstLoss : 0,
+    longestTradingTime: 0,
+    fasterTradingTime: 9999999,
+    bestWin: 0,
+    worstLoss: 0,
   }
 
-  onCalculation() { 
+  onCalculation() {
     this.summary.totalPip = 0;
     this.summary.totalRr = 0;
-
     this.summary.consecutiveWin = 0;
     this.summary.consecutiveLoss = 0;
     this.summary.averagePip = 0;
     this.summary.averageRr = 0;
-
     this.summary.win = 0;
-    this.summary.loss = 0; 
-    
-
+    this.summary.loss = 0;
     let saveWin = 0;
     let i = 0;
-   
+
     let hourDifference = 0;
     this.deleteAll = false;
 
-    const chartData: number[][] = [];
+    const chartLabel: any = [];
+    const chartData: any = [];
+
     let totalPip = 0;
-    chartData.push([0, 0 ]);
+    chartLabel.push(0);
+    chartData.push(0);
+
     this.detail.forEach((el: any) => {
 
       totalPip += parseFloat(el['tp']);
-      chartData.push([i+1, totalPip ]);
+      chartLabel.push(i + 1);
+      chartData.push(totalPip);
 
       if (el['checkbox'] == true) this.deleteAll = true;
       this.summary.totalPip += parseFloat(el['tp']);
@@ -254,10 +282,10 @@ throw new Error('Method not implemented.');
       }
 
 
-      if(this.summary.bestWin < parseFloat(el['tp']) ){
+      if (this.summary.bestWin < parseFloat(el['tp'])) {
         this.summary.bestWin = parseFloat(el['tp']);
       }
-      if(this.summary.worstLoss > parseFloat(el['tp'])  &&  parseFloat(el['tp']) < 0){
+      if (this.summary.worstLoss > parseFloat(el['tp']) && parseFloat(el['tp']) < 0) {
         this.summary.worstLoss = parseFloat(el['tp']);
       }
 
@@ -293,37 +321,50 @@ throw new Error('Method not implemented.');
         minute: el['closeTime'].split(":")[1],
       }
       hourDifference += this.functionsService.getHourDifference(el['openDate'], openTime, el['closeDate'], closeTime);
-     
+
       this.detail[i]['tradingTime'] = hourDifference;
 
-      if(this.summary.longestTradingTime < hourDifference){
+      if (this.summary.longestTradingTime < hourDifference) {
         this.summary.longestTradingTime = hourDifference;
       }
-      if(this.summary.fasterTradingTime > hourDifference){
+      if (this.summary.fasterTradingTime > hourDifference) {
         this.summary.fasterTradingTime = hourDifference;
       }
-
       i++;
-
     });
-    console.log(saveWin);
-    this.summary.winrate = (this.summary.win / i) * 100; 
+
+    this.summary.winrate = (this.summary.win / i) * 100;
     this.summary.avaregeTradingTime = hourDifference / i;
     this.summary.averageRr = this.summary.totalRr / i;
     this.summary.averagePip = this.summary.totalPip / i;
-    console.log(chartData);
-
-    this.chart.data = chartData;
-    
+    this.chartJsData = {
+      label: chartLabel,
+      data: chartData,
+    }
+    console.log(this.chartJsData);
+    this.chartJsUpdate();
   }
-
+  chartJsUpdate(){
+    this.chart.data.labels = this.chartJsData.label;
+    this.chart.data.datasets = [
+      {
+        label: this.item.name,
+        data: this.chartJsData.data,
+        fill: false,
+        borderColor:  this.item.borderColor,
+        backgroundColor: this.item.backgroundColor,
+      },
+    ];
+    
+    this.chart.update();
+  }
+  
   onUpdate() {
-    this.onCalculation();  
-    console.log("waiting...", this.waiting);
+    this.onCalculation();
+    console.log("Saving...", this.waiting);
     if (this.waiting == false) {
       this.waiting = true;
       this.myTimeout = setTimeout(() => {
-        console.log(this.item);
         this.waiting = false;
         this.onSubmit();
       }, 2000);
@@ -357,7 +398,6 @@ throw new Error('Method not implemented.');
     this.modalService.open(content, { size: 'xl' });
   }
 
-  backtestDetailId: string = "";
   openImg(content: any, x: any) {
     this.detailSelect = x;
     console.log(this.detailSelect);
@@ -398,19 +438,19 @@ throw new Error('Method not implemented.');
     );
   }
 
-  detailImageUrl: string = "";
+
   openFullscreen(content: any, url: string) {
     this.modalService.dismissAll();
     this.detailImageUrl = url;
     this.modalService.open(content, { fullscreen: true });
   }
 
-  backGalleries(content: any){
+  backGalleries(content: any) {
     this.modalService.dismissAll();
     this.modalService.open(content, { size: 'xl' });
   }
 
- 
+
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
