@@ -3,17 +3,21 @@
         <div class="col-12">
             <table class="table table-sm">
                 <tbody>
-                    <tr *ngFor="let x of items">
+                    <tr *ngFor="let x of items; let i = index">
+                        <td>{{i+1}}</td>
                         <td> <a [routerLink]="[ '/backtest', x.id ]">{{x.name}}</a></td>
+                        <td> {{x.version}}</td>
+                        <td> <span [innerHTML]="x.fontIcon" title="{{x.permission}}"></span></td>
+                        <td> <span class="badge"  [ngStyle]="{'background': x.backgroundColor}" >Color</span>  </td>
+                        <td> {{x.update_date | date:'medium'}}</td>
                     </tr>
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td><button type="button" (click)="onCreateNew();" class="btn btn-primary">New backtest</button>
-                        </td>
-                    </tr>
-                </tfoot>
+               
             </table>
+
+            <div class="text-end my-2">
+                <button type="button" (click)="onCreateNew();" class="btn btn-primary">New backtest</button>
+            </div>
         </div>
         <div class="col-12">
             <button type="button" (click)="test();">test</button>

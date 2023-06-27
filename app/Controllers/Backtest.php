@@ -8,9 +8,11 @@ class Backtest extends BaseController
 {
     public function index()
     {
-        $items = $this->db->query("SELECT * FROM 
-             backtest WHERE presence = 1 and accountId = '" . model("Core")->accountId() . "'
-             ORDER BY input_date ASC
+        $items = $this->db->query("SELECT b.*, p.name AS 'permission' , p.fontIcon
+        FROM backtest as  b
+        JOIN permission AS p ON p.id = b.permissionId
+        WHERE b.presence = 1 AND b.accountId = '" . model("Core")->accountId() . "'
+        ORDER BY b.input_date ASC 
         ")->getResultArray();
         $data = array(
             "error" => false,
@@ -31,8 +33,8 @@ class Backtest extends BaseController
         if ($post) {
 
             $this->db->table("backtest")->insert([
-                "id" => time(),
-                "name" => "New",
+                "id" => model("Core")->number("backtest"),
+                "name" => "New ".date("Y-m-d H:i"),
                 "url" => uniqid(),
                 "accountId" => model("Core")->accountId(),
                 "presence" => 1,
