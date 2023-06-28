@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
 import { ConfigService } from 'src/app/service/config.service';
 import { ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import Chart from 'chart.js/auto';
 
 @Component({
@@ -17,7 +19,8 @@ export class BacktestComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -113,6 +116,7 @@ export class BacktestComponent implements OnInit {
       headers: this.configService.headers()
     }).subscribe(
       data => {
+        console.log(data);
         //   this.items = data['items'];
         this.httpGet();
       },
@@ -122,4 +126,13 @@ export class BacktestComponent implements OnInit {
     )
   }
 
+  item : any = [];
+  open(content: any, x: any) {
+    this.item = x;
+		this.modalService.open(content, { size:'md'});
+	}
+
+  gaga(){
+    console.log("gaga ok");
+  }
 }

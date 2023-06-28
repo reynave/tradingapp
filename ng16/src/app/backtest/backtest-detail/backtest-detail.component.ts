@@ -44,7 +44,7 @@ export class BacktestDetailComponent implements OnInit {
     label: [],
   }
   detailImageUrl: string = "";
-  backtestDetailId: string = "";
+  journalDetailId: string = "";
   constructor(
     private http: HttpClient,
     public functionsService: FunctionsService,
@@ -208,6 +208,7 @@ export class BacktestDetailComponent implements OnInit {
       { headers: this.configService.headers() }
     ).subscribe(
       data => {
+        console.log("onSubmit Done");
         if (reload == true) {
           this.httpGet();
         }
@@ -401,8 +402,8 @@ export class BacktestDetailComponent implements OnInit {
   openImg(content: any, x: any) {
     this.detailSelect = x;
     console.log(this.detailSelect);
-    this.backtestDetailId = x.id;
-    this.router.navigate(['backtest', this.id], { queryParams: { backtestDetailId: x.id } }).then(
+    this.journalDetailId = x.id;
+    this.router.navigate(['backtest', this.id], { queryParams: { journalDetailId: x.id } }).then(
       () => {
         this.http.get<any>(environment.api + 'backtest/detailImages?id=' + x.id,
           { headers: this.configService.headers() }
@@ -423,7 +424,7 @@ export class BacktestDetailComponent implements OnInit {
   removeImages(x: any) {
     const body = {
       id: x.id,
-      backtestDetailId: x.backtestDetailId,
+      journalDetailId: x.journalDetailId,
     }
     this.http.post<any>(environment.api + 'backtest/removeImages?', body,
       { headers: this.configService.headers() }
@@ -460,7 +461,7 @@ export class BacktestDetailComponent implements OnInit {
       const formData = new FormData();
 
       formData.append("userfile", file);
-      formData.append("backtestDetailId", this.backtestDetailId);
+      formData.append("journalDetailId", this.journalDetailId);
       formData.append("table", "pages");
       formData.append("token", "123");
       const upload$ = this.http.post(environment.api + "/upload/uploadImages", formData);
@@ -468,7 +469,7 @@ export class BacktestDetailComponent implements OnInit {
         data => {
           console.log(data);
           this.httpNote = "";
-          this.http.get<any>(environment.api + 'backtest/detailImages?id=' + this.backtestDetailId,
+          this.http.get<any>(environment.api + 'backtest/detailImages?id=' + this.journalDetailId,
             { headers: this.configService.headers() }
           ).subscribe(
             data => {

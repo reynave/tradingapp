@@ -1,18 +1,38 @@
 <div class="container">
     <div class="row">
-        <div class="col-12">
-            <table class="table table-sm">
+        <div class="col-12 mt-2">
+            <table class="table table-sm border">
+                <thead>
+                    <tr>
+                        <th width="40px"></th>
+                        <th>No</th>
+                        <th>Title</th>
+                        <th>Version</th>
+                        <th>Permisson</th>
+                        <th>Color </th>
+                        <th>Update Date</th>
+                        <th>Owner</th>
+                        <th></th>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr *ngFor="let x of items; let i = index">
+                        <td class="text-center"><input type="checkbox"></td>
                         <td>{{i+1}}</td>
                         <td> <a [routerLink]="[ '/backtest', x.id ]">{{x.name}}</a></td>
                         <td> {{x.version}}</td>
                         <td> <span [innerHTML]="x.fontIcon" title="{{x.permission}}"></span></td>
-                        <td> <span class="badge"  [ngStyle]="{'background': x.backgroundColor}" >Color</span>  </td>
+                        <td> <span class="badge" [ngStyle]="{'background': x.borderColor}">Color</span> </td>
                         <td> {{x.update_date | date:'medium'}}</td>
+                        <td> {{x.ownBy}}</td>
+                        <td>
+                            <a [hidden]="i==0" (click)="open(content,x)" class="mx-1"><i class="bi bi-person-plus"></i></a>
+                           <a class="mx-1"> <i class="bi bi-trash3" ></i> </a>
+                        </td>
+
                     </tr>
                 </tbody>
-               
+
             </table>
 
             <div class="text-end my-2">
@@ -30,3 +50,73 @@
 
     </div>
 </div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4>Share "{{item.name}}"</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+
+        <div class="row mb-2">
+            <div class="col-12 mb-4">
+                <div>
+                    <strong> General access</strong>
+                </div>
+                <div ngbDropdown class="d-inline-block">
+                    <button type="button" class="btn btn-sm px-0" id="dropdownBasic1" ngbDropdownToggle>
+                        Share
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1"> 
+                        <button ngbDropdownItem (click)="gaga()">Private</button>
+                        <button ngbDropdownItem>Share</button>
+                        <button ngbDropdownItem>Share + Comments</button>
+                    </div>
+                </div>
+                <div>
+                    <small>Only people with access can open with the link</small>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <input type="text" class="form-control form-control-lg" placeholder="Add People with email">
+            </div>
+            <div class="col-12 mb-2">
+                <strong> People with access</strong>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-9">
+                <div>
+                    <strong> Felix Reynave (you)</strong>
+                </div>
+                <small>renaldi@gmail.com</small>
+            </div>
+            <div class="col-3 align-self-center text-end">
+                Owner
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-9">
+                <div>
+                    <strong> Wawa</strong>
+                </div>
+                <small>wawa@gmail.com</small>
+            </div>
+            <div class="col-3 align-self-center text-end">
+                <input type="checkbox"> <input type="checkbox"> <input type="checkbox">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <button type="button" class="btn btn-outline-dark"  ><i class="bi bi-link"></i> Copy Link</button> 
+            </div>  
+            <div class="col-6 text-end">
+                <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Done</button> 
+            </div>
+
+        </div>
+    </div>
+
+</ng-template>

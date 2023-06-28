@@ -107,9 +107,9 @@ class Upload extends BaseController
                 //         ->save($pathSave);
                 // }
  
-                $this->db->table('backtest_detail_images')->insert([ 
+                $this->db->table('journal_detail_images')->insert([ 
                     "img"               => base_url() . 'uploads/' . $file->getName(),
-                    "backtestDetailId"  => $data['post']['backtestDetailId'],
+                    "journalDetailId"  => $data['post']['journalDetailId'],
                     "input_date"        => date("Y-m-d H:i:s"),
                     "update_date"       => date("Y-m-d H:i:s"), 
                 ]);
