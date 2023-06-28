@@ -17,17 +17,29 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let x of items; let i = index">
-                        <td class="text-center"><input type="checkbox"></td>
+                        <td class="text-center"><input [hidden]="x.presence == '4'" type="checkbox"
+                                [(ngModel)]="x.checkbox"></td>
                         <td>{{i+1}}</td>
-                        <td> <a [routerLink]="[ '/backtest', x.id ]">{{x.name}}</a></td>
-                        <td> {{x.version}}</td>
-                        <td> <span [innerHTML]="x.fontIcon" title="{{x.permission}}"></span></td>
-                        <td> <span class="badge" [ngStyle]="{'background': x.borderColor}">Color</span> </td>
-                        <td> {{x.update_date | date:'medium'}}</td>
-                        <td> {{x.ownBy}}</td>
+                        <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> <a
+                                [routerLink]="[ '/backtest', x.id ]">{{x.name}}</a></td>
+                        <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.version}}</td>
+                        <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"><span
+                                [innerHTML]="x.fontIcon" title="{{x.permission}}"></span></td>
                         <td>
-                            <a [hidden]="i==0" (click)="open(content,x)" class="mx-1"><i class="bi bi-person-plus"></i></a>
-                           <a class="mx-1"> <i class="bi bi-trash3" ></i> </a>
+                            <span class="badge" *ngIf="x.presence != '4'"
+                                [ngStyle]="{'background': x.borderColor}">Color</span>
+                            <span class="badge bg-danger" *ngIf="x.presence == '4'">Delete</span>
+
+                        </td>
+                        <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.update_date |
+                            date:'medium'}}</td>
+                        <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.ownBy}}</td>
+                        <td>
+                            <span [hidden]="x.presence == '4'">
+                                <a [hidden]="i==0" (click)="open(content,x)" class="mx-1">
+                                    <i class="bi bi-person-plus"></i>
+                                </a>
+                            </span>
                         </td>
 
                     </tr>
@@ -36,7 +48,9 @@
             </table>
 
             <div class="text-end my-2">
-                <button type="button" (click)="onCreateNew();" class="btn btn-primary">New backtest</button>
+                <button type="button" (click)="fnRemovePresence();" class="btn btn-danger mx-1">Clear </button>
+                <button type="button" (click)="fnDeleteAll();" class="btn btn-danger mx-1">Delete </button>
+                <button type="button" (click)="onCreateNew();" class="btn btn-primary mx-1">New backtest</button>
             </div>
         </div>
         <div class="col-12">
@@ -61,59 +75,55 @@
         <div class="row mb-2">
             <div class="col-12 mb-4">
                 <div>
-                    <strong> General access</strong>
+                    <strong>General access</strong>
                 </div>
                 <div ngbDropdown class="d-inline-block">
-                    <button type="button" class="btn btn-sm px-0" id="dropdownBasic1" ngbDropdownToggle>
-                        Share
+                    <button type="button" class="btn btn-sm  " id="dropdownBasic1" ngbDropdownToggle>
+                        <span [innerHTML]="item.fontIcon" class="mx-2"></span> {{item.permission}}
                     </button>
-                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1"> 
-                        <button ngbDropdownItem (click)="gaga()">Private</button>
-                        <button ngbDropdownItem>Share</button>
-                        <button ngbDropdownItem>Share + Comments</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                        <button ngbDropdownItem (click)="onUpdatePermission(x)" *ngFor="let x of permission">
+                            <span [innerHTML]="x.fontIcon" class="mx-2"></span> {{x.name}}
+                        </button>
                     </div>
                 </div>
                 <div>
                     <small>Only people with access can open with the link</small>
                 </div>
             </div>
-            <div class="col-12 mb-2">
-                <input type="text" class="form-control form-control-lg" placeholder="Add People with email">
-            </div>
+
             <div class="col-12 mb-2">
                 <strong> People with access</strong>
             </div>
         </div>
 
-        <div class="row mb-2">
+        <div class="row mb-2" *ngFor="let x of journalAccess">
             <div class="col-9">
                 <div>
-                    <strong> Felix Reynave (you)</strong>
+                    <strong> {{x.name}} </strong>{{x.owner == '1' ? "(you)":""}}
                 </div>
-                <small>renaldi@gmail.com</small>
+                <small>{{x.email}}</small>
             </div>
             <div class="col-3 align-self-center text-end">
-                Owner
+                <span *ngIf="x.owner == '1'">
+                    Owner
+                </span>
             </div>
+
+
+            <div class="col-12 my-3">
+                <input type="text" class="form-control form-control-lg" placeholder="Add People with email">
+            </div>
+
         </div>
 
-        <div class="row mb-5">
-            <div class="col-9">
-                <div>
-                    <strong> Wawa</strong>
-                </div>
-                <small>wawa@gmail.com</small>
-            </div>
-            <div class="col-3 align-self-center text-end">
-                <input type="checkbox"> <input type="checkbox"> <input type="checkbox">
-            </div>
-        </div>
-        <div class="row">
+        <div class="row mt-4">
             <div class="col-6">
-                <button type="button" class="btn btn-outline-dark"  ><i class="bi bi-link"></i> Copy Link</button> 
-            </div>  
+                <button type="button" class="btn btn-outline-dark rounded-pill"><i class="bi bi-link"></i> Copy
+                    Link</button>
+            </div>
             <div class="col-6 text-end">
-                <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Done</button> 
+                <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Done</button>
             </div>
 
         </div>

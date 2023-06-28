@@ -10,22 +10,29 @@ class Backtest extends BaseController
     {
         
         $accountId = model("Core")->accountId(); 
-        $q1 = "SELECT  j.name AS 'permission', p.fontIcon, a.name AS 'ownBy',j.*, ja.owner
+        $q1 = "SELECT  p.name AS 'permission', p.fontIcon, a.name AS 'ownBy',j.*, ja.owner
         FROM journal_access AS ja
         JOIN journal AS j ON j.id = ja.journalId
         JOIN permission AS p ON p.id = j.permissionId
         JOIN account AS a ON a.id = j.accountId
         WHERE ja.accountId = '$accountId'
         ORDER BY ja.input_date  ASC";
-
         $items = $this->db->query($q1)->getResultArray();
+
+        $permission = "SELECT * FROM permission 
+        ORDER BY id ASC";
+        $permission = $this->db->query($permission)->getResultArray();
+
+
         $data = array(
             "error" => false,
             "items" => $items,
+            "permission" => $permission,
             "header" => model("Core")->header()
         );
         return $this->response->setJSON($data);
     }
+
 
     function onCreateNew()
     {
@@ -81,7 +88,7 @@ class Backtest extends BaseController
         return $this->response->setJSON($data);
     }
 
-    public function detail()
+    function detail()
     {
         $data = array(
             "error" => true,
@@ -116,8 +123,7 @@ class Backtest extends BaseController
         }
         return $this->response->setJSON($data);
     }
-
-
+ 
 
     function table()
     {
@@ -237,9 +243,8 @@ class Backtest extends BaseController
         }
         return $this->response->setJSON($data);
     }
-
-
-    public function detailImages()
+ 
+    function detailImages()
     {
         $data = array(
             "error" => true,

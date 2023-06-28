@@ -15,7 +15,10 @@ import Chart from 'chart.js/auto';
 export class BacktestComponent implements OnInit {
   items: any = [];
   chart: any = [];
+  permission : any = [];
   loading: boolean = false;
+  item : any = [];
+  journalAccess : any = [];
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
@@ -27,6 +30,7 @@ export class BacktestComponent implements OnInit {
     this.httpGet();
     this.myChartjs();
   }
+
   test() {
     this.chart.destroy();
     this.chart = new Chart('canvas', {
@@ -52,6 +56,7 @@ export class BacktestComponent implements OnInit {
     });
 
   }
+
   myChartjs() {
  
     this.chart = new Chart('canvas', {
@@ -95,10 +100,11 @@ export class BacktestComponent implements OnInit {
 
 
   httpGet() {
-    this.http.get<any>(environment.api + "backtest/index", {
+    this.http.get<any>(environment.api + "journal/index", {
       headers: this.configService.headers()
     }).subscribe(
       data => {
+        this.permission = data['permission'];
         this.items = data['items'];
         console.log(data);
       },
@@ -112,7 +118,7 @@ export class BacktestComponent implements OnInit {
     const body = {
       insert: true,
     }
-    this.http.post<any>(environment.api + "backtest/onCreateNew", body, {
+    this.http.post<any>(environment.api + "journal/onCreateNew", body, {
       headers: this.configService.headers()
     }).subscribe(
       data => {
@@ -126,13 +132,77 @@ export class BacktestComponent implements OnInit {
     )
   }
 
-  item : any = [];
+  onUpdatePermission(x :any){
+    console.log(x, this.item);
+    const body = {
+      permission : x,
+      item : this.item,
+    }
+    this.http.post<any>(environment.api + "journal/onUpdatePermission", body, {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.item['fontIcon'] = x.fontIcon;
+         this.item['permission'] = x.name;
+        
+        this.httpGet();
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
+
   open(content: any, x: any) {
     this.item = x;
-		this.modalService.open(content, { size:'md'});
+    this.http.get<any>(environment.api + "journal/access?journalId="+x.id, {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.journalAccess = data['journal_access'];
+        this.modalService.open(content, { size:'md'});
+      
+      },
+      e => {
+        console.log(e);
+      }
+    )
+		
 	}
-
-  gaga(){
-    console.log("gaga ok");
+  fnRemovePresence(){
+    const body = {
+      remove: true,
+    }
+    this.http.post<any>(environment.api + "journal/fnRemovePresence", body, {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log(data); 
+        this.httpGet();
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
+  fnDeleteAll(){
+    if(confirm("Delete all check list ?") ){
+      const body = {
+        items: this.items,
+      }
+      this.http.post<any>(environment.api + "journal/fnDeleteAll", body, {
+        headers: this.configService.headers()
+      }).subscribe(
+        data => {
+          console.log(data); 
+          this.httpGet();
+        },
+        e => {
+          console.log(e);
+        }
+      )
+    }
   }
 }
