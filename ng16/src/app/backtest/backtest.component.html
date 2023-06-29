@@ -1,6 +1,7 @@
 <div class="container">
     <div class="row">
         <div class="col-12 mt-2">
+            <h4>Folder 1</h4>
             <table class="table table-sm border">
                 <thead>
                     <tr>
@@ -13,10 +14,11 @@
                         <th>Update Date</th>
                         <th>Owner</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr *ngFor="let x of items; let i = index">
+                <tbody class="sortable">
+                    <tr *ngFor="let x of items; let i = index" data-id="{{x.id}}">
                         <td class="text-center"><input [hidden]="x.presence == '4'" type="checkbox"
                                 [(ngModel)]="x.checkbox"></td>
                         <td>{{i+1}}</td>
@@ -28,17 +30,22 @@
                         <td>
                             <span class="badge" *ngIf="x.presence != '4'"
                                 [ngStyle]="{'background': x.borderColor}">Color</span>
-                            <span class="badge bg-danger" *ngIf="x.presence == '4'">Delete</span>
+                            <span class="badge bg-light text-warning" *ngIf="x.presence == '4'">Trash Bin</span>
 
                         </td>
                         <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.update_date |
                             date:'medium'}}</td>
                         <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.ownBy}}</td>
-                        <td>
-                            <span [hidden]="x.presence == '4'">
-                                <a [hidden]="i==0" (click)="open(content,x)" class="mx-1">
+                        <td> 
+                            <span *ngIf="itemSetting(x)">
+                                <a (click)="open(content,x)" class="mx-1">
                                     <i class="bi bi-person-plus"></i>
                                 </a>
+                            </span> 
+                        </td>
+                        <td>
+                            <span class="handle">
+                                <i class="bi bi-list"></i>
                             </span>
                         </td>
 
@@ -48,7 +55,8 @@
             </table>
 
             <div class="text-end my-2">
-                <button type="button" (click)="fnRemovePresence();" class="btn btn-danger mx-1">Clear </button>
+                <button type="button" (click)="fnClearTrashBin();" class="btn btn-warning mx-1">Clear Trash bin
+                </button>
                 <button type="button" (click)="fnDeleteAll();" class="btn btn-danger mx-1">Delete </button>
                 <button type="button" (click)="onCreateNew();" class="btn btn-primary mx-1">New backtest</button>
             </div>
@@ -96,8 +104,9 @@
                 <strong> People with access</strong>
             </div>
         </div>
-
+        
         <div class="row mb-2" *ngFor="let x of journalAccess">
+          
             <div class="col-9">
                 <div>
                     <strong> {{x.name}} </strong>{{x.owner == '1' ? "(you)":""}}
@@ -108,13 +117,20 @@
                 <span *ngIf="x.owner == '1'">
                     Owner
                 </span>
+                <span *ngIf="x.owner != '1'">
+                    <a (click)="onRemoveAccess(x)"> <i class="bi bi-x-circle"></i> </a>
+                </span>
             </div>
+        </div>
+        <div class="row my-3">
+            <div class="col-12 ">
 
-
-            <div class="col-12 my-3">
-                <input type="text" class="form-control form-control-lg" placeholder="Add People with email">
+                <input type="email" class="form-control " required placeholder="Add People with email"
+                    [(ngModel)]="addUser" (keydown.enter)="onSubmitUser()" #email="ngModel" email>
+                <div [hidden]="email.valid || email.pristine" class="text-danger my-1">
+                    Email is required
+                </div>
             </div>
-
         </div>
 
         <div class="row mt-4">

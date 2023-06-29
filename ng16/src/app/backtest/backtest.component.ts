@@ -4,8 +4,9 @@ import { environment } from 'src/environments/environment.development';
 import { ConfigService } from 'src/app/service/config.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import Chart from 'chart.js/auto';
+
+declare var $: any;
 
 @Component({
   selector: 'app-backtest',
@@ -15,10 +16,10 @@ import Chart from 'chart.js/auto';
 export class BacktestComponent implements OnInit {
   items: any = [];
   chart: any = [];
-  permission : any = [];
+  permission: any = [];
   loading: boolean = false;
-  item : any = [];
-  journalAccess : any = [];
+  item: any = [];
+  journalAccess: any = [];
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
@@ -58,7 +59,7 @@ export class BacktestComponent implements OnInit {
   }
 
   myChartjs() {
- 
+
     this.chart = new Chart('canvas', {
       type: 'line',
       data: {
@@ -81,7 +82,7 @@ export class BacktestComponent implements OnInit {
 
           {
             label: '# of Votes 3',
-            data: [ 5, 2, 3, 0, 12, 19, 3,],
+            data: [5, 2, 3, 0, 12, 19, 3,],
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
           },
@@ -95,7 +96,7 @@ export class BacktestComponent implements OnInit {
         },
       },
     });
-   
+
   }
 
 
@@ -106,7 +107,33 @@ export class BacktestComponent implements OnInit {
       data => {
         this.permission = data['permission'];
         this.items = data['items'];
-        console.log(data);
+      //  console.log(data); 
+        var self = this;
+        $(function () {
+          $(".sortable").sortable({
+            handle: ".handle",
+            update: function (event: any, ui: any) {
+              const order: any[] = [];
+              $(".sortable tr").each((index: number, element: any) => {
+                const itemId = $(element).attr("id");
+                order.push(itemId);
+              });
+              
+              self.http.post<any>(environment.api + "journal/sorting", order, {
+                headers: self.configService.headers(),
+              }).subscribe(
+                data => {
+                 // console.log(data);  
+                 // console.log(self.items)  
+                },
+                e => {
+                  console.log(e);
+                }
+              )
+
+            }
+          });
+        });
       },
       e => {
         console.log(e);
@@ -132,11 +159,11 @@ export class BacktestComponent implements OnInit {
     )
   }
 
-  onUpdatePermission(x :any){
+  onUpdatePermission(x: any) {
     console.log(x, this.item);
     const body = {
-      permission : x,
-      item : this.item,
+      permission: x,
+      item: this.item,
     }
     this.http.post<any>(environment.api + "journal/onUpdatePermission", body, {
       headers: this.configService.headers()
@@ -144,8 +171,8 @@ export class BacktestComponent implements OnInit {
       data => {
         console.log(data);
         this.item['fontIcon'] = x.fontIcon;
-         this.item['permission'] = x.name;
-        
+        this.item['permission'] = x.name;
+
         this.httpGet();
       },
       e => {
@@ -156,30 +183,31 @@ export class BacktestComponent implements OnInit {
 
   open(content: any, x: any) {
     this.item = x;
-    this.http.get<any>(environment.api + "journal/access?journalId="+x.id, {
+    this.http.get<any>(environment.api + "journal/access?journalId=" + x.id, {
       headers: this.configService.headers()
     }).subscribe(
       data => {
         console.log(data);
         this.journalAccess = data['journal_access'];
-        this.modalService.open(content, { size:'md'});
-      
+        this.modalService.open(content, { size: 'md' });
+
       },
       e => {
         console.log(e);
       }
     )
-		
-	}
-  fnRemovePresence(){
+
+  }
+
+  fnClearTrashBin() {
     const body = {
       remove: true,
     }
-    this.http.post<any>(environment.api + "journal/fnRemovePresence", body, {
+    this.http.post<any>(environment.api + "journal/fnClearTrashBin", body, {
       headers: this.configService.headers()
     }).subscribe(
       data => {
-        console.log(data); 
+        console.log(data);
         this.httpGet();
       },
       e => {
@@ -187,8 +215,9 @@ export class BacktestComponent implements OnInit {
       }
     )
   }
-  fnDeleteAll(){
-    if(confirm("Delete all check list ?") ){
+
+  fnDeleteAll() {
+    if (confirm("Delete all check list ?")) {
       const body = {
         items: this.items,
       }
@@ -196,7 +225,7 @@ export class BacktestComponent implements OnInit {
         headers: this.configService.headers()
       }).subscribe(
         data => {
-          console.log(data); 
+          console.log(data);
           this.httpGet();
         },
         e => {
@@ -204,5 +233,60 @@ export class BacktestComponent implements OnInit {
         }
       )
     }
+  }
+
+  itemSetting(x:any){
+    let isDelete = false; 
+    if(x.presence == '1' && x.admin == '1'){
+      isDelete = true;
+    } 
+    return isDelete;
+  }
+
+  addUser: string = "";
+  onSubmitUser() { 
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (!this.addUser.match(mailformat)) {
+      alert("Valid email address!"); 
+    }else{
+      const body = {
+        addUser : this.addUser,
+        item : this.item,
+      }
+      this.http.post<any>(environment.api + "journal/onSubmitUser", body, {
+        headers: this.configService.headers()
+      }).subscribe(
+        data => {
+          console.log(data);
+          this.journalAccess = data['journal_access'];
+          if(data['duplicate'] == true){
+            alert("Email already join.");
+          }
+          //this.httpGet();
+        },
+        e => {
+          console.log(e);
+        }
+      )
+    }
+  
+  }
+
+  onRemoveAccess(x:any){
+    const body = {
+      access : x,
+      item : this.item,
+    }
+    this.http.post<any>(environment.api + "journal/onRemoveAccess", body, {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.journalAccess = data['journal_access']; 
+      },
+      e => {
+        console.log(e);
+      }
+    )
   }
 }

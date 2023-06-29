@@ -6,17 +6,17 @@ use CodeIgniter\Model;
 
 class Journal extends BaseController
 {
-    public function index()
+    function index()
     {
 
         $accountId = model("Core")->accountId();
-        $q1 = "SELECT  p.name AS 'permission', p.fontIcon, a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence
+        $q1 = "SELECT  p.name AS 'permission', p.fontIcon, a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin
         FROM journal_access AS ja
         JOIN journal AS j ON j.id = ja.journalId
         JOIN permission AS p ON p.id = j.permissionId
         JOIN account AS a ON a.id = j.accountId
         WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4)
-        ORDER BY ja.input_date  ASC";
+        ORDER BY ja.sorting ASC, ja.input_date ASC";
         $items = $this->db->query($q1)->getResultArray();
 
         $permission = "SELECT * FROM permission 
@@ -27,6 +27,7 @@ class Journal extends BaseController
         $data = array(
             "error" => false,
             "items" => $items,
+            "q" => $q1,
             "permission" => $permission,
             "header" => model("Core")->header()
         );
@@ -34,12 +35,12 @@ class Journal extends BaseController
     }
 
     function access()
-    { 
-       // $accountId = model("Core")->accountId();
+    {
+        // $accountId = model("Core")->accountId();
         $q1 = "SELECT ja.*, a.name, a.email
         FROM journal_access AS ja
         JOIN account AS a ON a.id = ja.accountId
-        WHERE ja.presence = 1 and ja.journalId = '".$this->request->getVar()['journalId']."'
+        WHERE ja.presence = 1 and ja.journalId = '" . $this->request->getVar()['journalId'] . "'
         ORDER BY  ja.owner DESC, ja.input_date  ASC ";
         $items = $this->db->query($q1)->getResultArray();
 
@@ -83,6 +84,7 @@ class Journal extends BaseController
                 "owner" => 1,
                 "changeable" => 1,
                 "editable" => 1,
+                "admin" => 1,
                 "presence" => 1,
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
@@ -151,7 +153,7 @@ class Journal extends BaseController
                             "update_date" => date("Y-m-d H:i:s"),
                             "update_by" => model("Core")->accountId(),
                         ], "id = '" . $row['id'] . "' ");
-                        
+
                         $this->db->table("journal_detail")->update([
                             "presence" => 0,
                             "update_date" => date("Y-m-d H:i:s"),
@@ -164,8 +166,12 @@ class Journal extends BaseController
                             "update_date" => date("Y-m-d H:i:s"),
                             "update_by" => model("Core")->accountId(),
                         ], "journalId = '" . $row['id'] . "' ");
-
-                        
+                    } else {
+                        $this->db->table("journal_access")->update([
+                            "presence" => 4,
+                            "update_date" => date("Y-m-d H:i:s"),
+                            "update_by" => model("Core")->accountId(),
+                        ], "journalId = '" . $row['id'] . "' and accountId = '" . model("Core")->accountId() . "' ");
                     }
                 }
             }
@@ -174,7 +180,109 @@ class Journal extends BaseController
         return $this->response->setJSON($data);
     }
 
-    function fnRemovePresence(){
+    function onSubmitUser()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $accountId = model("Core")->select("id", "account", "email = '" . $post['addUser'] . "' and presence = 1 ");
+            $avaiable = $accountId ? true : false;
+            $duplicate = false;
+            $journal_access = [];
+            if ($avaiable == true) {
+
+                $duplicate = model("Core")->select("id", "journal_access", "accountId = '" . $accountId . "' and journalId = '" . $post['item']['id'] . "' and presence = 1 ") ? true : false;
+
+                if ($duplicate === false) {
+                    $this->db->table("journal_access")->update([
+                        "presence" => 0,
+                        "input_date" => date("Y-m-d H:i:s"),
+                        "input_by" => model("Core")->accountId(),
+                        "update_date" => date("Y-m-d H:i:s"),
+                        "update_by" => model("Core")->accountId(),
+                    ], " accountId = '$accountId' AND journalId = '" . $post['item']['id'] . "' ");
+
+
+                    $this->db->table("journal_access")->insert([
+                        "accountId" => $accountId,
+                        "journalId" => $post['item']['id'],
+                        "owner" => 0,
+                        "editable" => 1,
+                        "changeable" => 0,
+                        "presence" => 1,
+                        "input_date" => date("Y-m-d H:i:s"),
+                        "input_by" => model("Core")->accountId(),
+                        "update_date" => date("Y-m-d H:i:s"),
+                        "update_by" => model("Core")->accountId(),
+                    ]);
+                }
+            } else {
+                // $this->db->table("journal_access")->update([
+                //     "presence" => 0,
+                //     "update_date" => date("Y-m-d H:i:s"),
+                //     "update_by" => model("Core")->accountId(),
+                // ], "presence  = 4 AND accountId =  '".model("Core")->accountId()."' "); 
+            }
+
+            $q1 = "SELECT ja.*, a.name, a.email
+            FROM journal_access AS ja
+            JOIN account AS a ON a.id = ja.accountId
+            WHERE ja.presence = 1 and ja.journalId = '" . $post['item']['id'] . "'
+            ORDER BY  ja.owner DESC, ja.input_date  ASC ";
+            $journal_access = $this->db->query($q1)->getResultArray();
+
+            $data = [
+                "error" => false,
+                "avaiable" => $avaiable,
+                "post" => $post,
+                "duplicate" => $duplicate,
+                "journal_access" => $journal_access,
+            ];
+
+        }
+
+        return $this->response->setJSON($data);
+    }
+
+    function onRemoveAccess()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $this->db->table("journal_access")->update([
+                "presence" => 4,
+                "update_date" => date("Y-m-d H:i:s"),
+                "update_by" => model("Core")->accountId(),
+            ], "id = '" . $post['access']['id'] . "' and accountId = '" .$post['access']['accountId']  . "' ");
+
+            $q1 = "SELECT ja.*, a.name, a.email
+            FROM journal_access AS ja
+            JOIN account AS a ON a.id = ja.accountId
+            WHERE ja.presence = 1 and ja.journalId = '" . $post['item']['id'] . "'
+            ORDER BY  ja.owner DESC, ja.input_date  ASC ";
+            $journal_access = $this->db->query($q1)->getResultArray();
+
+            $data = [
+                "error" => false, 
+                "post" =>$post,
+                "journal_access" => $journal_access,
+            ];
+
+        }
+
+        return $this->response->setJSON($data);
+    }
+
+    function fnClearTrashBin()
+    {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
         $data = [
@@ -190,10 +298,29 @@ class Journal extends BaseController
                 "presence" => 0,
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
-            ], "presence  = 4 AND accountId =  '".model("Core")->accountId()."' ");
+            ], "presence  = 4 AND accountId =  '" . model("Core")->accountId() . "' ");
 
-            
         }
+
+        return $this->response->setJSON($data);
+    }
+
+    function sorting()
+    {
+        $post = $this->request->getVar();
+
+        $i = 1;
+        foreach ($post as $row) {
+            $this->db->table("journal_access")->update([
+                "sorting" => $i,
+                "update_date" => date("Y-m-d H:i:s"),
+                "update_by" => model("Core")->accountId(),
+            ], " journalId = '$row' AND accountId =  '" . model("Core")->accountId() . "' ");
+            $i++;
+        }
+        $data = [
+            "error" => false,
+        ];
 
         return $this->response->setJSON($data);
     }

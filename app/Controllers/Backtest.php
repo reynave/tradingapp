@@ -7,28 +7,9 @@ use CodeIgniter\Model;
 class Backtest extends BaseController
 {
     public function index()
-    {
-        
-        $accountId = model("Core")->accountId(); 
-        $q1 = "SELECT  p.name AS 'permission', p.fontIcon, a.name AS 'ownBy',j.*, ja.owner
-        FROM journal_access AS ja
-        JOIN journal AS j ON j.id = ja.journalId
-        JOIN permission AS p ON p.id = j.permissionId
-        JOIN account AS a ON a.id = j.accountId
-        WHERE ja.accountId = '$accountId'
-        ORDER BY ja.input_date  ASC";
-        $items = $this->db->query($q1)->getResultArray();
-
-        $permission = "SELECT * FROM permission 
-        ORDER BY id ASC";
-        $permission = $this->db->query($permission)->getResultArray();
-
-
+    { 
         $data = array(
-            "error" => false,
-            "items" => $items,
-            "permission" => $permission,
-            "header" => model("Core")->header()
+            "error" => false, 
         );
         return $this->response->setJSON($data);
     }
@@ -95,7 +76,7 @@ class Backtest extends BaseController
             "request" => $this->request->getVar(),
         );
 
-        $id = model("Core")->select("id", "journal", "id='" . $data['request']['id'] . "' and presence = 1");
+        $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
         if ($data['request']['id'] && $id) {
 
             $c = "SELECT id,f, name, iType FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
