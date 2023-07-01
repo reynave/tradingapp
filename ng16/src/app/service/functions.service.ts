@@ -35,6 +35,6 @@ export class FunctionsService {
   }
 
   hourToDays(val : number){
-    return "gagaggag";
+    return "hourToDays (SOON)";
   }
 }

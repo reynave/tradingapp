@@ -36,10 +36,10 @@ class Login extends BaseController
             "post" => $post,
             "note" => ""
         ];
-        if ($post && filter_var($post['model']['email'], FILTER_VALIDATE_EMAIL)) {
+        if ($post && filter_var($post['email'], FILTER_VALIDATE_EMAIL)) {
 
-            $email = $post['model']['email'];
-            $pass = $post['model']['passw'];
+            $email = $post['email'];
+            $pass = $post['pass'];
             $id = model('Core')->select("id", "account", "email='$email' and password = '$pass' and presence = 1 and status = 1 ");
             if ($id) {
 

@@ -20,6 +20,7 @@ export class BacktestComponent implements OnInit {
   loading: boolean = false;
   item: any = [];
   journalAccess: any = [];
+  addUser: string = "";
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
@@ -30,6 +31,7 @@ export class BacktestComponent implements OnInit {
   ngOnInit(): void {
     this.httpGet();
     this.myChartjs();
+    console.log(this.configService.account());
   }
 
   test() {
@@ -243,7 +245,7 @@ export class BacktestComponent implements OnInit {
     return isDelete;
   }
 
-  addUser: string = "";
+
   onSubmitUser() { 
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!this.addUser.match(mailformat)) {

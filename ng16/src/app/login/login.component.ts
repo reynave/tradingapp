@@ -36,11 +36,10 @@ export class LoginComponent implements OnInit {
     this.note = "Loading..!";
     const hash = CryptoJS.MD5(CryptoJS.enc.Latin1.parse(this.model['passw']));
     const md5 = hash.toString(CryptoJS.enc.Hex);
-
-    this.model['passw'] = md5;
-
+ 
     const body = {
-      model: this.model, 
+      email: this.model['email'], 
+      pass : md5,
       player_id: "", 
       ver : environment.ver
     }
