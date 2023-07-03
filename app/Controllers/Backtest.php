@@ -13,62 +13,8 @@ class Backtest extends BaseController
         );
         return $this->response->setJSON($data);
     }
-
-
-    function onCreateNew()
-    {
-        $json = file_get_contents('php://input');
-        $post = json_decode($json, true);
-        $data = [
-            "error" => true,
-            "post" => $post,
-        ];
-        if ($post) {
-            $this->db->transStart();
-            $journalId = model("Core")->number("backtest");
-            $this->db->table("journal")->insert([
-                "id" => $journalId,
-                "name" => "New " . date("Y-m-d H:i"),
-                "url" => uniqid(),
-                "borderColor" => "#3AA6B9",
-                "backgroundColor" => "#C1ECE4",
-                "accountId" => model("Core")->accountId(),
-                "presence" => 1,
-                "version" => 1,
-                "update_date" => date("Y-m-d H:i:s"),
-                "update_by" => model("Core")->accountId(),
-                "input_date" => date("Y-m-d H:i:s"),
-                "input_by" => model("Core")->accountId(),
-            ]);
-
-            $this->db->table("journal_access")->insert([ 
-                "accountId" => model("Core")->accountId(),
-                "journalId" => $journalId,
-                "owner" => 1,
-                "changeable" => 1,  
-                "editable" => 1, 
-                "presence" => 1,
-                "update_date" => date("Y-m-d H:i:s"),
-                "update_by" => model("Core")->accountId(),
-                "input_date" => date("Y-m-d H:i:s"),
-                "input_by" => model("Core")->accountId(),
-            ]);
-            $this->db->transComplete(); 
-            if ($this->db->transStatus() === false) {
-                $this->db->transRollback();
-            } else {
-                $this->db->transCommit();
-            }
-
-            $data = array(
-                "error" => false,
-                "transStatus" => $this->db->transStatus(),
-            );
-            
-        }
-        return $this->response->setJSON($data);
-    }
-
+ 
+   
     function detail()
     {
         $data = array(
@@ -340,7 +286,6 @@ class Backtest extends BaseController
 
         return $this->response->setJSON($data);
     }
-
 
     function fnDeleteAll()
     {

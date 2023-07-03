@@ -16,6 +16,8 @@ import { HomeComponent } from './home/home.component';
 import { BacktestDetailComponent } from './backtest/backtest-detail/backtest-detail.component';
 import { ReloginComponent } from './login/relogin/relogin.component';
 import { HeaderComponent } from './global/header/header.component';
+import { JournalComponent } from './journal/journal.component';
+import { BookComponent } from './book/book.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { HeaderComponent } from './global/header/header.component';
     HomeComponent,
     BacktestDetailComponent,
     ReloginComponent,
-    HeaderComponent
+    HeaderComponent,
+    JournalComponent,
+    BookComponent
   ],
   imports: [
     BrowserModule,

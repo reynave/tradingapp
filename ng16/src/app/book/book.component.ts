@@ -9,11 +9,13 @@ import Chart from 'chart.js/auto';
 declare var $: any;
 
 @Component({
-  selector: 'app-backtest',
-  templateUrl: './backtest.component.html',
-  styleUrls: ['./backtest.component.css']
+  selector: 'app-book',
+  templateUrl: './book.component.html',
+  styleUrls: ['./book.component.css']
 })
-export class BacktestComponent implements OnInit {
+export class BookComponent implements OnInit {
+  newJournal: string = "";
+  id: string = "";
   items: any = [];
   chart: any = [];
   permission: any = [];
@@ -21,95 +23,47 @@ export class BacktestComponent implements OnInit {
   item: any = [];
   journalAccess: any = [];
   addUser: string = "";
+  book: any = [];
+  editable :any = {
+    title : false,
+  }
   constructor(
+    private activatedRoute: ActivatedRoute,
     private http: HttpClient,
     private configService: ConfigService,
     private route: ActivatedRoute,
     private modalService: NgbModal
   ) { }
 
-  ngOnInit(): void {
+  public onChild(obj: any) {
+    console.log('obj child : ', obj);
+    this.id = obj['id'];
     this.httpGet();
-    this.myChartjs();
-    console.log(this.configService.account());
+  }
+  public updateHeader(){
+    const data = {
+      id : this.book.id,
+      name : this.book.name,
+    }
+    return data;
   }
 
-  test() {
-    this.chart.destroy();
-    this.chart = new Chart('canvas', {
-      type: 'line',
-      data: {
-        labels: ['start', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [
-          {
-            label: '# of Votes',
-            data: [0, 1, 2, 3, 4, 5, 6],
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
-
-  }
-
-  myChartjs() {
-
-    this.chart = new Chart('canvas', {
-      type: 'line',
-      data: {
-        labels: ['start', 'Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [
-          {
-            label: '# of Votes 1',
-            data: [0, 12, 19, 3, 5, 2, 3],
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            backgroundColor: 'rgb(75, 192, 192)',
-          },
-
-          {
-            label: '# of Votes 2',
-            data: [1, 42, 2, 5, 7, 1, 53],
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-          },
-
-          {
-            label: '# of Votes 3',
-            data: [5, 2, 3, 0, 12, 19, 3,],
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
-
+  ngOnInit() {
+    this.id = this.activatedRoute.snapshot.params["id"];
+    this.httpGet();
   }
 
 
   httpGet() {
-    this.http.get<any>(environment.api + "journal/index", {
+    this.editable.title = false;  
+    this.http.get<any>(environment.api + "journal/index/" + this.id, {
       headers: this.configService.headers()
     }).subscribe(
       data => {
         this.permission = data['permission'];
         this.items = data['items'];
-      //  console.log(data); 
+        console.log(data);
+        this.book = data['book'];
         var self = this;
         $(function () {
           $(".sortable").sortable({
@@ -120,13 +74,13 @@ export class BacktestComponent implements OnInit {
                 const itemId = $(element).attr("id");
                 order.push(itemId);
               });
-              
+
               self.http.post<any>(environment.api + "journal/sorting", order, {
                 headers: self.configService.headers(),
               }).subscribe(
                 data => {
-                  console.log(data);  
-                 // console.log(self.items)  
+                  console.log(data);
+                  // console.log(self.items)  
                 },
                 e => {
                   console.log(e);
@@ -143,22 +97,52 @@ export class BacktestComponent implements OnInit {
     )
   }
 
-  onCreateNew() {
-    const body = {
-      insert: true,
-    }
-    this.http.post<any>(environment.api + "journal/onCreateNew", body, {
-      headers: this.configService.headers()
-    }).subscribe(
-      data => {
-        console.log(data);
-        //   this.items = data['items'];
-        this.httpGet();
-      },
-      e => {
-        console.log(e);
+  fnEditableChange(){
+    if (this.book.name != "") {
+      console.log(this.book);
+    
+      const body = {
+        book: this.book, 
+        id: this.id
       }
-    )
+      this.http.post<any>(environment.api + "journal/fnEditableChange", body, {
+        headers: this.configService.headers()
+      }).subscribe(
+        data => { 
+          console.log(data);
+          this.editable.title = false;  
+        },
+        e => {
+          console.log(e);
+        }
+      )
+    }
+    
+  }
+
+  onCreateNew() {
+    if (this.newJournal != "") {
+
+
+      const body = {
+        insert: true,
+        name: this.newJournal,
+        id: this.id
+      }
+      this.http.post<any>(environment.api + "journal/onCreateNew", body, {
+        headers: this.configService.headers()
+      }).subscribe(
+        data => {
+          console.log(data);
+          this.newJournal = "";
+          //   this.items = data['items'];
+          this.httpGet();
+        },
+        e => {
+          console.log(e);
+        }
+      )
+    }
   }
 
   onUpdatePermission(x: any) {
@@ -237,22 +221,22 @@ export class BacktestComponent implements OnInit {
     }
   }
 
-  itemSetting(x:any){
-    let isDelete = false; 
-    if(x.presence == '1' && x.admin == '1'){
+  itemSetting(x: any) {
+    let isDelete = false;
+    if (x.presence == '1' && x.admin == '1') {
       isDelete = true;
-    } 
+    }
     return isDelete;
   }
- 
-  onSubmitUser() { 
+
+  onSubmitUser() {
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!this.addUser.match(mailformat)) {
-      alert("Valid email address!"); 
-    }else{
+      alert("Valid email address!");
+    } else {
       const body = {
-        addUser : this.addUser,
-        item : this.item,
+        addUser: this.addUser,
+        item: this.item,
       }
       this.http.post<any>(environment.api + "journal/onSubmitUser", body, {
         headers: this.configService.headers()
@@ -260,7 +244,7 @@ export class BacktestComponent implements OnInit {
         data => {
           console.log(data);
           this.journalAccess = data['journal_access'];
-          if(data['duplicate'] == true){
+          if (data['duplicate'] == true) {
             alert("Email already join.");
           }
           //this.httpGet();
@@ -270,24 +254,25 @@ export class BacktestComponent implements OnInit {
         }
       )
     }
-  
+
   }
 
-  onRemoveAccess(x:any){
+  onRemoveAccess(x: any) {
     const body = {
-      access : x,
-      item : this.item,
+      access: x,
+      item: this.item,
     }
     this.http.post<any>(environment.api + "journal/onRemoveAccess", body, {
       headers: this.configService.headers()
     }).subscribe(
       data => {
         console.log(data);
-        this.journalAccess = data['journal_access']; 
+        this.journalAccess = data['journal_access'];
       },
       e => {
         console.log(e);
       }
     )
   }
+
 }

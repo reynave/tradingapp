@@ -11,9 +11,7 @@ export class authGuard {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
-     
-
+  ): Observable<boolean> | Promise<boolean> | boolean { 
     if (this.config.getToken()) {
       return true;
     } else {

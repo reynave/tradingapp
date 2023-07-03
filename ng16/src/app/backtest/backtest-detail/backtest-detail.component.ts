@@ -13,7 +13,7 @@ export class Model {
     public permissionId: number,
     public url: string,
     public borderColor: string,
-    public backgroundColor: string, 
+    public backgroundColor: string,
   ) { }
 }
 
@@ -26,7 +26,7 @@ export class BacktestDetailComponent implements OnInit {
   getProperties(_t195: any): any {
     throw new Error('Method not implemented.');
   }
-  item = new Model("", 0, "","","");
+  item = new Model("", 0, "", "", "");
   id: string = "";
   waiting: boolean = false;
   loading: boolean = false;
@@ -56,44 +56,33 @@ export class BacktestDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.chart = new Chart('canvas', {
-        type: 'line',
-        data: {
-          labels: [],
-          datasets: [
-            {
-              label: 'Load data',
-              data: [],
-            },
-          ],
-        },
-        options: {
-          // animation: {
-          //   duration: 0
-          // },
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Load data',
+            data: [],
+          },
+        ],
+      },
+      
+      options: {
+        // animation: {
+        //   duration: 0
+        // },
+        scales: {
+          y: {
+            beginAtZero: true,
           },
         },
+      },
     });
 
     this.id = this.ativatedRoute.snapshot.params['id'];
-    this.market();
-    this.httpGet();
-  }
-  back() {
-    history.back();
-  }
-  market() {
-    this.http.get<any>(environment.api + "market/index", {
-      headers: this.configService.headers(),
-    }).subscribe(
-      data => {
-        this.selectMarket = data['selectMarket'];
-      },
-    )
-  }
+    this.market(); 
+    this.httpGet(); 
+  } 
 
   httpGet() {
     this.http.get<any>(environment.api + "backtest/detail?id=" + this.id, {
@@ -123,15 +112,26 @@ export class BacktestDetailComponent implements OnInit {
         this.item.permissionId = data['item']['permissionId'];
         this.item.borderColor = data['item']['borderColor'];
         this.item.backgroundColor = data['item']['backgroundColor'];
-        
+
         this.item.url = environment.api + '?share=' + data['item']['url'];
 
+         
         this.onCalculation();
-
+          
       },
       e => {
         console.log(e);
       }
+    )
+  }
+  
+  market() {
+    this.http.get<any>(environment.api + "market/index", {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        this.selectMarket = data['selectMarket'];
+      },
     )
   }
 
@@ -198,6 +198,7 @@ export class BacktestDetailComponent implements OnInit {
 
   onSubmit(reload: boolean = true) {
     clearTimeout(this.myTimeout);
+   
     this.loading = true;
     const body = {
       id: this.id,
@@ -209,9 +210,7 @@ export class BacktestDetailComponent implements OnInit {
     ).subscribe(
       data => {
         console.log("onSubmit Done");
-        if (reload == true) {
-          this.httpGet();
-        }
+       
 
       },
       e => {
@@ -345,24 +344,26 @@ export class BacktestDetailComponent implements OnInit {
     console.log(this.chartJsData);
     this.chartJsUpdate();
   }
-  chartJsUpdate(){
+  chartJsUpdate() {
     this.chart.data.labels = this.chartJsData.label;
     this.chart.data.datasets = [
       {
         label: this.item.name,
-        data: this.chartJsData.data,
-        fill: false,
-        borderColor:  this.item.borderColor,
+        data: this.chartJsData.data, 
+        borderColor: this.item.borderColor,
         backgroundColor: this.item.backgroundColor,
+        fill: {above: '#98EECC', below: '#FFAAC9', target: {value: 0}},
       },
     ];
-    
+
     this.chart.update();
   }
-  
+
   onUpdate() {
     this.onCalculation();
+    this.onCalculation();
     console.log("Saving...", this.waiting);
+
     if (this.waiting == false) {
       this.waiting = true;
       this.myTimeout = setTimeout(() => {
@@ -385,7 +386,7 @@ export class BacktestDetailComponent implements OnInit {
       ).subscribe(
         data => {
           console.log(data);
-          this.httpGet();
+         
         },
         e => {
           console.log(e);
@@ -485,5 +486,8 @@ export class BacktestDetailComponent implements OnInit {
           console.log(e)
         });
     }
+  }
+  back() {
+    history.back();
   }
 }

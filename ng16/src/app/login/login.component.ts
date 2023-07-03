@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
     private configService: ConfigService,
   ) { }
   ngOnInit(): void {
-
+    
   }
 
   onSubmit() {

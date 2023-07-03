@@ -1,17 +1,27 @@
-<app-header></app-header>
+<app-header (sendToParent)="onChild($event)" [item]="updateHeader()"></app-header>
 
 
-<div class="container">
-    <div class="bg-white p-3 rounded shadow-sm">
 
+<div class="container-fluid">
+    <div class="bg-white p-3 rounded shadow-md border">
+
+        <div class="row mb-3">
+            <div class="col-4">
+                <h4  (click)="editable.title = true" *ngIf="editable.title == false">{{book.name}}</h4>
+                 <input type="text" [(ngModel)]="book.name" *ngIf="editable.title == true"  (change)="fnEditableChange();" placeholder="Book Title" class="form-control form-control-lg "> 
+            </div>
+        </div>
         <div class="row">
+           
             <div class="col-12 mt-2">
-                <h4>Journal 1</h4>
-                <div class="border"> 
-                    <table class="table table-sm ">
+              
+                <div class="">
+                    <table class="table table-sm border table-hover">
                         <thead>
                             <tr>
                                 <th width="40px"></th>
+                                <th width="40px"></th>
+
                                 <th>Title</th>
                                 <th>Version</th>
                                 <th>Color </th>
@@ -23,8 +33,17 @@
                         </thead>
                         <tbody class="sortable">
                             <tr *ngFor="let x of items; let i = index" data-id="{{x.id}}">
-                                <td class="text-center"><input [hidden]="x.presence == '4'" type="checkbox"
-                                        [(ngModel)]="x.checkbox"></td>
+                                <td class="text-center">
+                                    <input [hidden]="x.presence == '4'" type="checkbox" [(ngModel)]="x.checkbox">
+                                </td>
+
+                                <td class="text-center">
+                                    <span [hidden]="x.presence == '4'">
+                                        <!-- <i class="bi bi-star"></i> -->
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                    </span>
+
+                                </td>
 
                                 <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
                                     <a [routerLink]="[ '/backtest', x.id ]">{{x.name}}</a>
@@ -65,20 +84,24 @@
                                 </td>
 
                             </tr>
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td colspan="3">
+                                    <input type="text" class="form-control form-control-sm" (keyup.enter)="onCreateNew()" [(ngModel)]="newJournal" placeholder="+ Add Journal">
+                                 </td>
+                                 <td colspan="17"></td>
+                            </tr>
                         </tbody>
 
-                    </table> 
+                    </table>
                 </div>
                 <div class="text-end my-2">
-                    <button type="button" (click)="fnClearTrashBin();" class="btn btn-warning mx-1">Clear Trash bin  </button>
+                    <button type="button" (click)="fnClearTrashBin();" class="btn btn-warning mx-1">Clear Trash bin
+                    </button>
                     <button type="button" (click)="fnDeleteAll();" class="btn btn-danger mx-1">Delete </button>
                     <button type="button" (click)="onCreateNew();" class="btn btn-primary mx-1">New backtest</button>
-                </div>
-            </div>
-            <div class="col-12">
-                <button type="button" (click)="test();">test</button>
-                <div>
-                    <canvas id="canvas">{{chart}}</canvas>
                 </div>
             </div>
 

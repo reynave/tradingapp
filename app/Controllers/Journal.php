@@ -6,16 +6,16 @@ use CodeIgniter\Model;
 
 class Journal extends BaseController
 {
-    function index()
+    function index($id)
     {
 
         $accountId = model("Core")->accountId();
-        $q1 = "SELECT  p.name AS 'permission', p.fontIcon, a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin
+        $q1 = "SELECT  ja.bookId, p.name AS 'permission', p.fontIcon, a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin
         FROM journal_access AS ja
         JOIN journal AS j ON j.id = ja.journalId
         JOIN permission AS p ON p.id = j.permissionId
         JOIN account AS a ON a.id = j.accountId
-        WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4)
+        WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$id'
         ORDER BY ja.sorting ASC, ja.input_date ASC";
         $items = $this->db->query($q1)->getResultArray();
 
@@ -23,11 +23,14 @@ class Journal extends BaseController
         ORDER BY id ASC";
         $permission = $this->db->query($permission)->getResultArray();
 
+        $book = "SELECT * FROM book WHERE accountId  = '$accountId' and id = '$id'";
+        $book = $this->db->query($book)->getResultArray();
 
         $data = array(
             "error" => false,
             "items" => $items,
-            "q" => $q1,
+            "book" => $book[0],
+          //  "q" => $q1,
             "permission" => $permission,
             "header" => model("Core")->header()
         );
@@ -60,12 +63,12 @@ class Journal extends BaseController
             "error" => true,
             "post" => $post,
         ];
-        if ($post) {
+        if ($post &&  $post['name'] != "") {
             $this->db->transStart();
             $journalId = model("Core")->number("backtest");
             $this->db->table("journal")->insert([
                 "id" => $journalId,
-                "name" => "New " . date("Y-m-d H:i"),
+                "name" => $post['name'],
                 "url" => uniqid(),
                 "borderColor" => "#3AA6B9",
                 "backgroundColor" => "#C1ECE4",
@@ -79,6 +82,7 @@ class Journal extends BaseController
             ]);
 
             $this->db->table("journal_access")->insert([
+                "bookId" => $post['id'],
                 "accountId" => model("Core")->accountId(),
                 "journalId" => $journalId,
                 "owner" => 1,
@@ -86,6 +90,7 @@ class Journal extends BaseController
                 "editable" => 1,
                 "admin" => 1,
                 "presence" => 1,
+                "sorting" => 99,
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
                 "input_date" => date("Y-m-d H:i:s"),
@@ -107,6 +112,29 @@ class Journal extends BaseController
         return $this->response->setJSON($data);
     }
 
+
+    function fnEditableChange() {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post &&  $post['book']['name'] != "") {
+              
+            $this->db->table("book")->update([ 
+                "name" => $post['book']['name'], 
+                "update_date" => date("Y-m-d H:i:s"),
+                "update_by" => model("Core")->accountId(), 
+            ]," id = '".$post['book']['id']."' AND accountId = '".model("Core")->accountId()."' ");
+             
+            $data = array(
+                "error" => false, 
+            );
+
+        }
+        return $this->response->setJSON($data);
+    }
     function onUpdatePermission()
     {
 
