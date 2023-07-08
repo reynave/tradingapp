@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `auto_number` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.auto_number: ~1 rows (approximately)
+-- Dumping data for table tradingbook.auto_number: ~0 rows (approximately)
 INSERT INTO `auto_number` (`id`, `name`, `prefix`, `digit`, `runningNumber`, `updateDate`) VALUES
 	(10, 'backtest', 'B1-', 6, 39, '0000-00-00 00:00:00'),
 	(11, 'book', '2306', 4, 1, '2023-01-01 00:00:00');
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `book` (
 
 -- Dumping data for table tradingbook.book: ~5 rows (approximately)
 INSERT INTO `book` (`id`, `accountId`, `name`, `ilock`, `sorting`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
-	('23060001', '230101.0001', 'Real Trading MT5', 0, 1, 1, '2023-01-01 00:00:00', NULL, '2023-07-03 07:50:04', '230101.0001'),
+	('23060001', '230101.0001', 'Real Trading MT4', 0, 1, 1, '2023-01-01 00:00:00', NULL, '2023-07-08 10:32:30', '230101.0001'),
 	('23060003', '230101.0001', 'Backtest 2023 Feb1', 0, 2, 1, '2023-01-01 00:00:00', NULL, '2023-07-03 08:01:52', '230101.0001'),
 	('23060004', '230101.0001', 'Share to Me', 1, 999, 1, '2023-01-01 00:00:00', NULL, '2023-01-01 00:00:00', NULL),
 	('cook1', 'C0012', 'Book1', 0, 99, 1, '2023-01-01 00:00:00', NULL, '2023-01-01 00:00:00', NULL),
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `journal` (
   UNIQUE KEY `url` (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table tradingbook.journal: ~4 rows (approximately)
+-- Dumping data for table tradingbook.journal: ~13 rows (approximately)
 INSERT INTO `journal` (`id`, `accountId`, `templateId`, `name`, `url`, `permissionId`, `borderColor`, `backgroundColor`, `version`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
 	('B1-000026', '230101.0001', 0, 'SETUP NORA', '649d34f8bb389', 20, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:32', '230101.0001', '2023-07-01 19:03:16', '230101.0001'),
 	('B1-000027', '230101.0001', 0, 'Mansor Sapari', '649d34fa55074', 20, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:34', '230101.0001', '2023-07-01 17:11:25', '230101.0001'),
@@ -165,27 +165,19 @@ CREATE TABLE IF NOT EXISTS `journal_access` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_access: ~10 rows (approximately)
+-- Dumping data for table tradingbook.journal_access: ~11 rows (approximately)
 INSERT INTO `journal_access` (`id`, `bookId`, `accountId`, `journalId`, `owner`, `editable`, `changeable`, `admin`, `sorting`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
 	(26, '23060001', '230101.0001', 'B1-000026', 1, 1, 1, 1, 3, 1, '2023-06-29 07:38:32', '230101.0001', '2023-07-02 12:35:56', '230101.0001'),
 	(27, '23060001', '230101.0001', 'B1-000027', 1, 1, 1, 1, 2, 1, '2023-06-29 07:38:34', '230101.0001', '2023-07-02 12:35:56', '230101.0001'),
 	(28, '23060001', '230101.0001', 'B1-000028', 1, 1, 1, 1, 1, 1, '2023-06-29 07:38:35', '230101.0001', '2023-07-02 12:35:56', '230101.0001'),
-	(29, '23060001', '230101.0001', 'B1-000029', 1, 1, 1, 1, 4, 0, '2023-06-29 07:38:38', '230101.0001', '2023-07-02 18:54:47', '230101.0001'),
-	(30, 'cook1', 'C0012', 'B1-000026', 0, 1, 0, 0, 99, 0, '2023-06-29 07:50:50', '230101.0001', '2023-06-29 07:50:50', '230101.0001'),
 	(31, 'zook1', 'C5555', 'B1-000026', 0, 1, 0, 0, 99, 1, '2023-06-29 07:40:07', '230101.0001', '2023-06-29 07:40:07', '230101.0001'),
-	(32, 'cook1', 'C0012', 'B1-000026', 0, 1, 0, 0, 99, 0, '2023-06-29 07:50:50', '230101.0001', '2023-06-29 07:50:50', '230101.0001'),
 	(43, 'zook1', 'C5555', 'B1-000027', 0, 1, 0, 0, 99, 1, '2023-06-29 18:48:11', '230101.0001', '2023-06-29 18:48:11', '230101.0001'),
 	(44, 'cook1', 'C0012', 'B1-000029', 0, 1, 0, 0, 99, 4, '2023-06-29 18:49:27', '230101.0001', '2023-07-02 12:40:58', '230101.0001'),
 	(47, 'zook1', 'C5555', 'B1-000029', 0, 1, 0, 0, 99, 4, '2023-06-29 18:54:37', '230101.0001', '2023-07-02 12:40:58', '230101.0001'),
-	(49, '23060001', '230101.0001', 'B1-000031', 1, 1, 1, 1, 99, 0, '2023-07-02 18:34:35', '230101.0001', '2023-07-03 05:01:23', '230101.0001'),
-	(50, '23060001', '230101.0001', 'B1-000032', 1, 1, 1, 1, 99, 0, '2023-07-02 18:47:52', '230101.0001', '2023-07-03 05:01:23', '230101.0001'),
-	(51, '23060001', '230101.0001', 'B1-000033', 1, 1, 1, 1, 99, 1, '2023-07-02 18:50:03', '230101.0001', '2023-07-02 18:50:03', '230101.0001'),
-	(52, '23060001', '230101.0001', 'B1-000034', 1, 1, 1, 1, 99, 1, '2023-07-02 18:54:31', '230101.0001', '2023-07-02 18:54:31', '230101.0001'),
-	(53, '23060003', '230101.0001', 'B1-000035', 1, 1, 1, 1, 99, 1, '2023-07-02 18:58:27', '230101.0001', '2023-07-02 18:58:27', '230101.0001'),
-	(54, '23060003', '230101.0001', 'B1-000036', 1, 1, 1, 1, 99, 1, '2023-07-03 05:00:11', '230101.0001', '2023-07-03 05:00:11', '230101.0001'),
-	(55, '23060003', '230101.0001', 'B1-000037', 1, 1, 1, 1, 99, 0, '2023-07-03 05:00:13', '230101.0001', '2023-07-03 05:01:23', '230101.0001'),
-	(56, '23060003', '230101.0001', 'B1-000038', 1, 1, 1, 1, 99, 0, '2023-07-03 05:01:00', '230101.0001', '2023-07-03 05:01:23', '230101.0001'),
-	(57, '23060003', '230101.0001', 'B1-000039', 1, 1, 1, 1, 99, 0, '2023-07-03 05:01:14', '230101.0001', '2023-07-03 05:01:23', '230101.0001');
+	(51, '23060003', '230101.0001', 'B1-000033', 1, 1, 1, 1, 99, 1, '2023-07-02 18:50:03', '230101.0001', '2023-07-08 18:32:48', '230101.0001'),
+	(52, '23060003', '230101.0001', 'B1-000034', 1, 1, 1, 1, 99, 1, '2023-07-02 18:54:31', '230101.0001', '2023-07-08 18:32:45', '230101.0001'),
+	(53, '23060004', '230101.0001', 'B1-000035', 1, 1, 1, 1, 99, 1, '2023-07-02 18:58:27', '230101.0001', '2023-07-08 18:32:55', '230101.0001'),
+	(54, '23060004', '230101.0001', 'B1-000036', 1, 1, 1, 1, 99, 1, '2023-07-03 05:00:11', '230101.0001', '2023-07-08 18:32:53', '230101.0001');
 
 -- Dumping structure for table tradingbook.journal_custom_field
 CREATE TABLE IF NOT EXISTS `journal_custom_field` (
@@ -202,7 +194,7 @@ CREATE TABLE IF NOT EXISTS `journal_custom_field` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_custom_field: ~7 rows (approximately)
+-- Dumping data for table tradingbook.journal_custom_field: ~6 rows (approximately)
 INSERT INTO `journal_custom_field` (`id`, `journalId`, `f`, `name`, `iType`, `sorting`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
 	(39, 'B1-000014', 1, 'custom Field 1', 'text', 10, '2023-06-27 17:38:35', '230101.0001', '2023-01-01 00:00:00', ''),
 	(41, 'B1-000014', 2, 'custom Field 2', 'text', 20, '2023-06-27 17:38:57', '230101.0001', '2023-01-01 00:00:00', ''),

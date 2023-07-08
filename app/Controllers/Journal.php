@@ -10,7 +10,8 @@ class Journal extends BaseController
     {
 
         $accountId = model("Core")->accountId();
-        $q1 = "SELECT  ja.bookId, p.name AS 'permission', p.fontIcon, a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin
+        $q1 = "SELECT  ja.id as journal_accessID, ja.bookId, p.name AS 'permission', p.fontIcon, 
+        a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin
         FROM journal_access AS ja
         JOIN journal AS j ON j.id = ja.journalId
         JOIN permission AS p ON p.id = j.permissionId
@@ -25,15 +26,41 @@ class Journal extends BaseController
 
         $book = "SELECT * FROM book WHERE accountId  = '$accountId' and id = '$id'";
         $book = $this->db->query($book)->getResultArray();
+ 
+        $bookSelect = "SELECT  * from book where presence  = 1 and  accountId = '$accountId' order by sorting ASC, name ASC";
+        $bookSelect = $this->db->query($bookSelect)->getResultArray(); 
 
         $data = array(
             "error" => false,
             "items" => $items,
             "book" => $book[0],
-          //  "q" => $q1,
+            "bookSelect" => $bookSelect,
             "permission" => $permission,
             "header" => model("Core")->header()
         );
+        return $this->response->setJSON($data);
+    }
+
+    function onChangesBook(){
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post ) { 
+            $this->db->table("journal_access")->update([ 
+                "bookId" => $post['book']['id'],    
+                "update_date" => date("Y-m-d H:i:s"),
+                "update_by" => model("Core")->accountId(), 
+            ]," id = '".$post['item']['journal_accessID']."' ");
+             
+            $data = array(
+                "error" => false, 
+                "post" => $post,
+            );
+
+        }
         return $this->response->setJSON($data);
     }
 

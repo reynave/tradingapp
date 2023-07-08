@@ -11,7 +11,7 @@ class Book extends BaseController
         WHERE  accountId = '$accountId' AND presence = 1 
         ORDER BY sorting ASC, input_date ASC";
         $items = $this->db->query($q1)->getResultArray();
- 
+  
         $data = array(
             "error" => false,
             "items" => $items,  

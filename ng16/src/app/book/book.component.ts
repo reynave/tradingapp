@@ -24,6 +24,7 @@ export class BookComponent implements OnInit {
   journalAccess: any = [];
   addUser: string = "";
   book: any = [];
+  bookSelect : any = [];
   editable :any = {
     title : false,
   }
@@ -35,13 +36,14 @@ export class BookComponent implements OnInit {
     private modalService: NgbModal
   ) { }
 
-  public onChild(obj: any) {
-    console.log('obj child : ', obj);
+  public onChild(obj: any) { 
+    console.log('obj child : ', );
     this.id = obj['id'];
     this.httpGet();
   }
   public updateHeader(){
     const data = {
+      sender : 'book',
       id : this.book.id,
       name : this.book.name,
     }
@@ -52,7 +54,20 @@ export class BookComponent implements OnInit {
     this.id = this.activatedRoute.snapshot.params["id"];
     this.httpGet();
   }
+  onBlur(){
+    console.log("onBlur");
+    this.editable.title = false;
+  }
+  onFocus(){
+    console.log("onFocus");
+    this.editable.title = true; 
+    setTimeout(function(){
+      $("#bookTitle").focus();
+      console.log("set Fokus");
+    },100)
+    
 
+  }
 
   httpGet() {
     this.editable.title = false;  
@@ -60,10 +75,11 @@ export class BookComponent implements OnInit {
       headers: this.configService.headers()
     }).subscribe(
       data => {
-        this.permission = data['permission'];
-        this.items = data['items'];
         console.log(data);
+        this.permission = data['permission'];
+        this.items = data['items']; 
         this.book = data['book'];
+        this.bookSelect = data['bookSelect'];
         var self = this;
         $(function () {
           $(".sortable").sortable({
@@ -79,7 +95,7 @@ export class BookComponent implements OnInit {
                 headers: self.configService.headers(),
               }).subscribe(
                 data => {
-                  console.log(data);
+                  //console.log(data);
                   // console.log(self.items)  
                 },
                 e => {
@@ -90,6 +106,27 @@ export class BookComponent implements OnInit {
             }
           });
         });
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
+
+
+  onChangesBook(book:any, item:any){
+    console.log(book,item);
+    const body ={
+      book : book,
+      item : item
+    }
+    console.log(body)
+    this.http.post<any>(environment.api + "journal/onChangesBook", body, {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log(data); 
+        this.httpGet();
       },
       e => {
         console.log(e);

@@ -25,15 +25,19 @@ export class HeaderComponent implements OnInit, OnChanges {
     this.httpGet();
   }
   ngOnChanges(changes: any) {
-    console.log(changes); 
-    this.updateNavigator();  
+   
+    if ( this.item['sender'] == 'book') {
+       
+      this.updateNavigator();
+    }
+
   }
-  
+
   updateNavigator() {
-    if (this.items.length > 1) {
+    if (this.items.length > 1 &&  this.items !== 'undefined') {
       let objIndex = this.items.findIndex(((obj: { id: any; }) => obj.id == this.item.id));
       this.items[objIndex]['name'] = this.item.name;
-    } 
+    }
   }
 
 
@@ -42,7 +46,7 @@ export class HeaderComponent implements OnInit, OnChanges {
       headers: this.configService.headers()
     }).subscribe(
       data => {
-        console.log(data);
+        
         this.items = data['items'];
 
       },
@@ -68,7 +72,7 @@ export class HeaderComponent implements OnInit, OnChanges {
       headers: this.configService.headers()
     }).subscribe(
       data => {
-        console.log(data);
+        // console.log(data);
       },
       e => {
         console.log(e);

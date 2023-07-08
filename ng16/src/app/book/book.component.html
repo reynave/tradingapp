@@ -7,8 +7,10 @@
 
         <div class="row mb-3">
             <div class="col-4">
-                <h4  (click)="editable.title = true" *ngIf="editable.title == false">{{book.name}}</h4>
-                 <input type="text" [(ngModel)]="book.name" *ngIf="editable.title == true"  (change)="fnEditableChange();" placeholder="Book Title" class="form-control form-control-lg "> 
+                <h4  (click)="onFocus()" *ngIf="editable.title == false">{{book.name}}</h4>
+                 <input type="text" id="bookTitle" [(ngModel)]="book.name" #inputField
+                 *ngIf="editable.title == true"  (change)="fnEditableChange();" 
+                 placeholder="Book Title" class="form-control form-control-lg " (blur)="onBlur();"> 
             </div>
         </div>
         <div class="row">
@@ -27,7 +29,7 @@
                                 <th>Color </th>
                                 <th>Update Date</th>
                                 <th>Owner</th>
-                                <th colspan="3"></th>
+                                <th colspan="4"></th>
 
                             </tr>
                         </thead>
@@ -66,13 +68,30 @@
                                 <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.ownBy}}</td>
 
                                 <td>
-                                    <span *ngIf="itemSetting(x)">
-                                        <a (click)="open(content,x)" class="mx-1">
-                                            <i class="bi bi-person-plus"></i>
-                                        </a>
-                                    </span>
+                                    <div ngbDropdown class="d-inline-block">
+                                         
+                                        <span>
+                                            <i class="bi bi-folder" id="dropdownBasic1" ngbDropdownToggle></i>
+                                        </span>
+                                        
+                                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" >
+                                            <button ngbDropdownItem *ngFor="let n of bookSelect" (click)="onChangesBook(n, x);">
+                                               <span *ngIf="book.id == n.id"> <i class="bi bi-check2-square"></i> </span>
+                                               <span *ngIf="book.id != n.id">  <i class="bi bi-square"></i> </span>  
+                                               <span class="mx-1"> {{n.name}}</span>
+                                            </button> 
+                                        </div>
+                                    </div>
+                                       
+                                    
                                 </td>
 
+                                <td>
+                                    <span *ngIf="itemSetting(x)">
+                                        <a (click)="open(content,x)" class="mx-1">  <i class="bi bi-person-plus"></i> </a>
+                                    </span>
+                                </td>
+ 
                                 <td>
                                     <span [innerHTML]="x.fontIcon" title="{{x.permission}}"></span>
                                 </td>
