@@ -1,42 +1,94 @@
- 
-<header class="fixed-top shadow-sm ">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom" >
+<header class="fixed-top  ">
+    <nav class="navbar navbar-expand  " aria-label="Second navbar example">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">MIRREL</a>
-    
-            <div class="navbar-collapse" id="navbarsExample05">
-                <ul class="navbar-nav me-auto  ">
+            <a class="navbar-brand" href="#">Mirrel</a>
+           
+
+            <div class="collapse navbar-collapse" id="navbarsExample02">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li> 
-                    <li class="nav-item border-start">
-                        <a class="nav-link" href="#">{{item}}</a>
                     </li>
-                    <li class="nav-item border-start">
-                        <a class="nav-link disabled">Disabled</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
                     </li>
-                    <li class="nav-item dropdown border-start">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"  aria-expanded="false">Trading Book</a>
-                        <ul class="dropdown-menu"> 
-                            <li *ngFor="let x of items"><a class="dropdown-item" (click)="navigator(x);" >{{x.name}}</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                    <li class="nav-item dropdown ">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                            aria-expanded="false">Trading Book</a>
+                        <ul class="dropdown-menu">
+                            <li *ngFor="let x of items"><a class="dropdown-item" (click)="navigator(x);">{{x.name}}</a> </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item" href="#">Separated link</a></li>
                         </ul>
                     </li>
-                </ul> 
+                </ul>
+                <ul class="navbar-nav   ">
+                    <li>
+                        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+                            aria-controls="offcanvasScrolling">
+                            <i class="bi bi-three-dots"></i>
+                        </a>
+                    </li>
+                </ul>
             </div>
-
-            <ul class="navbar-nav me-auto  "> 
-                <li class="nav-item dropdown ">
-                    <a class="nav-link " data-bs-toggle="dropdown"> <i class="bi bi-three-dots"></i> </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><a class="dropdown-item" (click)="checkJwtToken();"  >Security</a></li>
-                        <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
         </div>
-    </nav>
-    
+    </nav> 
 </header>
+
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="offcanvasScrolling"
+    aria-labelledby="offcanvasScrollingLabel">
+
+    <div class="offcanvas-header border-bottom">
+        <div class="offcanvas-title" id="offcanvasScrollingLabel">MIRREL.COM</div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row g-1">
+            <div class="col-6">
+                <a class="d-block btn btn-outline-secondary border-0 text-start mb-1" href="javascript:;">
+                    <div>
+                        <span class="mx-1"> <i class="bi bi-person"></i> </span>
+                        My Profile
+                    </div>
+                </a>
+                <a class="d-block btn btn-outline-secondary border-0 text-start mb-1" href="javascript:;">
+                    <div>
+                        <span class="mx-1"> <i class="bi bi-people"></i> </span>
+                        Managements
+                    </div>
+                </a>
+                <a class="d-block btn btn-outline-secondary border-0 text-start mb-1" href="javascript:;">
+                    <div>
+                        <span class="mx-1"> <i class="bi bi-trash3"></i> </span>
+                        Trash
+                    </div>
+                </a>
+                <a class="d-block btn btn-outline-secondary border-0 text-start mb-1" href="javascript:;">
+                    <div>
+                        <span class="mx-1"> <i class="bi bi-archive"></i> </span>
+                        Archived
+                    </div>
+                </a>
+                <a class="d-block btn btn-outline-secondary border-0 text-start mb-1" href="javascript:;">
+                    <div>
+                        <span class="mx-1"> <i class="bi bi-key"></i> </span>
+                        Security & Password
+                    </div>
+                </a>
+                <a (click)="logout()" class="d-block btn btn-outline-secondary border-0 text-start mb-1"
+                    href="javascript:;">
+                    <div>
+                        <span class="mx-1"> <i class="bi bi-box-arrow-right"></i> </span>
+                        Logout
+                    </div>
+                </a>
+
+            </div>
+            <div class="col-6">
+
+            </div>
+        </div>
+    </div>
+</div>

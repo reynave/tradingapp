@@ -1,0 +1,61 @@
+.tables-body {
+    overflow-y: scroll;
+    overflow-x: auto;
+    white-space: nowrap;
+    max-width: 1900px;
+    height: calc(100vh - (var(--body-margin-top)*1.9));
+}
+
+.orders {
+    border-bottom: 1px solid var(--color-gray);
+    border-right: 1px solid var(--color-gray);
+    width: 140px;
+    min-height: 30px;
+}
+.tables-body-td{
+    position: relative;
+}
+.tables-body-td .floating-div , .tables-header-td .floating-div{
+    position: sticky;
+    background-color: #fff;
+    border-bottom: 1px solid var(--color-gray);
+    border-right: 1px solid var(--color-gray);
+    left: 0px;
+    top: 0px;
+    z-index: 99;
+    width: 150px;
+}
+
+.tables-body-td input {
+    width: 100%;
+    border: none;
+}
+
+input:focus {
+    background-color: var(--color-white)!important;
+}
+
+.tables-body-td:hover .orders,
+.tables-body-td:hover .orders input {
+    background-color: var(--color-border-1);
+}
+
+/* .fix { 
+    position: absolute;
+    width:40px;
+    margin-left: -40px;
+} */
+
+.details-panel {
+    width: 40% !important;  
+}
+
+.bg-warning{
+    color:var(--color-white);
+}
+.dropdown-menu.show {
+    background-color: var(--color-white);
+    padding: 10px;
+    border: 1px solid var(--color-gray);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}

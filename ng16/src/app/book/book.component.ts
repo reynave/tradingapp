@@ -58,14 +58,15 @@ export class BookComponent implements OnInit {
     console.log("onBlur");
     this.editable.title = false;
   }
-  onFocus(){
-    console.log("onFocus");
-    this.editable.title = true; 
-    setTimeout(function(){
-      $("#bookTitle").focus();
-      console.log("set Fokus");
-    },100)
-    
+  onFocus(book : any){
+    if(book.ilock == 0){
+      console.log("onFocus");
+      this.editable.title = true; 
+      setTimeout(function(){
+        $("#bookTitle").focus();
+        console.log("set Fokus");
+      },100)
+    } 
 
   }
 

@@ -81,10 +81,10 @@ export class BacktestDetailComponent implements OnInit {
 
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.market(); 
-    this.httpGet(); 
+    this.httpGet(true); 
   } 
 
-  httpGet() {
+  httpGet(recalulate : boolean = false) {
     this.http.get<any>(environment.api + "backtest/detail?id=" + this.id, {
       headers: this.configService.headers(),
     }).subscribe(
@@ -115,9 +115,11 @@ export class BacktestDetailComponent implements OnInit {
 
         this.item.url = environment.api + '?share=' + data['item']['url'];
 
-         
-        this.onCalculation();
+        if(recalulate == true){
+          this.onCalculation();
           
+        }
+       
       },
       e => {
         console.log(e);
@@ -196,7 +198,7 @@ export class BacktestDetailComponent implements OnInit {
     );
   }
 
-  onSubmit(reload: boolean = true) {
+  onSubmit() {
     clearTimeout(this.myTimeout);
    
     this.loading = true;
@@ -209,9 +211,7 @@ export class BacktestDetailComponent implements OnInit {
       { headers: this.configService.headers() }
     ).subscribe(
       data => {
-        console.log("onSubmit Done");
-       
-
+        console.log("onSubmit Done"); 
       },
       e => {
         console.log(e);
@@ -490,4 +490,5 @@ export class BacktestDetailComponent implements OnInit {
   back() {
     history.back();
   }
+ 
 }

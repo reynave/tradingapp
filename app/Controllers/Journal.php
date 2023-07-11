@@ -138,8 +138,7 @@ class Journal extends BaseController
         }
         return $this->response->setJSON($data);
     }
-
-
+ 
     function fnEditableChange() {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
@@ -150,10 +149,10 @@ class Journal extends BaseController
         if ($post &&  $post['book']['name'] != "") {
               
             $this->db->table("book")->update([ 
-                "name" => $post['book']['name'], 
-                "update_date" => date("Y-m-d H:i:s"),
-                "update_by" => model("Core")->accountId(), 
-            ]," id = '".$post['book']['id']."' AND accountId = '".model("Core")->accountId()."' ");
+                "name"          => $post['book']['name'], 
+                "update_date"   => date("Y-m-d H:i:s"),
+                "update_by"     => model("Core")->accountId(), 
+            ]," id = '".$post['book']['id']."' AND ilock = 0 AND accountId = '".model("Core")->accountId()."' ");
              
             $data = array(
                 "error" => false, 
@@ -162,6 +161,7 @@ class Journal extends BaseController
         }
         return $this->response->setJSON($data);
     }
+
     function onUpdatePermission()
     {
 

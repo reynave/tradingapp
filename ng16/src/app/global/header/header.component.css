@@ -1,3 +1,7 @@
  header{
     font-size: 1rem;
  }
+
+ .offcanvas-backdrop.show {
+   opacity: .1;
+}

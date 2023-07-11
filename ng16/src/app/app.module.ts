@@ -18,6 +18,8 @@ import { ReloginComponent } from './login/relogin/relogin.component';
 import { HeaderComponent } from './global/header/header.component';
 import { JournalComponent } from './journal/journal.component';
 import { BookComponent } from './book/book.component';
+import { TradeComponent } from './trade/trade.component';
+import { TemplateTableComponent } from './template/template-table/template-table.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import { BookComponent } from './book/book.component';
     ReloginComponent,
     HeaderComponent,
     JournalComponent,
-    BookComponent
+    BookComponent,
+    TradeComponent,
+    TemplateTableComponent
   ],
   imports: [
     BrowserModule,

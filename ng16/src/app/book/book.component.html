@@ -1,134 +1,147 @@
 <app-header (sendToParent)="onChild($event)" [item]="updateHeader()"></app-header>
 
+<div class="body-margin-top"> 
+    
+    <div class="container-fluid ">
+        <div class="bg-white p-3 rounded shadow-md border">
 
+            <div class="row mb-3">
+                <div class="col-4">
 
-<div class="container-fluid">
-    <div class="bg-white p-3 rounded shadow-md border">
-
-        <div class="row mb-3">
-            <div class="col-4">
-                <h4  (click)="onFocus()" *ngIf="editable.title == false">{{book.name}}</h4>
-                 <input type="text" id="bookTitle" [(ngModel)]="book.name" #inputField
-                 *ngIf="editable.title == true"  (change)="fnEditableChange();" 
-                 placeholder="Book Title" class="form-control form-control-lg " (blur)="onBlur();"> 
+                    <h4 (click)="onFocus(book)" *ngIf="editable.title == false">{{book.name}}</h4>
+                    <input type="text" id="bookTitle" [(ngModel)]="book.name" #inputField *ngIf="editable.title == true"
+                        (change)="fnEditableChange();" placeholder="Book Title" class="form-control form-control-lg "
+                        (blur)="onBlur();">
+                </div>
             </div>
-        </div>
-        <div class="row">
-           
-            <div class="col-12 mt-2">
-              
-                <div class="">
-                    <table class="table table-sm border table-hover">
-                        <thead>
-                            <tr>
-                                <th width="40px"></th>
-                                <th width="40px"></th>
+            <div class="row">
 
-                                <th>Title</th>
-                                <th>Version</th>
-                                <th>Color </th>
-                                <th>Update Date</th>
-                                <th>Owner</th>
-                                <th colspan="4"></th>
+                <div class="col-12 mt-2">
 
-                            </tr>
-                        </thead>
-                        <tbody class="sortable">
-                            <tr *ngFor="let x of items; let i = index" data-id="{{x.id}}">
-                                <td class="text-center">
-                                    <input [hidden]="x.presence == '4'" type="checkbox" [(ngModel)]="x.checkbox">
-                                </td>
-
-                                <td class="text-center">
-                                    <span [hidden]="x.presence == '4'">
-                                        <!-- <i class="bi bi-star"></i> -->
-                                        <i class="bi bi-star-fill text-warning"></i>
-                                    </span>
-
-                                </td>
-
-                                <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
-                                    <a [routerLink]="[ '/backtest', x.id ]">{{x.name}}</a>
-                                </td>
-
-                                <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.version}}</td>
+                    <div class="">
+                        <table class="table table-sm border table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="30px"></th>
+                                    <th width="40px"></th>
 
 
+                                    <th>Title</th>
+                                    <th>Version</th>
+                                    <th>Color </th>
+                                    <th>Update Date</th>
+                                    <th>Owner</th>
+                                    <th colspan="4"></th>
 
-                                <td>
-                                    <span class="badge" *ngIf="x.presence != '4'"
-                                        [ngStyle]="{'background': x.borderColor}">Color</span>
-                                    <span class="badge bg-light text-warning" *ngIf="x.presence == '4'">Trash Bin</span>
-                                </td>
+                                </tr>
+                            </thead>
+                            <tbody class="sortable">
+                                <tr *ngFor="let x of items; let i = index" data-id="{{x.id}}">
+                                    <td class="text-center">
+                                        <input [hidden]="x.presence == '4'" type="checkbox" [(ngModel)]="x.checkbox">
+                                    </td>
 
-                                <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.update_date |
-                                    date:'medium'}}
-                                </td>
-
-                                <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.ownBy}}</td>
-
-                                <td>
-                                    <div ngbDropdown class="d-inline-block">
-                                         
-                                        <span>
-                                            <i class="bi bi-folder" id="dropdownBasic1" ngbDropdownToggle></i>
+                                    <td class="text-center">
+                                        <span [hidden]="x.presence == '4'">
+                                            <!-- <i class="bi bi-star"></i> -->
+                                            <i class="bi bi-star-fill text-warning"></i>
                                         </span>
-                                        
-                                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" >
-                                            <button ngbDropdownItem *ngFor="let n of bookSelect" (click)="onChangesBook(n, x);">
-                                               <span *ngIf="book.id == n.id"> <i class="bi bi-check2-square"></i> </span>
-                                               <span *ngIf="book.id != n.id">  <i class="bi bi-square"></i> </span>  
-                                               <span class="mx-1"> {{n.name}}</span>
-                                            </button> 
+                                    </td>
+
+
+                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
+                                        <a [routerLink]="[ '/backtest', x.id ]">{{x.name}}</a>
+                                    </td>
+
+                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.version}}
+                                    </td>
+
+
+
+                                    <td>
+                                        <span class="badge" *ngIf="x.presence != '4'"
+                                            [ngStyle]="{'background': x.borderColor}">Color</span>
+                                        <span class="badge bg-light text-warning" *ngIf="x.presence == '4'">Trash
+                                            Bin</span>
+                                    </td>
+
+                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.update_date
+                                        |
+                                        date:'medium'}}
+                                    </td>
+
+                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.ownBy}}
+                                    </td>
+
+                                    <td width="40px">
+                                        <div ngbDropdown class="d-inline-block">
+
+                                            <span>
+                                                <i class="bi bi-folder" id="dropdownBasic1" ngbDropdownToggle></i>
+                                            </span>
+
+                                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                                <button ngbDropdownItem *ngFor="let n of bookSelect"
+                                                    (click)="onChangesBook(n, x);">
+                                                    <span *ngIf="book.id == n.id"> <i class="bi bi-check2-square"></i>
+                                                    </span>
+                                                    <span *ngIf="book.id != n.id"> <i class="bi bi-square"></i> </span>
+                                                    <span class="mx-1"> {{n.name}}</span>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                       
-                                    
-                                </td>
+                                    </td>
 
-                                <td>
-                                    <span *ngIf="itemSetting(x)">
-                                        <a (click)="open(content,x)" class="mx-1">  <i class="bi bi-person-plus"></i> </a>
-                                    </span>
-                                </td>
- 
-                                <td>
-                                    <span [innerHTML]="x.fontIcon" title="{{x.permission}}"></span>
-                                </td>
+                                    <td width="40px">
+                                        <span *ngIf="itemSetting(x)">
+                                            <a (click)="open(content,x)" class="mx-1"> <i class="bi bi-person-plus"></i>
+                                            </a>
+                                        </span>
+                                    </td>
 
-                                <td>
-                                    <span class="handle">
-                                        <i class="bi bi-list"></i>
-                                    </span>
-                                </td>
+                                    <td width="40px">
+                                        <span [innerHTML]="x.fontIcon" title="{{x.permission}}"></span>
+                                    </td>
 
-                            </tr>
+                                    <td width="40px">
+                                        <span class="handle">
+                                            <i class="bi bi-list"></i>
+                                        </span>
+                                    </td>
 
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td colspan="3">
-                                    <input type="text" class="form-control form-control-sm" (keyup.enter)="onCreateNew()" [(ngModel)]="newJournal" placeholder="+ Add Journal">
-                                 </td>
-                                 <td colspan="17"></td>
-                            </tr>
-                        </tbody>
+                                </tr>
 
-                    </table>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td colspan="3">
+                                        <input type="text" class="form-control form-control-sm"
+                                            (keyup.enter)="onCreateNew()" [(ngModel)]="newJournal"
+                                            placeholder="+ Add Journal">
+                                    </td>
+                                    <td colspan="17"></td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <div class="text-end my-2">
+                        <button type="button" (click)="fnClearTrashBin();" class="btn btn-warning mx-1">Clear Trash bin
+                        </button>
+                        <button type="button" (click)="fnDeleteAll();" class="btn btn-danger mx-1">Delete </button>
+                        <button type="button" (click)="onCreateNew();" class="btn btn-primary mx-1">New
+                            backtest</button>
+                    </div>
                 </div>
-                <div class="text-end my-2">
-                    <button type="button" (click)="fnClearTrashBin();" class="btn btn-warning mx-1">Clear Trash bin
-                    </button>
-                    <button type="button" (click)="fnDeleteAll();" class="btn btn-danger mx-1">Delete </button>
-                    <button type="button" (click)="onCreateNew();" class="btn btn-primary mx-1">New backtest</button>
-                </div>
+
+
+
             </div>
-
-
-
         </div>
-    </div>
+    </div> 
+
 </div>
+
 
 <ng-template #content let-modal>
     <div class="modal-header">

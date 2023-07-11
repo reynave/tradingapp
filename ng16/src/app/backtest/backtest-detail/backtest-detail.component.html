@@ -1,279 +1,269 @@
-<div class="container-fluid">
-    <div class="row g-2 mb-3">
-        <div class="col-12">
-            <a class="btn" (click)="back()">back</a>
-        </div>
-        <div class="col-9">
-            <input class="form-control form-control-sm" placeholder="" [(ngModel)]="item.name" (change)="onUpdate()">
-        </div>
-        <div class="col-3">
-            <select class="form-control form-control-sm" [(ngModel)]="item.permissionId" (change)="onUpdate()">
-                <option value="1">Private</option>
-                <option value="20">Share</option>
-                <option value="30">Share + Comments</option>
-            </select>
-        </div>
-        <div class="col-12" *ngIf="item.permissionId > 10">
-            Url share : {{item.url}}
+<app-header></app-header>
+
+<header class="shadow-sm bg-white p-2 body-margin-top">
+    <div class="container-fuild">
+        <div class="row g-2">
+            <div class="col-8">
+                <input class="form-control form-control-sm" placeholder="" [(ngModel)]="item.name"
+                    (change)="onUpdate()">
+            </div>
+            <div class="col-3">
+                <select class="form-control form-control-sm" [(ngModel)]="item.permissionId" (change)="onSubmit()">
+                    <option value="1">Private</option>
+                    <option value="20">Share</option>
+                    <option value="30">Share + Comments</option>
+                </select>
+            </div>
+            <div class="col-1">
+                <a (click)="open(customColumn)">
+                    <i class="bi bi-plus-lg"></i> Add Column
+                </a>
+            </div>
+            <div class="col-12" *ngIf="item.permissionId > 10">
+                Url share : {{item.url}}
+            </div>
         </div>
     </div>
+</header>
 
-    <div class="row g-2 mb-3">
-
-        <div class="col-5 border">
-            <div>
-                <canvas id="canvas">{{chart}}</canvas>
-            </div>
-            {{summary |json}}
-            <div>
-                <table class="table table-sm">
-                    <tbody>
-                        <tr>
-                            <td>Total Trades</td>
-                            <td>: {{detail?.length}}</td>
-                        </tr>
-                        <tr>
-                            <td>Winrate </td>
-                            <td>: {{summary.winrate  | number : '1.2-2'}}% ({{summary.win}} Win, {{summary.loss}} Loss) </td>
-                        </tr>
-                        <tr>
-                            <td>Total Pip</td>
-                            <td>: {{summary.totalPip}} pip</td>
-                        </tr>
-                        <tr>
-                            <td>Average Pip</td>
-                            <td>: {{summary.averagePip | number : '1.2-2'}} pip</td>
-                        </tr>
-                        <tr>
-                            <td>Average RR</td>
-                            <td>: {{summary.averageRr | number : '1.2-2'}}</td>
-                        </tr>
+<div class="container-fluid ">
 
 
-                        <tr>
-                            <td>Best Win</td>
-                            <td>: {{summary.bestWin | number : '1.2-2'}} pip</td>
-                        </tr>
+    <div class="row g-3 mb-3">
 
-                        <tr>
-                            <td>Worst Loss</td>
-                            <td class="text-danger">: {{summary.worstLoss | number : '1.2-2'}} pip</td>
-                        </tr>
+        <div class="col-4 border">
+            <div class="bg-white">
+                <div>
+                    <canvas id="canvas">{{chart}}</canvas>
+                </div>
+                {{summary |json}}
+                <div>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td>Total Trades</td>
+                                <td>: {{detail?.length}}</td>
+                            </tr>
+                            <tr>
+                                <td>Winrate </td>
+                                <td>: {{summary.winrate | number : '1.2-2'}}% ({{summary.win}} Win, {{summary.loss}}
+                                    Loss)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Total Pip</td>
+                                <td>: {{summary.totalPip}} pip</td>
+                            </tr>
+                            <tr>
+                                <td>Average Pip</td>
+                                <td>: {{summary.averagePip | number : '1.2-2'}} pip</td>
+                            </tr>
+                            <tr>
+                                <td>Average RR</td>
+                                <td>: {{summary.averageRr | number : '1.2-2'}}</td>
+                            </tr>
 
 
-                        <tr>
-                            <td>Consecutive win</td>
-                            <td>: {{summary.consecutiveWin}}</td>
-                        </tr>
-                        <tr>
-                            <td>Consecutive Loss</td>
-                            <td>: {{summary.consecutiveLoss}}</td>
-                        </tr>
+                            <tr>
+                                <td>Best Win</td>
+                                <td>: {{summary.bestWin | number : '1.2-2'}} pip</td>
+                            </tr>
 
-                        <tr>
-                            <td>Avarage Trading Time</td>
-                            <td>: {{summary.avaregeTradingTime}} hours</td>
-                        </tr>
-                        <tr>
-                            <td>Longest Trading Time</td>
-                            <td>: {{summary.longestTradingTime}} hours
+                            <tr>
+                                <td>Worst Loss</td>
+                                <td class="text-danger">: {{summary.worstLoss | number : '1.2-2'}} pip</td>
+                            </tr>
 
-                                {{functionsService.hourToDays(123)}}
-                                
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Faster Trading Time</td>
-                            <td>: {{summary.fasterTradingTime}} hours</td>
-                        </tr>
 
-                        <tr>
-                            <td colspan="2">
-                                <hr>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Avarage Holding Time</td>
-                            <td>: 5 days</td>
-                        </tr>
+                            <tr>
+                                <td>Consecutive win</td>
+                                <td>: {{summary.consecutiveWin}}</td>
+                            </tr>
+                            <tr>
+                                <td>Consecutive Loss</td>
+                                <td>: {{summary.consecutiveLoss}}</td>
+                            </tr>
 
-                        <tr>
-                            <td>Max Holding Time</td>
-                            <td>: 1 days</td>
-                        </tr>
-                        <tr>
-                            <td>Min Holding Time</td>
-                            <td>: 25 days</td>
-                        </tr>
-                    </tbody>
-                </table>
+                            <tr>
+                                <td>Avarage Trading Time</td>
+                                <td>: {{summary.avaregeTradingTime}} hours</td>
+                            </tr>
+                            <tr>
+                                <td>Longest Trading Time</td>
+                                <td>: {{summary.longestTradingTime}} hours
+
+                                    {{functionsService.hourToDays(123)}}
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Faster Trading Time</td>
+                                <td>: {{summary.fasterTradingTime}} hours</td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2">
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Avarage Holding Time</td>
+                                <td>: 5 days</td>
+                            </tr>
+
+                            <tr>
+                                <td>Max Holding Time</td>
+                                <td>: 1 days</td>
+                            </tr>
+                            <tr>
+                                <td>Min Holding Time</td>
+                                <td>: 25 days</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <div class="col-7">
-            <div class="border">
-                <small>Custom Field</small>
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>name</th>
-                            <th>type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let x of customField">
-                            <td>{{x.f}}</td>
-                            <td>{{x.name}}</td>
-                            <td>{{x.iType}}</td>
-                            <td><a (click)="removeCustomeFlied(x);"><i class="bi bi-trash-fill"></i></a></td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="3">
-                                <a class="btn btn-sm" (click)="addCustomField()">addCustomField</a>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+        <div class="col-8">
+            <div class="bg-white">
+                
 
-            <div class="border mb-3" *ngFor="let x of detail; let i = index">
+                <div class="border mb-3" *ngFor="let x of detail; let i = index">
 
-                <div class="row g-1">
-                    <div class="col-2">
-                        <small>Market</small>
-                        <select class="form-control form-control-sm" [(ngModel)]="x.marketId" name="marketId"
-                            (change)="onUpdate()">
-                            <option *ngFor="let x of selectMarket" [value]="x.id">{{x.name}}</option>
-                        </select>
-                    </div>
-                    <div class="col-2">
-                        <small>Position</small>
-                        <select class="form-control form-control-sm" [(ngModel)]="x.positionId" name="positionId"
-                            (change)="onUpdate()">
-                            <option value="1">BUY</option>
-                            <option value="2">SELL</option>
-                        </select>
-                    </div>
-                    <div class="col-2">
-                        <small>Stop Loss</small>
-                        <input type="number" class="form-control form-control-sm" placeholder="SL" [(ngModel)]="x.sl"
-                            name="sl" (change)="onUpdate()">
-                    </div>
+                    <div class="row g-1">
+                        <div class="col-2">
+                            <small>Market</small>
+                            <select class="form-control form-control-sm" [(ngModel)]="x.marketId" name="marketId"
+                                (change)="onUpdate()">
+                                <option *ngFor="let x of selectMarket" [value]="x.id">{{x.name}}</option>
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            <small>Position</small>
+                            <select class="form-control form-control-sm" [(ngModel)]="x.positionId" name="positionId"
+                                (change)="onUpdate()">
+                                <option value="1">BUY</option>
+                                <option value="2">SELL</option>
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            <small>Stop Loss</small>
+                            <input type="number" class="form-control form-control-sm" placeholder="SL"
+                                [(ngModel)]="x.sl" name="sl" (change)="onUpdate()">
+                        </div>
 
-                    <div class="col-2">
-                        <small>Risk Ratio</small>
-                        <input type="number" class="form-control form-control-sm" placeholder="RR" [(ngModel)]="x.rr"
-                            name="rr" (change)="onUpdate()">
-                    </div>
+                        <div class="col-2">
+                            <small>Risk Ratio</small>
+                            <input type="number" class="form-control form-control-sm" placeholder="RR"
+                                [(ngModel)]="x.rr" name="rr" (change)="onUpdate()">
+                        </div>
 
-                    <div class="col-2">
-                        <small>Take Profit</small>
-                        <input type="text" class="form-control form-control-sm" placeholder="TP" [(ngModel)]="x.tp"
-                            name="tp" readonly>
-                    </div>
+                        <div class="col-2">
+                            <small>Take Profit</small>
+                            <input type="text" class="form-control form-control-sm" placeholder="TP" [(ngModel)]="x.tp"
+                                name="tp" readonly>
+                        </div>
 
-                    <div class="col-2">
-                        <small>Result</small>
-                        <select class="form-control form-control-sm" [(ngModel)]="x.resultId" name="resultId" disabled
-                            (change)="onUpdate()">
-                            <option value="">-</option>
-                            <option value="1">WIN</option>
-                            <option value="0">BEP</option>
-                            <option value="-1">LOSS</option>
-                        </select>
+                        <div class="col-2">
+                            <small>Result</small>
+                            <select class="form-control form-control-sm" [(ngModel)]="x.resultId" name="resultId"
+                                disabled (change)="onUpdate()">
+                                <option value="">-</option>
+                                <option value="1">WIN</option>
+                                <option value="0">BEP</option>
+                                <option value="-1">LOSS</option>
+                            </select>
+
+                        </div>
 
                     </div>
 
+                    <div class="row g-1">
+                        <div class="col-5">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" name="openDate"
+                                    [(ngModel)]="x.openDate" (ngModelChange)="copyToOpenDate(x,i)" ngbDatepicker
+                                    #od="ngbDatepicker" placeholder="Open Order">
+                                <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="od.toggle()"
+                                    type="button"></button>
+
+                                <input type="time" class="form-control form-control-sm" [(ngModel)]="x.openTime"
+                                    (change)="onUpdate()" name="openTime">
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" name="closeDate"
+                                    [(ngModel)]="x.closeDate" (ngModelChange)="onUpdate()" ngbDatepicker
+                                    #cd="ngbDatepicker" placeholder="Close Order" [minDate]="x.openDate">
+                                <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="cd.toggle()"
+                                    type="button"></button>
+                                <input type="time" class="form-control form-control-sm" [(ngModel)]="x.closeTime"
+                                    (change)="onUpdate()" name="closeTime">
+                            </div>
+                        </div>
+
+                        <div class="col-2 text-end">
+                            <div class="d-grid">
+                                <a class="btn btn-primary btn-sm" (click)="openImg(galleries, x)">Images</a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row g-1">
+                        <div class="col-12">
+                            <input type="checkbox" [(ngModel)]="x.checkbox" (change)="onCalculation()">
+                            <a class="btn btn-primar btn-smy" (click)="open(content)">Notes</a>
+
+                            <span>Total Trading Time : {{x.tradingTime }} hours</span>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row g-1">
+                        <div class="col" *ngFor="let n of customField;  let a = index">
+                            {{customField[a]['name']}} {{customField[a]['iType']}}
+                            <!-- {{valueFromCustomField( customField[a]['f'], i )}} -->
+
+                            <div *ngIf="customField[a]['f'] == '1'">
+                                <input [type]="customField[a]['iType']" class="form-control form-control-sm"
+                                    (change)="onSubmit()" [(ngModel)]="x.f1" name="f1">
+                            </div>
+                            <div *ngIf="customField[a]['f'] == '2'">
+                                <input [type]="customField[a]['iType']" class="form-control form-control-sm"
+                                    (change)="onSubmit()" [(ngModel)]="x.f2" name="f2">
+                            </div>
+                            <div *ngIf="customField[a]['f'] == '3'">
+                                <input [type]="customField[a]['iType']" class="form-control form-control-sm"
+                                    (change)="onSubmit()" [(ngModel)]="x.f3" name="f3">
+                            </div>
+                            <div *ngIf="customField[a]['f'] == '4'">
+                                <input [type]="customField[a]['iType']" class="form-control form-control-sm"
+                                    (change)="onSubmit()" [(ngModel)]="x.f4" name="f4">
+                            </div>
+                        </div>
+
+
+                    </div>
                 </div>
 
-                <div class="row g-1">
-                    <div class="col-5">
-                        <div class="input-group">
-                            <input type="text" class="form-control form-control-sm" name="openDate"
-                                [(ngModel)]="x.openDate" (ngModelChange)="copyToOpenDate(x,i)" ngbDatepicker
-                                #od="ngbDatepicker" placeholder="Open Order">
-                            <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="od.toggle()"
-                                type="button"></button>
-
-                            <input type="time" class="form-control form-control-sm" [(ngModel)]="x.openTime"
-                                (change)="onUpdate()" name="openTime">
-                        </div>
-                    </div>
-                    <div class="col-5">
-                        <div class="input-group">
-                            <input type="text" class="form-control form-control-sm" name="closeDate"
-                                [(ngModel)]="x.closeDate" (ngModelChange)="onUpdate()" ngbDatepicker #cd="ngbDatepicker"
-                                placeholder="Close Order" [minDate]="x.openDate">
-                            <button class="btn btn-light border btn-sm bi bi-calendar3" (click)="cd.toggle()"
-                                type="button"></button>
-                            <input type="time" class="form-control form-control-sm" [(ngModel)]="x.closeTime"
-                                (change)="onUpdate()" name="closeTime">
-                        </div>
-                    </div>
-
-                    <div class="col-2 text-end">
-                        <div class="d-grid">
-                            <a class="btn btn-primary btn-sm" (click)="openImg(galleries, x)">Images</a>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="row g-1">
+                <div class="row">
                     <div class="col-12">
-                        <input type="checkbox" [(ngModel)]="x.checkbox" (change)="onCalculation()">
-                        <a class="btn btn-primar btn-smy" (click)="open(content)">Notes</a>
+                        <div class="d-grid py-1" *ngIf="deleteAll">
 
-                        <span>Total Trading Time : {{x.tradingTime }} hours</span>
+                            <button type="button" class="btn btn-danger" (click)="fnDeleteAll()">REMOVE</button>
+                        </div>
+                        <div class="d-grid py-1">
+                            <button type="button" class="btn btn-primary" (click)="fnAddItems()">ADD ITEMS</button>
+                        </div>
                     </div>
-
-
                 </div>
 
-                <div class="row g-1">
-                    <div class="col" *ngFor="let n of customField;  let a = index">
-                        {{customField[a]['name']}} {{customField[a]['iType']}}
-                        <!-- {{valueFromCustomField( customField[a]['f'], i )}} -->
-
-                        <div *ngIf="customField[a]['f'] == '1'">
-                            <input [type]="customField[a]['iType']" class="form-control form-control-sm"
-                                (change)="onSubmit(false)" [(ngModel)]="x.f1" name="f1">
-                        </div>
-                        <div *ngIf="customField[a]['f'] == '2'">
-                            <input [type]="customField[a]['iType']" class="form-control form-control-sm"
-                                (change)="onSubmit(false)" [(ngModel)]="x.f2" name="f2">
-                        </div>
-                        <div *ngIf="customField[a]['f'] == '3'">
-                            <input [type]="customField[a]['iType']" class="form-control form-control-sm"
-                                (change)="onSubmit(false)" [(ngModel)]="x.f3" name="f3">
-                        </div>
-                        <div *ngIf="customField[a]['f'] == '4'">
-                            <input [type]="customField[a]['iType']" class="form-control form-control-sm"
-                                (change)="onSubmit(false)" [(ngModel)]="x.f4" name="f4">
-                        </div>
-                    </div>
-
-
+                <div class="lh-1">
+                    <code> {{detail | json}}</code>
                 </div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="d-grid py-1" *ngIf="deleteAll">
-
-                        <button type="button" class="btn btn-danger" (click)="fnDeleteAll()">REMOVE</button>
-                    </div>
-                    <div class="d-grid py-1">
-                        <button type="button" class="btn btn-primary" (click)="fnAddItems()">ADD ITEMS</button>
-                    </div>
-                </div>
-            </div>
-            <div class="lh-1">
-                <code> {{detail | json}}</code>
             </div>
         </div>
 
@@ -290,18 +280,18 @@
     </div>
     <div>
         <editor apiKey="cc5hqwaiqsocbfakkn5qpug7r9bx5zioxppbw9h6w4gd0286" [init]="{
-     height: 500,
-     menubar: false,
-     plugins: [
-       'advlist autolink lists link image charmap print preview anchor',
-       'searchreplace visualblocks code fullscreen',
-       'insertdatetime media table paste code help wordcount'
-     ],
-     toolbar:
-       'undo redo | formatselect | bold italic backcolor | \
-       alignleft aligncenter alignright alignjustify | \
-       bullist numlist outdent indent | removeformat | help'
-   }"></editor>
+            height: 500,
+            menubar: false,
+            plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+            ],
+            toolbar:
+            'undo redo | formatselect | bold italic backcolor | \
+            alignleft aligncenter alignright alignjustify | \
+            bullist numlist outdent indent | removeformat | help'
+        }"></editor>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
@@ -339,8 +329,7 @@
 
     </div>
 </ng-template>
-
-
+ 
 <ng-template #fullScreenContent let-modal>
     <div class="modal-header">
         <button type="button" class="btn-close" aria-label="Close" (click)="backGalleries(galleries)"></button>
@@ -349,4 +338,42 @@
         <img [src]="detailImageUrl" class="w-100">
     </div>
 
+</ng-template>
+
+<ng-template #customColumn let-modal>
+	<div class="modal-header">
+		<div class="modal-title">Add Columns</div>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<div class="border">
+            <small>Custom Field</small>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>name</th>
+                        <th>type</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let x of customField">
+                        <td>{{x.f}}</td>
+                        <td>{{x.name}}</td>
+                        <td>{{x.iType}}</td>
+                        <td><a (click)="removeCustomeFlied(x);"><i class="bi bi-trash-fill"></i></a></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <a class="btn btn-sm" (click)="addCustomField()">addCustomField</a>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+	</div>
+	 
 </ng-template>

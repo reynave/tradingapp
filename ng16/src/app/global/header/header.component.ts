@@ -72,7 +72,7 @@ export class HeaderComponent implements OnInit, OnChanges {
       headers: this.configService.headers()
     }).subscribe(
       data => {
-        // console.log(data);
+          console.log(data);
       },
       e => {
         console.log(e);

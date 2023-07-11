@@ -10,6 +10,8 @@ import { BacktestDetailComponent } from './backtest/backtest-detail/backtest-det
 import { ReloginComponent } from './login/relogin/relogin.component';
 import { JournalComponent } from './journal/journal.component';
 import { BookComponent } from './book/book.component';
+import { TradeComponent } from './trade/trade.component';
+import { TemplateTableComponent } from './template/template-table/template-table.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -22,7 +24,9 @@ const routes: Routes = [
   { path: "book/:id", component: BookComponent, data: { active: "book" },  canActivate:[authGuard]  }, 
  
 
-  { path: "journal", component: JournalComponent, data: { active: "journal" },  canActivate:[authGuard]  }, 
+  { path: "trade/:id", component: TradeComponent, data: { active: "trade" },  canActivate:[authGuard]  }, 
+  
+  { path: "template/table", component: TemplateTableComponent, data: { active: "template" },  canActivate:[authGuard]  }, 
  
 
   { path: "backtest", component: BacktestComponent, data: { active: "backtest" },  canActivate:[authGuard]  }, 
