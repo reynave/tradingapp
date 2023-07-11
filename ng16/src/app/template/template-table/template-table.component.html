@@ -1,16 +1,36 @@
+
 <div class="container-fluid">
     <div class="row g-1">
 
-        <div class="col-lg-4 col-12">
-            <div class="sticky-top mt-1">
-                <div class="border bg-white rounded p-3 ">
-                    table CHART
+        <div class="col-lg-4 col-12" [hidden]="!leftSide">
+            <div class="sticky-top mt-1"> 
+                <div class="border bg-white rounded ">
+                    <div class="text-end">
+                        <button type="button" (click)="leftSide=false" class="btn btn-light"><i class="bi bi-arrow-bar-left"></i></button>
+                    </div>
+                    <div class="mb-4">
+                        <img src="https://learn.microsoft.com/en-us/power-bi/visuals/media/power-bi-line-charts/power-bi-line.png"
+                            width="100%">
+                    </div>
+                    <div class="p-3">
+
+                        <div class="mb-2">
+                            <h4>Summary</h4>
+                        </div>
+                        <div class="mb-2">
+                            Total Trades
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-
-        <div class="col-lg-8 col-12">
+        <div class="col-1" [hidden]="leftSide">
+            <div class="text-start mt-1">
+                <a (click)="leftSide=true"> <i class="bi bi-arrow-bar-right h2"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-{{leftSide == false ? 11:8}} col-12">
 
             <div class="border bg-white rounded p-3 mt-1">
 
@@ -21,7 +41,9 @@
                     <div class="col-4 text-end">
                         <div class="d-flex flex-row-reverse ">
                             <div>
-                                <a href="javascript:;" class="btn btn-outline-dark" placement="top-right" (click)="openModalFullscreen(contentCustomField)" ngbTooltip="Tooltip on top"><i  class="bi bi-gear"></i></a>
+                                <a href="javascript:;" class="btn btn-outline-dark" placement="top-right"
+                                    (click)="openModalFullscreen(contentCustomField)" ngbTooltip="Tooltip on top"><i
+                                        class="bi bi-gear"></i></a>
                             </div>
 
                             <div ngbDropdown container="body" class="mx-1">
@@ -35,7 +57,7 @@
                                     <button ngbDropdownItem>Delete</button>
                                 </div>
                             </div>
-                           
+
                         </div>
                     </div>
                     <div class="col-12">
@@ -49,6 +71,7 @@
                 </div>
 
             </div>
+
             <div class="border bg-white rounded mt-1">
 
                 <div class="tables-body">
@@ -95,17 +118,24 @@
                         <div class=" order-1 ">
                             <div class="orders text-center">
                                 <div ngbDropdown>
-                                    <div id="dropdownForm2" class="bg-warning select p-1" ngbDropdownToggle>
-                                        toggle
+                                    <div id="dropdownForm2" class="bg-success select p-1" ngbDropdownToggle>
+                                        BUY
                                     </div>
                                     <div ngbDropdownMenu aria-labelledby="dropdownForm2">
-                                        dfagsfdg
+                                        <div style="width: 200px;" class="p-2 d-grid">
+                                            <button type="button" class="btn btn-primary mb-1">BUY</button>
+                                            <button type="button" class="btn btn-warning mb-1">SELL</button>
+                                            <hr>
+                                            <button type="button"
+                                                class="btn btn-outline-light border text-black mb-1"><i
+                                                    class="bi bi-pencil"></i> Edit Select</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class=" order-2">
-                            <div class="orders"> <input type="number" class="p-1" value="123"></div>
+                            <div class="orders"> <input type="number" class="p-1" value="123" #justInput (keydown.enter)="justInput.blur();update();false"></div>
                         </div>
                         <div class=" order-3">
                             <div class="orders"> <input type="text" class="p-1" value="123"></div>
@@ -153,21 +183,15 @@
 
 <ng-template #content let-offcanvas>
     <div class="offcanvas-header">
-        <div class="offcanvas-title" id="offcanvas-basic-title">Profile update</div>
+        <div class="offcanvas-title" id="offcanvas-basic-title">Notes</div>
         <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
     </div>
     <div class="offcanvas-body">
-        <form>
-            <div class="mb-3">
-                <label for="dateOfBirth">Date of birth</label>
-                <div class="input-group">
-                    <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
-                        #dp="ngbDatepicker" />
-                    <button class="btn btn-outline-secondary bi bi-calendar3" (click)="dp.toggle()"
-                        type="button"></button>
-                </div>
-            </div>
-        </form>
+
+        <div class="mb-3"> 
+            <textarea class="form-control"></textarea>
+        </div>
+
         <div class="text-end">
             <button type="button" class="btn btn-outline-dark" (click)="offcanvas.close('Save click')">Save</button>
         </div>
@@ -176,26 +200,36 @@
 
 
 <ng-template #contentCustomField let-modal>
-	<div class="modal-header">
-		<div class="modal-title">Custom Fields</div>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		 <div class="container">
-            <div class="row">
-                <div class="col-4 text-end border-bottom ">Pair</div>
-                <div class="col-8 border-bottom">
+    <div class="modal-header">
+        <div class="modal-title">Custom Fields</div>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="container sortable">
+            <div class="row" *ngFor="let x of fields">
+                <div class="col-4 text-end border-bottom py-2">{{x.name}} :</div>
+                <div class="col-8 border-bottom py-2">
                     <div class="d-flex flex-row">
-                        <div class="px-2">Dropdown</div>
-                        <div class="px-2">300px</div>
+                        <div class="px-2">
+                            <select class="form-control form-control-sm py-0 ">
+                                <option>Text</option>
+                                <option>Number</option>
+                                <option>Date</option>
+                            </select>
+                        </div>
+                        <div class="px-2">
+                            <div class="input-group">
+                                <input type="number" style="width: 80px;"
+                                    class="form-control form-control-sm py-0 text-end" placeholder="100">
+                                <span class="input-group-text" id="basic-addon1">px</span>
+                            </div>
+                        </div>
                         <div class="px-2"><i class="bi bi-lock"></i></div>
-                        <div class="px-2"><i class="bi bi-list"></i></div> 
-                      </div>
-                </div> 
+                        <div class="px-2 handle" data-id="{{x.id}}"><i class="bi bi-list"></i></div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
 
-            
-         </div>
-	</div>
-	 
 </ng-template>

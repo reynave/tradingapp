@@ -50,12 +50,25 @@ input:focus {
     width: 40% !important;  
 }
 
-.bg-warning{
+.bg-warning, .bg-success{
     color:var(--color-white);
-}
+} 
+
 .dropdown-menu.show {
     background-color: var(--color-white);
     padding: 10px;
     border: 1px solid var(--color-gray);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.ui-sortable-helper{
+    background-color:var(--color-white);
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.ui-state-highlight{
+    background-color:#FBFFDC !important; 
+    height: 50px;
+    border: none;
 }
