@@ -23,9 +23,7 @@ export class Model {
   styleUrls: ['./backtest-detail.component.css']
 })
 export class BacktestDetailComponent implements OnInit {
-  getProperties(_t195: any): any {
-    throw new Error('Method not implemented.');
-  }
+  
   item = new Model("", 0, "", "", "");
   id: string = "";
   waiting: boolean = false;
@@ -89,6 +87,7 @@ export class BacktestDetailComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
+        console.log(data);
         this.customField = data['customField'];
         this.detail = data['detail'].map((item: any) => ({
           ...item,
@@ -116,8 +115,7 @@ export class BacktestDetailComponent implements OnInit {
         this.item.url = environment.api + '?share=' + data['item']['url'];
 
         if(recalulate == true){
-          this.onCalculation();
-          
+          this.onCalculation(); 
         }
        
       },

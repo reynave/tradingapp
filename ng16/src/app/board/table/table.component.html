@@ -10,8 +10,7 @@
                                 class="bi bi-arrow-bar-left"></i></button>
                     </div>
                     <div class="mb-4">
-                        <img src="https://learn.microsoft.com/en-us/power-bi/visuals/media/power-bi-line-charts/power-bi-line.png"
-                            width="100%">
+                        <canvas id="canvas">{{chart}}</canvas>
                     </div>
                     <div class="p-3">
 
@@ -21,6 +20,7 @@
                         <div class="mb-2">
                             Total Trades
                         </div>
+                        {{detail |json}}
                     </div>
                 </div>
             </div>
@@ -81,109 +81,36 @@
                                     <i class="bi bi-check-square-fill text-primary"></i>
                                 </div>
                             </div>
-                            <div class=" order-1 bg-white ">
-                                <div class="p-1 text-center orders ">Market</div>
+                            <div class=" order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index">
+                                <div class="p-1 text-center orders ">{{n.name}}</div>
                             </div>
-                            <div class=" order-2 bg-white">
-                                <div class="p-1 text-center orders"> Position </div>
-                            </div>
-                            <div class=" order-3 bg-white">
-                                <div class="p-1 text-center orders">Stop Loss </div>
-                            </div>
-                            <div class=" order-4 bg-white">
-                                <div class="p-1 text-center orders">Risk Ratio</div>
-                            </div>
-                            <div class=" order-5 bg-white">
-                                <div class="p-1 text-center orders">Take Profit </div>
-                            </div>
-                            <div class=" order-6 bg-white">
-                                <div class="p-1 text-center orders">Order Date</div>
-                            </div>
-                            <div class=" order-7 bg-white">
-                                <div class="p-1 text-center orders">Close Date</div>
-                            </div>
-                            <div class=" order-7 bg-white">
-                                <div class="p-1 text-center orders">Notes</div>
+                            <div class=" order-99 bg-white ">
+                                <div class="p-1 text-center orders ">Notes</div>
                             </div>
 
                         </div>
                     </div>
 
-                    <div class="d-flex tables-body-td" *ngFor="let item of items">
+                    <div class="d-flex tables-body-td" *ngFor="let x of detail; let i = index">
                         <div class="floating-div bg-white">
-                            <div class="py-1  px-2 ">
-                                <i class="bi bi-square"></i>
+                            <div class="py-1 px-2">
+                                <span *ngIf="x.checkbox===true" (click)="x.checkbox=false">
+                                    <i class="bi bi-check-square-fill text-primary"></i>
+                                </span>
+                                <span *ngIf="x.checkbox!=true" (click)="x.checkbox=true">
+                                    <i class="bi bi-square"></i>
+                                </span>
                             </div>
                         </div>
-                        <div class=" order-1 ">
-                            <div class="orders text-center ">
-                                <div ngbDropdown>
-                                    <div id="dropdownForm2" class="bg-success select p-1" ngbDropdownToggle>
-                                        BUY
-                                    </div>
-                                    <div ngbDropdownMenu aria-labelledby="dropdownForm2">
-                                        <div style="width: 200px;" class="p-2 d-grid">
-                                            <div class="mb-3">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    placeholder="Search Option">
-                                            </div>
-                                            <div class="mb-1 d-grid" style="overflow-y: auto; max-height: 200px;">
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
 
-                                            </div>
-                                            <hr>
-                                            <button type="button"
-                                                class="btn btn-outline-light border text-black mb-1"><i
-                                                    class="bi bi-pencil"></i> Edit Select</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class=" order-2">
+                        <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index">
                             <div class="orders">
-                               <app-custom-field  [item]="item" [itemSelect]="'hahaha'" (newItemEvent)="onChild($event)"></app-custom-field>
+                                <app-custom-field [item]="objItem(n,x)" [itemSelect]="'hahaha'"
+                                    (newItemEvent)="onChild($event)"></app-custom-field>
                             </div>
                         </div>
-                        <div class=" order-3">
-                            <div class="orders"> <input type="number" class="p-1  text-end" value="123" #justInput
-                                    (keydown.enter)="justInput.blur();update();false"></div>
-                        </div>
-                        <div class=" order-4">
-                            <div class="orders"> <input type="text" class="p-1" value="123"> </div>
-                        </div>
-                        <div class=" order-5">
-                            <div class="orders"> 
-                                <div class="p-1 text-center" ngbDropdown>
-                                    <small id="dropdownForm2" ngbDropdownToggle> 2023-01-03 12:21 </small>
-                                  
-                                    <div ngbDropdownMenu aria-labelledby="dropdownForm2">
-                                        <ngb-datepicker #dp123   (navigate)="$event.next"></ngb-datepicker>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class=" order-6">
-                            <div class="orders">
-                                <input   type="text" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker readonly class="text-center p-1"
-                                    #dp="ngbDatepicker" (click)="dp.toggle()" />
-                            </div>
-                        </div>
-                        <div class=" order-7">
-                            <div class="orders"><input type="text" class="p-1" value="123"></div>
-                        </div>
-                        <div class=" order-7">
+
+                        <div class=" order-99">
                             <div class="orders ">
                                 <div class="p-1 text-center">
                                     <a href="javascript:;" (click)="openCanvas(content)">
@@ -193,6 +120,7 @@
                             </div>
                         </div>
                     </div>
+                  
                 </div>
             </div>
 

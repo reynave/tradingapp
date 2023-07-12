@@ -224,7 +224,7 @@
 
                     <div class="row g-1">
                         <div class="col" *ngFor="let n of customField;  let a = index">
-                            {{customField[a]['name']}} {{customField[a]['iType']}}
+                            <div>name : {{customField[a]['name']}}, iType: {{customField[a]['iType']}}</div>
                             <!-- {{valueFromCustomField( customField[a]['f'], i )}} -->
 
                             <div *ngIf="customField[a]['f'] == '1'">

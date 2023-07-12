@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbOffcanvas, NgbModal, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 declare var $: any;
 
 @Component({
@@ -13,16 +13,30 @@ export class TemplateTableComponent implements OnInit{
   panels = ['First', 'Second', 'Third'];
   fields: any = [];
   items: any = [];
+
+  currentItem : any = {
+    id : 1,
+    value : "Sayama AI",
+    itype : "text",
+  };
+
   constructor(
     private offcanvasService: NgbOffcanvas, 
-    private modalService: NgbModal
+    private modalService: NgbModal, 
+    private calendar: NgbCalendar
   ) { }
 
+  onChild(newItem: any) {
+     console.log(newItem)
+  }
   ngOnInit(): void {
+  
     for (let i = 0; i < 100; i++) {
       this.items.push({
         id: i + 1,
-        name: "test",
+        name: "test "+i,
+        itype: ( i % 5 == 0) ? 'select':'text',
+        value : "value "+i, 
       });
     }
     for (let i = 0; i < 15; i++) {
@@ -30,11 +44,14 @@ export class TemplateTableComponent implements OnInit{
         id: i + 1,
         name: "Name_"+(i*7),
       });
+     
     }
-    console.log(this.items);
-
-   
+    console.log(this.items); 
   }
+
+  focusSelect(){
+    console.log("date");
+  } 
 
   openCanvas(content: any) {
     this.offcanvasService.open(content, { position: 'end', panelClass: 'details-panel', }).result.then(
@@ -59,6 +76,10 @@ export class TemplateTableComponent implements OnInit{
 		);
 
     $(function () {
+      $( ".resizable" ).resizable({ 
+        maxHeight: 33,
+        minHeight: 33,
+      });
       $(".sortable").sortable({
         handle: ".handle",
         placeholder: "ui-state-highlight",
@@ -79,4 +100,6 @@ export class TemplateTableComponent implements OnInit{
   update(){
     console.log("update");
   }
+
+  
 }

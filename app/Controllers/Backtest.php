@@ -25,7 +25,7 @@ class Backtest extends BaseController
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
         if ($data['request']['id'] && $id) {
 
-            $c = "SELECT id,f, name, iType FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
+            $c = "SELECT id,f, name, iType, sorting FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
 
             $customField = "";

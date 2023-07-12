@@ -5,7 +5,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -17,9 +17,10 @@ import { BacktestDetailComponent } from './backtest/backtest-detail/backtest-det
 import { ReloginComponent } from './login/relogin/relogin.component';
 import { HeaderComponent } from './global/header/header.component';
 import { JournalComponent } from './journal/journal.component';
-import { BookComponent } from './book/book.component';
-import { TradeComponent } from './trade/trade.component';
+import { BookComponent } from './book/book.component'; 
 import { TemplateTableComponent } from './template/template-table/template-table.component';
+import { CustomFieldComponent } from './template/custom-field/custom-field.component';
+import { TableComponent } from './board/table/table.component';
 
 @NgModule({
   declarations: [
@@ -32,9 +33,10 @@ import { TemplateTableComponent } from './template/template-table/template-table
     ReloginComponent,
     HeaderComponent,
     JournalComponent,
-    BookComponent,
-    TradeComponent,
-    TemplateTableComponent
+    BookComponent, 
+    TemplateTableComponent,
+    CustomFieldComponent,
+    TableComponent
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,9 @@ import { TemplateTableComponent } from './template/template-table/template-table
     FormsModule,
     HttpClientModule,
     GoogleChartsModule,
-    EditorModule
+    EditorModule,
+    NgbDatepickerModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

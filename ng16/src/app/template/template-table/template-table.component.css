@@ -3,7 +3,7 @@
     overflow-x: auto;
     white-space: nowrap;
     max-width: 1900px;
-    height: calc(100vh - (var(--body-margin-top)*1.9));
+    height: calc(100vh - (var(--body-margin-top)) - 93px );
 }
 
 .orders {
@@ -23,7 +23,8 @@
     left: 0px;
     top: 0px;
     z-index: 99;
-    width: 150px;
+    width: 50px;
+    text-align: center;
 }
 
 .tables-body-td input {
@@ -71,4 +72,8 @@ input:focus {
     background-color:#FBFFDC !important; 
     height: 50px;
     border: none;
+}
+
+.ui-icon-gripsmall-diagonal-se {
+    background-position: -210px -50px;
 }
