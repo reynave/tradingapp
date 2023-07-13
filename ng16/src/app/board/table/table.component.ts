@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment.development';
 import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service';
 import Chart from 'chart.js/auto';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbOffcanvas, NgbModal, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 declare var $: any;
 
 export class Model {
@@ -21,9 +21,12 @@ export class Model {
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  styleUrls: ['./table.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TableComponent implements OnInit {
+  @ViewChild('canvasRight') canvasRight: any;
+
   leftSide: boolean = true;
   panels = ['First', 'Second', 'Third'];
   fields: any = [];
@@ -34,9 +37,8 @@ export class TableComponent implements OnInit {
   waiting: boolean = false;
   loading: boolean = false;
   detail: any = [];
-  selectMarket: any = [];
   myTimeout: any;
-  detailSelect: any = [];
+  select: any = [];
   httpNote: string = "";
   fileName = "";
   deleteAll: boolean = false;
@@ -48,6 +50,8 @@ export class TableComponent implements OnInit {
   }
   detailImageUrl: string = "";
   journalDetailId: string = "";
+  startUpTable: boolean = false;
+  isCheckBoxAll: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -57,12 +61,7 @@ export class TableComponent implements OnInit {
     private ativatedRoute: ActivatedRoute,
     private router: Router,
     private offcanvasService: NgbOffcanvas,
-    private calendar: NgbCalendar
   ) { }
-
-  onChild(newItem: any) {
-    console.log(newItem)
-  }
 
   ngOnInit(): void {
     this.chart = new Chart('canvas', {
@@ -88,30 +87,12 @@ export class TableComponent implements OnInit {
         },
       },
     });
-
     this.id = this.ativatedRoute.snapshot.params['id'];
-
-    // for (let i = 0; i < 100; i++) {
-    //   this.items.push({
-    //     id: i + 1,
-    //     name: "test " + i,
-    //     itype: (i % 5 == 0) ? 'select' : 'text',
-    //     value: "value " + i,
-    //   });
-    // }
-    // for (let i = 0; i < 15; i++) {
-    //   this.fields.push({
-    //     id: i + 1,
-    //     name: "Name_" + (i * 7),
-    //   });
-
-    // }
-    // console.log(this.items);
     this.httpGet(true);
   }
 
   httpGet(recalulate: boolean = false) {
-    this.http.get<any>(environment.api + "backtest/detail?id=" + this.id, {
+    this.http.get<any>(environment.api + "Tables/detail?id=" + this.id, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
@@ -139,13 +120,13 @@ export class TableComponent implements OnInit {
         this.item.permissionId = data['item']['permissionId'];
         this.item.borderColor = data['item']['borderColor'];
         this.item.backgroundColor = data['item']['backgroundColor'];
-
+        this.select = data['select'];
         this.item.url = environment.api + '?share=' + data['item']['url'];
 
         if (recalulate == true) {
           // this.onCalculation();
         }
-
+        this.startUpTable = true;
       },
       e => {
         console.log(e);
@@ -153,14 +134,79 @@ export class TableComponent implements OnInit {
     )
   }
 
+  detailObject : any = [];
+  onChild(newItem: any) {
+    //console.log(this.detail[newItem.index]);
+    console.log("Saving...", this.waiting);
+    console.log(newItem);
+   
+    if (newItem['itype'] == 'note') {
+      this.detailObject = newItem;
+      this.openCanvasRight();
+    } else { 
+      this.detail[newItem.index]["f" + newItem.customField.f] = newItem.value;
+      if (this.waiting == false) {
+        this.waiting = true;
+        this.myTimeout = setTimeout(() => {
+          this.waiting = false;
+          this.loading = true;
+          const body = {
+            id: this.id,
+            newItem: newItem,
+          }
+          this.http.post<any>(environment.api + 'CustomField/updateData', body,
+            { headers: this.configService.headers() }
+          ).subscribe(
+            data => {
+              console.log(data);
+              this.loading = false;
+              console.log("onSubmit Done");
+            },
+            e => {
+              console.log(e);
+            },
+          );
 
+        }, 100);
+      }
 
-  focusSelect() {
-    console.log("date");
+    }
   }
 
-  openCanvas(content: any) {
-    this.offcanvasService.open(content, { position: 'end', panelClass: 'details-panel', }).result.then(
+  onSubmit() {
+    clearTimeout(this.myTimeout);
+
+    this.loading = true;
+    const body = {
+      id: this.id,
+      item: this.item,
+      detail: this.detail,
+    }
+    this.http.post<any>(environment.api + 'Tables/onSubmit', body,
+      { headers: this.configService.headers() }
+    ).subscribe(
+      data => {
+        console.log("onSubmit Done");
+      },
+      e => {
+        console.log(e);
+      },
+    );
+  }
+
+  // openCanvas(content: any) {
+  //   this.offcanvasService.open(content, { position: 'end', panelClass: 'details-panel', }).result.then(
+  //     (result) => {
+  //       console.log("load data");
+  //     },
+  //     (reason) => {
+
+  //     },
+  //   );
+  // }
+
+  openCanvasRight() {
+    this.offcanvasService.open(this.canvasRight, { position: 'end', panelClass: 'details-panel', }).result.then(
       (result) => {
         console.log("load data");
       },
@@ -169,7 +215,6 @@ export class TableComponent implements OnInit {
       },
     );
   }
-
 
   openModalFullscreen(content: any) {
     this.modalService.open(content, { fullscreen: true }).result.then(
@@ -203,17 +248,36 @@ export class TableComponent implements OnInit {
     });
   }
 
-  update() {
-    console.log("update");
-  }
-  objItem(customField: any, detail: any) {
-    const data = { 
-      id: detail.id, 
-      name: 'test', 
-      itype: (detail.id % 5 == 0) ? 'select' : 'text', 
-      value: detail['f' + customField['f']], 
+  objItem(customField: any, detail: any, index: number) {
+
+    let objIndex = this.select.findIndex(((obj: { field: string; }) => obj.field == 'f' + customField['f']));
+
+    const data = {
+      index: index,
+      id: detail.id,
+      customField: customField,
+      itype: customField['iType'],
+      value: detail['f' + customField['f']],
+      select: this.select[objIndex],
     }
     return data;
+  }
+
+  checkBoxAll(status: boolean = false) {
+    if (status == true) {
+      this.isCheckBoxAll = true;
+      this.detail = this.detail.map((item: any) => ({
+        ...item,
+        checkbox: true,
+      }));
+    }
+    else if (status == false) {
+      this.isCheckBoxAll = false;
+      this.detail = this.detail.map((item: any) => ({
+        ...item,
+        checkbox: false,
+      }));
+    }
   }
 
 }

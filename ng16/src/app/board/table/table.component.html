@@ -32,8 +32,7 @@
             <div class="border bg-white rounded p-3 mt-1">
                 <div class="row">
                     <div class="col-8">
-                        <h4 class="d-inline" placement="top-left" ngbTooltip="Tooltip on top">Title of setup trading
-                        </h4>
+                        <h4 class="d-inline" placement="top-left" ngbTooltip="Tooltip on top">Title of setup trading </h4>
                     </div>
                     <div class="col-4 text-end">
                         <div class="d-flex flex-row-reverse ">
@@ -72,17 +71,22 @@
             </div>
 
             <div class="border bg-white rounded mt-1">
+ 
+                <div class="text-center my-5" *ngIf="!startUpTable">
+                    <img src="./assets/gif/loading-board.gif"  class="w-100" style="max-width: 300px;">
+                </div>
 
-                <div class="tables-body">
+                <div class="tables-body" *ngIf="startUpTable">
                     <div class="sticky-top">
                         <div class="d-flex tables-header-td bg-white">
                             <div class="floating-div bg-white">
                                 <div class="py-1 px-2">
-                                    <i class="bi bi-check-square-fill text-primary"></i>
+                                     <i class="bi bi-check-square-fill text-primary"  *ngIf="isCheckBoxAll" (click)="checkBoxAll(false)"></i>  
+                                    <i class="bi bi-square" *ngIf="!isCheckBoxAll" (click)="checkBoxAll(true)"></i>
                                 </div>
                             </div>
                             <div class=" order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index">
-                                <div class="p-1 text-center orders ">{{n.name}}</div>
+                                <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}</div>
                             </div>
                             <div class=" order-99 bg-white ">
                                 <div class="p-1 text-center orders ">Notes</div>
@@ -103,22 +107,21 @@
                             </div>
                         </div>
 
-                        <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index">
-                            <div class="orders">
-                                <app-custom-field [item]="objItem(n,x)" [itemSelect]="'hahaha'"
-                                    (newItemEvent)="onChild($event)"></app-custom-field>
+                        <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index" >
+                            <div class="orders" [ngStyle]="{'width': n.width+'px'}"> 
+                                <app-custom-field [item]="objItem(n,x,i)"   (newItemEvent)="onChild($event)"></app-custom-field>
                             </div>
                         </div>
 
-                        <div class=" order-99">
+                        <!-- <div class=" order-99">
                             <div class="orders ">
                                 <div class="p-1 text-center">
-                                    <a href="javascript:;" (click)="openCanvas(content)">
+                                    <a href="javascript:;" (click)="openCanvasRight()">
                                         <small><i class="bi bi-chat"></i> Add Notes</small>
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                   
                 </div>
@@ -129,7 +132,7 @@
 </div>
 
 
-<ng-template #content let-offcanvas>
+<ng-template #canvasRight let-offcanvas>
     <div class="offcanvas-header">
         <div class="offcanvas-title" id="offcanvas-basic-title">Notes</div>
         <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
@@ -137,7 +140,22 @@
     <div class="offcanvas-body">
 
         <div class="mb-3">
-            <textarea class="form-control"></textarea>
+           
+            <!-- {{detailObject | json}} -->
+            <editor apiKey="cc5hqwaiqsocbfakkn5qpug7r9bx5zioxppbw9h6w4gd0286" [init]="{
+                height: 500,
+                menubar: false, 
+                branding: false,
+                plugins: [
+                'advlist autolink lists link image charmap print preview anchor', 
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar:
+                'formatselect | bold italic backcolor | \
+                alignleft aligncenter alignright alignjustify | \
+                bullist numlist outdent indent | removeformat'
+            }" [(ngModel)]="detailObject.value" ></editor>
         </div>
 
         <div class="text-end">

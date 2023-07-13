@@ -1,0 +1,29 @@
+/* set the unit abbreviation for each unit class */
+.customFieldArea {
+    display: inline-block;
+    position: relative;
+}
+
+/* position the unit to the right of the wrapper */
+.customFieldArea::after {
+    position: absolute;
+    top: 2px;
+    right: .5em;
+    transition: all .05s ease-in-out;
+}
+
+.customFieldArea:hover::after,
+.customFieldArea:focus-within::after {
+    right: 1.5em;
+}
+
+/* handle Firefox (arrows always shown) */
+@supports (-moz-appearance:none) {
+    .customFieldArea::after {
+        right: 1.5em;
+    }
+}
+
+.percent::after {
+    content: '%';
+}
