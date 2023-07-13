@@ -17,6 +17,14 @@ export class Model {
     public backgroundColor: string,
   ) { }
 }
+export class NewSelect {
+  constructor(
+    public value: string, 
+    public field: string, 
+    public journalId: string, 
+    public color: string,  
+  ) { }
+}
 
 @Component({
   selector: 'app-table',
@@ -54,7 +62,7 @@ export class TableComponent implements OnInit {
   startUpTable: boolean = false;
   isCheckBoxAll: boolean = false;
 
-
+  newSelect = new NewSelect("","","","");
   backgroundColorOption : any = [];
   
   constructor(
@@ -150,6 +158,9 @@ export class TableComponent implements OnInit {
       this.openCanvasRight();
     }else if (newItem['itype'] == 'editSelect') {
       this.detailObject = newItem;
+      this.newSelect.field = this.detailObject.select.field;
+      this.newSelect.journalId = this.detailObject.customField.journalId;
+      
       this.modalService.open(this.contentEditSelect, { centered: true });
     } else { 
       this.detail[newItem.index]["f" + newItem.customField.f] = newItem.value;

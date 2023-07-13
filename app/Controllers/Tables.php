@@ -24,7 +24,7 @@ class Tables extends BaseController
 
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
         if ($data['request']['id'] && $id) {
-
+ 
             $c = "SELECT * FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
 
@@ -42,7 +42,7 @@ class Tables extends BaseController
 
             $select = [];
             foreach($customFieldObj as $rec) {
-                $option = "SELECT field, id, value, journalId, background
+                $option = "SELECT *
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 1 order by sorting ASC, id DESC";
              

@@ -27,7 +27,7 @@ export class CustomFieldComponent implements OnInit{
   background(value:string){
     let objIndex = this.childItem.select.option.findIndex(((obj: { value: string; }) => obj.value == value ));
     if(objIndex > -1){
-      return this.childItem.select.option[objIndex]['background'];
+      return this.childItem.select.option[objIndex]['color'];
     }else{
       return 'auto';
     } 

@@ -243,8 +243,7 @@
                                 </div>
                               
                             </div>
-                        </div>
-                        
+                        </div> 
                     </td>
                     <td>
                         <a href="javascript:;"  class="btn btn-light"><i class="bi bi-trash"></i></a>
@@ -253,9 +252,15 @@
                         <a href="javascript:;"  class="btn "> <i class="bi bi-list"></i></a>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <input type="text" class="form-control" [(ngModel)]="newSelect.value">
+                    </td>
+                </tr>
             </tbody>
            
         </table>
+        {{newSelect | json}}
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
