@@ -20,7 +20,9 @@
                         <div class="mb-2">
                             Total Trades
                         </div>
-                        {{detail |json}}
+                        <a class="m-1 btn" *ngFor="let i of backgroundColorOption" >
+                            <i class="bi bi-square-fill fs-4"   [ngStyle]="{'color': i.color }" ></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -88,9 +90,9 @@
                             <div class=" order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index">
                                 <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}</div>
                             </div>
-                            <div class=" order-99 bg-white ">
+                            <!-- <div class=" order-99 bg-white ">
                                 <div class="p-1 text-center orders ">Notes</div>
-                            </div>
+                            </div> -->
 
                         </div>
                     </div>
@@ -113,15 +115,7 @@
                             </div>
                         </div>
 
-                        <!-- <div class=" order-99">
-                            <div class="orders ">
-                                <div class="p-1 text-center">
-                                    <a href="javascript:;" (click)="openCanvasRight()">
-                                        <small><i class="bi bi-chat"></i> Add Notes</small>
-                                    </a>
-                                </div>
-                            </div>
-                        </div> -->
+                         
                     </div>
                   
                 </div>
@@ -219,4 +213,51 @@
 
     </div>
 
+</ng-template>
+
+
+
+<ng-template #contentEditSelect let-modal>
+	<div class="modal-header">
+		<small class="modal-title" id="modal-basic-title">Profile update</small>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<code> {{detailObject.select | json}}</code>
+        <table class="table">
+            <tbody>
+                <tr *ngFor="let item of detailObject.select.option">
+                    <td>
+                        <input type="text" class="form-control" [(ngModel)]="item.value">
+                    </td>
+                    <td>
+                        <div ngbDropdown class="d-inline-block" #myDrop="ngbDropdown">
+                            <a  class="btn btn-light"  id="dropdownBasic1" ngbDropdownToggle>
+                                <i class="bi bi-square-fill"></i>
+                            </a>
+                            <div ngbDropdownMenu>
+                                <div style="width: 200px;">
+                                    <a class="m-1 btn" *ngFor="let i of backgroundColorOption" (click)="myDrop.close()">
+                                        <i class="bi bi-square-fill fs-4"   [ngStyle]="{'color': i.color }" ></i>
+                                    </a>
+                                </div>
+                              
+                            </div>
+                        </div>
+                        
+                    </td>
+                    <td>
+                        <a href="javascript:;"  class="btn btn-light"><i class="bi bi-trash"></i></a>
+                    </td>
+                    <td>
+                        <a href="javascript:;"  class="btn "> <i class="bi bi-list"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+           
+        </table>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+	</div>
 </ng-template>

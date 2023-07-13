@@ -26,6 +26,7 @@ export class Model {
 })
 export class TableComponent implements OnInit {
   @ViewChild('canvasRight') canvasRight: any;
+  @ViewChild('contentEditSelect') contentEditSelect: any;
 
   leftSide: boolean = true;
   panels = ['First', 'Second', 'Third'];
@@ -53,6 +54,9 @@ export class TableComponent implements OnInit {
   startUpTable: boolean = false;
   isCheckBoxAll: boolean = false;
 
+
+  backgroundColorOption : any = [];
+  
   constructor(
     private http: HttpClient,
     public functionsService: FunctionsService,
@@ -97,6 +101,7 @@ export class TableComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
+        this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
         this.detail = data['detail'].map((item: any) => ({
           ...item,
@@ -143,6 +148,9 @@ export class TableComponent implements OnInit {
     if (newItem['itype'] == 'note') {
       this.detailObject = newItem;
       this.openCanvasRight();
+    }else if (newItem['itype'] == 'editSelect') {
+      this.detailObject = newItem;
+      this.modalService.open(this.contentEditSelect, { centered: true });
     } else { 
       this.detail[newItem.index]["f" + newItem.customField.f] = newItem.value;
       if (this.waiting == false) {
@@ -169,7 +177,6 @@ export class TableComponent implements OnInit {
 
         }, 100);
       }
-
     }
   }
 

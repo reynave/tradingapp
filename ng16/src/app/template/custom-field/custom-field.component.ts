@@ -18,6 +18,11 @@ export class CustomFieldComponent implements OnInit{
   emitToParent(newValue: string) { 
     this.newItemEvent.emit(this.childItem);
   }
+  emitModalEditSelect(){
+    this.childItem.itype= "editSelect";
+    console.log(this.childItem);
+    this.newItemEvent.emit( this.childItem);
+  }
 
   background(value:string){
     let objIndex = this.childItem.select.option.findIndex(((obj: { value: string; }) => obj.value == value ));

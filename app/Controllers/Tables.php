@@ -53,6 +53,10 @@ class Tables extends BaseController
                 array_push($select, $temp);
             } 
 
+            $b = "SELECT * FROM color   ORDER BY id ASC ";
+            $backgroundColorOption = $this->db->query($b)->getResultArray();
+
+
             $data = array(
                 "error" => false,
                 "id" => $id,
@@ -61,6 +65,7 @@ class Tables extends BaseController
                 "customFieldObj" =>  $customFieldObj,
                 "select" =>  $select, 
                 "customField" => $journal_custom_field,
+                "backgroundColorOption" => $backgroundColorOption,
                 "q" => $q,
             );
         }
