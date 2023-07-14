@@ -78,7 +78,7 @@ a{
   overflow-x: auto;
   white-space: nowrap;
   max-width: 1900px;
-  height: calc(100vh - (var(--body-margin-top)) - 93px );
+  height: calc(100vh - (var(--body-margin-top)) - 100px );
 }
 
 .orders {

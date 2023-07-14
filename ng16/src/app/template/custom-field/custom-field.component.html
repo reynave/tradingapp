@@ -8,11 +8,12 @@
 </div>
 
 <span *ngIf="item['itype']=='select'">
-    <div ngbDropdown>
-        <div id="dropdownForm2" class="select p-1 text-center " ngbDropdownToggle
+    <div ngbDropdown container="body">
+        <div id="dropdownForm2" class="select p-1 text-center " ngbDropdownToggle 
             [ngClass]="{'text-white': background(childItem['value']) != 'auto' }"
             [ngStyle]="{'background': background(childItem['value'])}">
-            {{childItem['value']}}
+            <!-- {{childItem['value']}} -->
+            {{ fnChildItemSelectOption(childItem['value'])}}
         </div>
         <div ngbDropdownMenu aria-labelledby="dropdownForm2">
             <div style="width: 200px;" class="p-2 d-grid">
@@ -21,7 +22,7 @@
                 </div>
                 <div class="mb-1 d-grid" style="overflow-y: auto; max-height: 200px;">
                     <button class="btn mb-1 text-center text-white" [ngStyle]="{'background': x.color}"
-                        (click)="emitSelectToParent(x.value);" ngbDropdownItem
+                        (click)="emitSelectToParent(x.id);" ngbDropdownItem
                         *ngFor="let x of childItem.select.option">{{x.value}}</button>
                 </div>
                 <hr>
@@ -44,7 +45,7 @@
 
 <div *ngIf="item['itype']=='url'" class="p-1" >
     <div class="d-flex flex-row-reverse">
-        <div>Flex item 1</div> 
+        <div>Flex item 1 on progress</div> 
         <div>Edit</div>
       </div>
 </div>

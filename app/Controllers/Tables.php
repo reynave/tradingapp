@@ -72,6 +72,50 @@ class Tables extends BaseController
         return $this->response->setJSON($data);
     }
  
+    function journal_select()
+    {
+        $data = array(
+            "error" => true,
+            "request" => $this->request->getVar(),
+        );
+
+        $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
+        if ($data['request']['id'] && $id) {
+ 
+            $c = "SELECT * FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
+            $journal_custom_field = $this->db->query($c)->getResultArray();
+
+            $customField = "";
+            $customFieldObj = [];
+            foreach ($journal_custom_field as $r) {
+                $customField .= ", f" . $r['f'];
+                array_push($customFieldObj,"f".$r['f']);
+            }
+      
+            $select = [];
+            foreach($customFieldObj as $rec) {
+                $option = "SELECT *
+                FROM journal_select 
+                where journalId = '$id' and field = '$rec' and presence = 1 order by sorting ASC, id DESC";
+             
+                $temp = array(
+                    "field" => $rec,
+                    "option" =>  $this->db->query($option)->getResultArray(),
+                );
+                array_push($select, $temp);
+            } 
+
+            $data = array(
+                "error" => false,
+                "customFieldObj" =>  $customFieldObj,
+                "select" =>  $select, 
+                "customField" => $journal_custom_field, 
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+ 
+
     function table()
     {
         $fields = $this->db->getFieldNames('journal_detail');

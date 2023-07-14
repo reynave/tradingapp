@@ -14,6 +14,15 @@ export class CustomFieldComponent implements OnInit{
   ngOnInit(): void {
     this.childItem = { ...this.item };
   }
+
+  fnChildItemSelectOption(id : string){
+    let objIndex = this.childItem.select.option.findIndex(((obj: { id: string; }) => obj.id == id ));
+    if(objIndex > -1){
+      return this.childItem.select.option[objIndex]['value'];
+    }else{
+      return '';
+    } 
+  }
    
   emitToParent(newValue: string) { 
     this.newItemEvent.emit(this.childItem);
@@ -24,8 +33,8 @@ export class CustomFieldComponent implements OnInit{
     this.newItemEvent.emit( this.childItem);
   }
 
-  background(value:string){
-    let objIndex = this.childItem.select.option.findIndex(((obj: { value: string; }) => obj.value == value ));
+  background(id:string){
+    let objIndex = this.childItem.select.option.findIndex(((obj: { id: string; }) => obj.id == id ));
     if(objIndex > -1){
       return this.childItem.select.option[objIndex]['color'];
     }else{
@@ -36,6 +45,7 @@ export class CustomFieldComponent implements OnInit{
   emitSelectToParent(newValue: string) { 
     console.log(newValue);
     this.childItem.value = newValue;
+    this.childItem.itype= "select";
     console.log(this.childItem); 
     //this.childItem.newItem.value = newValue;
     this.newItemEvent.emit(this.childItem);

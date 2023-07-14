@@ -61,7 +61,7 @@ export class TableComponent implements OnInit {
   journalDetailId: string = "";
   startUpTable: boolean = false;
   isCheckBoxAll: boolean = false;
-
+ detailObject : any = [];
   newSelect = new NewSelect("","","","");
   backgroundColorOption : any = [];
   
@@ -147,11 +147,24 @@ export class TableComponent implements OnInit {
     )
   }
 
-  detailObject : any = [];
+  journal_select() {
+    this.http.get<any>(environment.api + "Tables/journal_select?id=" + this.id, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        this.customField = data['customField'];
+        this.select = data['select'];
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
+ 
   onChild(newItem: any) {
     //console.log(this.detail[newItem.index]);
     console.log("Saving...", this.waiting);
-    console.log(newItem);
+    console.log("onChild ",newItem);
    
     if (newItem['itype'] == 'note') {
       this.detailObject = newItem;
@@ -162,6 +175,37 @@ export class TableComponent implements OnInit {
       this.newSelect.journalId = this.detailObject.customField.journalId;
       
       this.modalService.open(this.contentEditSelect, { centered: true });
+      let self = this;
+      $(function () { 
+        $(".sortableSelect").sortable({
+          handle: ".handleSelect",
+          placeholder: "ui-state-highlight",
+          update: function (event: any, ui: any) {
+            const order: any[] = [];
+            $(".sortableSelect .handleSelect").each((index: number, element: any) => {
+              const itemId = $(element).attr("id");
+              order.push(itemId);
+            });
+            console.log(order); 
+            const body = {
+              order : order,
+              journalId : self.id,
+            }
+            self.http.post<any>(environment.api+"CustomField/updateSortableSelect",body,{
+              headers: self.configService.headers(),
+            }).subscribe(
+              data=>{ 
+               // self.customField = data['customField'];
+               // self.select = data['select']; 
+               self.journal_select();
+              },
+              e=>{
+                console.log(e);
+              }
+            )
+          }
+        });
+      });
     } else { 
       this.detail[newItem.index]["f" + newItem.customField.f] = newItem.value;
       if (this.waiting == false) {
@@ -212,6 +256,19 @@ export class TableComponent implements OnInit {
     );
   }
 
+  onUpdateSelect(data:any){
+    console.log(data);
+    this.http.post<any>(environment.api+"CustomField/updateSelect",data,{
+      headers: this.configService.headers(),
+    }).subscribe(
+      data=>{
+        console.log(data);
+      },
+      e=>{
+        console.log(e);
+      }
+    )
+  }
   // openCanvas(content: any) {
   //   this.offcanvasService.open(content, { position: 'end', panelClass: 'details-panel', }).result.then(
   //     (result) => {
@@ -298,4 +355,18 @@ export class TableComponent implements OnInit {
     }
   }
 
+  addSelect(){ 
+    this.http.post<any>(environment.api+"CustomField/addSelect",this.newSelect,{
+      headers: this.configService.headers(),
+    }).subscribe(
+      data=>{
+        this.detailObject.select.option = data['option'];
+        this.journal_select();
+        this.newSelect = new NewSelect("","","","");
+      },
+      e=>{
+        console.log(e);
+      }
+    )
+  }
 }
