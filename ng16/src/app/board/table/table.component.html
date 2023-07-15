@@ -1,10 +1,10 @@
 <app-header></app-header>
 <div class="container-fluid body-margin-top">
-    <div class="row g-1">
+    <div class="row g-2">
 
         <div class="col-lg-3 col-12" [hidden]="!leftSide">
-            <div class="mt-1">
-                <div class="border bg-white rounded ">
+            <div class=" ">
+                <div class="bg-white rounded ">
                     <div class="text-end">
                         <button type="button" (click)="leftSide=false" class="btn btn-light"><i
                                 class="bi bi-arrow-bar-left"></i></button>
@@ -31,7 +31,7 @@
 
         <div class="col-lg-{{leftSide == false ? 12:9}} col-12">
 
-            <div class="border bg-white rounded p-3 mt-1">
+            <div class="bg-white rounded p-3 mb-2">
                 <div class="row">
                     <div class="col-8">
                         <h4 class="d-inline" placement="top-left" ngbTooltip="Tooltip on top">Title of setup trading
@@ -73,7 +73,7 @@
 
             </div>
 
-            <div class="border bg-white rounded mt-1 p-1">
+            <div class="bg-white rounded  p-1">
 
                 <div class="text-center my-5" *ngIf="!startUpTable">
                     <img src="./assets/gif/loading-board.gif" class="w-100" style="max-width: 300px;">
@@ -124,7 +124,7 @@
                         <div class="d-flex tables-header-td bg-white">
                             <div class="floating-div bg-white">
                                 <div class="py-1 px-2">
-                                    <i class="bi bi-forward-fill"></i>
+                                    <i class="bi bi-file-spreadsheet"></i>
                                 </div>
                             </div>
                             <div class=" order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index">
@@ -243,6 +243,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body pb-5"> 
+        {{detailObject.select | json}}
         <div class="sortableSelect"> 
             <div class="row g-1 py-2" *ngFor="let item of detailObject.select.option">
                 <div class="col-8">
@@ -265,7 +266,7 @@
                                 </div>
                             </div>
                         </div> 
-                        <div class="mx-1"><a href="javascript:;" class="btn btn-light"><i class="bi bi-trash"></i></a></div>
+                        <div class="mx-1"><a href="javascript:;" class="btn btn-light" (click)="onDeleteSelect(item)"><i class="bi bi-trash"></i></a></div>
                         <div class="mx-1"><a href="javascript:;" class="btn handleSelect" data-id="{{item.id}}"> <i class="bi bi-list"></i></a></div>
                     </div> 
                     
@@ -300,7 +301,7 @@
                         </div>
                     </div> 
                     <div class="mx-1">
-                        <button type="button" [disabled]="!newSelect.value" (click)="addSelect();"  class="btn btn-light"><i class="bi bi-plus-lg"></i> Add </button>
+                        <button type="button" [disabled]="!newSelect.value" (click)="addInsertSelect();"  class="btn btn-light"><i class="bi bi-plus-lg"></i> Add </button>
                     </div> 
                 </div> 
                 

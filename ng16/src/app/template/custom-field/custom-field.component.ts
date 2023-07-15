@@ -16,11 +16,23 @@ export class CustomFieldComponent implements OnInit{
   }
 
   fnChildItemSelectOption(id : string){
+    let data = "";
+    
     let objIndex = this.childItem.select.option.findIndex(((obj: { id: string; }) => obj.id == id ));
     if(objIndex > -1){
       return this.childItem.select.option[objIndex]['value'];
-    }else{
-      return '';
+    }
+    else{
+      if(id !== ""){
+        let objIndexHistory = this.childItem.select.optionHistory.findIndex(((obj: { id: string; }) => obj.id == id ))
+      
+       if(objIndexHistory > -1){
+          data = this.childItem.select.optionHistory[objIndexHistory]['value'];;
+       //   data = objIndexHistory;
+       }
+   
+      }
+      return data;
     } 
   }
    
