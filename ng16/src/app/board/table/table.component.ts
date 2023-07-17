@@ -27,7 +27,12 @@ export class NewSelect {
     public color: string,
   ) { }
 }
-
+export class NewCustomField {
+  constructor(
+    public name: string,
+    public iType: string,
+  ) { }
+}
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -44,6 +49,7 @@ export class TableComponent implements OnInit {
   items: any = [];
   journal: any = [];
   item = new Model("", 0, "", "", "");
+  newCustomField = new NewCustomField("", "text");
   id: string = "";
   waiting: boolean = false;
   loading: boolean = false;
@@ -142,7 +148,7 @@ export class TableComponent implements OnInit {
         console.log(data);
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
-      
+
         this.detail = data['detail'].map((item: any) => ({
           ...item,
           checkbox: false,
@@ -176,8 +182,8 @@ export class TableComponent implements OnInit {
     this.http.get<any>(environment.api + "Tables/detail?id=" + this.id, {
       headers: this.configService.headers(),
     }).subscribe(
-      data => { 
-        this.customField = data['customField']; 
+      data => {
+        this.customField = data['customField'];
       },
       e => {
         console.log(e);
@@ -346,7 +352,7 @@ export class TableComponent implements OnInit {
       }
     )
   }
- 
+
 
   openCanvasRight() {
     this.offcanvasService.open(this.canvasRight, { position: 'end', panelClass: 'details-panel', }).result.then(
@@ -473,4 +479,48 @@ export class TableComponent implements OnInit {
       }
     )
   }
+
+  addCustomField() {
+    const body = {
+      id: this.id,
+      item: this.newCustomField
+    }
+    this.http.post<any>(environment.api + 'CustomField/addCustomField', body,
+      { headers: this.configService.headers() }
+    ).subscribe(
+      data => {
+        console.log(data);
+        if (data['error'] === true) {
+          alert(data['note']);
+        }
+        this.modalService.dismissAll();
+        this.httpGet();
+
+      },
+      e => {
+        console.log(e);
+      },
+    );
+  }
+
+  removeCustomeFlied(x: any) {
+    const body = {
+      id: x.id,
+    }
+    console.log(body);
+    this.http.post<any>(environment.api + 'CustomField/removeCustomeFlied', body,
+      { headers: this.configService.headers() }
+    ).subscribe(
+      data => {
+        console.log(data);
+        let objIndex = this.customFieldForm.findIndex(((obj: { id: any; }) => obj.id == x.id));
+        this.customFieldForm.splice(objIndex, 1);
+        this.httpGet();
+      },
+      e => {
+        console.log(e);
+      },
+    );
+  }
+
 }
