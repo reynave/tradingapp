@@ -7,14 +7,14 @@ use CodeIgniter\Model;
 class Tables extends BaseController
 {
     public function index()
-    { 
+    {
         $data = array(
-            "error" => false, 
+            "error" => false,
         );
         return $this->response->setJSON($data);
     }
- 
-   
+
+
     function detail()
     {
         $data = array(
@@ -24,7 +24,7 @@ class Tables extends BaseController
 
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
         if ($data['request']['id'] && $id) {
- 
+
             $c = "SELECT * FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
 
@@ -32,7 +32,7 @@ class Tables extends BaseController
             $customFieldObj = [];
             foreach ($journal_custom_field as $r) {
                 $customField .= ", f" . $r['f'];
-                array_push($customFieldObj,"f".$r['f']);
+                array_push($customFieldObj, "f" . $r['f']);
             }
             $q = "SELECT id, journalId, positionId,  marketId, openDate, closeDate,  sl, rr,  tp,  resultId, note,
             time_to_sec(timediff(closeDate, openDate )) / 3600  AS 'tradingTime', false AS 'checkbox' $customField 
@@ -41,7 +41,7 @@ class Tables extends BaseController
             $detail = $this->db->query($q)->getResultArray();
 
             $select = [];
-            foreach($customFieldObj as $rec) {
+            foreach ($customFieldObj as $rec) {
                 $option = "SELECT *
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 1 order by sorting ASC, id DESC";
@@ -52,11 +52,11 @@ class Tables extends BaseController
 
                 $temp = array(
                     "field" => $rec,
-                    "option" =>  $this->db->query($option)->getResultArray(),
-                    "optionHistory" =>  $this->db->query($optionHistory)->getResultArray(),
+                    "option" => $this->db->query($option)->getResultArray(),
+                    "optionHistory" => $this->db->query($optionHistory)->getResultArray(),
                 );
                 array_push($select, $temp);
-            } 
+            }
 
             $b = "SELECT * FROM color   ORDER BY id ASC ";
             $backgroundColorOption = $this->db->query($b)->getResultArray();
@@ -66,9 +66,10 @@ class Tables extends BaseController
                 "error" => false,
                 "id" => $id,
                 "item" => $this->db->query("SELECT * from journal where id = '$id' ")->getResultArray()[0],
+                "permission" => $this->db->query("SELECT * from permission")->getResultArray(),
                 "detail" => $detail,
-                "customFieldObj" =>  $customFieldObj,
-                "select" =>  $select, 
+                "customFieldObj" => $customFieldObj,
+                "select" => $select,
                 "customField" => $journal_custom_field,
                 "backgroundColorOption" => $backgroundColorOption,
                 "q" => $q,
@@ -76,7 +77,7 @@ class Tables extends BaseController
         }
         return $this->response->setJSON($data);
     }
- 
+
     function journal_select()
     {
         $data = array(
@@ -86,7 +87,7 @@ class Tables extends BaseController
 
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
         if ($data['request']['id'] && $id) {
- 
+
             $c = "SELECT * FROM journal_custom_field WHERE journalId = '$id'  ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
 
@@ -94,11 +95,11 @@ class Tables extends BaseController
             $customFieldObj = [];
             foreach ($journal_custom_field as $r) {
                 $customField .= ", f" . $r['f'];
-                array_push($customFieldObj,"f".$r['f']);
+                array_push($customFieldObj, "f" . $r['f']);
             }
-      
+
             $select = [];
-            foreach($customFieldObj as $rec) {
+            foreach ($customFieldObj as $rec) {
                 $option = "SELECT *
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 1 order by sorting ASC, id DESC";
@@ -106,28 +107,26 @@ class Tables extends BaseController
                 $optionHistory = "SELECT *
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 0 order by sorting ASC, id DESC";
-           
+
                 $temp = array(
                     "field" => $rec,
-                    "option" =>  $this->db->query($option)->getResultArray(),
-                    "optionHistory" =>  $this->db->query($optionHistory)->getResultArray(),
-                    
-                    "q" =>  $option,
+                    "option" => $this->db->query($option)->getResultArray(),
+                    "optionHistory" => $this->db->query($optionHistory)->getResultArray(),
+
+                    "q" => $option,
                 );
                 array_push($select, $temp);
-            } 
+            }
 
             $data = array(
                 "error" => false,
-                "customFieldObj" =>  $customFieldObj,
-                "select" =>  $select, 
-                "customField" => $journal_custom_field, 
+                "customFieldObj" => $customFieldObj,
+                "select" => $select,
+                "customField" => $journal_custom_field,
             );
         }
         return $this->response->setJSON($data);
     }
- 
-
     function table()
     {
         $fields = $this->db->getFieldNames('journal_detail');
@@ -159,4 +158,39 @@ class Tables extends BaseController
         echo $max;
     }
 
+    function onSubmit()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            if ($post['item']['name'] != "") {
+                $this->db->table("journal")->update([
+                    'name' => $post['item']['name'],
+                    "update_by" => model("Core")->accountId(),
+                    "update_date" => date("Y-m-d H:i:s"),
+                ], "id = '" . $post['id'] . "' ");
+            }
+
+            $this->db->table("journal")->update([
+                'permissionId' => $post['item']['permissionId'],
+                "update_by" => model("Core")->accountId(),
+                "update_date" => date("Y-m-d H:i:s"),
+            ], "id = '" . $post['id'] . "' ");
+
+            $data = array(
+                "error" => false,
+                "post" => $post,
+                "rollback"=> array(
+                    "name" => model("Core")->select("name","journal","id= '" . $post['id'] . "'  "),
+                )
+
+            );
+        }
+
+        return $this->response->setJSON($data);
+    }
 }

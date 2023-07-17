@@ -21,6 +21,7 @@ import { BookComponent } from './book/book.component';
 import { TemplateTableComponent } from './template/template-table/template-table.component';
 import { CustomFieldComponent } from './template/custom-field/custom-field.component';
 import { TableComponent } from './board/table/table.component';
+import { CustomFieldFormComponent } from './template/custom-field-form/custom-field-form.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { TableComponent } from './board/table/table.component';
     BookComponent, 
     TemplateTableComponent,
     CustomFieldComponent,
-    TableComponent
+    TableComponent,
+    CustomFieldFormComponent
   ],
   imports: [
     BrowserModule,

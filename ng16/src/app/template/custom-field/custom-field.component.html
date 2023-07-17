@@ -1,19 +1,23 @@
-<div *ngIf="item['itype']=='text' || item['itype']=='number'"   [ngClass]="{'customFieldArea': item['customField']['suffix']!=''}">
-
-    <div  class="{{item['customField']['suffix']}}">
-          <input [type]="item['itype']" class="p-1 {{'text-'+childItem['customField']['textAlign']}}" maxlength="250"
-            [(ngModel)]="childItem['value']" #inputText (keydown.enter)="emitToParent(childItem);inputText.blur();"
-            (change)="emitToParent(childItem);">   
+<div *ngIf="item['itype']=='text' || item['itype']=='number'  || item['itype']=='date' || item['itype']=='time'">
+    <div class="d-flex">
+        <div style="width: 100%;">
+            <input [type]="item['itype']" class="p-1 {{'text-'+childItem['customField']['textAlign']}}" maxlength="250"
+                [(ngModel)]="childItem['value']" #customFieldText (keyup.enter)="customFieldText.blur()"
+                (change)="emitToParent(childItem);" [ngClass]="{'text-gray': item['itype'] == 'date' && !childItem['value']}">
+        </div> 
+        <div class="mx-1 py-1" *ngIf="item['customField']['suffix']"><small>{{item['customField']['suffix']}}</small></div>
     </div>
+    
 </div>
 
 <span *ngIf="item['itype']=='select'">
     <div ngbDropdown container="body">
-        <div id="dropdownForm2" class="select p-1 text-center " ngbDropdownToggle 
+        <div id="dropdownForm2" class="select p-1 text-center " ngbDropdownToggle
             [ngClass]="{'text-white': background(childItem['value']) != 'auto' }"
-            [ngStyle]="{'background': background(childItem['value'])}">
+            [ngStyle]="{'background': background(childItem['value'])}"
+            [innerHTML]="fnChildItemSelectOption(childItem['value'])">
             <!-- {{childItem['value']}} -->
-            {{ fnChildItemSelectOption(childItem['value'])}}
+
         </div>
         <div ngbDropdownMenu aria-labelledby="dropdownForm2">
             <div style="width: 200px;" class="p-2 d-grid">
@@ -26,26 +30,46 @@
                         *ngFor="let x of childItem.select.option">{{x.value}}</button>
                 </div>
                 <hr>
-                <button type="button" class="btn btn-outline-light border text-black mb-1 text-center" (click)="emitModalEditSelect();" ngbDropdownItem><i class="bi bi-pencil"></i> Edit Select</button>
+                <button type="button" class="btn btn-outline-light border text-black mb-1 text-center"
+                    (click)="emitModalEditSelect();" ngbDropdownItem><i class="bi bi-pencil"></i> Edit Select</button>
             </div>
 
         </div>
     </div>
 </span>
 
-<div *ngIf="item['itype']=='note' || item['itype']=='image'" >
+<div *ngIf="item['itype']=='note' || item['itype']=='image'">
     <div class="p-1 text-center">
         <a href="javascript:;" (click)="emitToParent(childItem)">
             <small><i class="bi bi-chat"></i> Add Notes</small>
         </a>
-    </div> 
+    </div>
 </div>
+ 
 
+<div *ngIf="item['itype']=='url'" class="p-1">
+    <div class="" [ngClass]="{'d-flex': childItem['value']}">
 
+        <small class="cut-text mt-1" style="width: inherit;" [hidden]="!childItem['value']">
+            <a [href]="childItem['value']" target="_blank">{{childItem['value']}}</a>
+        </small>
+        <div class="text-end">
+            <div ngbDropdown container="body">
+                <div id="dropdownForm3" ngbDropdownToggle>
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+                <div ngbDropdownMenu aria-labelledby="dropdownForm3">
+                    <div style="width: 300px;" class="p-2 d-grid">
+                        <div class="mb-3">
+                            <input type="text" class="form-control form-control-sm" [(ngModel)]="childItem['value']"
+                                placeholder="https://yoururl.here">
+                        </div>
+                        <button type="button" class="btn btn-outline-light border text-black mb-1 text-center"
+                            (click)="updateUrl();" ngbDropdownItem> Save</button>
+                    </div> 
+                </div>
+            </div>
 
-<div *ngIf="item['itype']=='url'" class="p-1" >
-    <div class="d-flex flex-row-reverse">
-        <div>Flex item 1 on progress</div> 
-        <div>Edit</div>
-      </div>
+        </div>
+    </div>
 </div>

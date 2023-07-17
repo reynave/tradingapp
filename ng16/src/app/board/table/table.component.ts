@@ -6,6 +6,7 @@ import { FunctionsService } from 'src/app/service/functions.service';
 import Chart from 'chart.js/auto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Title } from '@angular/platform-browser';
 declare var $: any;
 
 export class Model {
@@ -15,6 +16,7 @@ export class Model {
     public url: string,
     public borderColor: string,
     public backgroundColor: string,
+
   ) { }
 }
 export class NewSelect {
@@ -40,7 +42,7 @@ export class TableComponent implements OnInit {
   panels = ['First', 'Second', 'Third'];
   fields: any = [];
   items: any = [];
-
+  journal: any = [];
   item = new Model("", 0, "", "", "");
   id: string = "";
   waiting: boolean = false;
@@ -52,11 +54,14 @@ export class TableComponent implements OnInit {
   fileName = "";
   deleteAll: boolean = false;
   customField: any = [];
+  customFieldForm: any = [];
+
   chart: any = [];
   chartJsData = {
     data: [],
     label: [],
   }
+  permission: any = [];
   detailImageUrl: string = "";
   journalDetailId: string = "";
   startUpTable: boolean = false;
@@ -66,6 +71,7 @@ export class TableComponent implements OnInit {
   backgroundColorOption: any = [];
 
   constructor(
+    private titleService: Title,
     private http: HttpClient,
     public functionsService: FunctionsService,
     private configService: ConfigService,
@@ -100,8 +106,32 @@ export class TableComponent implements OnInit {
       },
     });
     this.id = this.ativatedRoute.snapshot.params['id'];
-    this.httpGet(true); 
+    this.httpHeader();
+    this.httpGet(true);
     this.httpJournalSelect();
+
+  }
+
+  httpHeader() {
+    this.http.get<any>(environment.api + "Tables/detail?id=" + this.id, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.journal = data['item'];
+        this.titleService.setTitle(data['item']['name']);
+        this.item.name = data['item']['name'];
+        this.item.permissionId = data['item']['permissionId'];
+        this.permission = data['permission'];
+        this.customFieldForm = data['customField'];
+        this.item.borderColor = data['item']['borderColor'];
+        this.item.backgroundColor = data['item']['backgroundColor'];
+        this.item.url = environment.api + '?share=' + data['item']['url'];
+      },
+      e => {
+        console.log(e);
+      }
+    )
   }
 
   httpGet(recalulate: boolean = false) {
@@ -112,10 +142,10 @@ export class TableComponent implements OnInit {
         console.log(data);
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
+      
         this.detail = data['detail'].map((item: any) => ({
           ...item,
           checkbox: false,
-
           openDate: {
             year: new Date(item.openDate).getFullYear(),
             month: new Date(item.openDate).getMonth() + 1,
@@ -129,25 +159,33 @@ export class TableComponent implements OnInit {
           openTime: item.openDate.split(" ")[1].substring(0, 5),
           closeTime: item.closeDate.split(" ")[1].substring(0, 5),
         }));
-
-        this.item.name = data['item']['name'];
-        this.item.permissionId = data['item']['permissionId'];
-        this.item.borderColor = data['item']['borderColor'];
-        this.item.backgroundColor = data['item']['backgroundColor'];
         this.select = data['select'];
-        this.item.url = environment.api + '?share=' + data['item']['url'];
-
         if (recalulate == true) {
           // this.onCalculation();
         }
         this.startUpTable = true;
+
       },
       e => {
         console.log(e);
       }
     )
   }
- 
+
+  httpCustomField() {
+    this.http.get<any>(environment.api + "Tables/detail?id=" + this.id, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => { 
+        this.customField = data['customField']; 
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
+
+
   onChild(newItem: any) {
     //console.log(this.detail[newItem.index]);
     console.log("Saving...", this.waiting);
@@ -194,6 +232,7 @@ export class TableComponent implements OnInit {
         });
       });
     } else {
+
       this.detail[newItem.index]["f" + newItem.customField.f] = newItem.value;
       if (this.waiting == false) {
         this.waiting = true;
@@ -217,25 +256,25 @@ export class TableComponent implements OnInit {
             },
           );
 
-        }, 100);
+        }, 500);
       }
     }
   }
 
   onSubmit() {
     clearTimeout(this.myTimeout);
-
     this.loading = true;
     const body = {
       id: this.id,
       item: this.item,
-      detail: this.detail,
     }
+    console.log(body);
     this.http.post<any>(environment.api + 'Tables/onSubmit', body,
       { headers: this.configService.headers() }
     ).subscribe(
       data => {
         console.log("onSubmit Done");
+        this.httpHeader();
       },
       e => {
         console.log(e);
@@ -251,12 +290,12 @@ export class TableComponent implements OnInit {
         console.log(data);
         this.customField = data['customField'];
         this.select = data['select'];
-        if(this.detailObject.length !== 0){
-          let objIndex = this.select.findIndex(((obj: { field: any; }) => obj.field == this.detailObject.select.field)); 
-          this.detailObject.select =  this.select[objIndex] ;
+        if (this.detailObject.length !== 0) {
+          let objIndex = this.select.findIndex(((obj: { field: any; }) => obj.field == this.detailObject.select.field));
+          this.detailObject.select = this.select[objIndex];
           console.log(this.detailObject.select, this.select);
         }
-      
+
       },
       e => {
         console.log(e);
@@ -285,7 +324,7 @@ export class TableComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
-        this.httpJournalSelect(); 
+        this.httpJournalSelect();
       },
       e => {
         console.log(e);
@@ -300,25 +339,14 @@ export class TableComponent implements OnInit {
       data => {
         this.detailObject.select.option = data['option'];
         this.httpJournalSelect();
-        this.newSelect = new NewSelect("", "", "", "");
+        this.newSelect.value = "";
       },
       e => {
         console.log(e);
       }
     )
   }
-
-
-  // openCanvas(content: any) {
-  //   this.offcanvasService.open(content, { position: 'end', panelClass: 'details-panel', }).result.then(
-  //     (result) => {
-  //       console.log("load data");
-  //     },
-  //     (reason) => {
-
-  //     },
-  //   );
-  // }
+ 
 
   openCanvasRight() {
     this.offcanvasService.open(this.canvasRight, { position: 'end', panelClass: 'details-panel', }).result.then(
@@ -332,19 +360,33 @@ export class TableComponent implements OnInit {
   }
 
   openModalFullscreen(content: any) {
-    this.modalService.open(content, { fullscreen: true }).result.then(
-      (result) => {
-
-      },
-      (reason) => {
-
-      },
-    );
-
+    this.modalService.open(content, { fullscreen: true });
+    this.customFieldForm = this.customField;
+    let self = this;
     $(function () {
       $(".resizable").resizable({
         maxHeight: 33,
         minHeight: 33,
+        minWidth: 100,
+        stop: function (event: any, ui: any) {
+          console.log(ui.size);
+          const body = {
+            ui: ui.size,
+            itemId: $(this).attr("id")
+          }
+          console.log(body);
+          self.http.post<any>(environment.api + "CustomField/fieldResizable", body, {
+            headers: self.configService.headers(),
+          }).subscribe(
+            data => {
+              console.log(data);
+              self.httpCustomField();
+            },
+            e => {
+              console.log(e);
+            }
+          )
+        }
       });
       $(".sortable").sortable({
         handle: ".handle",
@@ -357,7 +399,17 @@ export class TableComponent implements OnInit {
           });
 
           console.log(order);
-
+          self.http.post<any>(environment.api + "CustomField/sortable", order, {
+            headers: self.configService.headers(),
+          }).subscribe(
+            data => {
+              console.log(data);
+              self.httpGet();
+            },
+            e => {
+              console.log(e);
+            }
+          )
         }
       });
     });
@@ -395,5 +447,30 @@ export class TableComponent implements OnInit {
     }
   }
 
+  fnPermission(id: number) {
+    let data = [];
+    if (this.permission.length > 0) {
+      let objIndex = this.permission.findIndex(((obj: { id: number; }) => obj.id == id));
+      this.permission[objIndex]['name'];
+      data = this.permission[objIndex];
+    }
 
+    return data;
+  }
+
+
+  onUpdateCustomField(x: any) {
+    console.log(x);
+    this.http.post<any>(environment.api + "CustomField/onUpdateCustomField", x, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.httpCustomField();
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
 }

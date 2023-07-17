@@ -8,22 +8,30 @@
 .customFieldArea::after {
     position: absolute;
     top: 2px;
-    right: .5em;
+    right: 0em;
     transition: all .05s ease-in-out;
 }
 
 .customFieldArea:hover::after,
 .customFieldArea:focus-within::after {
-    right: 1.5em;
+    right: 0em;
 }
 
 /* handle Firefox (arrows always shown) */
 @supports (-moz-appearance:none) {
     .customFieldArea::after {
-        right: 1.5em;
+        right: 0em;
     }
 }
 
 .percent::after {
     content: '%';
 }
+
+.cut-text { 
+    
+    overflow:hidden;
+    display:inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }

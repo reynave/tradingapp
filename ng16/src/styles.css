@@ -8,7 +8,7 @@
     
     --color-gray : #ccc;
     --color-border-1: #F5F5F5;
-    --scroll-color-active:#D6E4E5;
+    --scroll-color-active:#aab7b8;
 }
 
 /* Firefox */
@@ -47,8 +47,7 @@
 *::-webkit-scrollbar-thumb:active {
   background-color:var(--scroll-color-active); 
 }
-
-
+ 
 html{
     font-size: 14px; 
 }
@@ -71,6 +70,9 @@ a{
     color: #333;
 }
 
+.text-gray{
+  color: var(--color-gray);
+}
 
 
 .tables-body {
