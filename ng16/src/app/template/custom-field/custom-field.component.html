@@ -45,6 +45,7 @@
         </a>
     </div>
 </div>
+
 <div *ngIf=" item['itype']=='image'">
     <div class="p-1 text-center">
         <a href="javascript:;" >
@@ -53,8 +54,6 @@
     </div>
 </div>
  
-
-
 <div *ngIf="item['itype']=='url'" class="p-1">
     <div class="" [ngClass]="{'d-flex': childItem['value']}">
 

@@ -30,116 +30,133 @@
 
 
         <div class="col-lg-{{leftSide == false ? 12:9}} col-12">
+            <div class="bg-white rounded  ">
+                <div class="p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <input class="form-control form-control-lg border-0 p-0" placeholder=""
+                                [(ngModel)]="item.name" (change)="onSubmit()" #itemName (keyup.enter)="itemName.blur()">
+                        </div>
+                        <div class="col-4 text-end align-self-center">
+                            <div class="d-flex flex-row-reverse ">
+                                <div>
+                                    <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
+                                        (click)="openModalFullscreen(contentCustomField)" ngbTooltip="Tooltip on top"><i
+                                            class="bi bi-gear"></i></a>
+                                </div>
 
-            <div class="bg-white rounded p-3 mb-2">
-                <div class="row">
-                    <div class="col-8">
-
-                        <input class="form-control form-control-lg border-0 p-0" placeholder="" [(ngModel)]="item.name"
-                            (change)="onSubmit()" #itemName (keyup.enter)="itemName.blur()">
-                    </div>
-                    <div class="col-4 text-end align-self-center">
-                        <div class="d-flex flex-row-reverse ">
-                            <div>
-                                <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
-                                    (click)="openModalFullscreen(contentCustomField)" ngbTooltip="Tooltip on top"><i
-                                        class="bi bi-gear"></i></a>
-                            </div>
-
-                            <div ngbDropdown container="body" class="mx-1">
-                                <button type="button" class="btn btn-outline-dark btn-sm" ngbDropdownToggle>
-                                    <span class="me-2" [innerHTML]="fnPermission(item.permissionId)['fontIcon']"></span>
-                                    {{fnPermission(item.permissionId)['name']}}
-                                </button>
-                                <div ngbDropdownMenu>
-                                    <button ngbDropdownItem (click)="item.permissionId = a.id; onSubmit()"
-                                        *ngFor="let a of permission">
-                                        <span class="me-2" [innerHTML]="a.fontIcon"></span> {{a.name}}
+                                <div ngbDropdown container="body" class="mx-1">
+                                    <button type="button" class="btn btn-outline-dark btn-sm" ngbDropdownToggle>
+                                        <span class="me-2"
+                                            [innerHTML]="fnPermission(item.permissionId)['fontIcon']"></span>
+                                        {{fnPermission(item.permissionId)['name']}}
                                     </button>
+                                    <div ngbDropdownMenu>
+                                        <button ngbDropdownItem (click)="item.permissionId = a.id; onSubmit()"
+                                            *ngFor="let a of permission">
+                                            <span class="me-2" [innerHTML]="a.fontIcon"></span> {{a.name}}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div [hidden]="fnPermission(item.permissionId)['share'] != 1" placement="top"
+                                    ngbTooltip="http://localhost:4200/#/board/{{journal.url}}">
+                                    <a href="http://localhost:4200/#/board/{{journal.url}}" target="_blank"
+                                        class="btn btn-sm text-dark"><i class="bi bi-link-45deg"></i> Copy</a>
+                                </div>
+
+                                <div [hidden]="leftSide">
+                                    <a (click)="leftSide=true"> <i class="bi bi-arrow-bar-right h2"></i></a>
                                 </div>
                             </div>
-                            <div [hidden]="fnPermission(item.permissionId)['share'] != 1" placement="top"
-                                ngbTooltip="http://localhost:4200/#/board/{{journal.url}}">
-                                <a href="http://localhost:4200/#/board/{{journal.url}}" target="_blank"
-                                    class="btn btn-sm text-dark"><i class="bi bi-link-45deg"></i> Copy</a>
-                            </div>
+                        </div>
 
-                            <div [hidden]="leftSide">
-                                <a (click)="leftSide=true"> <i class="bi bi-arrow-bar-right h2"></i></a>
+                        <div class="col-12">
+                            <div class="d-flex">
+                                <div class="me-2">
+                                    <button type="button" class="btn btn-sm btn-primary">New Task</button>
+                                </div>
+                                <div class="me-2">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Search">
+
+                                </div>
+                                <div class="me-2">
+                                    <button type="button" class="btn btn-sm btn-light"><i class="bi bi-sliders"></i></button>
+                                </div>
+                                <div class="me-2">
+                                    <button type="button" class="btn btn-sm btn-light"><i class="bi bi-eye-slash"></i> Hide</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-            </div>
-
-            <div class="bg-white rounded  p-1">
 
                 <div class="text-center my-5" *ngIf="!startUpTable">
                     <img src="./assets/gif/loading-board.gif" class="w-100" style="max-width: 300px;">
                 </div>
+                <div class="ps-3 pt-0">
+                    <div class="tables-body border" *ngIf="startUpTable">
+                        <div class="sticky-top">
+                            <div class="d-flex tables-header-td bg-white">
+                                <div class="floating-div bg-white">
+                                    <div class="py-1 px-2">
+                                        <i class="bi bi-check-square-fill text-primary" *ngIf="isCheckBoxAll"
+                                            (click)="checkBoxAll(false)"></i>
+                                        <i class="bi bi-square" *ngIf="!isCheckBoxAll" (click)="checkBoxAll(true)"></i>
+                                    </div>
+                                </div>
+                                <div class=" order-{{n.sorting}} bg-white "
+                                    *ngFor="let n of customField;  let a = index">
+                                    <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}
+                                    </div>
+                                </div>
+                                <!-- <div class=" order-99 bg-white ">
+                                <div class="p-1 text-center orders ">Notes</div>
+                            </div> -->
 
-                <div class="tables-body " *ngIf="startUpTable">
-                    <div class="sticky-top">
-                        <div class="d-flex tables-header-td bg-white">
+                            </div>
+                        </div>
+
+                        <div class="d-flex tables-body-td" *ngFor="let x of detail; let i = index">
                             <div class="floating-div bg-white">
                                 <div class="py-1 px-2">
-                                    <i class="bi bi-check-square-fill text-primary" *ngIf="isCheckBoxAll"
-                                        (click)="checkBoxAll(false)"></i>
-                                    <i class="bi bi-square" *ngIf="!isCheckBoxAll" (click)="checkBoxAll(true)"></i>
+                                    <span *ngIf="x.checkbox===true" (click)="x.checkbox=false">
+                                        <i class="bi bi-check-square-fill text-primary"></i>
+                                    </span>
+                                    <span *ngIf="x.checkbox!=true" (click)="x.checkbox=true">
+                                        <i class="bi bi-square"></i>
+                                    </span>
                                 </div>
                             </div>
-                            <div class=" order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index">
-                                <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}
+
+                            <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index">
+                                <div class="orders" [ngStyle]="{'width': n.width+'px'}">
+                                    <app-custom-field [item]="objItem(n,x,i)"
+                                        (newItemEvent)="onChild($event)"></app-custom-field>
                                 </div>
                             </div>
-                            <!-- <div class=" order-99 bg-white ">
+
+
+                        </div>
+                        <div class="sticky-bottom border-top">
+                            <div class="d-flex tables-header-td ">
+                                <div class="floating-div  text-light  bg-light ">
+                                    <div class="py-1 px-2">
+                                        <i class="bi bi-file-spreadsheet text-white"></i>
+                                    </div>
+                                </div>
+                                <div class=" order-{{n.sorting}} bg-light "
+                                    *ngFor="let n of customField;  let a = index">
+                                    <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}
+                                    </div>
+                                </div>
+                                <!-- <div class=" order-99 bg-white ">
                                 <div class="p-1 text-center orders ">Notes</div>
                             </div> -->
 
-                        </div>
-                    </div>
-
-                    <div class="d-flex tables-body-td" *ngFor="let x of detail; let i = index">
-                        <div class="floating-div bg-white">
-                            <div class="py-1 px-2">
-                                <span *ngIf="x.checkbox===true" (click)="x.checkbox=false">
-                                    <i class="bi bi-check-square-fill text-primary"></i>
-                                </span>
-                                <span *ngIf="x.checkbox!=true" (click)="x.checkbox=true">
-                                    <i class="bi bi-square"></i>
-                                </span>
                             </div>
                         </div>
-
-                        <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index">
-                            <div class="orders" [ngStyle]="{'width': n.width+'px'}">
-                                <app-custom-field [item]="objItem(n,x,i)"
-                                    (newItemEvent)="onChild($event)"></app-custom-field>
-                            </div>
-                        </div>
-
 
                     </div>
-                    <div class="sticky-bottom border-top">
-                        <div class="d-flex tables-header-td ">
-                            <div class="floating-div  text-light  bg-light ">
-                                <div class="py-1 px-2">
-                                    <i class="bi bi-file-spreadsheet text-white"></i>
-                                </div>
-                            </div>
-                            <div class=" order-{{n.sorting}} bg-light " *ngFor="let n of customField;  let a = index">
-                                <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}
-                                </div>
-                            </div>
-                            <!-- <div class=" order-99 bg-white ">
-                                <div class="p-1 text-center orders ">Notes</div>
-                            </div> -->
-
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
@@ -224,7 +241,7 @@
                         </div>
                         <div class="mx-1" *ngIf="x.iType == 'number'"> <input type="text" [(ngModel)]="x.suffix"
                                 class="form-control  " style="width: 50px;" (change)="onUpdateCustomField(x)"
-                                maxlength="3" #updateCustomFieldSuffix (keyup.enter)="updateCustomFieldSuffix.blur()"> 
+                                maxlength="3" #updateCustomFieldSuffix (keyup.enter)="updateCustomFieldSuffix.blur()">
                         </div>
 
                     </div>
@@ -233,8 +250,9 @@
 
                 <div class="col-1 text-end">
                     <div class="d-flex">
-                        <div class="mx-1" > 
-                            <button type="button" class="btn btn-sm btn-danger" (click)="removeCustomeFlied(x);"><i class="bi bi-trash3"></i></button>
+                        <div class="mx-1">
+                            <button type="button" class="btn btn-sm btn-danger" (click)="removeCustomeFlied(x);"><i
+                                    class="bi bi-trash3"></i></button>
                         </div>
                         <div class="py-1 handle mx-1" data-id="{{x.id}}"> <i class="bi bi-list"></i> </div>
                     </div>
@@ -254,14 +272,15 @@
                         <option value="time">Time</option>
                         <option value="url">Url</option>
                         <option value="note">Note</option>
-                        <option value="image">Image</option> 
+                        <option value="image">Image</option>
                     </select>
                 </div>
                 <div class="col-8">
                     <input type="text" class="form-control" [(ngModel)]="newCustomField.name">
                 </div>
                 <div class="col-2 d-grid">
-                    <button type="button" (click)="addCustomField()" [disabled]="newCustomField.name==''" class="btn btn-primary btn-sm">Add</button>
+                    <button type="button" (click)="addCustomField()" [disabled]="newCustomField.name==''"
+                        class="btn btn-primary btn-sm">Add</button>
                 </div>
             </div>
         </div>
