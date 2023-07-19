@@ -3,11 +3,13 @@
         <div style="width: 100%;">
             <input [type]="item['itype']" class="p-1 {{'text-'+childItem['customField']['textAlign']}}" maxlength="250"
                 [(ngModel)]="childItem['value']" #customFieldText (keyup.enter)="customFieldText.blur()"
-                (change)="emitToParent(childItem);" [ngClass]="{'text-gray': item['itype'] == 'date' && !childItem['value']}">
-        </div> 
-        <div class="mx-1 py-1" *ngIf="item['customField']['suffix']"><small>{{item['customField']['suffix']}}</small></div>
+                (change)="emitToParent(childItem);"
+                [ngClass]="{'text-gray': item['itype'] == 'date' && !childItem['value']}">
+        </div>
+        <div class="mx-1 py-1" *ngIf="item['customField']['suffix']"><small>{{item['customField']['suffix']}}</small>
+        </div>
     </div>
-    
+
 </div>
 
 <span *ngIf="item['itype']=='select'">
@@ -48,12 +50,12 @@
 
 <div *ngIf=" item['itype']=='image'">
     <div class="p-1 text-center">
-        <a href="javascript:;" >
+        <a href="javascript:;">
             Images
         </a>
     </div>
 </div>
- 
+
 <div *ngIf="item['itype']=='url'" class="p-1">
     <div class="" [ngClass]="{'d-flex': childItem['value']}">
 
@@ -73,10 +75,17 @@
                         </div>
                         <button type="button" class="btn btn-outline-light border text-black mb-1 text-center"
                             (click)="updateUrl();" ngbDropdownItem> Save</button>
-                    </div> 
+                    </div>
                 </div>
             </div>
 
         </div>
+    </div>
+</div>
+
+<div *ngIf=" item['itype']=='formula'">
+
+    <div class="p-1 text-center">
+        <small>{{isNumber(childItem['value'])}}</small>
     </div>
 </div>

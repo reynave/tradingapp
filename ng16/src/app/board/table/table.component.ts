@@ -119,11 +119,11 @@ export class TableComponent implements OnInit {
   }
 
   httpHeader() {
-    this.http.get<any>(environment.api + "Tables/detail?id=" + this.id, {
+    this.http.get<any>(environment.api + "Tables/header?id=" + this.id, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data);
+    //    console.log("httpHeader",data);
         this.journal = data['item'];
         this.titleService.setTitle(data['item']['name']);
         this.item.name = data['item']['name'];
@@ -145,25 +145,25 @@ export class TableComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data);
+        console.log("httpGet",data);
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
 
         this.detail = data['detail'].map((item: any) => ({
           ...item,
           checkbox: false,
-          openDate: {
-            year: new Date(item.openDate).getFullYear(),
-            month: new Date(item.openDate).getMonth() + 1,
-            day: new Date(item.openDate).getDate(),
-          },
-          closeDate: {
-            year: new Date(item.closeDate).getFullYear(),
-            month: new Date(item.closeDate).getMonth() + 1,
-            day: new Date(item.closeDate).getDate()
-          },
-          openTime: item.openDate.split(" ")[1].substring(0, 5),
-          closeTime: item.closeDate.split(" ")[1].substring(0, 5),
+          // openDate: {
+          //   year: new Date(item.openDate).getFullYear(),
+          //   month: new Date(item.openDate).getMonth() + 1,
+          //   day: new Date(item.openDate).getDate(),
+          // },
+          // closeDate: {
+          //   year: new Date(item.closeDate).getFullYear(),
+          //   month: new Date(item.closeDate).getMonth() + 1,
+          //   day: new Date(item.closeDate).getDate()
+          // },
+          // openTime: item.openDate.split(" ")[1].substring(0, 5),
+          // closeTime: item.closeDate.split(" ")[1].substring(0, 5),
         }));
         this.select = data['select'];
         if (recalulate == true) {
@@ -195,7 +195,7 @@ export class TableComponent implements OnInit {
   onChild(newItem: any) {
     //console.log(this.detail[newItem.index]);
     console.log("Saving...", this.waiting);
-    console.log("onChild ", newItem);
+    console.log("return from child ", newItem);
 
     if (newItem['itype'] == 'note') {
       this.detailObject = newItem;
@@ -293,7 +293,7 @@ export class TableComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data);
+     //   console.log("httpJournalSelect",data);
         this.customField = data['customField'];
         this.select = data['select'];
         if (this.detailObject.length !== 0) {

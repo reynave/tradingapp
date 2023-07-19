@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from 'src/app/service/config.service';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment'; 
 
 @Component({
   selector: 'app-custom-field',
@@ -74,11 +74,9 @@ export class CustomFieldComponent implements OnInit {
     this.newItemEvent.emit(this.childItem);
   }
 
-
   openCanvas(content: any) {
     console.log(content);
   }
-
 
   updateUrl() {
     this.childItem.itype = "url";
@@ -100,5 +98,9 @@ export class CustomFieldComponent implements OnInit {
     console.log(newDate);
     this.emitToParent(this.childItem);
   }
- 
+
+
+  isNumber(str : string) {   
+      return str.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","); 
+  }
 }
