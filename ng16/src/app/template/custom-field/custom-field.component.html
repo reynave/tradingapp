@@ -85,7 +85,7 @@
 
 <div *ngIf=" item['itype']=='formula'">
 
-    <div class="p-1 text-center">
+    <div class="p-1 {{'text-'+childItem['customField']['textAlign']}}">
         <small>{{isNumber(childItem['value'])}}</small>
     </div>
 </div>
