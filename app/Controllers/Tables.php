@@ -99,7 +99,7 @@ class Tables extends BaseController
             }
             $q = "SELECT id, journalId, false AS 'checkbox' $customField 
             FROM journal_detail 
-            where journalId = '$id' and presence = 1";
+            where journalId = '$id' and presence = 1 order by sorting DESC";
             $detail = $this->db->query($q)->getResultArray();
 
             $select = [];
@@ -125,11 +125,7 @@ class Tables extends BaseController
 
             $evaluateFormula = function ($data, $formula) {
                 extract($data);
-                //try {
-                    return eval("return $formula;");
-               // } catch (Throwable $e) {
-               //     return false;
-               // }
+                return eval("return $formula;");
             };
 
             $index = 0;
@@ -157,6 +153,50 @@ class Tables extends BaseController
             );
 
 
+        }
+        return $this->response->setJSON($data);
+    }
+
+    function addTask()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $id = $post['journalId'];
+            $this->db->table("journal_detail")->insert([
+                "sorting" => model("Core")->select("count(id)", "journal_detail", "journalId = '$id' and presence = 1 "),
+                'journalId' => $post['journalId'],
+                'presence' => 1,
+                "input_by" => model("Core")->accountId(),
+                "input_date" => date("Y-m-d H:i:s"),
+            ]);
+
+            $newId = model("Core")->select("id", "journal_detail", "journalId = '$id' ORDER BY input_date desc");
+
+            $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
+            $journal_custom_field = $this->db->query($c)->getResultArray();
+
+            $customField = "";
+            $customFieldNo = [];
+            foreach ($journal_custom_field as $r) {
+                $customField .= ", f" . $r['f'];
+                array_push($customFieldNo, "f" . $r['f']);
+            }
+
+            $q = "SELECT id, journalId, false AS 'checkbox' $customField 
+            FROM journal_detail 
+            where journalId = '$id' and id = '$newId' and presence = 1 order by sorting DESC";
+            $detail = $this->db->query($q)->getResultArray();
+
+            $data = array(
+                "error" => false,
+                "post" => $post,
+                "detail" => $detail,
+            );
         }
         return $this->response->setJSON($data);
     }

@@ -72,10 +72,12 @@ class CustomField extends BaseController
                 "update_date" => date("Y-m-d H:i:s"),
             ], "id = '" . $post['newItem']['id'] . "' ");
 
+           
 
             $data = [
                 "error" => false,
                 "post" => $post,
+                "detail" => self::getRow($post),
             ];
         }
 
@@ -208,6 +210,7 @@ class CustomField extends BaseController
             $data = array(
                 "error" => false,
                 "post" => $post,
+            //    "detail" => self::getRow($post),
             );
         }
 
@@ -311,7 +314,7 @@ class CustomField extends BaseController
             "error" => true,
             "post" => $post,
         ];
-        if ($post) { 
+        if ($post) {
             $this->db->table("journal_custom_field")->delete([
                 "id" => $post['id'],
             ]);
@@ -321,5 +324,47 @@ class CustomField extends BaseController
             );
         }
         return $this->response->setJSON($data);
+    }
+
+
+    function getRow($post){
+        $newId = $post['newItem']['id'];
+        $journalId = model("Core")->select("journalId", "journal_detail", "id = '$newId' ");
+        $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field WHERE journalId = '$journalId' ORDER BY sorting ASC ";
+        $journal_custom_field = $this->db->query($c)->getResultArray();
+
+        $customField = "";
+        $customFieldNo = [];
+        foreach ($journal_custom_field as $r) {
+            $customField .= ", f" . $r['f'];
+            array_push($customFieldNo, "f" . $r['f']);
+        }
+
+        $q = "SELECT id, journalId, false AS 'checkbox' $customField 
+        FROM journal_detail 
+        where   id = '$newId' and presence = 1 order by sorting DESC";
+        $detail = $this->db->query($q)->getResultArray();
+
+        if ($post['newItem']['itype'] == "number") {
+
+            $evaluateFormula = function ($data, $formula) {
+                extract($data);
+                return eval("return $formula;");
+            }; 
+            $index = 0;
+            foreach ($detail as $rec) {
+                $data = [];
+                foreach ($journal_custom_field as $field) {
+                    if ($field['iType'] == 'formula') {
+                        foreach (array_keys($rec) as $key) {
+                            $data[$key] = (int) $rec[$key];
+                        }
+                        $detail[$index][$field['key']] = $evaluateFormula($data, $field['eval']);
+                    }
+                }
+                $index++;
+            }
+        }
+        return $detail;
     }
 }

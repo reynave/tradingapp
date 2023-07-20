@@ -6,8 +6,7 @@
 
             <div class="bg-white rounded ">
                 <div class="text-end">
-                    <button type="button" (click)="leftSide=false" class="btn btn-light"><i
-                            class="bi bi-arrow-bar-left"></i></button>
+                    <button type="button" (click)="leftSide=false" class="btn btn-light"><i  class="bi bi-arrow-bar-left"></i></button>
                 </div>
                 <div class="mb-4">
                     <canvas id="canvas">{{chart}}</canvas>
@@ -19,8 +18,6 @@
                     </div>
                     <div class="mb-2">
                         Total Trades
-
-                        <button type="button" (click)="openComponent()">openComponent</button>
                     </div>
                     <a class="m-1 btn" [title]="i.color" *ngFor="let i of backgroundColorOption">
                         <i class="bi bi-square-fill fs-4" [ngStyle]="{'color': i.color }"></i>
@@ -47,6 +44,13 @@
                                         (click)="openModalFullscreen(contentCustomField)" ngbTooltip="Tooltip on top"><i
                                             class="bi bi-gear"></i></a>
                                 </div>
+
+                                <div>
+                                    <a href="javascript:;" class="btn btn-dark btn-sm" placement="top-right"
+                                        (click)="openComponent()" ngbTooltip="Tooltip on top"><i
+                                            class="bi bi-gear"></i></a>
+                                </div>
+
 
                                 <div ngbDropdown container="body" class="mx-1">
                                     <button type="button" class="btn btn-outline-dark btn-sm" ngbDropdownToggle>
@@ -76,17 +80,19 @@
                         <div class="col-12">
                             <div class="d-flex">
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-primary">New Task</button>
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New Task</button>
                                 </div>
                                 <div class="me-2">
                                     <input type="text" class="form-control form-control-sm" placeholder="Search">
 
                                 </div>
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light"><i class="bi bi-sliders"></i></button>
+                                    <button type="button" class="btn btn-sm btn-light"><i
+                                            class="bi bi-sliders"></i></button>
                                 </div>
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light"><i class="bi bi-eye-slash"></i> Hide</button>
+                                    <button type="button" class="btn btn-sm btn-light"><i class="bi bi-eye-slash"></i>
+                                        Hide</button>
                                 </div>
                             </div>
                         </div>
@@ -96,56 +102,58 @@
                 <div class="text-center my-5" *ngIf="!startUpTable">
                     <img src="./assets/gif/loading-board.gif" class="w-100" style="max-width: 300px;">
                 </div>
-                
+
                 <div class="ps-3 pt-0">
-                    <div class="tables-body border-top" *ngIf="startUpTable">
-                        <div class="sticky-top border-start">
+                    <div class="tables-body " *ngIf="startUpTable">
+                        <div class="sticky-top border-bottom">
                             <div class="d-flex tables-header-td bg-white">
-                                <div class="floating-div bg-white">
+                                <div class="floating-div bg-white  border-start">
                                     <div class="py-1 px-2">
                                         <i class="bi bi-check-square-fill text-primary" *ngIf="isCheckBoxAll"
                                             (click)="checkBoxAll(false)"></i>
                                         <i class="bi bi-square" *ngIf="!isCheckBoxAll" (click)="checkBoxAll(true)"></i>
                                     </div>
                                 </div>
-                                <div class=" order-{{n.sorting}} bg-white "  *ngFor="let n of customField;  let a = index">
+                                <div class=" order-{{n.sorting}} bg-white "
+                                    *ngFor="let n of customField;  let a = index">
                                     <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
-                                        <b>{{n.name}}</b>  
+                                        <b>{{n.name}}</b>
                                         <span *ngIf="n.iType === 'formula'" class="mx-1">
                                             <button class="btn btn-sm btn-light py-0"><i class="bi bi-pen"></i></button>
                                         </span>
                                     </div>
-                                </div> 
+                                </div>
 
                             </div>
                         </div>
 
-                        <div class="d-flex tables-body-td" *ngFor="let x of detail; let i = index">
-                            <div class="floating-div bg-white border-start">
-                                <div class="py-1 px-2">
-                                    <span *ngIf="x.checkbox===true" (click)="x.checkbox=false">
-                                        <i class="bi bi-check-square-fill text-primary"></i>
-                                    </span>
-                                    <span *ngIf="x.checkbox!=true" (click)="x.checkbox=true">
-                                        <i class="bi bi-square"></i>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index">
-                                <div class="orders" [ngStyle]="{'width': n.width+'px'}">
-                                    <app-custom-field [item]="objItem(n,x,i)"
-                                        (newItemEvent)="onChild($event)"></app-custom-field>
-                                </div>
-                            </div> 
-                        </div>
-                        <div class="d-flex tables-body-td">
-                            <div class="ms-3 p-3"><h3>TITLE </h3></div>
-                        </div>
                         
-                        <div class="sticky-bottom border">
+                        <span *ngFor="let x of detail; let i = index">
+                            <div class="d-flex tables-body-td"> 
+                                <div class="floating-div bg-white border-start" >
+                                    <div class="py-1 px-2">
+                                        <span *ngIf="x.checkbox===true" (click)="x.checkbox=false">
+                                            <i class="bi bi-check-square-fill text-primary"></i>
+                                        </span>
+                                        <span *ngIf="x.checkbox!=true" (click)="x.checkbox=true">
+                                            <i class="bi bi-square"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index">
+                                    <div class="orders" [ngStyle]="{'width': n.width+'px'}">
+                                        <app-custom-field [item]="objItem(n,x,i)"
+                                            (newItemEvent)="onChild($event)"></app-custom-field>
+                                    </div>
+                                </div> 
+                            </div> 
+                        </span>
+                        
+
+                        <div class="sticky-bottom border-bottom">
                             <div class="d-flex tables-header-td ">
-                                <div class="floating-div  text-light  bg-light ">
+                                <div class="floating-div  text-light  bg-light border-start ">
                                     <div class="py-1 px-2">
                                         <i class="bi bi-file-spreadsheet text-white"></i>
                                     </div>
@@ -154,7 +162,7 @@
                                     *ngFor="let n of customField;  let a = index">
                                     <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}
                                     </div>
-                                </div> 
+                                </div>
 
                             </div>
                         </div>
@@ -213,7 +221,7 @@
             </div>
         </div>
         <div class="container mt-5">
-            <div class="row g-2"> 
+            <div class="row g-2">
                 <div class="col-2 border-bottom">
                     <strong>TYPE OF FIELD</strong>
                 </div>
@@ -237,9 +245,12 @@
 
                     <div class="d-flex">
                         <div>
-                            <button type="button" (click)="onUpdateCustomFieldAlign('left')" class="btn btn-light me-1"><i class="bi bi-text-left"></i></button>
-                            <button type="button" (click)="onUpdateCustomFieldAlign('center')" class="btn btn-light me-1"><i class="bi bi-text-center"></i></button>
-                            <button type="button" (click)="onUpdateCustomFieldAlign('right')" class="btn btn-light me-2"><i class="bi bi-text-right"></i></button>
+                            <button type="button" (click)="onUpdateCustomFieldAlign('left')"
+                                class="btn btn-light me-1"><i class="bi bi-text-left"></i></button>
+                            <button type="button" (click)="onUpdateCustomFieldAlign('center')"
+                                class="btn btn-light me-1"><i class="bi bi-text-center"></i></button>
+                            <button type="button" (click)="onUpdateCustomFieldAlign('right')"
+                                class="btn btn-light me-2"><i class="bi bi-text-right"></i></button>
                         </div>
                         <div class="resizable" data-id="{{x.id}}" [ngStyle]="{'width': x.width+'px'}">
                             <input type="text" [(ngModel)]="x.name" class="form-control  "
@@ -247,7 +258,8 @@
                                 (keyup.enter)="updateCustomField.blur()">
                         </div>
                         <div class="mx-1" *ngIf="x.iType == 'formula'">
-                            <button type="button" class="btn btn-light border"><i class="bi bi-pen"></i> Add Custom Formula</button>
+                            <button type="button" class="btn btn-light border"><i class="bi bi-pen"></i> Add Custom
+                                Formula</button>
                         </div>
                         <div class="mx-1" *ngIf="x.iType == 'number'"> <input type="text" [(ngModel)]="x.suffix"
                                 class="form-control  " style="width: 50px;" (change)="onUpdateCustomField(x)"
@@ -283,7 +295,7 @@
                         <option value="url">Url</option>
                         <option value="note">Note</option>
                         <option value="image">Image</option>
-                        <option value="formula">Formula</option> 
+                        <option value="formula">Formula</option>
                     </select>
                 </div>
                 <div class="col-8">

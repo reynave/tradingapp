@@ -150,23 +150,23 @@ export class TableComponent implements OnInit {
         console.log("httpGet",data);
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
-
-        this.detail = data['detail'].map((item: any) => ({
-          ...item,
-          checkbox: false,
-          // openDate: {
-          //   year: new Date(item.openDate).getFullYear(),
-          //   month: new Date(item.openDate).getMonth() + 1,
-          //   day: new Date(item.openDate).getDate(),
-          // },
-          // closeDate: {
-          //   year: new Date(item.closeDate).getFullYear(),
-          //   month: new Date(item.closeDate).getMonth() + 1,
-          //   day: new Date(item.closeDate).getDate()
-          // },
-          // openTime: item.openDate.split(" ")[1].substring(0, 5),
-          // closeTime: item.closeDate.split(" ")[1].substring(0, 5),
-        }));
+        this.detail = data['detail'];
+        // this.detail = data['detail'].map((item: any) => ({
+        //   ...item,
+        //   checkbox: false,
+        //   openDate: {
+        //     year: new Date(item.openDate).getFullYear(),
+        //     month: new Date(item.openDate).getMonth() + 1,
+        //     day: new Date(item.openDate).getDate(),
+        //   },
+        //   closeDate: {
+        //     year: new Date(item.closeDate).getFullYear(),
+        //     month: new Date(item.closeDate).getMonth() + 1,
+        //     day: new Date(item.closeDate).getDate()
+        //   },
+        //   openTime: item.openDate.split(" ")[1].substring(0, 5),
+        //   closeTime: item.closeDate.split(" ")[1].substring(0, 5),
+        // }));
         this.select = data['select'];
         if (recalulate == true) {
           // this.onCalculation();
@@ -257,6 +257,7 @@ export class TableComponent implements OnInit {
             data => {
               console.log(data);
               this.loading = false;
+              this.reloadRow(data['detail'][0]);
               console.log("onSubmit Done");
             },
             e => {
@@ -288,6 +289,39 @@ export class TableComponent implements OnInit {
         console.log(e);
       },
     );
+  }
+
+  addTask(){
+    const body = {
+      journalId : this.id,
+    }
+    this.http.post<any>(environment.api + "Tables/addTask" , body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.reloadAddRow(data['detail'][0]);
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
+
+  reloadRow(data:any){
+    console.log("reloadRow");
+    let objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == data.id));
+    this.detail[objIndex] = data;
+  }
+  reloadAddRow(data:any){
+    this.detail.push(data);
+  }
+  reloadDelRow(data:any){
+    data.forEach((el: any) => {
+      let objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el));
+      this.detail.move(objIndex,0);
+    });
+    
   }
 
   httpJournalSelect() {
@@ -441,20 +475,12 @@ export class TableComponent implements OnInit {
   checkBoxAll(status: boolean = false) {
     if (status == true) {
       this.isCheckBoxAll = true;
-      // this.detail = this.detail.map((item: any) => ({
-      //   ...item,
-      //   checkbox: true,
-      // }));
       for (let i = 0; i < this.detail.length; i++) {
         this.detail[i].checkbox = true;
       }
     }
     else if (status == false) {
       this.isCheckBoxAll = false;
-      // this.detail = this.detail.map((item: any) => ({
-      //   ...item,
-      //   checkbox: false,
-      // }));
       for (let i = 0; i < this.detail.length; i++) {
         this.detail[i].checkbox = false;
       }
@@ -491,9 +517,9 @@ export class TableComponent implements OnInit {
       }
     )
   }
+
   onUpdateCustomFieldAlign(x:any){
-    this.httpGet();
-    
+    this.httpGet(); 
     this.httpCustomField();
   }
 

@@ -87,6 +87,7 @@ export class CustomFieldComponent implements OnInit {
       data => {
         console.log(data);
         console.log("onSubmit Done");
+        this.emitToParent(this.childItem);
       },
       e => {
         console.log(e);
