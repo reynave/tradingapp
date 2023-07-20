@@ -19,6 +19,8 @@
                     </div>
                     <div class="mb-2">
                         Total Trades
+
+                        <button type="button" (click)="openComponent()">openComponent</button>
                     </div>
                     <a class="m-1 btn" [title]="i.color" *ngFor="let i of backgroundColorOption">
                         <i class="bi bi-square-fill fs-4" [ngStyle]="{'color': i.color }"></i>
@@ -30,13 +32,14 @@
 
 
         <div class="col-lg-{{leftSide == false ? 12:9}} col-12">
-            <div class="bg-white rounded  ">
+            <div class="bg-white rounded" style="border-left: 5px solid rgb(114, 194, 254);">
                 <div class="p-3">
                     <div class="row">
                         <div class="col-8">
                             <input class="form-control form-control-lg border-0 p-0" placeholder=""
                                 [(ngModel)]="item.name" (change)="onSubmit()" #itemName (keyup.enter)="itemName.blur()">
                         </div>
+
                         <div class="col-4 text-end align-self-center">
                             <div class="d-flex flex-row-reverse ">
                                 <div>
@@ -93,9 +96,10 @@
                 <div class="text-center my-5" *ngIf="!startUpTable">
                     <img src="./assets/gif/loading-board.gif" class="w-100" style="max-width: 300px;">
                 </div>
+                
                 <div class="ps-3 pt-0">
-                    <div class="tables-body border" *ngIf="startUpTable">
-                        <div class="sticky-top">
+                    <div class="tables-body border-top" *ngIf="startUpTable">
+                        <div class="sticky-top border-start">
                             <div class="d-flex tables-header-td bg-white">
                                 <div class="floating-div bg-white">
                                     <div class="py-1 px-2">
@@ -104,20 +108,20 @@
                                         <i class="bi bi-square" *ngIf="!isCheckBoxAll" (click)="checkBoxAll(true)"></i>
                                     </div>
                                 </div>
-                                <div class=" order-{{n.sorting}} bg-white "
-                                    *ngFor="let n of customField;  let a = index">
-                                    <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}
+                                <div class=" order-{{n.sorting}} bg-white "  *ngFor="let n of customField;  let a = index">
+                                    <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
+                                        <b>{{n.name}}</b>  
+                                        <span *ngIf="n.iType === 'formula'" class="mx-1">
+                                            <button class="btn btn-sm btn-light py-0"><i class="bi bi-pen"></i></button>
+                                        </span>
                                     </div>
-                                </div>
-                                <!-- <div class=" order-99 bg-white ">
-                                <div class="p-1 text-center orders ">Notes</div>
-                            </div> -->
+                                </div> 
 
                             </div>
                         </div>
 
                         <div class="d-flex tables-body-td" *ngFor="let x of detail; let i = index">
-                            <div class="floating-div bg-white">
+                            <div class="floating-div bg-white border-start">
                                 <div class="py-1 px-2">
                                     <span *ngIf="x.checkbox===true" (click)="x.checkbox=false">
                                         <i class="bi bi-check-square-fill text-primary"></i>
@@ -133,11 +137,13 @@
                                     <app-custom-field [item]="objItem(n,x,i)"
                                         (newItemEvent)="onChild($event)"></app-custom-field>
                                 </div>
-                            </div>
-
-
+                            </div> 
                         </div>
-                        <div class="sticky-bottom border-top">
+                        <div class="d-flex tables-body-td">
+                            <div class="ms-3 p-3"><h3>TITLE </h3></div>
+                        </div>
+                        
+                        <div class="sticky-bottom border">
                             <div class="d-flex tables-header-td ">
                                 <div class="floating-div  text-light  bg-light ">
                                     <div class="py-1 px-2">
@@ -148,10 +154,7 @@
                                     *ngFor="let n of customField;  let a = index">
                                     <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}
                                     </div>
-                                </div>
-                                <!-- <div class=" order-99 bg-white ">
-                                <div class="p-1 text-center orders ">Notes</div>
-                            </div> -->
+                                </div> 
 
                             </div>
                         </div>
@@ -197,7 +200,6 @@
     </div>
 </ng-template>
 
-
 <ng-template #contentCustomField let-modal>
 
     <div class="modal-body">
@@ -211,7 +213,7 @@
             </div>
         </div>
         <div class="container mt-5">
-            <div class="row g-2">
+            <div class="row g-2"> 
                 <div class="col-2 border-bottom">
                     <strong>TYPE OF FIELD</strong>
                 </div>
@@ -234,10 +236,18 @@
 
 
                     <div class="d-flex">
+                        <div>
+                            <button type="button" (click)="onUpdateCustomFieldAlign('left')" class="btn btn-light me-1"><i class="bi bi-text-left"></i></button>
+                            <button type="button" (click)="onUpdateCustomFieldAlign('center')" class="btn btn-light me-1"><i class="bi bi-text-center"></i></button>
+                            <button type="button" (click)="onUpdateCustomFieldAlign('right')" class="btn btn-light me-2"><i class="bi bi-text-right"></i></button>
+                        </div>
                         <div class="resizable" data-id="{{x.id}}" [ngStyle]="{'width': x.width+'px'}">
                             <input type="text" [(ngModel)]="x.name" class="form-control  "
                                 (change)="onUpdateCustomField(x)" #updateCustomField
                                 (keyup.enter)="updateCustomField.blur()">
+                        </div>
+                        <div class="mx-1" *ngIf="x.iType == 'formula'">
+                            <button type="button" class="btn btn-light border"><i class="bi bi-pen"></i> Add Custom Formula</button>
                         </div>
                         <div class="mx-1" *ngIf="x.iType == 'number'"> <input type="text" [(ngModel)]="x.suffix"
                                 class="form-control  " style="width: 50px;" (change)="onUpdateCustomField(x)"
@@ -273,8 +283,7 @@
                         <option value="url">Url</option>
                         <option value="note">Note</option>
                         <option value="image">Image</option>
-                        <option value="formula">Formula</option>
-                        
+                        <option value="formula">Formula</option> 
                     </select>
                 </div>
                 <div class="col-8">
@@ -294,7 +303,7 @@
 
 <ng-template #contentEditSelect let-modal>
     <div class="modal-header">
-        <div class="modal-title" id="modal-basic-title">Select Option Editable</div>
+        <div class="modal-title" id="modal-basic-title">Editable Select Option </div>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body pb-5">

@@ -7,6 +7,8 @@ import Chart from 'chart.js/auto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Title } from '@angular/platform-browser';
+import { LoginComponent } from 'src/app/login/login.component';
+import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
 declare var $: any;
 
 export class Model {
@@ -73,7 +75,7 @@ export class TableComponent implements OnInit {
   startUpTable: boolean = false;
   isCheckBoxAll: boolean = false;
   detailObject: any = [];
-  newSelect = new NewSelect("", "", "", "");
+  newSelect = new NewSelect("", "", "", "#393737");
   backgroundColorOption: any = [];
 
   constructor(
@@ -293,7 +295,7 @@ export class TableComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-     //   console.log("httpJournalSelect",data);
+        // console.log("httpJournalSelect",data);
         this.customField = data['customField'];
         this.select = data['select'];
         if (this.detailObject.length !== 0) {
@@ -439,17 +441,23 @@ export class TableComponent implements OnInit {
   checkBoxAll(status: boolean = false) {
     if (status == true) {
       this.isCheckBoxAll = true;
-      this.detail = this.detail.map((item: any) => ({
-        ...item,
-        checkbox: true,
-      }));
+      // this.detail = this.detail.map((item: any) => ({
+      //   ...item,
+      //   checkbox: true,
+      // }));
+      for (let i = 0; i < this.detail.length; i++) {
+        this.detail[i].checkbox = true;
+      }
     }
     else if (status == false) {
       this.isCheckBoxAll = false;
-      this.detail = this.detail.map((item: any) => ({
-        ...item,
-        checkbox: false,
-      }));
+      // this.detail = this.detail.map((item: any) => ({
+      //   ...item,
+      //   checkbox: false,
+      // }));
+      for (let i = 0; i < this.detail.length; i++) {
+        this.detail[i].checkbox = false;
+      }
     }
   }
 
@@ -464,6 +472,10 @@ export class TableComponent implements OnInit {
     return data;
   }
 
+  openComponent() {
+		const modalRef = this.modalService.open(CustomFieldFormComponent, { fullscreen: true});
+		modalRef.componentInstance.customFieldForm = this.customFieldForm;
+	}
 
   onUpdateCustomField(x: any) {
     console.log(x);
@@ -478,6 +490,11 @@ export class TableComponent implements OnInit {
         console.log(e);
       }
     )
+  }
+  onUpdateCustomFieldAlign(x:any){
+    this.httpGet();
+    
+    this.httpCustomField();
   }
 
   addCustomField() {

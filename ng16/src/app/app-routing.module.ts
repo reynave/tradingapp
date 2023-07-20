@@ -7,8 +7,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { LoginComponent } from './login/login.component';
 import { BacktestComponent } from './backtest/backtest.component';
 import { BacktestDetailComponent } from './backtest/backtest-detail/backtest-detail.component';
-import { ReloginComponent } from './login/relogin/relogin.component';
-import { JournalComponent } from './journal/journal.component';
+import { ReloginComponent } from './login/relogin/relogin.component'; 
 import { BookComponent } from './book/book.component'; 
 import { TemplateTableComponent } from './template/template-table/template-table.component';
 import { TableComponent } from './board/table/table.component';
@@ -27,8 +26,7 @@ const routes: Routes = [
   { path: "board/table/:id", component: TableComponent, data: { active: "trade" },  canActivate:[authGuard]  }, 
   
   { path: "template/table", component: TemplateTableComponent, data: { active: "template" },  canActivate:[authGuard]  }, 
- 
-
+  
   { path: "backtest", component: BacktestComponent, data: { active: "backtest" },  canActivate:[authGuard]  }, 
   { path: "backtest/:id", component: BacktestDetailComponent, data: { active: "backtest" },  canActivate:[authGuard]  }, 
  

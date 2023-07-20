@@ -125,11 +125,11 @@ class Tables extends BaseController
 
             $evaluateFormula = function ($data, $formula) {
                 extract($data);
-                try {
+                //try {
                     return eval("return $formula;");
-                } catch (Throwable $e) {
-                    return false;
-                }
+               // } catch (Throwable $e) {
+               //     return false;
+               // }
             };
 
             $index = 0;

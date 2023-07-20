@@ -1,4 +1,4 @@
-<div *ngIf="item['itype']=='text' || item['itype']=='number'  || item['itype']=='date' || item['itype']=='time'">
+<div *ngIf="item['itype']=='text' || item['itype']=='number' ">
     <div class="d-flex">
         <div style="width: 100%;">
             <input [type]="item['itype']" class="p-1 {{'text-'+childItem['customField']['textAlign']}}" maxlength="250"
@@ -7,6 +7,18 @@
                 [ngClass]="{'text-gray': item['itype'] == 'date' && !childItem['value']}">
         </div>
         <div class="mx-1 py-1" *ngIf="item['customField']['suffix']"><small>{{item['customField']['suffix']}}</small>
+        </div>
+    </div>
+
+</div>
+
+<div *ngIf=" item['itype']=='date' || item['itype']=='time'">
+    <div class="d-flex">
+        <div style="width: 100%;">
+            <input [type]="item['itype']" class="p-1 {{'text-'+childItem['customField']['textAlign']}}" maxlength="250"
+                [(ngModel)]="childItem['value']" #customFieldText (keyup.enter)="customFieldText.blur()"
+                (change)="emitToParent(childItem);"
+                [ngClass]="{'text-gray': item['itype'] == 'date' && !childItem['value']}">
         </div>
     </div>
 
@@ -83,8 +95,7 @@
     </div>
 </div>
 
-<div *ngIf=" item['itype']=='formula'">
-
+<div *ngIf=" item['itype']=='formula'"> 
     <div class="p-1 {{'text-'+childItem['customField']['textAlign']}}">
         <small>{{isNumber(childItem['value'])}}</small>
     </div>
