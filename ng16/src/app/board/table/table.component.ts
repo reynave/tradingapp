@@ -125,7 +125,7 @@ export class TableComponent implements OnInit {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-    //    console.log("httpHeader",data);
+        //    console.log("httpHeader",data);
         this.journal = data['item'];
         this.titleService.setTitle(data['item']['name']);
         this.item.name = data['item']['name'];
@@ -146,8 +146,8 @@ export class TableComponent implements OnInit {
     this.http.get<any>(environment.api + "Tables/detail?id=" + this.id, {
       headers: this.configService.headers(),
     }).subscribe(
-      data => {
-        console.log("httpGet",data);
+      data => { 
+        console.log("httpGet", data);
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
         this.detail = data['detail'];
@@ -172,7 +172,12 @@ export class TableComponent implements OnInit {
           // this.onCalculation();
         }
         this.startUpTable = true;
-
+        $(function () {
+          $(".sortable").sortable({
+            handle: ".handle",
+            placeholder: "ui-state-highlight", 
+          });
+        });
       },
       e => {
         console.log(e);
@@ -291,11 +296,11 @@ export class TableComponent implements OnInit {
     );
   }
 
-  addTask(){
+  addTask() {
     const body = {
-      journalId : this.id,
+      journalId: this.id,
     }
-    this.http.post<any>(environment.api + "Tables/addTask" , body, {
+    this.http.post<any>(environment.api + "Tables/addTask", body, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
@@ -308,20 +313,67 @@ export class TableComponent implements OnInit {
     )
   }
 
-  reloadRow(data:any){
+  actionTask(action: string) {
+    const detail = [];
+    for (let i = 0; i < this.detail.length; i++) {
+      if (this.detail[i].checkbox == true) {
+        let temp = {
+          id: this.detail[i]['id'],
+        }
+        detail.push(temp);
+      }
+    }
+    const body = {
+      detail: detail,
+    }
+    console.log(body);
+    if (action == 'delete') { 
+      detail.forEach(el => {
+        var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
+        this.detail.splice(objIndex, 1);
+      });  
+      this.http.post<any>(environment.api + "Tables/deleteTask", body, {
+        headers: this.configService.headers(),
+      }).subscribe(
+        data => {
+          console.log(data);
+        },
+        e => {
+          console.log(e);
+        }
+      )
+    }
+    if (action == 'duplicate') {  
+      this.http.post<any>(environment.api + "Tables/duplicateTask", body, {
+        headers: this.configService.headers(),
+      }).subscribe(
+        data => {
+          console.log(data);
+           this.httpGet();
+        },
+        e => {
+          console.log(e);
+        }
+      )
+    }
+  }
+
+  reloadRow(data: any) {
     console.log("reloadRow");
     let objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == data.id));
     this.detail[objIndex] = data;
   }
-  reloadAddRow(data:any){
+
+  reloadAddRow(data: any) {
     this.detail.push(data);
   }
-  reloadDelRow(data:any){
+
+  reloadDelRow(data: any) {
     data.forEach((el: any) => {
       let objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el));
-      this.detail.move(objIndex,0);
+      this.detail.move(objIndex, 0);
     });
-    
+
   }
 
   httpJournalSelect() {
@@ -498,10 +550,23 @@ export class TableComponent implements OnInit {
     return data;
   }
 
-  openComponent() {
-		const modalRef = this.modalService.open(CustomFieldFormComponent, { fullscreen: true});
-		modalRef.componentInstance.customFieldForm = this.customFieldForm;
-	}
+  openComponent(componentName: string) {
+    if (componentName == 'CustomFieldFormComponent') {
+      const modalRef = this.modalService.open(CustomFieldFormComponent, { fullscreen: true });
+      modalRef.componentInstance.customFieldForm = this.customFieldForm;
+      modalRef.componentInstance.id = this.id;
+
+      modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+        console.log(data);
+        if (data == 'httpGet') {
+          this.httpGet();
+        }
+        else if (data == 'httpCustomField') {
+          this.httpCustomField();
+        }
+      });
+    }
+  }
 
   onUpdateCustomField(x: any) {
     console.log(x);
@@ -518,8 +583,8 @@ export class TableComponent implements OnInit {
     )
   }
 
-  onUpdateCustomFieldAlign(x:any){
-    this.httpGet(); 
+  onUpdateCustomFieldAlign(x: any) {
+    this.httpGet();
     this.httpCustomField();
   }
 

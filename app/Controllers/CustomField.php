@@ -266,19 +266,15 @@ class CustomField extends BaseController
 
 
             if ($total < $max) {
-
-
                 $i = 1;
                 for ($n = 1; $n <= $max; $n++) {
                     if (!model("Core")->select("id", "journal_custom_field", "journalId = '" . $post['id'] . "' AND f = " . $n)) {
                         $i = $n;
                         break;
                     }
-
                 }
 
                 if ($this->db->fieldExists("f$i", 'journal_detail')) {
-
                     $this->db->table("journal_custom_field")->insert([
                         "f" => $i,
                         "width" => 150,
@@ -289,11 +285,20 @@ class CustomField extends BaseController
                         "input_by" => model("Core")->accountId(),
                         "input_date" => date("Y-m-d H:i:s"),
                     ]);
+ 
+                    $items = "SELECT *
+                    FROM journal_custom_field 
+                    where journalId = '" . $post['id'] . "' order by sorting ASC, id DESC";
+          
                     $data = array(
                         "error" => false,
                         "post" => $post,
+                        "note" => "",
+                        "items" => $this->db->query($items)->getResultArray(),
                     );
                 }
+ 
+
             } else {
                 $data = array(
                     "error" => true,

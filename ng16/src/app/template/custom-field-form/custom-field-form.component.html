@@ -1,2 +1,113 @@
-<p>custom-field-form works!</p>
-{{customFieldForm |json}}
+<div class="modal-body">
+    <div class="row">
+        <div class="col-10">
+            <div class="modal-title"><b>Custom Fields Form</b></div>
+        </div>
+        <div class="col-2 text-end">
+            <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()"></button>
+        </div>
+    </div>
+    <div>
+        <div class="tables-body " style="height: 90vh;">
+            <div class="sticky-top  bg-white">
+                <div class="container mt-5 ">
+                    <div class="row g-2 ">
+                        <div class="col-2 border-bottom">
+                            <strong>TYPE OF FIELD</strong>
+                        </div>
+                        <div class="col-10 border-bottom">
+                            <div class="mx-2 ">
+                                <strong>FIELDS</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container sortable">
+                <div class="row g-2 border-bottom py-1" *ngFor="let x of customFieldForm">
+                    <div class="col-2 ">
+                        <div class="py-2">
+                            <b><small> {{x.iType | uppercase}}</small></b>
+                        </div>
+                    </div>
+
+                    <div class="col-9 ">
+
+
+                        <div class="d-flex">
+                            <div>
+                                <button type="button" (click)="onUpdateCustomFieldAlign('left')"
+                                    class="btn btn-light me-1"><i class="bi bi-text-left"></i></button>
+                                <button type="button" (click)="onUpdateCustomFieldAlign('center')"
+                                    class="btn btn-light me-1"><i class="bi bi-text-center"></i></button>
+                                <button type="button" (click)="onUpdateCustomFieldAlign('right')"
+                                    class="btn btn-light me-2"><i class="bi bi-text-right"></i></button>
+                            </div>
+                            <div class="resizable" data-id="{{x.id}}" [ngStyle]="{'width': x.width+'px'}">
+                                <input type="text" [(ngModel)]="x.name" class="form-control rounded-0 "
+                                    (change)="onUpdateCustomField(x)" #updateCustomField
+                                    (keyup.enter)="updateCustomField.blur()">
+                            </div>
+                            <div class="mx-1" *ngIf="x.iType == 'formula'">
+                                <button type="button" class="btn btn-light border"><i class="bi bi-pen"></i> Add Custom
+                                    Formula</button>
+                            </div>
+                            <div class="mx-1" *ngIf="x.iType == 'number'"> <input type="text" [(ngModel)]="x.suffix"
+                                    class="form-control  " style="width: 50px;" (change)="onUpdateCustomField(x)"
+                                    maxlength="3" #updateCustomFieldSuffix
+                                    (keyup.enter)="updateCustomFieldSuffix.blur()">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-1 text-end">
+                        <div class="d-flex">
+                            <div class="mx-1">
+                                <button type="button" class="btn btn-sm btn-danger" *ngIf="x.ilock == '0'"
+                                    (click)="removeCustomeFlied(x);"><i class="bi bi-trash3"></i></button>
+
+                                <button type="button" class="btn btn-sm btn-light" disabled *ngIf="x.ilock == '1'"><i
+                                        class="bi bi-lock-fill"></i></button>
+                            </div>
+                            <div class="py-1 handle mx-1" data-id="{{x.id}}"> <i class="bi bi-list"></i> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sticky-bottom"> 
+                <div class="container bg-white">
+
+                    <div class="row g-2 py-2">
+                        <div class="col-2">
+                            <select class="form-control" [(ngModel)]="newCustomField.iType">
+                                <option value="number">Number</option>
+                                <option value="text">Text</option>
+                                <option value="select">Select</option>
+                                <option value="date">Date</option>
+                                <option value="time">Time</option>
+                                <option value="url">Url</option>
+                                <option value="note">Note</option>
+                                <option value="image">Image</option>
+                                <option value="formula">Formula</option>
+                            </select>
+                        </div>
+                        <div class="col-8">
+                            <input type="text" class="form-control" [(ngModel)]="newCustomField.name">
+                        </div>
+                        <div class="col-2 d-grid">
+                            <button type="button" (click)="addCustomField()" [disabled]="newCustomField.name==''"
+                                class="btn btn-primary btn-sm">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

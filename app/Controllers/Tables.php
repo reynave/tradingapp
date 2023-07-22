@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class Tables extends BaseController
 {
-    public function index()
+    function index()
     {
         $data = array(
             "error" => false,
@@ -83,8 +83,8 @@ class Tables extends BaseController
             "error" => true,
             "request" => $this->request->getVar(),
         );
-        $accountId = "230101.0001";
-        // $accountId =  model("Core")->accountId();
+        
+        $accountId =  model("Core")->accountId();
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
         if ($data['request']['id'] && $id) {
 
@@ -196,6 +196,70 @@ class Tables extends BaseController
                 "error" => false,
                 "post" => $post,
                 "detail" => $detail,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+    function deleteTask()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            foreach ($post['detail'] as $row) {
+                $this->db->table("journal_detail")->update([
+                    'presence' => 0,
+                    "input_by" => model("Core")->accountId(),
+                    "input_date" => date("Y-m-d H:i:s"),
+                ], " id = '" . $row['id'] . "' ");
+            }
+            $data = array(
+                "error" => false,
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+    function duplicateTask()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $accountId = model("Core")->accountId();
+            foreach ($post['detail'] as $row) {
+                $id = $row['id'];
+                $journalId = model("Core")->select("journalId", "journal_detail", "id='$id'");
+                $this->db->table("journal_detail")->insert([
+                    'presence' => 1,
+                    'journalId' => $journalId,
+                    "input_by" => $accountId,
+                    "input_date" => date("Y-m-d H:i:s"),
+                ]);
+
+                $newId = model("Core")->select("id", "journal_detail", " journalId='$journalId' and input_by = '$accountId' order by input_date DESC");
+                $query = $this->db->query("SELECT * FROM journal_detail WHERE id = '$id'");
+                foreach ($query->getFieldNames() as $field) {
+                    if ($field != 'id') { 
+                        $this->db->table("journal_detail")->update([
+                            $field => model("Core")->select($field, "journal_detail", "id='$id'"),
+                        ], " id = '$newId' ");
+                    }
+                }
+
+            }
+
+            $data = array(
+                "error" => false,
+                "post" => $post,
             );
         }
         return $this->response->setJSON($data);
