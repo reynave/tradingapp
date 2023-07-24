@@ -139,7 +139,7 @@ input:focus {
 }
 
 .tables-body-td:hover .orders,
-.tables-body-td:hover .orders input {
+.tables-body-td:hover .orders input, .tables-body-td:hover  .orders-left-fixed {
   background-color: var(--color-border-1);
 }
 

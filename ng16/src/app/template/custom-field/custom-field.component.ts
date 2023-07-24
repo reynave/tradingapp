@@ -23,7 +23,7 @@ export class CustomFieldComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.childItem = { ...this.item };
+    this.childItem = { ...this.item }; 
   }
 
   fnChildItemSelectOption(id: string) {

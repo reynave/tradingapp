@@ -151,31 +151,41 @@ export class TableComponent implements OnInit {
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
         this.detail = data['detail'];
-        // this.detail = data['detail'].map((item: any) => ({
-        //   ...item,
-        //   checkbox: false,
-        //   openDate: {
-        //     year: new Date(item.openDate).getFullYear(),
-        //     month: new Date(item.openDate).getMonth() + 1,
-        //     day: new Date(item.openDate).getDate(),
-        //   },
-        //   closeDate: {
-        //     year: new Date(item.closeDate).getFullYear(),
-        //     month: new Date(item.closeDate).getMonth() + 1,
-        //     day: new Date(item.closeDate).getDate()
-        //   },
-        //   openTime: item.openDate.split(" ")[1].substring(0, 5),
-        //   closeTime: item.closeDate.split(" ")[1].substring(0, 5),
-        // }));
         this.select = data['select'];
         if (recalulate == true) {
           // this.onCalculation();
         }
         this.startUpTable = true;
+        let self = this;
         $(function () {
           $(".sortable").sortable({
             handle: ".handle",
             placeholder: "ui-state-highlight", 
+            cancel: ".handle-disabled",
+            update: function (event: any, ui: any) {
+              const order: any[] = [];
+              $(".handle").each((index: number, element: any) => {
+                const itemId = $(element).attr("id");
+                order.push(itemId);
+              });
+              console.log(order);
+              const body = {
+                order: order,
+                journalId: self.id,
+              }
+              
+              self.http.post<any>(environment.api + "Tables/sortableDetail", body, {
+                headers: self.configService.headers(),
+              }).subscribe(
+                data => { 
+                  //self.httpGet();
+                  console.log(data);
+                },
+                e => {
+                  console.log(e);
+                }
+              )
+            }
           });
         });
       },
@@ -356,6 +366,41 @@ export class TableComponent implements OnInit {
         }
       )
     }
+    if (action == 'lock') {  
+      detail.forEach(el => {
+        var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id'])); 
+        this.detail[objIndex]['ilock'] = "1";
+      });  
+      this.http.post<any>(environment.api + "Tables/lock", body, {
+        headers: this.configService.headers(),
+      }).subscribe(
+        data => {
+          console.log(data);
+          this.checkBoxAll(false);
+        },
+        e => {
+          console.log(e);
+        }
+      )
+    }
+    if (action == 'unlock') {  
+      detail.forEach(el => {
+        var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id'])); 
+        this.detail[objIndex]['ilock'] = "0";
+      });  
+      this.http.post<any>(environment.api + "Tables/unlock", body, {
+        headers: this.configService.headers(),
+      }).subscribe(
+        data => {
+          console.log(data); 
+          this.checkBoxAll(false);
+        },
+        e => {
+          console.log(e);
+        }
+      )
+    }
+
   }
 
   reloadRow(data: any) {
@@ -441,6 +486,24 @@ export class TableComponent implements OnInit {
     )
   }
 
+  fnHide(n:string, index : number, item:any){
+    console.log(n,index);
+    this.customField[index]['hide'] = n == '1' ? '0': '1';
+    const data = {
+      item : item,
+      hide : this.customField[index]['hide'],
+    }
+    this.http.post<any>(environment.api + "Tables/fnHide", data, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data); 
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
 
   openCanvasRight() {
     this.offcanvasService.open(this.canvasRight, { position: 'end', panelClass: 'details-panel', }).result.then(
@@ -452,63 +515,7 @@ export class TableComponent implements OnInit {
       },
     );
   }
-
-  openModalFullscreen(content: any) {
-    this.modalService.open(content, { fullscreen: true });
-    this.customFieldForm = this.customField;
-    let self = this;
-    $(function () {
-      $(".resizable").resizable({
-        maxHeight: 33,
-        minHeight: 33,
-        minWidth: 100,
-        stop: function (event: any, ui: any) {
-          console.log(ui.size);
-          const body = {
-            ui: ui.size,
-            itemId: $(this).attr("id")
-          }
-          console.log(body);
-          self.http.post<any>(environment.api + "CustomField/fieldResizable", body, {
-            headers: self.configService.headers(),
-          }).subscribe(
-            data => {
-              console.log(data);
-              self.httpCustomField();
-            },
-            e => {
-              console.log(e);
-            }
-          )
-        }
-      });
-      $(".sortable").sortable({
-        handle: ".handle",
-        placeholder: "ui-state-highlight",
-        update: function (event: any, ui: any) {
-          const order: any[] = [];
-          $(".sortable .handle").each((index: number, element: any) => {
-            const itemId = $(element).attr("id");
-            order.push(itemId);
-          });
-
-          console.log(order);
-          self.http.post<any>(environment.api + "CustomField/sortable", order, {
-            headers: self.configService.headers(),
-          }).subscribe(
-            data => {
-              console.log(data);
-              self.httpGet();
-            },
-            e => {
-              console.log(e);
-            }
-          )
-        }
-      });
-    });
-  }
-
+ 
   objItem(customField: any, detail: any, index: number) {
 
     let objIndex = this.select.findIndex(((obj: { field: string; }) => obj.field == 'f' + customField['f']));
@@ -516,6 +523,7 @@ export class TableComponent implements OnInit {
     const data = {
       index: index,
       id: detail.id,
+      ilock: detail.ilock == '1' ? true : false, 
       customField: customField,
       itype: customField['iType'],
       value: detail['f' + customField['f']],

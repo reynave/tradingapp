@@ -83,8 +83,8 @@ class Tables extends BaseController
             "error" => true,
             "request" => $this->request->getVar(),
         );
-        
-        $accountId =  model("Core")->accountId();
+
+        $accountId = model("Core")->accountId();
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
         if ($data['request']['id'] && $id) {
 
@@ -97,9 +97,9 @@ class Tables extends BaseController
                 $customField .= ", f" . $r['f'];
                 array_push($customFieldNo, "f" . $r['f']);
             }
-            $q = "SELECT id, journalId, false AS 'checkbox' $customField 
+            $q = "SELECT id, ilock, journalId, false AS 'checkbox' $customField 
             FROM journal_detail 
-            where journalId = '$id' and presence = 1 order by sorting DESC";
+            where journalId = '$id' and presence = 1 order by sorting ASC";
             $detail = $this->db->query($q)->getResultArray();
 
             $select = [];
@@ -120,7 +120,7 @@ class Tables extends BaseController
                 array_push($select, $temp);
             }
 
-            $b = "SELECT * FROM color   ORDER BY id ASC ";
+            $b = "SELECT * FROM color  ORDER BY id ASC ";
             $backgroundColorOption = $this->db->query($b)->getResultArray();
 
             $evaluateFormula = function ($data, $formula) {
@@ -248,7 +248,7 @@ class Tables extends BaseController
                 $newId = model("Core")->select("id", "journal_detail", " journalId='$journalId' and input_by = '$accountId' order by input_date DESC");
                 $query = $this->db->query("SELECT * FROM journal_detail WHERE id = '$id'");
                 foreach ($query->getFieldNames() as $field) {
-                    if ($field != 'id') { 
+                    if ($field != 'id') {
                         $this->db->table("journal_detail")->update([
                             $field => model("Core")->select($field, "journal_detail", "id='$id'"),
                         ], " id = '$newId' ");
@@ -257,6 +257,98 @@ class Tables extends BaseController
 
             }
 
+            $data = array(
+                "error" => false,
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+    function lock()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            foreach ($post['detail'] as $row) {
+                $this->db->table("journal_detail")->update([
+                    'ilock' => 1,
+                    "input_by" => model("Core")->accountId(),
+                    "input_date" => date("Y-m-d H:i:s"),
+                ], " id = '" . $row['id'] . "' ");
+            }
+            $data = array(
+                "error" => false,
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+    function unlock()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            foreach ($post['detail'] as $row) {
+                $this->db->table("journal_detail")->update([
+                    'ilock' => 0,
+                    "update_by" => model("Core")->accountId(),
+                    "update_date" => date("Y-m-d H:i:s"),
+                ], " id = '" . $row['id'] . "' ");
+            }
+            $data = array(
+                "error" => false,
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+    function fnHide(){
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) { 
+            $this->db->table("journal_custom_field")->update([
+                'hide' => $post['hide'],
+                "update_by" => model("Core")->accountId(),
+                "update_date" => date("Y-m-d H:i:s"),
+            ], " id = '" . $post['item']['id'] . "' ");
+          
+            $data = array(
+                "error" => false,
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
+
+    function sortableDetail()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $i = 0;
+            foreach($post['order'] as $row){
+                $this->db->table('journal_detail')->update([
+                    "sorting" => $i++,
+                ],"id = $row ");
+            }
             $data = array(
                 "error" => false,
                 "post" => $post,

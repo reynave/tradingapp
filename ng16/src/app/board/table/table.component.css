@@ -1,0 +1,6 @@
+.absolut-area{
+    position: absolute;
+    top: 70px;
+    left: -9px;
+    z-index: 999;
+}
