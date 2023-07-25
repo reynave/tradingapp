@@ -35,9 +35,9 @@
 
         <div class="col-lg-{{leftSide == false ? 12:9}} col-12">
             <div class="bg-white rounded" style="border-left: 5px solid rgb(114, 194, 254);">
-               
-                <div class="p-3">
-                    <div class="row">
+
+                <div class="px-3 py-2">
+                    <div class="row mb-2">
                         <div class="col-8">
                             <input class="form-control form-control-lg border-0 p-0" placeholder=""
                                 [(ngModel)]="item.name" (change)="onSubmit()" #itemName (keyup.enter)="itemName.blur()">
@@ -71,15 +71,20 @@
                                     ngbTooltip="http://localhost:4200/#/board/{{journal.url}}">
                                     <a href="http://localhost:4200/#/board/{{journal.url}}" target="_blank"
                                         class="btn btn-sm text-dark"><i class="bi bi-link-45deg"></i> Copy</a>
-                                </div> 
-                               
+                                </div>
+
                             </div>
                         </div>
+                        <div class="col-12 ">
 
+                           <app-board-view (newItemEvent)="reload($event)"></app-board-view>
+
+                        </div>
                         <div class="col-12">
                             <div class="d-flex">
                                 <div class="me-2">
-                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New Task</button>
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New
+                                        Task</button>
                                 </div>
 
                                 <div class="me-2">
@@ -87,65 +92,72 @@
                                 </div>
 
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light"><i class="bi bi-sliders"></i></button>
+                                    <button type="button" class="btn btn-sm btn-light"><i
+                                            class="bi bi-sliders"></i></button>
                                 </div>
 
-                                <div class="me-2"> 
+                                <div class="me-2">
                                     <div ngbDropdown class="d-inline-block" container="body">
-                                        <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide" ngbDropdownToggle>
+                                        <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide"
+                                            ngbDropdownToggle>
                                             <i class="bi bi-eye-slash"></i> Hide
                                         </button>
                                         <div ngbDropdownMenu aria-labelledby="dropdownFormHide" style="width: 240px;">
-                                            <div class="px-3 py-2">  
-                                                <div *ngFor="let x of customField; let i = index" class="border-bottom py-1" >
+                                            <div class="px-3 py-2">
+                                                <div *ngFor="let x of customField; let i = index" class="border-bottom py-1">
                                                     <div class="row g-1">
-                                                        <div class="col-10" [ngClass]="{'text-gray': x.hide==1 ? true :false}">
+                                                        <div class="col-10"
+                                                            [ngClass]="{'text-gray': x.hide==1 ? true :false}">
                                                             {{x.name}}
                                                         </div>
-                                                        <div class="col-2 text-end">
-                                                            {{x.hide}}
+                                                        <div class="col-2 text-end"> 
                                                             <span *ngIf="x.hide==1" (click)="fnHide(1,i,x);">
                                                                 <i class="bi bi-square"></i>
                                                             </span>
-                                                            <span *ngIf="x.hide!=1" (click)="fnHide(0,i,x);"> 
+                                                            <span *ngIf="x.hide!=1" (click)="fnHide(0,i,x);">
                                                                 <i class="bi bi-check-square-fill text-dark"></i>
                                                             </span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div> 
+                                            </div>
                                         </div>
                                     </div>
-   
+
                                 </div>
 
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('duplicate')"><i class="bi bi-files"></i>
+                                    <button type="button" class="btn btn-sm btn-light"
+                                        (click)="actionTask('duplicate')"><i class="bi bi-files"></i>
                                         Duplicate</button>
                                 </div>
 
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('delete')"><i  class="bi bi-trash"></i>
+                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('delete')"><i
+                                            class="bi bi-trash"></i>
                                         Delete</button>
                                 </div>
 
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('lock')" ><i class="bi bi-lock"></i> Lock</button>
+                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('lock')"><i
+                                            class="bi bi-lock"></i> Lock</button>
                                 </div>
 
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('unlock')"><i class="bi bi-unlock"></i> Unlock</button>
+                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('unlock')"><i
+                                            class="bi bi-unlock"></i> Unlock</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="text-center my-5" *ngIf="!startUpTable">
                     <img src="./assets/gif/loading-board.gif" class="w-100" style="max-width: 300px;">
                 </div>
 
-                <div class="ps-3 pt-0">  
+                <div class="ps-3 pt-0">
                     <div class="tables-body " *ngIf="startUpTable">
                         <div class="sticky-top border-bottom">
                             <div class="d-flex tables-header-td bg-white">
@@ -171,7 +183,7 @@
 
                         <div class="sortable">
                             <span *ngFor="let x of detail; let i = index">
-                                <div class="d-flex tables-body-td "  >
+                                <div class="d-flex tables-body-td ">
                                     <div class="floating-div bg-white border-start table-body-td-first">
                                         <div class="py-1 px-3 position-relative orders-left-fixed">
                                             <div class="table-sorting-area">
@@ -179,7 +191,7 @@
                                                     <i class="bi bi-list "></i>
                                                 </div>
                                                 <div class="py-1 " *ngIf="x.ilock == '1'">
-                                                    <i class="bi bi-lock-fill"></i>  
+                                                    <i class="bi bi-lock-fill"></i>
                                                 </div>
                                             </div>
 
@@ -192,9 +204,11 @@
                                         </div>
                                     </div>
 
-                                    <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
+                                    <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index"
+                                        [hidden]="n.hide=='1'">
                                         <div class="orders" [ngStyle]="{'width': n.width+'px'}">
-                                            <app-custom-field [item]="objItem(n,x,i)" (newItemEvent)="onChild($event)"></app-custom-field>
+                                            <app-custom-field [item]="objItem(n,x,i)"
+                                                (newItemEvent)="onChild($event)"></app-custom-field>
                                         </div>
                                     </div>
                                 </div>

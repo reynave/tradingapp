@@ -172,7 +172,7 @@ class Tables extends BaseController
                 array_push($customFieldNo, "f" . $r['f']);
             }
 
-            $q = "SELECT id, journalId, false AS 'checkbox' $customField 
+            $q = "SELECT id, ilock, journalId, false AS 'checkbox' $customField 
             FROM journal_detail 
             where journalId = '$id' and id = '$newId' and presence = 1 order by sorting DESC";
             $detail = $this->db->query($q)->getResultArray();

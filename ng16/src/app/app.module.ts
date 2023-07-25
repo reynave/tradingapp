@@ -22,6 +22,7 @@ import { TemplateTableComponent } from './template/template-table/template-table
 import { CustomFieldComponent } from './template/custom-field/custom-field.component';
 import { TableComponent } from './board/table/table.component';
 import { CustomFieldFormComponent } from './template/custom-field-form/custom-field-form.component';
+import { BoardViewComponent } from './global/board-view/board-view.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { CustomFieldFormComponent } from './template/custom-field-form/custom-fi
     TemplateTableComponent,
     CustomFieldComponent,
     TableComponent,
-    CustomFieldFormComponent
+    CustomFieldFormComponent,
+    BoardViewComponent
   ],
   imports: [
     BrowserModule,

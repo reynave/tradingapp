@@ -1,13 +1,12 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service';
 import Chart from 'chart.js/auto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Title } from '@angular/platform-browser';
-import { LoginComponent } from 'src/app/login/login.component';
+import { Title } from '@angular/platform-browser'; 
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
 declare var $: any;
 
@@ -120,7 +119,17 @@ export class TableComponent implements OnInit {
     
     this.httpHeader();
     this.httpGet(true);
-     this.httpJournalSelect();
+    this.httpJournalSelect();
+
+  }
+
+  reload(newItem: any){
+    this.startUpTable = false;
+    console.log(newItem);
+    this.journalTableViewId =  newItem['id']; 
+    this.httpHeader();
+    this.httpGet(true);
+    this.httpJournalSelect();
 
   }
 
@@ -589,67 +598,5 @@ export class TableComponent implements OnInit {
     }
   }
 
-  onUpdateCustomField(x: any) {
-    console.log(x);
-    this.http.post<any>(environment.api + "CustomField/onUpdateCustomField", x, {
-      headers: this.configService.headers(),
-    }).subscribe(
-      data => {
-        console.log(data);
-        this.httpCustomField();
-      },
-      e => {
-        console.log(e);
-      }
-    )
-  }
-
-  onUpdateCustomFieldAlign(x: any) {
-    this.httpGet();
-    this.httpCustomField();
-  }
-
-  addCustomField() {
-    const body = {
-      id: this.id,
-      item: this.newCustomField
-    }
-    this.http.post<any>(environment.api + 'CustomField/addCustomField', body,
-      { headers: this.configService.headers() }
-    ).subscribe(
-      data => {
-        console.log(data);
-        if (data['error'] === true) {
-          alert(data['note']);
-        }
-        this.modalService.dismissAll();
-        this.httpGet();
-
-      },
-      e => {
-        console.log(e);
-      },
-    );
-  }
-
-  removeCustomeFlied(x: any) {
-    const body = {
-      id: x.id,
-    }
-    console.log(body);
-    this.http.post<any>(environment.api + 'CustomField/removeCustomeFlied', body,
-      { headers: this.configService.headers() }
-    ).subscribe(
-      data => {
-        console.log(data);
-        let objIndex = this.customFieldForm.findIndex(((obj: { id: any; }) => obj.id == x.id));
-        this.customFieldForm.splice(objIndex, 1);
-        this.httpGet();
-      },
-      e => {
-        console.log(e);
-      },
-    );
-  }
-
+  
 }
