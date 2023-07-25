@@ -96,17 +96,18 @@
                                             <i class="bi bi-eye-slash"></i> Hide
                                         </button>
                                         <div ngbDropdownMenu aria-labelledby="dropdownFormHide" style="width: 240px;">
-                                            <div class="px-3 py-2">
-                                                <div *ngFor="let x of customField; let i = index" class="border-bottom" >
+                                            <div class="px-3 py-2">  
+                                                <div *ngFor="let x of customField; let i = index" class="border-bottom py-1" >
                                                     <div class="row g-1">
-                                                        <div class="col-10" [ngClass]="{'text-gray': x.hide=='1' ? true :false}">
+                                                        <div class="col-10" [ngClass]="{'text-gray': x.hide==1 ? true :false}">
                                                             {{x.name}}
                                                         </div>
                                                         <div class="col-2 text-end">
-                                                            <span *ngIf="x.hide=='1'" (click)="fnHide('1',i,x);">
+                                                            {{x.hide}}
+                                                            <span *ngIf="x.hide==1" (click)="fnHide(1,i,x);">
                                                                 <i class="bi bi-square"></i>
                                                             </span>
-                                                            <span *ngIf="x.hide!='1'" (click)="fnHide('0',i,x);"> 
+                                                            <span *ngIf="x.hide!=1" (click)="fnHide(0,i,x);"> 
                                                                 <i class="bi bi-check-square-fill text-dark"></i>
                                                             </span>
                                                         </div>

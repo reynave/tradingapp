@@ -35,10 +35,10 @@ export class CustomFieldComponent implements OnInit {
     }
     else {
       if (id !== "") {
-        let objIndexHistory = this.childItem.select.optionHistory.findIndex(((obj: { id: string; }) => obj.id == id))
+        let objIndexHistory = this.childItem.select.optionDelete.findIndex(((obj: { id: string; }) => obj.id == id))
 
         if (objIndexHistory > -1) {
-          data = this.childItem.select.optionHistory[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
+          data = this.childItem.select.optionDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
           //   data = objIndexHistory;
         }
 

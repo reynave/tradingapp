@@ -41,6 +41,7 @@ export class BookComponent implements OnInit {
     this.id = obj['id'];
     this.httpGet();
   }
+
   public updateHeader(){
     const data = {
       sender : 'book',
@@ -54,10 +55,12 @@ export class BookComponent implements OnInit {
     this.id = this.activatedRoute.snapshot.params["id"];
     this.httpGet();
   }
+
   onBlur(){
     console.log("onBlur");
     this.editable.title = false;
   }
+  
   onFocus(book : any){
     if(book.ilock == 0){
       console.log("onFocus");
@@ -113,8 +116,7 @@ export class BookComponent implements OnInit {
       }
     )
   }
-
-
+ 
   onChangesBook(book:any, item:any){
     console.log(book,item);
     const body ={

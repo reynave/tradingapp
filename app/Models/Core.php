@@ -96,4 +96,57 @@ class Core extends Model
             self::deleteNode($child['id']);
         }
     }
+    function journalTable($id = "", $journalTableViewId = "", $where = "") {
+        $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
+        $journal_custom_field = $this->db->query($c)->getResultArray();
+        
+        $journal_custom_field = [];
+        foreach ($this->db->query($c)->getResultArray() as $r) { 
+            $temp = array(
+                "hide" => model("Core")->select("hide","journal_table_view_show","journalTableViewId = '$journalTableViewId'  AND journalCustomFieldId = '".$r['id']."' ") ? 1:0,
+            );
+            array_push($journal_custom_field, array_merge($r,$temp));
+        }
+        
+
+        $customField = "";
+        $customFieldNo = [];
+        foreach ($journal_custom_field as $r) {
+            $customField .= ", f" . $r['f'];
+            array_push($customFieldNo, "f" . $r['f']);
+        }
+
+
+        $q = "SELECT id, ilock, journalId, false AS 'checkbox' $customField 
+        FROM journal_detail 
+        where journalId = '$id' $where
+        AND presence = 1 order by sorting ASC";
+        $detail = $this->db->query($q)->getResultArray();
+
+        $evaluateFormula = function ($data, $formula) {
+            extract($data);
+            return eval("return $formula;");
+        };
+
+        $index = 0;
+        foreach ($detail as $rec) {
+            $data = [];
+            foreach ($journal_custom_field as $field) {
+                if ($field['iType'] == 'formula') {
+                    foreach (array_keys($rec) as $key) {
+                        $data[$key] = (int) $rec[$key];
+                    }
+                    $detail[$index][$field['key']] = $evaluateFormula($data, $field['eval']);
+                }
+            }
+            $index++;
+        }
+        $data = array(  
+            "customFieldNo" => $customFieldNo,
+            "journal_custom_field" => $journal_custom_field,
+            "detail" => $detail, 
+        );
+
+        return $data;
+    }
 }

@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment.development';
 import { ConfigService } from 'src/app/service/config.service';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -24,19 +25,17 @@ export class HeaderComponent implements OnInit, OnChanges {
     this.checkJwtToken();
     this.httpGet();
   }
-  ngOnChanges(changes: any) {
-   
-    if ( this.item['sender'] == 'book') {
-       
+  ngOnChanges(changes: any = []) {
+    if (this.item['sender'] == 'book') { 
       this.updateNavigator();
     }
 
   }
 
   updateNavigator() {
-    if (this.items.length > 1 &&  this.items !== 'undefined') {
+    if (this.items.length > 1 && this.items !== 'undefined') {
       let objIndex = this.items.findIndex(((obj: { id: any; }) => obj.id == this.item.id));
-      this.items[objIndex]['name'] = this.item.name;
+      //this.items[objIndex]['name'] = this.item['name'];
     }
   }
 
@@ -46,7 +45,7 @@ export class HeaderComponent implements OnInit, OnChanges {
       headers: this.configService.headers()
     }).subscribe(
       data => {
-        
+
         this.items = data['items'];
 
       },
@@ -72,7 +71,7 @@ export class HeaderComponent implements OnInit, OnChanges {
       headers: this.configService.headers()
     }).subscribe(
       data => {
-         
+
       },
       e => {
         console.log(e);

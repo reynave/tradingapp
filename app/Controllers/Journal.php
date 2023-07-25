@@ -13,8 +13,8 @@ class Journal extends BaseController
         $q1 = "SELECT  ja.id as journal_accessID, ja.bookId, p.name AS 'permission', p.fontIcon, 
         a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin
         FROM journal_access AS ja
-        JOIN journal AS j ON j.id = ja.journalId
-        JOIN permission AS p ON p.id = j.permissionId
+        LEFT JOIN journal AS j ON j.id = ja.journalId
+        LEFT JOIN permission AS p ON p.id = j.permissionId
         JOIN account AS a ON a.id = j.accountId
         WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$id'
         ORDER BY ja.sorting ASC, ja.input_date ASC";
@@ -36,7 +36,8 @@ class Journal extends BaseController
             "book" => $book[0],
             "bookSelect" => $bookSelect,
             "permission" => $permission,
-            "header" => model("Core")->header()
+            "header" => model("Core")->header(),
+            "q1" => $q1,
         );
         return $this->response->setJSON($data);
     }

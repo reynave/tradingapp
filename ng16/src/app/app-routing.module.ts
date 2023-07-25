@@ -23,7 +23,8 @@ const routes: Routes = [
   { path: "book/:id", component: BookComponent, data: { active: "book" },  canActivate:[authGuard]  }, 
  
 
-  { path: "board/table/:id", component: TableComponent, data: { active: "trade" },  canActivate:[authGuard]  }, 
+ // { path: "board/table/:id", component: TableComponent, data: { active: "trade" },  canActivate:[authGuard]  }, 
+  { path: "board/table/:id/:journalTableViewId", component: TableComponent, data: { active: "trade" },  canActivate:[authGuard]  }, 
   
   { path: "template/table", component: TemplateTableComponent, data: { active: "template" },  canActivate:[authGuard]  }, 
   

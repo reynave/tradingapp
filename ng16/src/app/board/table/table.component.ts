@@ -53,6 +53,8 @@ export class TableComponent implements OnInit {
   item = new Model("", 0, "", "", "");
   newCustomField = new NewCustomField("", "text");
   id: string = "";
+  journalTableViewId: string = "";
+  
   waiting: boolean = false;
   loading: boolean = false;
   detail: any = [];
@@ -114,9 +116,11 @@ export class TableComponent implements OnInit {
       },
     });
     this.id = this.ativatedRoute.snapshot.params['id'];
+    this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
+    
     this.httpHeader();
     this.httpGet(true);
-    this.httpJournalSelect();
+     this.httpJournalSelect();
 
   }
 
@@ -143,8 +147,12 @@ export class TableComponent implements OnInit {
   }
 
   httpGet(recalulate: boolean = false) {
-    this.http.get<any>(environment.api + "Tables/detail?id=" + this.id, {
+    this.http.get<any>(environment.api + "Tables/detail", {
       headers: this.configService.headers(),
+      params : {
+        id : this.id,
+        journalTableViewId : this.journalTableViewId,
+      }
     }).subscribe(
       data => { 
         console.log("httpGet", data);
@@ -196,8 +204,12 @@ export class TableComponent implements OnInit {
   }
 
   httpCustomField() {
-    this.http.get<any>(environment.api + "Tables/detail?id=" + this.id, {
+    this.http.get<any>(environment.api + "Tables/detail", {
       headers: this.configService.headers(),
+      params : {
+        id : this.id,
+        journalTableViewId : this.journalTableViewId,
+      }
     }).subscribe(
       data => {
         this.customField = data['customField'];
@@ -207,8 +219,7 @@ export class TableComponent implements OnInit {
       }
     )
   }
-
-
+ 
   onChild(newItem: any) {
     //console.log(this.detail[newItem.index]);
     console.log("Saving...", this.waiting);
@@ -427,7 +438,7 @@ export class TableComponent implements OnInit {
     }).subscribe(
       data => {
         // console.log("httpJournalSelect",data);
-        this.customField = data['customField'];
+        //this.customField = data['customField'];
         this.select = data['select'];
         if (this.detailObject.length !== 0) {
           let objIndex = this.select.findIndex(((obj: { field: any; }) => obj.field == this.detailObject.select.field));
@@ -486,12 +497,14 @@ export class TableComponent implements OnInit {
     )
   }
 
-  fnHide(n:string, index : number, item:any){
+  fnHide(n:number, index : number, item:any){
     console.log(n,index);
-    this.customField[index]['hide'] = n == '1' ? '0': '1';
+    this.customField[index]['hide'] = n == 1 ? 0: 1;
     const data = {
       item : item,
       hide : this.customField[index]['hide'],
+      id : this.id,
+      journalTableViewId : this.journalTableViewId,
     }
     this.http.post<any>(environment.api + "Tables/fnHide", data, {
       headers: this.configService.headers(),

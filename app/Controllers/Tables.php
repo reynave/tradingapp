@@ -45,14 +45,14 @@ class Tables extends BaseController
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 1 order by sorting ASC, id DESC";
 
-                $optionHistory = "SELECT *
+                $optionDelete = "SELECT *
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 0 order by sorting ASC, id DESC";
 
                 $temp = array(
                     "field" => $rec,
                     "option" => $this->db->query($option)->getResultArray(),
-                    "optionHistory" => $this->db->query($optionHistory)->getResultArray(),
+                    "optionDelete" => $this->db->query($optionDelete)->getResultArray(),
                 );
                 array_push($select, $temp);
             }
@@ -79,12 +79,14 @@ class Tables extends BaseController
 
     function detail()
     {
+
         $data = array(
             "error" => true,
             "request" => $this->request->getVar(),
         );
 
         $accountId = model("Core")->accountId();
+        $journalTableViewId = $data['request']['journalTableViewId'];
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
         if ($data['request']['id'] && $id) {
 
@@ -97,10 +99,7 @@ class Tables extends BaseController
                 $customField .= ", f" . $r['f'];
                 array_push($customFieldNo, "f" . $r['f']);
             }
-            $q = "SELECT id, ilock, journalId, false AS 'checkbox' $customField 
-            FROM journal_detail 
-            where journalId = '$id' and presence = 1 order by sorting ASC";
-            $detail = $this->db->query($q)->getResultArray();
+
 
             $select = [];
             foreach ($customFieldNo as $rec) {
@@ -108,14 +107,14 @@ class Tables extends BaseController
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 1 order by sorting ASC, id DESC";
 
-                $optionHistory = "SELECT *
+                $optionDelete = "SELECT *
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 0 order by sorting ASC, id DESC";
 
                 $temp = array(
                     "field" => $rec,
                     "option" => $this->db->query($option)->getResultArray(),
-                    "optionHistory" => $this->db->query($optionHistory)->getResultArray(),
+                    "optionDelete" => $this->db->query($optionDelete)->getResultArray(),
                 );
                 array_push($select, $temp);
             }
@@ -123,33 +122,19 @@ class Tables extends BaseController
             $b = "SELECT * FROM color  ORDER BY id ASC ";
             $backgroundColorOption = $this->db->query($b)->getResultArray();
 
-            $evaluateFormula = function ($data, $formula) {
-                extract($data);
-                return eval("return $formula;");
-            };
-
-            $index = 0;
-            foreach ($detail as $rec) {
-                $data = [];
-                foreach ($journal_custom_field as $field) {
-                    if ($field['iType'] == 'formula') {
-                        foreach (array_keys($rec) as $key) {
-                            $data[$key] = (int) $rec[$key];
-                        }
-                        $detail[$index][$field['key']] = $evaluateFormula($data, $field['eval']);
-                    }
-                }
-                $index++;
-            }
+            $journalTable = model("Core")->journalTable($id, $journalTableViewId);
 
             $data = array(
                 "error" => false,
                 "id" => $id,
                 "backgroundColorOption" => $backgroundColorOption,
                 "select" => $select,
-                "customFieldNo" => $customFieldNo,
-                "customField" => $journal_custom_field,
-                "detail" => $detail,
+                //  "customFieldNo" => $customFieldNo,
+                //  "customField" => $journal_custom_field,
+                //  "detail" => $detail,
+                "customFieldNo" => $journalTable['customFieldNo'],
+                "customField" => $journalTable['journal_custom_field'],
+                "detail" => $journalTable['detail'],
             );
 
 
@@ -311,20 +296,28 @@ class Tables extends BaseController
         return $this->response->setJSON($data);
     }
 
-    function fnHide(){
+    function fnHide()
+    {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
         $data = [
             "error" => true,
             "post" => $post,
         ];
-        if ($post) { 
-            $this->db->table("journal_custom_field")->update([
-                'hide' => $post['hide'],
-                "update_by" => model("Core")->accountId(),
-                "update_date" => date("Y-m-d H:i:s"),
-            ], " id = '" . $post['item']['id'] . "' ");
-          
+        if ($post) {
+            $id = model("Core")->select("id", "journal_table_view_show", " journalTableViewId = '" . $post['journalTableViewId'] . "'  AND journalCustomFieldId = '" . $post['item']['id'] . "'  ");
+
+            if ($id) { 
+                $this->db->table("journal_table_view_show")->update([
+                    'hide' => (int)$post['hide'], 
+                ], " id = '$id' ");
+            } else {
+                $this->db->table("journal_table_view_show")->insert([
+                    'hide' => (int)$post['hide'], 
+                    'journalTableViewId' => $post['journalTableViewId'],
+                    'journalCustomFieldId' => $post['item']['id'],
+                ]);
+            }
             $data = array(
                 "error" => false,
                 "post" => $post,
@@ -344,10 +337,10 @@ class Tables extends BaseController
         ];
         if ($post) {
             $i = 0;
-            foreach($post['order'] as $row){
+            foreach ($post['order'] as $row) {
                 $this->db->table('journal_detail')->update([
                     "sorting" => $i++,
-                ],"id = $row ");
+                ], "id = $row ");
             }
             $data = array(
                 "error" => false,
@@ -383,14 +376,14 @@ class Tables extends BaseController
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 1 order by sorting ASC, id DESC";
 
-                $optionHistory = "SELECT *
+                $optionDelete = "SELECT *
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 0 order by sorting ASC, id DESC";
 
                 $temp = array(
                     "field" => $rec,
                     "option" => $this->db->query($option)->getResultArray(),
-                    "optionHistory" => $this->db->query($optionHistory)->getResultArray(),
+                    "optionDelete" => $this->db->query($optionDelete)->getResultArray(),
 
                     "q" => $option,
                 );
