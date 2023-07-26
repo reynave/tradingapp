@@ -23,6 +23,7 @@ import { CustomFieldComponent } from './template/custom-field/custom-field.compo
 import { TableComponent } from './board/table/table.component';
 import { CustomFieldFormComponent } from './template/custom-field-form/custom-field-form.component';
 import { BoardViewComponent } from './global/board-view/board-view.component';
+import { ChartjsComponent } from './board/chartjs/chartjs.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { BoardViewComponent } from './global/board-view/board-view.component';
     CustomFieldComponent,
     TableComponent,
     CustomFieldFormComponent,
-    BoardViewComponent
+    BoardViewComponent,
+    ChartjsComponent
   ],
   imports: [
     BrowserModule,

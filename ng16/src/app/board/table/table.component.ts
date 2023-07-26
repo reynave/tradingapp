@@ -45,7 +45,7 @@ export class TableComponent implements OnInit {
   @ViewChild('contentEditSelect') contentEditSelect: any;
 
   leftSide: boolean = true;
-  panels = ['First', 'Second', 'Third'];
+ 
   fields: any = [];
   items: any = [];
   journal: any = [];
@@ -557,15 +557,21 @@ export class TableComponent implements OnInit {
   checkBoxAll(status: boolean = false) {
     if (status == true) {
       this.isCheckBoxAll = true;
-      for (let i = 0; i < this.detail.length; i++) {
-        this.detail[i].checkbox = true;
-      }
+      // for (let i = 0; i < this.detail.length; i++) {
+      //   this.detail[i].checkbox = true;
+      // }
+      this.detail.forEach((el: any) => {
+        el.checkbox = true;
+      });
     }
     else if (status == false) {
       this.isCheckBoxAll = false;
-      for (let i = 0; i < this.detail.length; i++) {
-        this.detail[i].checkbox = false;
-      }
+      // for (let i = 0; i < this.detail.length; i++) {
+      //   this.detail[i].checkbox = false;
+      // }
+      this.detail.forEach((el: any) => {
+        el.checkbox = false;
+      });
     }
   }
 

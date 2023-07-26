@@ -11,6 +11,7 @@ import { ReloginComponent } from './login/relogin/relogin.component';
 import { BookComponent } from './book/book.component'; 
 import { TemplateTableComponent } from './template/template-table/template-table.component';
 import { TableComponent } from './board/table/table.component';
+import { ChartjsComponent } from './board/chartjs/chartjs.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -24,7 +25,8 @@ const routes: Routes = [
  
 
  // { path: "board/table/:id", component: TableComponent, data: { active: "trade" },  canActivate:[authGuard]  }, 
-  { path: "board/table/:id/:journalTableViewId", component: TableComponent, data: { active: "trade" },  canActivate:[authGuard]  }, 
+  { path: "board/table/:id/:journalTableViewId", component: TableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
+  { path: "board/chart/:id/:journalTableViewId", component: ChartjsComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   
   { path: "template/table", component: TemplateTableComponent, data: { active: "template" },  canActivate:[authGuard]  }, 
   

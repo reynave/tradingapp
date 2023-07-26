@@ -1,6 +1,17 @@
-<p>home works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <p>home works!</p>
 {{time}}
 {{time | date}}
 <br>
 {{date}}<br>
 {{now}}
+
+<input type="text" class="form-control" placeholder="Search..." [(ngModel)]="keyword" (ngModelChange)="onSearchChange()">
+<ul>
+  <li *ngFor="let item of filteredData">{{ item.name }} - {{ item.address }} - {{ item.area }}</li>
+</ul>
+        </div>
+    </div>
+</div>
