@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `journal` (
 -- Dumping data for table tradingbook.journal: ~16 rows (approximately)
 INSERT INTO `journal` (`id`, `accountId`, `templateId`, `name`, `url`, `permissionId`, `borderColor`, `backgroundColor`, `version`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
 	('B1-000026', '230101.0001', 0, 'SETUP NORA', '649d34f8bb389', 0, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:32', '230101.0001', '2023-07-01 19:03:16', '230101.0001'),
-	('B1-000027', '230101.0001', 0, '充サ際査メフカ454545 243', '649d34fa55074', 20, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:34', '230101.0001', '2023-07-25 06:07:58', '230101.0001'),
+	('B1-000027', '230101.0001', 0, '充サ際査メフカ454545 243', '649d34fa55074', 20, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:34', '230101.0001', '2023-07-26 07:08:37', '230101.0001'),
 	('B1-000028', '230101.0001', 0, 'QM1', '649d34fb0bd97', 0, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:35', '230101.0001', '2023-07-02 05:24:46', '230101.0001'),
 	('B1-000029', '230101.0001', 0, 'SNR 100', '649d34feba584', 0, '#3AA6B9', '#C1ECE4', '1', 0, '2023-06-29 07:38:38', '230101.0001', '2023-07-02 12:40:58', '230101.0001'),
 	('B1-000031', '230101.0001', 1, 'New 2023-07-02 18:34', '64a1c33be7377', 0, '#3AA6B9', '#C1ECE4', '1', 0, '2023-07-02 18:34:35', '230101.0001', '2023-07-02 18:55:15', '230101.0001'),
@@ -434,12 +434,20 @@ CREATE TABLE IF NOT EXISTS `journal_table_view` (
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `input_by` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_table_view: ~2 rows (approximately)
+-- Dumping data for table tradingbook.journal_table_view: ~3 rows (approximately)
 INSERT INTO `journal_table_view` (`id`, `journalId`, `board`, `name`, `ilock`, `share`, `presence`, `input_date`, `input_by`) VALUES
 	(1, 'B1-000027', 'table', 'Main Table', 1, 0, 1, '2023-01-01 00:00:00', ''),
-	(2, 'B1-000027', 'table', 'Table Kazama', 0, 0, 1, '2023-01-01 00:00:00', '');
+	(2, 'B1-000027', 'table', 'Table Kazama 3123', 0, 1, 1, '2023-07-26 08:05:28', '230101.0001'),
+	(3, 'B1-000027', 'table', 'Flix Chart', 0, 1, 0, '2023-07-26 08:15:31', '230101.0001'),
+	(4, 'B1-000027', 'table', 'New table', 0, 1, 0, '2023-07-26 08:05:52', '230101.0001'),
+	(5, 'B1-000027', 'table', 'New table', 0, 1, 0, '2023-07-26 08:06:04', '230101.0001'),
+	(6, 'B1-000027', 'table', 'New table', 0, 1, 0, '2023-07-26 08:15:28', '230101.0001'),
+	(7, 'B1-000027', 'table', 'New table', 0, 1, 0, '2023-07-26 08:15:22', '230101.0001'),
+	(8, 'B1-000027', 'table', 'New table', 0, 1, 0, '2023-07-26 08:12:22', '230101.0001'),
+	(9, 'B1-000027', 'table', 'New table', 0, 1, 1, '2023-07-26 08:15:43', '230101.0001'),
+	(10, 'B1-000027', 'table', 'New table', 0, 1, 1, '2023-07-26 08:15:45', '230101.0001');
 
 -- Dumping structure for table tradingbook.journal_table_view_show
 CREATE TABLE IF NOT EXISTS `journal_table_view_show` (
@@ -448,7 +456,7 @@ CREATE TABLE IF NOT EXISTS `journal_table_view_show` (
   `journalCustomFieldId` int(9) NOT NULL DEFAULT 0,
   `hide` int(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table tradingbook.journal_table_view_show: ~11 rows (approximately)
 INSERT INTO `journal_table_view_show` (`id`, `journalTableViewId`, `journalCustomFieldId`, `hide`) VALUES
@@ -462,7 +470,13 @@ INSERT INTO `journal_table_view_show` (`id`, `journalTableViewId`, `journalCusto
 	(115, 2, 58, 1),
 	(116, 2, 50, 1),
 	(117, 2, 52, 1),
-	(118, 2, 51, 0);
+	(118, 2, 51, 0),
+	(119, 9, 58, 1),
+	(120, 9, 50, 1),
+	(121, 9, 52, 1),
+	(122, 9, 51, 1),
+	(123, 9, 53, 1),
+	(124, 9, 47, 1);
 
 -- Dumping structure for table tradingbook.market
 CREATE TABLE IF NOT EXISTS `market` (

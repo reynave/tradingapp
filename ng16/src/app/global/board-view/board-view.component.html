@@ -1,9 +1,47 @@
 <div class="border-bottom mb-2">
     <div class="d-flex ">
         <div *ngFor="let x of items">
+
             <a class="btn btn-sm" [ngClass]="{'btn-active': x.id == journalTableViewId}" (click)="goToView(x);"><i
-                    *ngIf="x.ilock == '1'" class="bi bi-house"></i> {{x.name}}</a> <small>|</small>
+                    *ngIf="x.ilock == '1'" class="bi bi-house"></i> {{x.name}}</a>
+
+            <div class="btn-group pe-2" ngbDropdown container="body" role="group" [hidden]="x.ilock == '1'"
+                aria-label="Button group with nested dropdown">
+                <a ngbDropdownToggle></a>
+                <div class="dropdown-menu" ngbDropdownMenu style="width: 240px;">
+                    <div class="p-2">
+                        <div class="mb-2">
+                            <small>Edit Board View</small>
+                        </div>
+                      
+                        <div class="mb-2">
+                            <input type="text" class="form-control" [(ngModel)]="x.tempName" name="name" placeholder="{{x.name}}" maxlength="50">
+                        </div>
+                        <div class="mb-4 mx-3">
+                            <div class="row">
+                                <div class="col-10">
+                                    <span [ngClass]="{'text-gray': x.share == '0'}">Share</span>
+                                </div>
+                                <div class="col-2">
+                                    <span *ngIf="x.share == '1'" (click)="x.share = '0'"><i class="bi bi-check-square"></i></span>
+                                    <span *ngIf="x.share != '1'" (click)="x.share = '1'"><i class="bi bi-square"></i></span> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2 ">
+                            <button class="btn bg-primary text-center text-white" ngbDropdownItem (click)="update(x)"><i class="bi bi-cloud-upload me-1"></i> Update</button>
+                        </div>
+                        <div class="mb-2">
+                            <button class="btn bg-danger text-center text-white" ngbDropdownItem (click)="delete(x)"><i class="bi bi-trash me-1"></i> Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <small>|</small>
+
         </div>
+
 
         <div>
             <div ngbDropdown class="d-inline-block" container="body">
@@ -16,8 +54,9 @@
                             <small>Add Board View</small>
                         </div>
                         <div class="list-group list-group-flush">
-                            <button type="button" class="list-group-item list-group-item-action"><i
-                                    class="bi bi-table me-3"></i> Table</button>
+                            <button type="button" (click)="addView('table')" ngbDropdownItem
+                                class="list-group-item list-group-item-action"><i class="bi bi-table me-3"></i>
+                                Table</button>
                             <button type="button" class="list-group-item list-group-item-action"><i
                                     class="bi bi-graph-up  me-3"></i> Chart</button>
                             <button type="button" class="list-group-item list-group-item-action disabled"><i
