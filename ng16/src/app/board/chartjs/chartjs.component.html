@@ -16,7 +16,9 @@
 
                                 <div>
                                     <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
-                                        ngbTooltip="Tooltip on top"><i class="bi bi-gear"></i></a>
+                                        (click)="openComponent('CustomFieldFormComponent')"
+                                        (newItemEvent)="onChild($event)" ngbTooltip="Tooltip on top"><i
+                                            class="bi bi-gear"></i></a>
                                 </div>
 
 
@@ -58,8 +60,8 @@
                         </div>
                     </div>
                     <div class="col-3">
-                        <div class="border p-3">
-                            <div class="mb-2">
+                        <div class="border p-3 bg-light rounded">
+                            <!-- <div class="mb-2">
                                 <label class="mb-1">Type of Chart 1</label>
                                 <div ngbDropdown class="d-inline-block d-grid">
                                     <button type="button" class="form-control text-start" id="dropdownBasic1"
@@ -72,27 +74,65 @@
                                         <button ngbDropdownItem>Something else is here</button>
                                     </div>
                                 </div>
+                            </div> -->
+                            {{journalChart | json}}
+                            <div class="mb-2">
+                                <label class="mb-1">Type of Chart</label>
+                                <select class="form-control" (change)="updateChartJs()" [(ngModel)]="journalChart.chartjsTypeId" >
+                                    <option [hidden]="journalChart.chartjsTypeId != 0">- Select -</option>
+                                    <option *ngFor="let n of typeOfChart" [value]="n.id">{{n.label}}</option>
+                                </select>
                             </div>
                             <div class="mb-2">
                                 <label class="mb-1">Label (X Axis)</label>
-                                <select class="form-control">
-                                    <option>- Select -</option>
-                                    <option *ngFor="let n of x" [value]="n.key">{{n.name}}</option>
+                                <select class="form-control"  (change)="updateChartJs()" [(ngModel)]="journalChart.xAxis" >
+                                    <option [hidden]="journalChart.xAxis != '' ">- Select -</option>
+                                    <option *ngFor="let n of x" [value]="n.key">{{n.name}}  [{{n.iType}}]</option>
                                 </select>
                             </div>
                             <div class="mb-2">
-                                <label class="mb-1">Group</label>
-                                <select class="form-control">
-                                    <option>- Select -</option>
-                                    <option *ngFor="let n of select" [value]="n.key">{{n.name}}</option>
+                                <label class="mb-1">Where</label>
+                                <select class="form-control" [(ngModel)]="journalChart.iWhere"  (change)="updateChartJs()">
+                                    <option value="">Show All</option>
+                                    <option *ngFor="let n of iWhere" [value]="n.key">{{n.name}}</option>
                                 </select>
+
+                                <div class="form-control scrollarea mt-1" [hidden]="journalChart.iWhere == ''">
+                                    <div class="row g-1 mb-1 " [ngClass]="{'border-top': (i > 0) ? true : false}"
+                                         *ngFor="let n of returniWhereOption(journalChart.iWhere); let i = index">
+
+                                        <div class="col-10">
+                                            {{n.value}}
+                                        </div>
+                                        <div class="col-2 text-end">
+                                            <i *ngIf="n.checkbox == true" (click)="n.checkbox = false;updateChartJs()" class="bi bi-check-square-fill"></i> 
+                                            <i *ngIf="n.checkbox != true" (click)="n.checkbox = true;updateChartJs()" class="bi bi-square"></i>
+                                           
+                                        </div>
+
+                                    </div>
+                                    
+                                </div>
                             </div>
                             <div class="mb-2">
                                 <label class="mb-1">Data Sets (Y Axis)</label>
-                                <select class="form-control">
-                                    <option>- Select -</option>
-                                    <option *ngFor="let n of y" [value]="n.key">{{n.name}}</option>
-                                </select>
+                                <div class="form-control scrollarea">
+                                    <div class="row g-1 mb-1 " [ngClass]="{'border-top': (i > 0) ? true : false}" *ngFor="let n of y; let i = index">
+                                        <div class="col-10">
+                                            {{n.name}} 
+                                            <small *ngIf="n.iType == 'number'"><i class="bi bi-123"></i></small>
+                                            <span *ngIf="n.iType == 'formula'"><img src="./assets/icon/formula-30.png" class="icon"></span>
+                                        </div>
+                                        <div class="col-2 text-end">
+                                            <i *ngIf="n.check == true" (click)="n.check = false;updateChartJs()" class="bi bi-check-square-fill"></i> 
+                                            <i *ngIf="n.check != true" (click)="n.check = true;updateChartJs()" class="bi bi-square"></i>
+                                            
+                                        </div>
+
+                                    </div>
+                                    
+                                </div>
+                              
                             </div>
                         </div>
                     </div>

@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { ConfigService } from 'src/app/service/config.service'; 
+import { ConfigService } from 'src/app/service/config.service';
 import Chart from 'chart.js/auto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Title } from '@angular/platform-browser';  
+import { Title } from '@angular/platform-browser';
+import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
 
-declare var $: any;
 export class Model {
   constructor(
     public name: string,
@@ -18,7 +18,16 @@ export class Model {
 
   ) { }
 }
- 
+
+export class JournalChart {
+  constructor(
+    public chartjsTypeId: number,
+    public iWhere: string,
+    public xAxis: string,
+
+  ) { }
+}
+
 @Component({
   selector: 'app-chartjs',
   templateUrl: './chartjs.component.html',
@@ -28,24 +37,25 @@ export class ChartjsComponent implements OnInit {
   @ViewChild('canvasRight') canvasRight: any;
   @ViewChild('contentEditSelect') contentEditSelect: any;
 
-  leftSide: boolean = true;
-  
+
   items: any = [];
   journal: any = [];
-  item = new Model("", 0, "", "", ""); 
+  item = new Model("", 0, "", "", "");
+  journalChart = new JournalChart(0, "", "");
+
   id: string = "";
   journalTableViewId: string = "";
-  
+
   waiting: boolean = false;
   loading: boolean = false;
   detail: any = [];
   myTimeout: any;
-  select: any = [];
   httpNote: string = "";
-  fileName = ""; 
-  x : any = [];
-  y : any = [];
-  group : any = [];
+  fileName = "";
+  x: any = [];
+  y: any = [];
+  iWhere: any = [];
+  whereOption: any = [];
   chart: any = [];
   chartJsData = {
     data: [],
@@ -54,12 +64,13 @@ export class ChartjsComponent implements OnInit {
   permission: any = [];
   detailImageUrl: string = "";
   journalDetailId: string = "";
-  startUpTable: boolean = false; 
-  detailObject: any = [];  
-
+  startUpTable: boolean = false;
+  detailObject: any = [];
+  typeOfChart: any = [];
+  customFieldForm: any = [];
   constructor(
     private titleService: Title,
-    private http: HttpClient, 
+    private http: HttpClient,
     private configService: ConfigService,
     private modalService: NgbModal,
     private ativatedRoute: ActivatedRoute,
@@ -68,7 +79,7 @@ export class ChartjsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const  typeChart = 'line';
+    const typeChart = 'line';
     this.chart = new Chart('canvas', {
       type: typeChart,
       data: {
@@ -79,7 +90,7 @@ export class ChartjsComponent implements OnInit {
             data: [],
           },
         ],
-      }, 
+      },
       options: {
         animation: {
           duration: 0
@@ -93,19 +104,19 @@ export class ChartjsComponent implements OnInit {
     });
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
-    
+
     this.httpHeader();
-    this.httpGet(true); 
+    this.httpGet(true);
     this.chartJsUpdate();
 
   }
 
-  reload(newItem: any){
+  reload(newItem: any) {
     this.startUpTable = false;
     console.log(newItem);
-    this.journalTableViewId =  newItem['id']; 
+    this.journalTableViewId = newItem['id'];
     this.httpHeader();
-    this.httpGet(true); 
+    this.httpGet(true);
 
   }
 
@@ -118,8 +129,10 @@ export class ChartjsComponent implements OnInit {
         this.journal = data['item'];
         this.titleService.setTitle(data['item']['name']);
         this.item.name = data['item']['name'];
+
+        this.customFieldForm = data['customField'];
         this.item.permissionId = data['item']['permissionId'];
-        this.permission = data['permission'];  
+        this.permission = data['permission'];
         this.item.url = environment.api + '?share=' + data['item']['url'];
       },
       e => {
@@ -131,22 +144,22 @@ export class ChartjsComponent implements OnInit {
   httpGet(recalulate: boolean = false) {
     this.http.get<any>(environment.api + "Chart/detail", {
       headers: this.configService.headers(),
-      params : {
-        id : this.id,
-        journalTableViewId : this.journalTableViewId,
+      params: {
+        id: this.id,
+        journalTableViewId: this.journalTableViewId,
       }
     }).subscribe(
-      data => { 
-        console.log("httpGet", data); 
-        this.detail = data['detail']; 
+      data => {
+        console.log("httpGet", data);
+        this.detail = data['detail'];
         this.x = data['x'];
         this.y = data['y'];
-        this.select = data['select'];
-        
+        this.iWhere = data['iWhere'];
+        this.typeOfChart = data['typeOfChart'];
         if (recalulate == true) {
           // this.onCalculation();
         }
-        this.startUpTable = true; 
+        this.startUpTable = true;
       },
       e => {
         console.log(e);
@@ -155,23 +168,23 @@ export class ChartjsComponent implements OnInit {
   }
 
   chartJsUpdate() {
-  
+
     this.chart.data.labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     this.chart.data.datasets = [
       {
         label: "data Lable 1",
-        data:  [0, -21, -43, -64, 20, -1, -23, -45, 39, 123, 102, 80], 
-      //  borderColor: this.item.borderColor,
-      //  backgroundColor: this.item.backgroundColor,
-      //  fill: {above: '#98EECC', below: '#FFAAC9', target: {value: 0}},
+        data: [0, -21, -43, -64, 20, -1, -23, -45, 39, 123, 102, 80],
+        //  borderColor: this.item.borderColor,
+        //  backgroundColor: this.item.backgroundColor,
+        fill: { above: '#98EECC', below: '#FFAAC9', target: { value: 0 } },
       },
       {
         label: "data Lable 2",
-        data:  [0, -21, -43, -64, 20, -1, -23, -45, 39, 123, 102, 80], 
+        data: [0, -21, -43, -64, 20, -1, -23, -45, 39, 123, 102, 80],
         type: 'bar',
-      //  borderColor: this.item.borderColor,
-      //  backgroundColor: this.item.backgroundColor,
-      //  fill: {above: '#98EECC', below: '#FFAAC9', target: {value: 0}},
+        //  borderColor: this.item.borderColor,
+        //  backgroundColor: this.item.backgroundColor,
+        //  fill: {above: '#98EECC', below: '#FFAAC9', target: {value: 0}},
       },
     ];
 
@@ -196,7 +209,8 @@ export class ChartjsComponent implements OnInit {
         console.log(e);
       },
     );
-  }  
+  }
+
   openCanvasRight() {
     this.offcanvasService.open(this.canvasRight, { position: 'end', panelClass: 'details-panel', }).result.then(
       (result) => {
@@ -207,8 +221,7 @@ export class ChartjsComponent implements OnInit {
       },
     );
   }
-  
- 
+
   fnPermission(id: number) {
     let data = [];
     if (this.permission.length > 0) {
@@ -219,5 +232,53 @@ export class ChartjsComponent implements OnInit {
 
     return data;
   }
- 
+
+  openComponent(componentName: string) {
+    if (componentName == 'CustomFieldFormComponent') {
+      const modalRef = this.modalService.open(CustomFieldFormComponent, { fullscreen: true });
+      modalRef.componentInstance.customFieldForm = this.customFieldForm;
+      modalRef.componentInstance.id = this.id;
+    }
+  }
+
+  onChild(newItem: any) {
+    console.log("return from child ", newItem);
+  }
+
+  iWhereOption: any = [];
+  returniWhereOption(key: any) {
+    
+    if (key != "") {
+   
+      this.iWhereOption = this.iWhere[0]['option'];
+    }else{
+      this.iWhereOption = [];
+    }
+    return this.iWhereOption;
+  }
+
+  updateChartJs() {
+    
+
+    const body = {
+      id: this.id,
+      journalTableViewId: this.journalTableViewId,
+      journalChart: this.journalChart,
+      y: this.y,
+      whereOption: this.journalChart['iWhere'] == "" ? [] : this.iWhereOption
+    }
+    this.http.post<any>(environment.api + "Chart/updateChartJs", body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);
+
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
+
+
 }

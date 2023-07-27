@@ -98,13 +98,19 @@ class Core extends Model
     }
     function journalTable($id = "", $journalTableViewId = "", $where = "") {
         $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
-        $journal_custom_field = $this->db->query($c)->getResultArray();
-        
+         
         $journal_custom_field = [];
         foreach ($this->db->query($c)->getResultArray() as $r) { 
-            $temp = array(
-                "hide" => model("Core")->select("hide","journal_table_view_show","journalTableViewId = '$journalTableViewId'  AND journalCustomFieldId = '".$r['id']."' ") ? 1:0,
-            );
+            if(model("Core")->select("board","journal_table_view","id =  '$journalTableViewId' ") == 'chart' ){
+                $temp = array(
+                    "hide" => 0,
+                );
+            }else{ 
+                $temp = array(
+                    "hide" => model("Core")->select("hide","journal_table_view_show","journalTableViewId = '$journalTableViewId'  AND journalCustomFieldId = '".$r['id']."' ") ? 1:0,
+                ); 
+            }
+            
             array_push($journal_custom_field, array_merge($r,$temp));
         }
         

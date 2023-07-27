@@ -1,0 +1,8 @@
+.scrollarea{
+    overflow-y: auto;
+    max-height: 30vh;
+    padding-bottom: 10px;
+}
+label{
+    font-size: 0.9rem;
+}

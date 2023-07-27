@@ -73,7 +73,9 @@ a{
 .text-gray{
   color: var(--color-gray);
 }
-
+.icon{
+  height: 1rem;
+}
 
 .tables-body {
   overflow-y: scroll;

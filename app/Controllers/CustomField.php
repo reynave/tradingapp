@@ -280,7 +280,7 @@ class CustomField extends BaseController
                         "width" => 150,
                         "name" => $post['item']['name'],
                         "iType" => $post['item']['iType'],
-                        "sorting" => model("Core")->select("count(id)", "journal_custom_field", "journalId = '" . $post['id'] . "' ") + 1,
+                        "sorting" => model("Core")->select("sorting", "journal_custom_field", "journalId = '" . $post['id'] . "' order by sorting DESC ") + 1,
                         "journalId" => $post['id'],
                         "input_by" => model("Core")->accountId(),
                         "input_date" => date("Y-m-d H:i:s"),
