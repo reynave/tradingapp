@@ -181,6 +181,12 @@ export class ChartjsComponent implements OnInit {
             y: {
               beginAtZero: true,
             },
+            x: {
+              ticks: {
+                maxRotation: 90,
+                minRotation: 0
+              }
+            }
           },
         },
       });
@@ -202,16 +208,16 @@ export class ChartjsComponent implements OnInit {
     this.chartJsData['datasets'].forEach((el: any) => {
       this.chart.data.datasets.push(
         {
-          label:  el['label'],
+          label: el['label'],
           data: el['data'],
           //  borderColor: this.item.borderColor,
           //  backgroundColor: this.item.backgroundColor,
           // type: 'bar',
-          fill:  el['fill'] == true ? { above: '#98EECC', below: '#FFAAC9', target: { value: 0 } } : false,
+          fill: el['fill'] == true ? { above: '#98EECC', below: '#FFAAC9', target: { value: 0 } } : false,
         },
       )
     });
-  
+
 
     // this.chart.data.datasets = [
     //   {
