@@ -66,7 +66,7 @@
 
                                 <div class="mb-2">
                                     <label class="mb-1">Type of Chart</label>
-                                    <select class="form-control" (change)="updateChartJs();initChartJs();"
+                                    <select class="form-control" (change)="updateChartJs();"
                                         [(ngModel)]="journalChart.chartjsTypeId">
                                         <option [hidden]="journalChart.chartjsTypeId != 0">- Select -</option>
                                         <option *ngFor="let n of typeOfChart" [value]="n.id">{{n.label}}</option>

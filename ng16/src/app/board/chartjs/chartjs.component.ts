@@ -218,26 +218,6 @@ export class ChartjsComponent implements OnInit {
       )
     });
 
-
-    // this.chart.data.datasets = [
-    //   {
-    //     label: "data Lable 1",
-    //     data: [0, -21, -43, -64, 20, -1, -23, -45, 39, 123, 102, 80],
-    //     //  borderColor: this.item.borderColor,
-    //     //  backgroundColor: this.item.backgroundColor,
-    //     // type: 'bar',
-    //     fill: { above: '#98EECC', below: '#FFAAC9', target: { value: 0 } },
-    //   },
-    //   {
-    //     label: "data Lable 2",
-    //     data: [-23, -45, 39, 123, 102, 80, 0, -21, -43, -64, 20, -1,],
-    //     //type: 'bar',
-    //     //  borderColor: this.item.borderColor,
-    //     //  backgroundColor: this.item.backgroundColor,
-    //     //  fill: {above: '#98EECC', below: '#FFAAC9', target: {value: 0}},
-    //   },
-    // ];
-
     this.chart.update();
     // setTimeout(() => {
     //   this.chart.destroy();
@@ -330,6 +310,7 @@ export class ChartjsComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
+        this.httpGet(); 
       },
       e => {
         console.log(e);
