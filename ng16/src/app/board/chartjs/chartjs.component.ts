@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Title } from '@angular/platform-browser';
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
+import { Observable, of } from 'rxjs';
 
 export class Model {
   constructor(
@@ -52,24 +53,18 @@ export class ChartjsComponent implements OnInit {
   loading: boolean = false;
   detail: any = [];
   myTimeout: any;
-  httpNote: string = "";
-  fileName = "";
   x: any = [];
   y: any = [];
   iWhere: any = [];
   whereOption: any = [];
   chart: any = [];
-  chartJsData = {
-    data: [],
-    label: [],
-  }
+
   permission: any = [];
-  detailImageUrl: string = "";
-  journalDetailId: string = "";
   startUpTable: boolean = false;
   detailObject: any = [];
   typeOfChart: any = [];
   customFieldForm: any = [];
+  chartJsData: any = [];
   constructor(
     private titleService: Title,
     private http: HttpClient,
@@ -87,7 +82,7 @@ export class ChartjsComponent implements OnInit {
 
     this.httpHeader();
     this.httpGet(true);
-   
+
 
   }
 
@@ -98,34 +93,6 @@ export class ChartjsComponent implements OnInit {
     this.httpHeader();
     this.httpGet(true);
 
-  }
-
-  initChartJs() {
-    console.log(this.chart);
-    const typeChart = 'line';
-    this.chart = new Chart('canvas', {
-      type: typeChart,
-      data: {
-        labels: [],
-        datasets: [
-          {
-            label: 'Load data',
-            data: [],
-          },
-        ],
-      },
-      options: {
-        animation: {
-          duration: 0
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
-    console.log(this.chart);
   }
 
   httpHeader() {
@@ -160,9 +127,9 @@ export class ChartjsComponent implements OnInit {
       data => {
 
         console.log("httpGet", data);
-        this.journalChart.chartjsTypeId = data['journal_chart_type']['chartjsTypeId'];
-        this.journalChart.xAxis = data['journal_chart_type']['xaxis'];
-        this.journalChart.idWhere = data['journal_chart_type']['idWhere'];
+        this.journalChart.chartjsTypeId = data['journal_chart']['chartjsTypeId'];
+        this.journalChart.xAxis = data['journal_chart']['xaxis'];
+        this.journalChart.idWhere = data['journal_chart']['idWhere'];
 
         this.detail = data['detail'];
         this.x = data['x'];
@@ -173,12 +140,14 @@ export class ChartjsComponent implements OnInit {
           // this.onCalculation();
         }
         this.startUpTable = true;
-        console.log("journalChart", this.journalChart);
+        this.chartJsData = data['chartJsData'];
 
-        if (this.journalChart.chartjsTypeId == 1) {
-          this.initChartJs();
-          this.chartJsUpdate();
-        }
+        // if (this.journalChart.chartjsTypeId == 1) {
+        this.initChartJs();
+
+
+        // this.chartJsUpdate();
+        // }
       },
       e => {
         console.log(e);
@@ -186,27 +155,82 @@ export class ChartjsComponent implements OnInit {
     )
   }
 
+  initChartJs() {
+    // console.log("initChartJs", this.chart['canvas'], this.journalChart.chartjsTypeId);
+    if (this.chart['canvas'] !== undefined) {
+      this.chart.destroy();
+    }
+    let objIndex = this.typeOfChart.findIndex(((obj: { id: any; }) => obj.id == this.journalChart.chartjsTypeId));
+    if (objIndex > -1) {
+      this.chart = new Chart('canvas', {
+        type: this.typeOfChart[objIndex]['itype'],
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'Load data',
+              data: [],
+            },
+          ],
+        },
+        options: {
+          animation: {
+            duration: 0
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+      this.chartJsUpdate();
+    }
+
+    //console.log(this.chart);
+  }
+
+
+
   chartJsUpdate() {
-  //  this.chart.type = "bar";
-    this.chart.data.labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-    this.chart.data.datasets = [
-      {
-        label: "data Lable 1",
-        data: [0, -21, -43, -64, 20, -1, -23, -45, 39, 123, 102, 80],
-        //  borderColor: this.item.borderColor,
-        //  backgroundColor: this.item.backgroundColor,
-       // type: 'bar',
-        fill: { above: '#98EECC', below: '#FFAAC9', target: { value: 0 } },
-      },
-      {
-        label: "data Lable 2",
-        data: [-23, -45, 39, 123, 102, 80,0, -21, -43, -64, 20, -1, ],
-        //type: 'bar',
-        //  borderColor: this.item.borderColor,
-        //  backgroundColor: this.item.backgroundColor,
-        //  fill: {above: '#98EECC', below: '#FFAAC9', target: {value: 0}},
-      },
-    ];
+    //console.log("chartJsUpdate", this.chart['canvas']);
+
+    //  this.chart.type = "bar";
+    this.chart.data.labels = this.chartJsData['labels'];
+    this.chart.data.datasets = [];
+
+    this.chartJsData['datasets'].forEach((el: any) => {
+      this.chart.data.datasets.push(
+        {
+          label:  el['label'],
+          data: el['data'],
+          //  borderColor: this.item.borderColor,
+          //  backgroundColor: this.item.backgroundColor,
+          // type: 'bar',
+          fill:  el['fill'] == true ? { above: '#98EECC', below: '#FFAAC9', target: { value: 0 } } : false,
+        },
+      )
+    });
+  
+
+    // this.chart.data.datasets = [
+    //   {
+    //     label: "data Lable 1",
+    //     data: [0, -21, -43, -64, 20, -1, -23, -45, 39, 123, 102, 80],
+    //     //  borderColor: this.item.borderColor,
+    //     //  backgroundColor: this.item.backgroundColor,
+    //     // type: 'bar',
+    //     fill: { above: '#98EECC', below: '#FFAAC9', target: { value: 0 } },
+    //   },
+    //   {
+    //     label: "data Lable 2",
+    //     data: [-23, -45, 39, 123, 102, 80, 0, -21, -43, -64, 20, -1,],
+    //     //type: 'bar',
+    //     //  borderColor: this.item.borderColor,
+    //     //  backgroundColor: this.item.backgroundColor,
+    //     //  fill: {above: '#98EECC', below: '#FFAAC9', target: {value: 0}},
+    //   },
+    // ];
 
     this.chart.update();
     // setTimeout(() => {

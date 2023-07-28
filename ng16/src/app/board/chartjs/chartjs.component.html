@@ -55,16 +55,18 @@
 
                     <div class="row">
                         <div class="col-9">
+                         
                             <div class="tables-body">
                                 <canvas id="canvas">{{chart}}</canvas>
                             </div>
+                            {{journalChart | json}}
                         </div>
                         <div class="col-3">
                             <div class="border border-2  p-3">
 
                                 <div class="mb-2">
                                     <label class="mb-1">Type of Chart</label>
-                                    <select class="form-control" (change)="updateChartJs()"
+                                    <select class="form-control" (change)="updateChartJs();initChartJs();"
                                         [(ngModel)]="journalChart.chartjsTypeId">
                                         <option [hidden]="journalChart.chartjsTypeId != 0">- Select -</option>
                                         <option *ngFor="let n of typeOfChart" [value]="n.id">{{n.label}}</option>

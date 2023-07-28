@@ -15,6 +15,7 @@ class Chart extends BaseController
             "request" => $this->request->getVar(),
         );
         $accountId = model("Core")->accountId();
+        $accountId = '230101.0001';
         $journalTableViewId = $data['request']['journalTableViewId'];
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
         if ($data['request']['id'] && $id) {
@@ -25,21 +26,16 @@ class Chart extends BaseController
             $x = [];
             $y = [];
             $iWhere = [];
+            // yAxis
             foreach ($customField as $row) {
-
-                // $q1 = "SELECT id, value, '' as checkbox  
-                // FROM journal_select
-                // WHERE   presence = 1  and field = '" . $row['key'] . "'
-                // ORDER BY sorting ASC";
 
                 $q1 = "SELECT a.id, a.value, IF(s.status = 1, TRUE, FALSE) as checkbox  , a.field
                 FROM journal_select AS a 
                 LEFT JOIN journal_chart_where_select AS s ON s.journalSelectId = a.id
                 WHERE   a.presence = 1   and a.field = '" . $row['key'] . "'
                 ORDER BY a.sorting ASC";
-
                 $option = $this->db->query($q1)->getResultArray();
- 
+
                 $temp = array(
                     "key" => $row['key'],
                     "name" => $row['name'],
@@ -54,20 +50,20 @@ class Chart extends BaseController
                     array_push($iWhere, $temp);
                 }
             }
-
+            // xAxis
             foreach ($customField as $row) {
                 $temp = array(
                     "key" => $row['key'],
                     "name" => $row['name'],
                     "iType" => $row['iType'],
                 );
-                if ($row['iType'] == 'text' || $row['iType'] == 'formula') {
+                if ($row['iType'] == 'text' || $row['iType'] == 'formula' || $row['iType'] == 'date' || $row['iType'] == 'time' || $row['iType'] == 'select') {
                     array_push($x, $temp);
                 }
             }
 
             $q1 = "SELECT *  FROM chartjs_type
-            WHERE   status = 1 
+            WHERE status = 1 
             ORDER BY id ASC ";
             $typeOfChart = $this->db->query($q1)->getResultArray();
 
@@ -79,6 +75,13 @@ class Chart extends BaseController
             WHERE  journalTableViewId = '$journalTableViewId' AND presence = 1 ";
             $yaxis = $this->db->query($q1)->getResultArray();
 
+            $journal_chart = [
+                "chartjsTypeId" => $chartjsTypeId,
+                "xaxis" => $xaxis,
+                "yaxis" => $yaxis,
+                "idWhere" => $idWhere ? $idWhere : "",
+            ];
+
             $data = array(
                 "error" => false,
                 "id" => $id,
@@ -86,15 +89,10 @@ class Chart extends BaseController
                 "y" => $y,
                 "typeOfChart" => $typeOfChart,
                 "iWhere" => $iWhere,
+                "chartJsData" => model("Core")->chartJsData($journal_chart, $journalTable['detail'], $y),
                 "detail" => $journalTable['detail'],
-                "journal_chart_type" => [
-                    "chartjsTypeId" => $chartjsTypeId,
-                    "xaxis" => $xaxis,
-                    "yaxis" => $yaxis,
-                    "idWhere" => $idWhere ? $idWhere : "",
-                ],
+                "journal_chart" => $journal_chart,
                 "request" => $this->request->getVar()
-
             );
 
 
@@ -133,9 +131,9 @@ class Chart extends BaseController
                         " id = $id "
                     );
                 }
-                array_push( $yAxisObj, $array);
+                array_push($yAxisObj, $array);
             }
-         
+
             $id_journal_chart_type = model("Core")->select("id", "journal_chart_type", "presence = 1 and  journalTableViewId = '" . $post['journalTableViewId'] . "'  and presence = 1 ");
             if (!$id_journal_chart_type) {
                 $this->db->table("journal_chart_type")->insert([
@@ -180,7 +178,7 @@ class Chart extends BaseController
                     "update_by" => model("Core")->accountId(),
                 ], " id =  $id_journal_chart_xaxis ");
             }
- 
+
             //  iWhere
             $id_journal_chart_where = model("Core")->select("id", "journal_chart_where", "presence = 1 and  journalTableViewId = '" . $post['journalTableViewId'] . "'  and presence = 1 ");
             if (!$id_journal_chart_where) {
@@ -205,14 +203,14 @@ class Chart extends BaseController
             }
 
             $this->db->table("journal_chart_where_select")->delete([
-                "journalTableViewId" =>  $post['journalTableViewId'], 
-             ]);
-            foreach($post['journalChart']['whereOption'] as $row){ 
+                "journalTableViewId" => $post['journalTableViewId'],
+            ]);
+            foreach ($post['journalChart']['whereOption'] as $row) {
                 $this->db->table("journal_chart_where_select")->insert([
-                    "journalTableViewId" =>  $post['journalTableViewId'], 
+                    "journalTableViewId" => $post['journalTableViewId'],
                     "journalSelectId" => $row['id'],
-                    "status" => $row['checkbox'] == true ? 1:0,
-                 ]);
+                    "status" => $row['checkbox'] == true ? 1 : 0,
+                ]);
             }
 
             $data = [
