@@ -24,6 +24,8 @@ export class JournalChart {
     public chartjsTypeId: number,
     public iWhere: string,
     public xAxis: string,
+    public yAxis: any,
+    public selectId: any,
 
   ) { }
 }
@@ -41,7 +43,7 @@ export class ChartjsComponent implements OnInit {
   items: any = [];
   journal: any = [];
   item = new Model("", 0, "", "", "");
-  journalChart = new JournalChart(0, "", "");
+  journalChart = new JournalChart(0, "", "", [], []);
 
   id: string = "";
   journalTableViewId: string = "";
@@ -150,7 +152,11 @@ export class ChartjsComponent implements OnInit {
       }
     }).subscribe(
       data => {
+      
         console.log("httpGet", data);
+        this.journalChart.chartjsTypeId = data['journal_chart_type']['chartjsTypeId'];
+        this.journalChart.xAxis = data['journal_chart_type']['xaxis'];
+
         this.detail = data['detail'];
         this.x = data['x'];
         this.y = data['y'];
@@ -246,11 +252,11 @@ export class ChartjsComponent implements OnInit {
   }
 
   iWhereOption: any = [];
-  returniWhereOption(key: any) {
-    
-    if (key != "") {
-   
-      this.iWhereOption = this.iWhere[0]['option'];
+  returniWhereOption() { 
+    if (this.journalChart.iWhere != "") { 
+      let objIndex = this.iWhere.findIndex(((obj: { key: any; }) => obj.key == this.journalChart.iWhere));
+
+      this.iWhereOption = this.iWhere[objIndex]['option'];
     }else{
       this.iWhereOption = [];
     }
@@ -258,15 +264,23 @@ export class ChartjsComponent implements OnInit {
   }
 
   updateChartJs() {
-    
+    if (this.journalChart.iWhere != "") { 
+      let objIndex = this.iWhere.findIndex(((obj: { key: any; }) => obj.key == this.journalChart.iWhere));
 
+      this.iWhereOption = this.iWhere[objIndex]['option'];
+    }
+    const whereOption = this.journalChart['iWhere'] == "" ? [] : this.iWhereOption;
+
+    this.journalChart.yAxis = this.y;
+    this.journalChart.yAxis = this.y;
+    this.journalChart.selectId = whereOption;
+    
     const body = {
       id: this.id,
       journalTableViewId: this.journalTableViewId,
-      journalChart: this.journalChart,
-      y: this.y,
-      whereOption: this.journalChart['iWhere'] == "" ? [] : this.iWhereOption
+      journalChart: this.journalChart,   
     }
+
     this.http.post<any>(environment.api + "Chart/updateChartJs", body, {
       headers: this.configService.headers(),
     }).subscribe(

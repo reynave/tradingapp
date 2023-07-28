@@ -83,8 +83,7 @@ class Core extends Model
     }
 
     function deleteNode($parentId) {
-  
-        
+   
         // Mengupdate nilai presence menjadi 0 pada parent yang dihapus
         $this->db->table('pages')->where('id', $parentId)->update(['presence' => 0]);
     
@@ -96,6 +95,40 @@ class Core extends Model
             self::deleteNode($child['id']);
         }
     }
+
+    function put($data = [],$table = "", $where = ""){
+        $res = false;
+        if($where != ""){
+            $id = self::select("id",$table, $where); 
+            if(!$id){ 
+                $res = $this->db->table($table)->insert([  
+                    "presence" => 1,
+                    "update_date"   => date("Y-m-d H:i:s"),
+                    "update_by"     => model("Core")->accountId(), 
+                    "input_date"   => date("Y-m-d H:i:s"),
+                    "input_by"     => model("Core")->accountId(), 
+                ]);
+                $id = self::select("id",$table," input_by = '".model("Core")->accountId()."' order by input_by DESC ");
+            }
+
+            foreach($data as $key => $value){
+              
+                 $this->db->table($table)->update([
+                    $key => $value, 
+                    "update_date"   => date("Y-m-d H:i:s"),
+                    "update_by"     => model("Core")->accountId(), 
+                ],"id = $id ");
+            } 
+           
+        }
+       
+
+        return $res;
+
+
+        
+    }
+
     function journalTable($id = "", $journalTableViewId = "", $where = "") {
         $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
          

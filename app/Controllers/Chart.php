@@ -62,13 +62,15 @@ class Chart extends BaseController
             WHERE   status = 1 
             ORDER BY sorting ASC";
             $typeOfChart = $this->db->query($q1)->getResultArray();
-             
-            $q1 = "SELECT * FROM journal_chart
-            WHERE  journalTableViewId = '$journalTableViewId'  AND  status = 1 
+        
+            $chartjsTypeId = model("Core")->select("chartjsTypeId","journal_chart_type","journalTableViewId = '$journalTableViewId'  AND  status = 1 ");
+            $xaxis = model("Core")->select("value","journal_chart_xaxis","journalTableViewId = '$journalTableViewId'  AND  status = 1 ");
+           
+            $q1 = "SELECT * FROM journal_chart_yaxis
+            WHERE  journalTableViewId = '$journalTableViewId' AND status = 1 AND presence = 1
             ORDER BY sorting ASC";
-            $journal_chart = $this->db->query($q1)->getResultArray();
-          
-
+            $yaxis = $this->db->query($q1)->getResultArray();
+  
             $data = array(
                 "error" => false,
                 "id" => $id,  
@@ -77,7 +79,11 @@ class Chart extends BaseController
                 "typeOfChart" => $typeOfChart,
                 "iWhere" => $iWhere,
                 "customField" => $journalTable['journal_custom_field'],
-                "journal_chart" => $journal_chart,
+                "journal_chart_type" => [
+                    "chartjsTypeId" =>  $chartjsTypeId,
+                    "xaxis"         =>  $xaxis,
+                    "yaxis"         =>  $yaxis,  
+                ],
                 "q1" => $q1,
             );
 
@@ -93,6 +99,46 @@ class Chart extends BaseController
             "error" => true,
             "post" => $post,
         ];
+
+        if($post){
+
+            foreach($post['journalChart']['yAxis'] as $row){
+                $id = model("Core")->select("id","journal_chart_yaxis","presence = 1 and  journalTableViewId = '".$post['journalTableViewId']."' AND value =  '".$row['key']."' ");
+               $array = [
+                "journalTableViewId" => $post['journalTableViewId'],
+                "value" => $row['key'],
+                "status" => $row['check'] == true ? 1:0, 
+                "presence" => 1
+               ];
+
+               if(!$id){
+                $this->db->table("journal_chart_yaxis")->insert(
+                    $array
+                );
+               }else{
+                $this->db->table("journal_chart_yaxis")->update(
+                    $array," id = $id "
+                );
+               } 
+              // model("Core")->put($array,"journal_chart_yaxis"," journalTableViewId = '".$post['journalTableViewId']."' AND value =  '".$row['key']."' ");
+            }
+ 
+            $data = [
+                "error" => true,
+                "post" => $post,
+                "journal_chart_type" =>  model("Core")->put([
+                    "journalTableViewId" => $post['journalTableViewId'],
+                    "chartjsTypeId" => $post['journalChart']['chartjsTypeId'],
+                ],"journal_chart_type"," journalTableViewId = ".$post['journalTableViewId']),
+
+                "journal_chart_xaxis" =>  model("Core")->put([
+                    "journalTableViewId" => $post['journalTableViewId'],
+                    "value" => $post['journalChart']['xAxis'],
+                ],"journal_chart_xaxis"," journalTableViewId = ".$post['journalTableViewId']), 
+             
+            ]; 
+        }
+
 
         return $this->response->setJSON($data);
     }

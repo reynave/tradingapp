@@ -99,7 +99,7 @@
 
                                 <div class="form-control scrollarea mt-1" [hidden]="journalChart.iWhere == ''">
                                     <div class="row g-1 mb-1 " [ngClass]="{'border-top': (i > 0) ? true : false}"
-                                         *ngFor="let n of returniWhereOption(journalChart.iWhere); let i = index">
+                                         *ngFor="let n of returniWhereOption(); let i = index">
 
                                         <div class="col-10">
                                             {{n.value}}
