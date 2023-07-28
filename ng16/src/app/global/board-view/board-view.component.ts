@@ -42,7 +42,7 @@ export class BoardViewComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        console.log("boardView", data);
+         
         this.items = data['items'];
       },
       e => {
@@ -70,7 +70,7 @@ export class BoardViewComponent implements OnInit {
      
     }).subscribe(
       data => {
-        console.log("addView", data);
+        
         this.httpGet();
       },
       e => {

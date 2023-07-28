@@ -14,77 +14,87 @@ class Chart extends BaseController
             "error" => true,
             "request" => $this->request->getVar(),
         );
-        $accountId = model("Core")->accountId(); 
+        $accountId = model("Core")->accountId();
         $journalTableViewId = $data['request']['journalTableViewId'];
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
         if ($data['request']['id'] && $id) {
- 
 
-            $journalTable = model("Core")->journalTable($id, $journalTableViewId); 
-            $customField = $journalTable['journal_custom_field']; 
-            $x = [];  $y = []; $iWhere = []; 
-            foreach( $customField  as $row){
 
-                $q1 = "SELECT id, value, '' as checkbox  FROM journal_select
-                WHERE   presence = 1  and field = '".$row['key']."'
-                ORDER BY sorting ASC"; 
+            $journalTable = model("Core")->journalTable($id, $journalTableViewId);
+            $customField = $journalTable['journal_custom_field'];
+            $x = [];
+            $y = [];
+            $iWhere = [];
+            foreach ($customField as $row) {
+
+                // $q1 = "SELECT id, value, '' as checkbox  
+                // FROM journal_select
+                // WHERE   presence = 1  and field = '" . $row['key'] . "'
+                // ORDER BY sorting ASC";
+
+                $q1 = "SELECT a.id, a.value, IF(s.status = 1, TRUE, FALSE) as checkbox  , a.field
+                FROM journal_select AS a 
+                LEFT JOIN journal_chart_where_select AS s ON s.journalSelectId = a.id
+                WHERE   a.presence = 1   and a.field = '" . $row['key'] . "'
+                ORDER BY a.sorting ASC";
+
                 $option = $this->db->query($q1)->getResultArray();
-
-
+ 
                 $temp = array(
-                    "key" =>  $row['key'], 
-                    "name" =>  $row['name'],  
+                    "key" => $row['key'],
+                    "name" => $row['name'],
                     "iType" => $row['iType'],
-                    "check" => 0,
+                    "check" => model("Core")->select("status", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
                     "option" => $option,
                 );
- 
-                if($row['iType'] == 'number' || $row['iType'] == 'formula' ){
-                    array_push($y, $temp );
-                }
-                else if($row['iType'] == 'select'){
-                    array_push($iWhere, $temp );
+
+                if ($row['iType'] == 'number' || $row['iType'] == 'formula') {
+                    array_push($y, $temp);
+                } else if ($row['iType'] == 'select') {
+                    array_push($iWhere, $temp);
                 }
             }
 
-            foreach( $customField  as $row){
+            foreach ($customField as $row) {
                 $temp = array(
-                    "key" =>  $row['key'], 
-                    "name" =>  $row['name'],  
+                    "key" => $row['key'],
+                    "name" => $row['name'],
                     "iType" => $row['iType'],
                 );
-                if($row['iType'] == 'text'  || $row['iType'] == 'formula'){
-                    array_push($x, $temp );
+                if ($row['iType'] == 'text' || $row['iType'] == 'formula') {
+                    array_push($x, $temp);
                 }
             }
-            
+
             $q1 = "SELECT *  FROM chartjs_type
             WHERE   status = 1 
-            ORDER BY sorting ASC";
+            ORDER BY id ASC ";
             $typeOfChart = $this->db->query($q1)->getResultArray();
-        
-            $chartjsTypeId = model("Core")->select("chartjsTypeId","journal_chart_type","journalTableViewId = '$journalTableViewId'  AND  status = 1 ");
-            $xaxis = model("Core")->select("value","journal_chart_xaxis","journalTableViewId = '$journalTableViewId'  AND  status = 1 ");
-           
+
+            $chartjsTypeId = model("Core")->select("chartjsTypeId", "journal_chart_type", "journalTableViewId = '$journalTableViewId'  AND  status = 1 ");
+            $xaxis = model("Core")->select("value", "journal_chart_xaxis", "journalTableViewId = '$journalTableViewId'  AND  status = 1 ");
+            $idWhere = model("Core")->select("value", "journal_chart_where", "journalTableViewId = '$journalTableViewId'  AND  status = 1 ");
+
             $q1 = "SELECT * FROM journal_chart_yaxis
-            WHERE  journalTableViewId = '$journalTableViewId' AND status = 1 AND presence = 1
-            ORDER BY sorting ASC";
+            WHERE  journalTableViewId = '$journalTableViewId' AND presence = 1 ";
             $yaxis = $this->db->query($q1)->getResultArray();
-  
+
             $data = array(
                 "error" => false,
-                "id" => $id,  
+                "id" => $id,
                 "x" => $x,
                 "y" => $y,
                 "typeOfChart" => $typeOfChart,
                 "iWhere" => $iWhere,
-                "customField" => $journalTable['journal_custom_field'],
+                "detail" => $journalTable['detail'],
                 "journal_chart_type" => [
-                    "chartjsTypeId" =>  $chartjsTypeId,
-                    "xaxis"         =>  $xaxis,
-                    "yaxis"         =>  $yaxis,  
+                    "chartjsTypeId" => $chartjsTypeId,
+                    "xaxis" => $xaxis,
+                    "yaxis" => $yaxis,
+                    "idWhere" => $idWhere ? $idWhere : "",
                 ],
-                "q1" => $q1,
+                "request" => $this->request->getVar()
+
             );
 
 
@@ -92,7 +102,8 @@ class Chart extends BaseController
         return $this->response->setJSON($data);
     }
 
-    function updateChartJs(){
+    function updateChartJs()
+    {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
         $data = [
@@ -100,47 +111,123 @@ class Chart extends BaseController
             "post" => $post,
         ];
 
-        if($post){
+        if ($post) {
+            // YAXIS
+            $yAxisObj = [];
+            foreach ($post['journalChart']['yAxis'] as $row) {
+                $id = model("Core")->select("id", "journal_chart_yaxis", "presence = 1 and  journalTableViewId = '" . $post['journalTableViewId'] . "' AND value =  '" . $row['key'] . "' ");
+                $array = [
+                    "journalTableViewId" => $post['journalTableViewId'],
+                    "value" => $row['key'],
+                    "status" => $row['check'] == true ? 1 : 0,
+                    "presence" => 1
+                ];
 
-            foreach($post['journalChart']['yAxis'] as $row){
-                $id = model("Core")->select("id","journal_chart_yaxis","presence = 1 and  journalTableViewId = '".$post['journalTableViewId']."' AND value =  '".$row['key']."' ");
-               $array = [
-                "journalTableViewId" => $post['journalTableViewId'],
-                "value" => $row['key'],
-                "status" => $row['check'] == true ? 1:0, 
-                "presence" => 1
-               ];
+                if (!$id) {
+                    $this->db->table("journal_chart_yaxis")->insert(
+                        $array
+                    );
+                } else {
+                    $this->db->table("journal_chart_yaxis")->update(
+                        $array,
+                        " id = $id "
+                    );
+                }
+                array_push( $yAxisObj, $array);
+            }
+         
+            $id_journal_chart_type = model("Core")->select("id", "journal_chart_type", "presence = 1 and  journalTableViewId = '" . $post['journalTableViewId'] . "'  and presence = 1 ");
+            if (!$id_journal_chart_type) {
+                $this->db->table("journal_chart_type")->insert([
+                    "journalTableViewId" => $post['journalTableViewId'],
+                    "presence" => 1,
+                    "status" => 1,
+                    "chartjsTypeId" => $post['journalChart']['chartjsTypeId'],
+                    "update_date" => date("Y-m-d H:i:s"),
+                    "update_by" => model("Core")->accountId(),
+                    "input_date" => date("Y-m-d H:i:s"),
+                    "input_by" => model("Core")->accountId(),
+                ]);
+                $id_journal_chart_type = model("Core")->select("id", "journal_chart_type", " input_by = '" . model("Core")->accountId() . "' AND  journalTableViewId = '" . $post['journalTableViewId'] . "'  AND presence = 1 order by input_date DESC");
+            } else {
+                $this->db->table("journal_chart_type")->update([
+                    "journalTableViewId" => $post['journalTableViewId'],
+                    "chartjsTypeId" => $post['journalChart']['chartjsTypeId'],
+                    "update_date" => date("Y-m-d H:i:s"),
+                    "update_by" => model("Core")->accountId(),
+                ], " id =  $id_journal_chart_type ");
+            }
 
-               if(!$id){
-                $this->db->table("journal_chart_yaxis")->insert(
-                    $array
-                );
-               }else{
-                $this->db->table("journal_chart_yaxis")->update(
-                    $array," id = $id "
-                );
-               } 
-              // model("Core")->put($array,"journal_chart_yaxis"," journalTableViewId = '".$post['journalTableViewId']."' AND value =  '".$row['key']."' ");
+
+            $id_journal_chart_xaxis = model("Core")->select("id", "journal_chart_xaxis", "presence = 1 and  journalTableViewId = '" . $post['journalTableViewId'] . "'  and presence = 1 ");
+            if (!$id_journal_chart_xaxis) {
+                $this->db->table("journal_chart_xaxis")->insert([
+                    "journalTableViewId" => $post['journalTableViewId'],
+                    "presence" => 1,
+                    "status" => 1,
+                    "value" => isset($post['journalChart']['xAxis']) ? $post['journalChart']['xAxis'] : "",
+                    "update_date" => date("Y-m-d H:i:s"),
+                    "update_by" => model("Core")->accountId(),
+                    "input_date" => date("Y-m-d H:i:s"),
+                    "input_by" => model("Core")->accountId(),
+                ]);
+                $id_journal_chart_xaxis = model("Core")->select("id", "journal_chart_xaxis", " input_by = '" . model("Core")->accountId() . "' AND  journalTableViewId = '" . $post['journalTableViewId'] . "'  AND presence = 1 order by input_date DESC");
+            } else {
+                $this->db->table("journal_chart_xaxis")->update([
+                    "journalTableViewId" => $post['journalTableViewId'],
+                    "value" => $post['journalChart']['xAxis'],
+                    "update_date" => date("Y-m-d H:i:s"),
+                    "update_by" => model("Core")->accountId(),
+                ], " id =  $id_journal_chart_xaxis ");
             }
  
+            //  iWhere
+            $id_journal_chart_where = model("Core")->select("id", "journal_chart_where", "presence = 1 and  journalTableViewId = '" . $post['journalTableViewId'] . "'  and presence = 1 ");
+            if (!$id_journal_chart_where) {
+                $this->db->table("journal_chart_where")->insert([
+                    "journalTableViewId" => $post['journalTableViewId'],
+                    "presence" => 1,
+                    "status" => 1,
+                    "value" => isset($post['journalChart']['idWhere']) ? $post['journalChart']['idWhere'] : "",
+                    "update_date" => date("Y-m-d H:i:s"),
+                    "update_by" => model("Core")->accountId(),
+                    "input_date" => date("Y-m-d H:i:s"),
+                    "input_by" => model("Core")->accountId(),
+                ]);
+                $id_journal_chart_where = model("Core")->select("id", "journal_chart_where", " input_by = '" . model("Core")->accountId() . "' AND  journalTableViewId = '" . $post['journalTableViewId'] . "'  AND presence = 1 order by input_date DESC");
+            } else {
+                $this->db->table("journal_chart_where")->update([
+                    "journalTableViewId" => $post['journalTableViewId'],
+                    "value" => $post['journalChart']['idWhere'],
+                    "update_date" => date("Y-m-d H:i:s"),
+                    "update_by" => model("Core")->accountId(),
+                ], " id =  $id_journal_chart_where ");
+            }
+
+            $this->db->table("journal_chart_where_select")->delete([
+                "journalTableViewId" =>  $post['journalTableViewId'], 
+             ]);
+            foreach($post['journalChart']['whereOption'] as $row){ 
+                $this->db->table("journal_chart_where_select")->insert([
+                    "journalTableViewId" =>  $post['journalTableViewId'], 
+                    "journalSelectId" => $row['id'],
+                    "status" => $row['checkbox'] == true ? 1:0,
+                 ]);
+            }
+
             $data = [
                 "error" => true,
                 "post" => $post,
-                "journal_chart_type" =>  model("Core")->put([
-                    "journalTableViewId" => $post['journalTableViewId'],
-                    "chartjsTypeId" => $post['journalChart']['chartjsTypeId'],
-                ],"journal_chart_type"," journalTableViewId = ".$post['journalTableViewId']),
+                "journal_chart_type" => $id_journal_chart_type,
+                "journal_chart_where" => $id_journal_chart_where,
+                "xAxis" => $id_journal_chart_xaxis,
+                "yAxis" => $yAxisObj,
 
-                "journal_chart_xaxis" =>  model("Core")->put([
-                    "journalTableViewId" => $post['journalTableViewId'],
-                    "value" => $post['journalChart']['xAxis'],
-                ],"journal_chart_xaxis"," journalTableViewId = ".$post['journalTableViewId']), 
-             
-            ]; 
+            ];
         }
 
 
         return $this->response->setJSON($data);
     }
 
-} 
+}

@@ -61,21 +61,7 @@
                     </div>
                     <div class="col-3">
                         <div class="border p-3 bg-light rounded">
-                            <!-- <div class="mb-2">
-                                <label class="mb-1">Type of Chart 1</label>
-                                <div ngbDropdown class="d-inline-block d-grid">
-                                    <button type="button" class="form-control text-start" id="dropdownBasic1"
-                                        ngbDropdownToggle>
-                                        Toggle dropdown
-                                    </button>
-                                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                        <button ngbDropdownItem>Action - 1</button>
-                                        <button ngbDropdownItem>Another Action</button>
-                                        <button ngbDropdownItem>Something else is here</button>
-                                    </div>
-                                </div>
-                            </div> -->
-                            {{journalChart | json}}
+                             
                             <div class="mb-2">
                                 <label class="mb-1">Type of Chart</label>
                                 <select class="form-control" (change)="updateChartJs()" [(ngModel)]="journalChart.chartjsTypeId" >
@@ -92,12 +78,12 @@
                             </div>
                             <div class="mb-2">
                                 <label class="mb-1">Where</label>
-                                <select class="form-control" [(ngModel)]="journalChart.iWhere"  (change)="updateChartJs()">
+                                <select class="form-control" [(ngModel)]="journalChart.idWhere"  (change)="updateChartJs()">
                                     <option value="">Show All</option>
                                     <option *ngFor="let n of iWhere" [value]="n.key">{{n.name}}</option>
                                 </select>
-
-                                <div class="form-control scrollarea mt-1" [hidden]="journalChart.iWhere == ''">
+                           
+                                <div class="form-control scrollarea mt-1" [hidden]="journalChart.idWhere == ''">
                                     <div class="row g-1 mb-1 " [ngClass]="{'border-top': (i > 0) ? true : false}"
                                          *ngFor="let n of returniWhereOption(); let i = index">
 

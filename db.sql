@@ -242,15 +242,11 @@ INSERT INTO `journal_access` (`id`, `bookId`, `accountId`, `journalId`, `owner`,
 	(59, '23060001', '230101.0001', 'B1-000041', 1, 1, 1, 1, 99, 1, '2023-07-25 05:03:48', '230101.0001', '2023-07-25 05:03:48', '230101.0001'),
 	(60, '23060001', '230101.0001', 'B1-000042', 1, 1, 1, 1, 99, 1, '2023-07-25 05:04:48', '230101.0001', '2023-07-25 05:04:48', '230101.0001');
 
--- Dumping structure for table tradingbook.journal_chart
-CREATE TABLE IF NOT EXISTS `journal_chart` (
+-- Dumping structure for table tradingbook.journal_chart_type
+CREATE TABLE IF NOT EXISTS `journal_chart_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `journalTableViewId` int(11) DEFAULT NULL,
   `chartjsTypeId` int(3) DEFAULT NULL,
-  `group` varchar(10) NOT NULL,
-  `xAxis` varchar(10) NOT NULL,
-  `yAxis` varchar(10) NOT NULL,
-  `sorting` int(3) NOT NULL DEFAULT 99,
   `status` int(1) NOT NULL DEFAULT 1,
   `presence` int(1) NOT NULL DEFAULT 1,
   `update_by` varchar(50) NOT NULL DEFAULT '',
@@ -258,9 +254,95 @@ CREATE TABLE IF NOT EXISTS `journal_chart` (
   `input_by` varchar(50) NOT NULL DEFAULT '',
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_chart: ~0 rows (approximately)
+-- Dumping data for table tradingbook.journal_chart_type: ~0 rows (approximately)
+INSERT INTO `journal_chart_type` (`id`, `journalTableViewId`, `chartjsTypeId`, `status`, `presence`, `update_by`, `update_date`, `input_by`, `input_date`) VALUES
+	(12, 11, 1, 1, 1, '230101.0001', '2023-07-28 09:55:29', '230101.0001', '2023-07-28 09:50:42'),
+	(13, 12, 9, 1, 1, '230101.0001', '2023-07-28 09:55:39', '230101.0001', '2023-07-28 09:55:35');
+
+-- Dumping structure for table tradingbook.journal_chart_where
+CREATE TABLE IF NOT EXISTS `journal_chart_where` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `journalTableViewId` int(11) DEFAULT NULL,
+  `value` varchar(10) NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `presence` int(1) NOT NULL DEFAULT 1,
+  `update_by` varchar(50) NOT NULL DEFAULT '',
+  `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  `input_by` varchar(50) NOT NULL DEFAULT '',
+  `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table tradingbook.journal_chart_where: ~1 rows (approximately)
+INSERT INTO `journal_chart_where` (`id`, `journalTableViewId`, `value`, `status`, `presence`, `update_by`, `update_date`, `input_by`, `input_date`) VALUES
+	(9, 11, 'f4', 1, 1, '230101.0001', '2023-07-28 09:55:29', '230101.0001', '2023-07-28 09:50:42'),
+	(10, 12, '', 1, 1, '230101.0001', '2023-07-28 09:55:39', '230101.0001', '2023-07-28 09:55:35');
+
+-- Dumping structure for table tradingbook.journal_chart_where_select
+CREATE TABLE IF NOT EXISTS `journal_chart_where_select` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `journalTableViewId` int(11) DEFAULT NULL,
+  `journalSelectId` int(6) NOT NULL DEFAULT 0,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `presence` int(1) NOT NULL DEFAULT 1,
+  `update_by` varchar(50) NOT NULL DEFAULT '',
+  `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  `input_by` varchar(50) NOT NULL DEFAULT '',
+  `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table tradingbook.journal_chart_where_select: ~3 rows (approximately)
+INSERT INTO `journal_chart_where_select` (`id`, `journalTableViewId`, `journalSelectId`, `status`, `presence`, `update_by`, `update_date`, `input_by`, `input_date`) VALUES
+	(146, 11, 2, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(147, 11, 7, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(148, 11, 19, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00');
+
+-- Dumping structure for table tradingbook.journal_chart_xaxis
+CREATE TABLE IF NOT EXISTS `journal_chart_xaxis` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `journalTableViewId` int(11) DEFAULT NULL,
+  `value` varchar(10) NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `presence` int(1) NOT NULL DEFAULT 1,
+  `update_by` varchar(50) NOT NULL DEFAULT '',
+  `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  `input_by` varchar(50) NOT NULL DEFAULT '',
+  `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table tradingbook.journal_chart_xaxis: ~1 rows (approximately)
+INSERT INTO `journal_chart_xaxis` (`id`, `journalTableViewId`, `value`, `status`, `presence`, `update_by`, `update_date`, `input_by`, `input_date`) VALUES
+	(13, 11, 'f10', 1, 1, '230101.0001', '2023-07-28 09:55:29', '230101.0001', '2023-07-28 09:50:42'),
+	(14, 12, 'f12', 1, 1, '230101.0001', '2023-07-28 09:55:39', '230101.0001', '2023-07-28 09:55:35');
+
+-- Dumping structure for table tradingbook.journal_chart_yaxis
+CREATE TABLE IF NOT EXISTS `journal_chart_yaxis` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `journalTableViewId` int(11) DEFAULT NULL,
+  `value` varchar(10) NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `presence` int(1) NOT NULL DEFAULT 1,
+  `update_by` varchar(50) NOT NULL DEFAULT '',
+  `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  `input_by` varchar(50) NOT NULL DEFAULT '',
+  `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table tradingbook.journal_chart_yaxis: ~4 rows (approximately)
+INSERT INTO `journal_chart_yaxis` (`id`, `journalTableViewId`, `value`, `status`, `presence`, `update_by`, `update_date`, `input_by`, `input_date`) VALUES
+	(32, 11, 'f7', 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(33, 11, 'f8', 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(34, 11, 'f9', 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(35, 11, 'f2', 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(36, 12, 'f7', 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(37, 12, 'f8', 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(38, 12, 'f9', 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(39, 12, 'f2', 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00');
 
 -- Dumping structure for table tradingbook.journal_custom_field
 CREATE TABLE IF NOT EXISTS `journal_custom_field` (
@@ -282,9 +364,9 @@ CREATE TABLE IF NOT EXISTS `journal_custom_field` (
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_by` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_custom_field: ~19 rows (approximately)
+-- Dumping data for table tradingbook.journal_custom_field: ~20 rows (approximately)
 INSERT INTO `journal_custom_field` (`id`, `journalId`, `ilock`, `hideDEL`, `f`, `name`, `iType`, `width`, `textAlign`, `suffix`, `sorting`, `eval`, `evalTemp`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
 	(39, 'B1-000014', 0, 0, 1, 'custom Field 1', 'text', 300, 'center', '', 10, '', '', '2023-06-27 17:38:35', '230101.0001', '2023-01-01 00:00:00', ''),
 	(41, 'B1-000014', 0, 0, 2, 'custom Field 2', 'text', 300, 'center', '', 20, '', '', '2023-06-27 17:38:57', '230101.0001', '2023-01-01 00:00:00', ''),
@@ -295,7 +377,7 @@ INSERT INTO `journal_custom_field` (`id`, `journalId`, `ilock`, `hideDEL`, `f`, 
 	(46, 'B1-000028', 0, 0, 1, 'custom Field 1', 'text', 300, 'center', '', 10, '', '', '2023-07-01 17:34:39', '230101.0001', '2023-01-01 00:00:00', ''),
 	(47, 'B1-000027', 0, 0, 1, 'custom Field 1', 'time', 125, 'center', '', 16, '', '', '2023-07-09 18:25:13', '230101.0001', '2023-07-25 12:22:51', '230101.0001'),
 	(48, 'B1-000027', 0, 0, 2, 'profit % f2', 'number', 150, 'end', '%', 17, '', '', '2023-07-09 18:25:14', '230101.0001', '2023-07-25 12:22:51', '230101.0001'),
-	(50, 'B1-000027', 0, 0, 4, 'Select Market', 'select', 166, 'center', '', 12, '', '', '2023-07-09 18:30:58', '230101.0001', '2023-07-25 12:22:51', '230101.0001'),
+	(50, 'B1-000027', 0, 0, 4, 'Markets', 'select', 166, 'center', '', 12, '', '', '2023-07-09 18:30:58', '230101.0001', '2023-07-28 08:22:16', '230101.0001'),
 	(51, 'B1-000027', 0, 1, 3, 'custom Field 3123', 'note', 166, '', '', 14, '', '', '2023-07-13 10:09:59', '230101.0001', '2023-07-25 12:22:51', '230101.0001'),
 	(52, 'B1-000027', 0, 1, 5, 'custom Field 5555', 'url', 230, 'center', '', 13, '', '', '2023-07-13 11:38:22', '230101.0001', '2023-07-25 12:22:51', '230101.0001'),
 	(53, 'B1-000027', 0, 0, 6, 'custom Field 6', 'date', 123, 'center', '', 15, '', '', '2023-07-13 11:38:23', '230101.0001', '2023-07-25 12:22:51', '230101.0001'),
@@ -304,7 +386,8 @@ INSERT INTO `journal_custom_field` (`id`, `journalId`, `ilock`, `hideDEL`, `f`, 
 	(75, 'B1-000027', 0, 0, 8, 'Stop Loss', 'number', 150, 'center', '', 9, '', '', '2023-07-27 06:13:36', '230101.0001', '2023-01-01 00:00:00', ''),
 	(76, 'B1-000027', 0, 0, 10, 'Label 1', 'text', 150, 'center', '', 10, '', '', '2023-07-27 07:43:44', '230101.0001', '2023-01-01 00:00:00', ''),
 	(77, 'B1-000027', 0, 0, 11, 'label 2', 'text', 150, 'center', '', 11, '', '', '2023-07-27 07:43:58', '230101.0001', '2023-01-01 00:00:00', ''),
-	(78, 'B1-000027', 0, 0, 12, 'label 4', 'text', 150, 'center', '', 18, '', '', '2023-07-27 08:52:19', '230101.0001', '2023-01-01 00:00:00', '');
+	(78, 'B1-000027', 0, 0, 12, 'label 4', 'text', 150, 'center', '', 18, '', '', '2023-07-27 08:52:19', '230101.0001', '2023-01-01 00:00:00', ''),
+	(79, 'B1-000027', 0, 0, 13, 'Line Select Style', 'select', 150, 'center', '', 19, '', '', '2023-07-27 18:02:19', '230101.0001', '2023-07-28 08:18:38', '230101.0001');
 
 -- Dumping structure for table tradingbook.journal_detail
 CREATE TABLE IF NOT EXISTS `journal_detail` (
@@ -447,9 +530,9 @@ CREATE TABLE IF NOT EXISTS `journal_select` (
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `input_by` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_select: ~19 rows (approximately)
+-- Dumping data for table tradingbook.journal_select: ~23 rows (approximately)
 INSERT INTO `journal_select` (`id`, `journalId`, `field`, `value`, `color`, `sorting`, `presence`, `update_date`, `update_by`, `input_date`, `input_by`) VALUES
 	(1, 'B1-000027', 'f4', 'BELI 1', '#F94892', 4, 0, '2023-07-15 11:57:42', '230101.0001', '2023-01-01 00:00:00', ''),
 	(2, 'B1-000027', 'f4', 'Urutan no 220000', '#1B9C85', 1, 1, '2023-07-22 06:28:12', '230101.0001', '2023-01-01 00:00:00', ''),
@@ -469,7 +552,11 @@ INSERT INTO `journal_select` (`id`, `journalId`, `field`, `value`, `color`, `sor
 	(19, 'B1-000027', 'f4', 'ke 2', '#8FACC0', 4, 1, '2023-07-22 06:28:12', '230101.0001', '2023-07-19 13:34:56', '230101.0001'),
 	(20, 'B1-000027', 'f4', 'ke 4', '#E60965', 17, 0, '2023-07-19 13:36:24', '230101.0001', '2023-07-19 13:35:02', '230101.0001'),
 	(21, 'B1-000027', 'f4', 'ke 1', '#53CDE2', 6, 0, '2023-07-25 10:03:14', '230101.0001', '2023-07-19 13:36:53', '230101.0001'),
-	(22, 'B1-000027', 'f4', 'ke 3', '#53CDE2', 5, 0, '2023-07-25 10:03:15', '230101.0001', '2023-07-19 13:36:58', '230101.0001');
+	(22, 'B1-000027', 'f4', 'ke 3', '#53CDE2', 5, 0, '2023-07-25 10:03:15', '230101.0001', '2023-07-19 13:36:58', '230101.0001'),
+	(23, 'B1-000027', 'f13', 'FOMC', '#E60965', 1, 1, '2023-07-27 18:02:44', '230101.0001', '2023-07-27 18:02:44', '230101.0001'),
+	(24, 'B1-000027', 'f13', 'FED', '#F1C27B', 2, 1, '2023-07-27 18:02:52', '230101.0001', '2023-07-27 18:02:52', '230101.0001'),
+	(25, 'B1-000027', 'f13', 'CPI', '#1B9C85', 3, 1, '2023-07-27 18:03:00', '230101.0001', '2023-07-27 18:03:00', '230101.0001'),
+	(26, 'B1-000027', 'f13', 'News', '#51ADCF', 4, 1, '2023-07-27 18:03:11', '230101.0001', '2023-07-27 18:03:11', '230101.0001');
 
 -- Dumping structure for table tradingbook.journal_table_view
 CREATE TABLE IF NOT EXISTS `journal_table_view` (
@@ -483,9 +570,9 @@ CREATE TABLE IF NOT EXISTS `journal_table_view` (
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `input_by` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_table_view: ~11 rows (approximately)
+-- Dumping data for table tradingbook.journal_table_view: ~10 rows (approximately)
 INSERT INTO `journal_table_view` (`id`, `journalId`, `board`, `name`, `ilock`, `share`, `presence`, `input_date`, `input_by`) VALUES
 	(1, 'B1-000027', 'table', 'Main Table', 1, 0, 1, '2023-01-01 00:00:00', ''),
 	(2, 'B1-000027', 'table', 'Table Kazama 3123', 0, 1, 1, '2023-07-26 08:05:28', '230101.0001'),
@@ -497,7 +584,8 @@ INSERT INTO `journal_table_view` (`id`, `journalId`, `board`, `name`, `ilock`, `
 	(8, 'B1-000027', 'table', 'New table', 0, 1, 0, '2023-07-26 08:12:22', '230101.0001'),
 	(9, 'B1-000027', 'table', 'New table', 0, 1, 1, '2023-07-26 08:15:43', '230101.0001'),
 	(10, 'B1-000027', 'table', 'New table', 0, 1, 1, '2023-07-26 08:15:45', '230101.0001'),
-	(11, 'B1-000027', 'chart', 'Chart JS test', 0, 1, 1, '2023-07-27 08:14:11', '230101.0001');
+	(11, 'B1-000027', 'chart', 'Chart JS test', 0, 1, 1, '2023-07-27 08:14:11', '230101.0001'),
+	(12, 'B1-000027', 'chart', 'New chart', 0, 1, 1, '2023-07-28 07:10:40', '230101.0001');
 
 -- Dumping structure for table tradingbook.journal_table_view_show
 CREATE TABLE IF NOT EXISTS `journal_table_view_show` (

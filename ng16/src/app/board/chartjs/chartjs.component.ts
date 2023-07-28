@@ -22,10 +22,10 @@ export class Model {
 export class JournalChart {
   constructor(
     public chartjsTypeId: number,
-    public iWhere: string,
+    public idWhere: string,
     public xAxis: string,
-    public yAxis: any,
-    public selectId: any,
+    public yAxis: any, 
+    public whereOption: any,
 
   ) { }
 }
@@ -156,16 +156,18 @@ export class ChartjsComponent implements OnInit {
         console.log("httpGet", data);
         this.journalChart.chartjsTypeId = data['journal_chart_type']['chartjsTypeId'];
         this.journalChart.xAxis = data['journal_chart_type']['xaxis'];
+        this.journalChart.idWhere = data['journal_chart_type']['idWhere'];
 
         this.detail = data['detail'];
         this.x = data['x'];
         this.y = data['y'];
-        this.iWhere = data['iWhere'];
+        this.iWhere = data['iWhere'] ;
         this.typeOfChart = data['typeOfChart'];
         if (recalulate == true) {
           // this.onCalculation();
         }
         this.startUpTable = true;
+        console.log("journalChart", this.journalChart);
       },
       e => {
         console.log(e);
@@ -253,40 +255,36 @@ export class ChartjsComponent implements OnInit {
 
   iWhereOption: any = [];
   returniWhereOption() { 
-    if (this.journalChart.iWhere != "") { 
-      let objIndex = this.iWhere.findIndex(((obj: { key: any; }) => obj.key == this.journalChart.iWhere));
-
-      this.iWhereOption = this.iWhere[objIndex]['option'];
-    }else{
-      this.iWhereOption = [];
-    }
+    this.iWhereOption = [];
+    if ( this.journalChart.idWhere != ""  ) { 
+      let objIndex = this.iWhere.findIndex(((obj: { key: any; }) => obj.key == this.journalChart.idWhere));
+      if(objIndex > -1) this.iWhereOption = this.iWhere[objIndex]['option'];
+    } 
     return this.iWhereOption;
   }
 
   updateChartJs() {
-    if (this.journalChart.iWhere != "") { 
-      let objIndex = this.iWhere.findIndex(((obj: { key: any; }) => obj.key == this.journalChart.iWhere));
-
+    if (this.journalChart.idWhere != "") { 
+      let objIndex = this.iWhere.findIndex(((obj: { key: any; }) => obj.key == this.journalChart.idWhere)); 
       this.iWhereOption = this.iWhere[objIndex]['option'];
     }
-    const whereOption = this.journalChart['iWhere'] == "" ? [] : this.iWhereOption;
+    const whereOption = this.journalChart['idWhere'] == "" ? [] : this.iWhereOption;
 
     this.journalChart.yAxis = this.y;
     this.journalChart.yAxis = this.y;
-    this.journalChart.selectId = whereOption;
+    this.journalChart.whereOption = whereOption; 
     
     const body = {
       id: this.id,
       journalTableViewId: this.journalTableViewId,
       journalChart: this.journalChart,   
     }
-
+    console.log(body);
     this.http.post<any>(environment.api + "Chart/updateChartJs", body, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data);
-
+        console.log(data); 
       },
       e => {
         console.log(e);
