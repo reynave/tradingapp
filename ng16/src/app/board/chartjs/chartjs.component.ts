@@ -24,7 +24,7 @@ export class JournalChart {
     public chartjsTypeId: number,
     public idWhere: string,
     public xAxis: string,
-    public yAxis: any, 
+    public yAxis: any,
     public whereOption: any,
 
   ) { }
@@ -81,6 +81,27 @@ export class ChartjsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    this.id = this.ativatedRoute.snapshot.params['id'];
+    this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
+
+    this.httpHeader();
+    this.httpGet(true);
+   
+
+  }
+
+  reload(newItem: any) {
+    this.startUpTable = false;
+    console.log(newItem);
+    this.journalTableViewId = newItem['id'];
+    this.httpHeader();
+    this.httpGet(true);
+
+  }
+
+  initChartJs() {
+    console.log(this.chart);
     const typeChart = 'line';
     this.chart = new Chart('canvas', {
       type: typeChart,
@@ -104,22 +125,7 @@ export class ChartjsComponent implements OnInit {
         },
       },
     });
-    this.id = this.ativatedRoute.snapshot.params['id'];
-    this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
-
-    this.httpHeader();
-    this.httpGet(true);
-    this.chartJsUpdate();
-
-  }
-
-  reload(newItem: any) {
-    this.startUpTable = false;
-    console.log(newItem);
-    this.journalTableViewId = newItem['id'];
-    this.httpHeader();
-    this.httpGet(true);
-
+    console.log(this.chart);
   }
 
   httpHeader() {
@@ -152,7 +158,7 @@ export class ChartjsComponent implements OnInit {
       }
     }).subscribe(
       data => {
-      
+
         console.log("httpGet", data);
         this.journalChart.chartjsTypeId = data['journal_chart_type']['chartjsTypeId'];
         this.journalChart.xAxis = data['journal_chart_type']['xaxis'];
@@ -161,13 +167,18 @@ export class ChartjsComponent implements OnInit {
         this.detail = data['detail'];
         this.x = data['x'];
         this.y = data['y'];
-        this.iWhere = data['iWhere'] ;
+        this.iWhere = data['iWhere'];
         this.typeOfChart = data['typeOfChart'];
         if (recalulate == true) {
           // this.onCalculation();
         }
         this.startUpTable = true;
         console.log("journalChart", this.journalChart);
+
+        if (this.journalChart.chartjsTypeId == 1) {
+          this.initChartJs();
+          this.chartJsUpdate();
+        }
       },
       e => {
         console.log(e);
@@ -176,7 +187,7 @@ export class ChartjsComponent implements OnInit {
   }
 
   chartJsUpdate() {
-
+  //  this.chart.type = "bar";
     this.chart.data.labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     this.chart.data.datasets = [
       {
@@ -184,12 +195,13 @@ export class ChartjsComponent implements OnInit {
         data: [0, -21, -43, -64, 20, -1, -23, -45, 39, 123, 102, 80],
         //  borderColor: this.item.borderColor,
         //  backgroundColor: this.item.backgroundColor,
+       // type: 'bar',
         fill: { above: '#98EECC', below: '#FFAAC9', target: { value: 0 } },
       },
       {
         label: "data Lable 2",
-        data: [0, -21, -43, -64, 20, -1, -23, -45, 39, 123, 102, 80],
-        type: 'bar',
+        data: [-23, -45, 39, 123, 102, 80,0, -21, -43, -64, 20, -1, ],
+        //type: 'bar',
         //  borderColor: this.item.borderColor,
         //  backgroundColor: this.item.backgroundColor,
         //  fill: {above: '#98EECC', below: '#FFAAC9', target: {value: 0}},
@@ -197,6 +209,9 @@ export class ChartjsComponent implements OnInit {
     ];
 
     this.chart.update();
+    // setTimeout(() => {
+    //   this.chart.destroy();
+    // }, 2000);
   }
   onSubmit() {
     clearTimeout(this.myTimeout);
@@ -254,37 +269,37 @@ export class ChartjsComponent implements OnInit {
   }
 
   iWhereOption: any = [];
-  returniWhereOption() { 
+  returniWhereOption() {
     this.iWhereOption = [];
-    if ( this.journalChart.idWhere != ""  ) { 
+    if (this.journalChart.idWhere != "") {
       let objIndex = this.iWhere.findIndex(((obj: { key: any; }) => obj.key == this.journalChart.idWhere));
-      if(objIndex > -1) this.iWhereOption = this.iWhere[objIndex]['option'];
-    } 
+      if (objIndex > -1) this.iWhereOption = this.iWhere[objIndex]['option'];
+    }
     return this.iWhereOption;
   }
 
   updateChartJs() {
-    if (this.journalChart.idWhere != "") { 
-      let objIndex = this.iWhere.findIndex(((obj: { key: any; }) => obj.key == this.journalChart.idWhere)); 
+    if (this.journalChart.idWhere != "") {
+      let objIndex = this.iWhere.findIndex(((obj: { key: any; }) => obj.key == this.journalChart.idWhere));
       this.iWhereOption = this.iWhere[objIndex]['option'];
     }
     const whereOption = this.journalChart['idWhere'] == "" ? [] : this.iWhereOption;
 
     this.journalChart.yAxis = this.y;
     this.journalChart.yAxis = this.y;
-    this.journalChart.whereOption = whereOption; 
-    
+    this.journalChart.whereOption = whereOption;
+
     const body = {
       id: this.id,
       journalTableViewId: this.journalTableViewId,
-      journalChart: this.journalChart,   
+      journalChart: this.journalChart,
     }
     console.log(body);
     this.http.post<any>(environment.api + "Chart/updateChartJs", body, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        console.log(data); 
+        console.log(data);
       },
       e => {
         console.log(e);
