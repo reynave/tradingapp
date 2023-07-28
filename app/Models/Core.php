@@ -227,7 +227,7 @@ class Core extends Model
                     "key" => $row['value'],
                     "label" => $label,
                     "data" => $data,
-                    "fill" => false, 
+                    "fill" => (bool)$row['fill'], 
                 );
                 array_push($datasets, $dataDetail);
             }

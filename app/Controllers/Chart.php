@@ -41,7 +41,10 @@ class Chart extends BaseController
                     "name" => $row['name'],
                     "iType" => $row['iType'],
                     "check" => model("Core")->select("status", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
+                    "fill" => (bool)model("Core")->select("fill", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
+                    
                     "option" => $option,
+                     
                 );
 
                 if ($row['iType'] == 'number' || $row['iType'] == 'formula') {
