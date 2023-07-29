@@ -2,8 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; 
 declare var $: any;
 
 export class NewCustomField {
@@ -127,14 +126,14 @@ export class CustomFieldFormComponent implements OnInit {
     )
   }
 
-  removeCustomeFlied(x: any) {
+  removeCustomeField(x: any) {
     const body = {
       id: x.id,
     }
     console.log(body);
     if (confirm("Are sure delete this field?")) { 
 
-      this.http.post<any>(environment.api + 'CustomField/removeCustomeFlied', body,
+      this.http.post<any>(environment.api + 'CustomField/removeCustomeField', body,
         { headers: this.configService.headers() }
       ).subscribe(
         data => {
@@ -162,5 +161,19 @@ export class CustomFieldFormComponent implements OnInit {
 
   emitToParent(newValue: string) { 
     this.newItemEvent.emit(newValue);
+  }
+
+  fnShowFormulaDev(x : any, i : number){
+    console.log(x,i);
+    if(x.showEvalDev == ''){
+      this.customFieldForm[i]['showEvalDev'] = true;
+    }
+    else if(x.showEvalDev == true){
+      this.customFieldForm[i]['showEvalDev'] = false;
+    }
+  }
+
+  evalDevCheck(x:any){
+    console.log(x.evalDev)
   }
 }

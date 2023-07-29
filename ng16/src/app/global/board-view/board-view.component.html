@@ -1,9 +1,9 @@
 <div class="border-bottom mb-2">
     <div class="d-flex ">
-        <div *ngFor="let x of items">
+        <div *ngFor="let x of items" class="minWidth">
 
-            <a class="btn btn-sm" [ngClass]="{'btn-active': x.id == journalTableViewId}" (click)="goToView(x);"><i
-                    *ngIf="x.ilock == '1'" class="bi bi-house"></i> {{x.name}}</a>
+            <a class="btn btn-sm" [ngClass]="{'btn-active': x.id == journalTableViewId}" (click)="goToView(x);">
+                <i *ngIf="x.ilock == '1'" class="bi bi-house"></i> {{x.name}}</a>
 
             <div class="btn-group pe-2" ngbDropdown container="body" role="group" [hidden]="x.ilock == '1'"
                 aria-label="Button group with nested dropdown">

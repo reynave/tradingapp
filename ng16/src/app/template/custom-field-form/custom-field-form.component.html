@@ -11,11 +11,14 @@
         <div class="tables-body " style="height: 90vh;">
             <div class="sticky-top  bg-white">
                 <div class="container mt-5 ">
-                    <div class="row g-2 ">
+                    <div class="row g-1 ">
+                        <div class="col-1  border-bottom">
+                            <strong>FIELD</strong>
+                        </div>
                         <div class="col-2 border-bottom">
                             <strong>TYPE OF FIELD</strong>
                         </div>
-                        <div class="col-10 border-bottom">
+                        <div class="col-9 border-bottom">
                             <div class="mx-2 ">
                                 <strong>FIELDS</strong>
                             </div>
@@ -24,50 +27,88 @@
                 </div>
             </div>
 
-            <div class="container sortable">
-                <div class="row g-2 border-bottom py-1" *ngFor="let x of customFieldForm">
-                    <div class="col-2 ">
-                        <div class="py-2">
-                            <b><small> {{x.iType | uppercase}}</small></b>
-                        </div>
+            <div class="container sortable pb-2">
+                <div class="row g-1 border-bottom py-1" *ngFor="let x of customFieldForm ; let i = index">
+                    <div class="col-1 align-self-center">
+                       <b> $f{{x.f}} </b>
+                    </div>
+                    <div class="col-2 align-self-center">
+
+                        <span class="mx-2" *ngIf="x.iType == 'text'"><i class="bi bi-textarea-t"></i></span>
+                        <span class="mx-2" *ngIf="x.iType == 'number'"><i class="bi bi-123"></i></span>
+                        <span class="mx-2" *ngIf="x.iType == 'select'"><i class="bi bi-menu-button"></i></span>
+                        <span class="mx-2" *ngIf="x.iType == 'date'"><i class="bi bi-calendar3"></i></span>
+                        <span class="mx-2" *ngIf="x.iType == 'time'"> <i class="bi bi-clock"></i> </span>
+                        <span class="mx-2" *ngIf="x.iType == 'note'"> <i class="bi bi-journal-text"></i> </span>
+                        <span class="mx-2" *ngIf="x.iType == 'formula'"> <img src="./assets/icon/formula-30.png"
+                                class="icon"> </span>
+                        <span class="mx-2" *ngIf="x.iType == 'url'"> <i class="bi bi-link-45deg"></i> </span>
+                        <span class="mx-2" *ngIf="x.iType == 'image'"> <i class="bi bi-images"></i> </span>
+
+                        <small> {{x.iType | uppercase}}</small>
+
                     </div>
 
-                    <div class="col-9 ">
-
+                    <div class="col-8 ">
 
                         <div class="d-flex">
-                            <div>
+
+                            <!-- <div>
                                 <button type="button" (click)="onUpdateCustomFieldAlign('left')"
                                     class="btn btn-light me-1"><i class="bi bi-text-left"></i></button>
                                 <button type="button" (click)="onUpdateCustomFieldAlign('center')"
                                     class="btn btn-light me-1"><i class="bi bi-text-center"></i></button>
                                 <button type="button" (click)="onUpdateCustomFieldAlign('right')"
                                     class="btn btn-light me-2"><i class="bi bi-text-right"></i></button>
-                            </div>
+                            </div> -->
+
                             <div class="resizable" data-id="{{x.id}}" [ngStyle]="{'width': x.width+'px'}">
                                 <input type="text" [(ngModel)]="x.name" class="form-control rounded-0 "
                                     (change)="onUpdateCustomField(x)" #updateCustomField
                                     (keyup.enter)="updateCustomField.blur()">
                             </div>
                             <div class="mx-1" *ngIf="x.iType == 'formula'">
-                                <button type="button" class="btn btn-light border"><img src="./assets/icon/formula-30.png" class="icon"> Edit
-                                    Formula</button>
+                                <button type="button" class="btn btn-light border " (click)="fnShowFormulaDev(x,i);">
+                                    <img src="./assets/icon/formula-30.png" class="icon">
+                                    {{x.eval != "" ? x.eval : "Edit Formula"}}
+                                </button>
                             </div>
                             <div class="mx-1" *ngIf="x.iType == 'number'"> <input type="text" [(ngModel)]="x.suffix"
-                                    class="form-control  " style="width: 50px;" (change)="onUpdateCustomField(x)"
-                                    maxlength="3" #updateCustomFieldSuffix
+                                    class="form-control" style="width: 50px;" (change)="onUpdateCustomField(x)"
+                                    maxlength="3" #updateCustomFieldSuffix placeholder="%"
                                     (keyup.enter)="updateCustomFieldSuffix.blur()">
                             </div>
 
                         </div>
 
+                        <div class="my-2" *ngIf="x.showEvalDev == true">
+                            <div class="row g-1">
+                                <div class="col-9">
+                                    <textarea type="text" class="form-control form-control-sm rounded-0 bg-light font-monospace"
+                                        [(ngModel)]="x.evalDev"></textarea>
+                                </div>
+                                <div class="col-3">
+                                    <div class="row g-1">
+                                        <div class="col-6 d-grid">
+                                            <button type="button" class="btn btn-sm btn-primary" (click)="evalDevCheck(x);">Submit</button>
+                                        </div>
+                                        <div class="col-6 d-grid">
+                                            <button type="button" class="btn btn-sm btn-light" (click)="x.showEvalDev =false">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 text-break">
+                                   <small  [ngbTooltip]="tipContent" >How</small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col-1 text-end">
                         <div class="d-flex">
                             <div class="mx-1">
                                 <button type="button" class="btn btn-sm btn-danger" *ngIf="x.ilock == '0'"
-                                    (click)="removeCustomeFlied(x);"><i class="bi bi-trash3"></i></button>
+                                    (click)="removeCustomeField(x);"><i class="bi bi-trash3"></i></button>
 
                                 <button type="button" class="btn btn-sm btn-light" disabled *ngIf="x.ilock == '1'"><i
                                         class="bi bi-lock-fill"></i></button>
@@ -78,7 +119,7 @@
                 </div>
             </div>
 
-            <div class="sticky-bottom"> 
+            <div class="sticky-bottom">
                 <div class="container bg-white">
 
                     <div class="row g-2 py-2">
@@ -111,3 +152,14 @@
     </div>
 
 </div>
+
+<ng-template #tipContent>
+    <small>
+        You can use formulas in the PHP style, such as <a href="https://www.w3schools.com/php/php_operators.asp" class="text-primary" target="_blank">Arithmetic Operators</a> and  Ternary Operator.
+        <br>
+        Example 1 : <span class="p-1 font-monospace"> $f1 * ($f2/100) </span>
+        <br>
+        Example 2 :<span class="p-1 font-monospace">( $f1 * ($f2/100) ) < 50 ? ( $f1 * ($f2/100) )."% is Low" : ( $f1 * ($f2/100) )."% is high"</span>
+
+    </small>
+</ng-template>

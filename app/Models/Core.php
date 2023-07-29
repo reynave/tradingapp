@@ -135,7 +135,7 @@ class Core extends Model
 
     function journalTable($id = "", $journalTableViewId = "", $where = "")
     {
-        $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
+        $c = "SELECT *, CONCAT('f',f) AS 'key', '' as showEvalDev FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
 
         $journal_custom_field = [];
         foreach ($this->db->query($c)->getResultArray() as $r) {

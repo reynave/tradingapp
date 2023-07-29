@@ -311,7 +311,7 @@ class CustomField extends BaseController
         return $this->response->setJSON($data);
     }
 
-    function removeCustomeFlied()
+    function removeCustomeField()
     {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
@@ -330,8 +330,7 @@ class CustomField extends BaseController
         }
         return $this->response->setJSON($data);
     }
-
-
+ 
     function getRow($post){
         $newId = $post['newItem']['id'];
         $journalId = model("Core")->select("journalId", "journal_detail", "id = '$newId' ");
@@ -371,5 +370,9 @@ class CustomField extends BaseController
             }
         }
         return $detail;
+    }
+ 
+    function evalDevCheck(){
+        
     }
 }
