@@ -11,14 +11,11 @@
         <div class="tables-body " style="height: 90vh;">
             <div class="sticky-top  bg-white">
                 <div class="container mt-5 ">
-                    <div class="row g-1 ">
-                        <div class="col-1  border-bottom">
-                            <strong>FIELD</strong>
-                        </div>
+                    <div class="row g-1 "> 
                         <div class="col-2 border-bottom">
                             <strong>TYPE OF FIELD</strong>
                         </div>
-                        <div class="col-9 border-bottom">
+                        <div class="col-10 border-bottom">
                             <div class="mx-2 ">
                                 <strong>FIELDS</strong>
                             </div>
@@ -29,9 +26,7 @@
 
             <div class="container sortable pb-2">
                 <div class="row g-1 border-bottom py-1" *ngFor="let x of customFieldForm ; let i = index">
-                    <div class="col-1 align-self-center">
-                       <b> $f{{x.f}} </b>
-                    </div>
+                     
                     <div class="col-2 align-self-center">
 
                         <span class="mx-2" *ngIf="x.iType == 'text'"><i class="bi bi-textarea-t"></i></span>
@@ -48,11 +43,14 @@
                         <small> {{x.iType | uppercase}}</small>
 
                     </div>
+                    <div class="col-1">
+                        <div class="form-control rounded-0"><b> $f{{x.f}} </b></div>
+                    </div>
 
                     <div class="col-8 ">
 
                         <div class="d-flex">
-
+                            
                             <!-- <div>
                                 <button type="button" (click)="onUpdateCustomFieldAlign('left')"
                                     class="btn btn-light me-1"><i class="bi bi-text-left"></i></button>

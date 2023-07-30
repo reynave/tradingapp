@@ -373,6 +373,20 @@ class CustomField extends BaseController
     }
  
     function evalDevCheck(){
-        
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $data = [
+                "post" => $post,
+                "error" => false,
+                "evalDev" => $post['field']['evalDev'],
+                "resultData" => model("Core")->journalTableFormula($post['id'], $post['journalTableViewId'], $post['field']['evalDev'], 'f'.$post['field']['f'])
+            ];
+        }
+        return $this->response->setJSON($data);
     }
 }

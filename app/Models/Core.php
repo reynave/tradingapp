@@ -185,6 +185,19 @@ class Core extends Model
             }
             $index++;
         }
+        //  $index = 0;
+        // foreach ($detail as $rec) {
+        //     $data = [];
+        //     foreach ($journal_custom_field as $field) {
+        //         if ($field['iType'] == 'formula') {
+        //             foreach (array_keys($rec) as $key) {
+        //                 $data[$key] = (int) $rec[$key];
+        //             }
+        //             $detail[$index][$field['key']] = "formula!";
+        //         }
+        //     }
+        //     $index++;
+        // }
         $data = array(
             "customFieldNo" => $customFieldNo,
             "journal_custom_field" => $journal_custom_field,
@@ -192,6 +205,55 @@ class Core extends Model
         );
 
         return $data;
+    }
+    function journalTableFormula($id = "", $journalTableViewId = "", $evalDev = "", $f = "")
+    {
+        $c = "SELECT *, CONCAT('f',f) AS 'key'  FROM journal_custom_field WHERE  journalId = '$id' ORDER BY sorting ASC ";
+        $journal_custom_field = $this->db->query($c)->getResultArray() ;
+        
+        $customField = "";
+        $customFieldNo = [];
+        foreach ($journal_custom_field as $r) {
+            $customField .= ", f" . $r['f'];
+            array_push($customFieldNo, "f" . $r['f']);
+        }
+
+
+        $q = "SELECT id $customField 
+        FROM journal_detail 
+        where journalId = '$id' 
+        AND presence = 1 order by sorting ASC";
+        $detail = $this->db->query($q)->getResultArray();
+
+        $evaluateFormula = function ($data, $formula) {
+            extract($data);
+            try {
+                return eval("return $formula;");
+            } catch (Throwable $e) {
+                return 0;
+            }
+        };
+
+        $index = 0; $detailEval = [];
+        foreach ($detail as $rec) {
+            $data = [];
+            foreach ($journal_custom_field as $field) {
+                if ($field['iType'] == 'formula' && $field['key'] == $f ) {
+                    foreach (array_keys($rec) as $key) {
+                        $data[$key] = (int) $rec[$key];
+                    } 
+                    $detailEval[$index][$field['key']] = $evaluateFormula($data,  $evalDev);
+                    
+                }
+            }
+            $index++;
+        }
+        
+        // $data = array(  
+        //     "detailEval" =>$detailEval
+        // );
+
+        return $detailEval;
     }
 
     function chartJsData($journal_chart, $detail, $y)

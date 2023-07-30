@@ -141,6 +141,25 @@ class Tables extends BaseController
         }
         return $this->response->setJSON($data);
     }
+    function httpDataFormula()
+    { 
+        $data = array(
+            "error" => true,
+            "request" => $this->request->getVar(),
+        ); 
+        $accountId = model("Core")->accountId();
+        $journalTableViewId = $data['request']['journalTableViewId'];
+        $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
+        if ($data['request']['id'] && $id) { 
+            $journalTable = model("Core")->journalTableFormula($id, $journalTableViewId); 
+            $data = array(
+                "error" => false,
+                "id" => $id,  
+                "detail" => $journalTable,
+            ); 
+        }
+        return $this->response->setJSON($data);
+    }
 
     function addTask()
     {
@@ -307,13 +326,13 @@ class Tables extends BaseController
         if ($post) {
             $id = model("Core")->select("id", "journal_table_view_show", " journalTableViewId = '" . $post['journalTableViewId'] . "'  AND journalCustomFieldId = '" . $post['item']['id'] . "'  ");
 
-            if ($id) { 
+            if ($id) {
                 $this->db->table("journal_table_view_show")->update([
-                    'hide' => (int)$post['hide'], 
+                    'hide' => (int) $post['hide'],
                 ], " id = '$id' ");
             } else {
                 $this->db->table("journal_table_view_show")->insert([
-                    'hide' => (int)$post['hide'], 
+                    'hide' => (int) $post['hide'],
                     'journalTableViewId' => $post['journalTableViewId'],
                     'journalCustomFieldId' => $post['item']['id'],
                 ]);

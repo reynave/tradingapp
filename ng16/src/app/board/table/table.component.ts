@@ -168,6 +168,7 @@ export class TableComponent implements OnInit {
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
         this.detail = data['detail'];
+       // this.httpDataFormula();
         this.select = data['select'];
         if (recalulate == true) {
           // this.onCalculation();
@@ -211,6 +212,23 @@ export class TableComponent implements OnInit {
       }
     )
   }
+  // httpDataFormula(){
+  
+  //   this.http.get<any>(environment.api + "Tables/httpDataFormula", {
+  //     headers: this.configService.headers(), 
+  //     params : {
+  //       id : this.id,
+  //       journalTableViewId : this.journalTableViewId,
+  //     }
+  //   }).subscribe(
+  //     data => { 
+  //       console.log("httpDataFormula", data);  
+  //     },
+  //     e => {
+  //       console.log(e);
+  //     }
+  //   )
+  // }
 
   httpCustomField() {
     this.http.get<any>(environment.api + "Tables/detail", {
@@ -591,6 +609,7 @@ export class TableComponent implements OnInit {
       const modalRef = this.modalService.open(CustomFieldFormComponent, { fullscreen: true });
       modalRef.componentInstance.customFieldForm = this.customFieldForm;
       modalRef.componentInstance.id = this.id;
+      modalRef.componentInstance.journalTableViewId = this.journalTableViewId;
 
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log(data);

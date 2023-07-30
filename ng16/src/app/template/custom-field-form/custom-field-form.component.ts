@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 declare var $: any;
 
 export class NewCustomField {
@@ -20,8 +20,9 @@ export class NewCustomField {
 export class CustomFieldFormComponent implements OnInit {
   @Input() customFieldForm: any;
   @Input() id: any;
+  @Input() journalTableViewId: any; 
   @Output() newItemEvent = new EventEmitter<string>();
-  
+
   newCustomField = new NewCustomField("", "text");
 
   constructor(
@@ -100,7 +101,7 @@ export class CustomFieldFormComponent implements OnInit {
         console.log(data);
         if (data['error'] === true) {
           alert(data['note']);
-        } 
+        }
         this.customFieldForm = data['items'];
         this.emitToParent('httpGet');
       },
@@ -131,7 +132,7 @@ export class CustomFieldFormComponent implements OnInit {
       id: x.id,
     }
     console.log(body);
-    if (confirm("Are sure delete this field?")) { 
+    if (confirm("Are sure delete this field?")) {
 
       this.http.post<any>(environment.api + 'CustomField/removeCustomeField', body,
         { headers: this.configService.headers() }
@@ -159,21 +160,36 @@ export class CustomFieldFormComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  emitToParent(newValue: string) { 
+  emitToParent(newValue: string) {
     this.newItemEvent.emit(newValue);
   }
 
-  fnShowFormulaDev(x : any, i : number){
-    console.log(x,i);
-    if(x.showEvalDev == ''){
+  fnShowFormulaDev(x: any, i: number) {
+    console.log(x, i);
+    if (x.showEvalDev == '') {
       this.customFieldForm[i]['showEvalDev'] = true;
     }
-    else if(x.showEvalDev == true){
+    else if (x.showEvalDev == true) {
       this.customFieldForm[i]['showEvalDev'] = false;
     }
   }
 
-  evalDevCheck(x:any){
-    console.log(x.evalDev)
+  evalDevCheck(field: any) {
+    const body = {
+      field: field,
+      id : this.id,
+      journalTableViewId : this.journalTableViewId,
+    } 
+    this.http.post<any>(environment.api + 'CustomField/evalDevCheck', body,
+      { headers: this.configService.headers() }
+    ).subscribe(
+      data => {
+        console.log(data);  
+      },
+      e => {
+        console.log(e);
+      },
+    );
+
   }
 }
