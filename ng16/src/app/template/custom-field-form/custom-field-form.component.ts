@@ -174,7 +174,7 @@ export class CustomFieldFormComponent implements OnInit {
     }
   }
 
-  evalDevCheck(field: any) {
+  evalDevCheck(field: any, index : number) {
     const body = {
       field: field,
       id : this.id,
@@ -185,11 +185,35 @@ export class CustomFieldFormComponent implements OnInit {
     ).subscribe(
       data => {
         console.log(data);  
+        this.updateEval(field ,index);
       },
       e => {
         console.log(e);
+        alert("your formula is not valid!");
       },
     );
 
   }
+
+  updateEval(field: any, index : number) {
+    console.log(field);
+    const body = {
+      field: field
+    } 
+    this.http.post<any>(environment.api + 'CustomField/updateEval', body,
+      { headers: this.configService.headers() }
+    ).subscribe(
+      data => {
+        console.log(data);   
+        this.customFieldForm[index]['eval'] = field['evalDev'];
+        this.emitToParent('httpGet');
+      },
+      e => {
+        console.log(e);
+        alert("your formula is not valid!");
+      },
+    );
+
+  }
+
 }

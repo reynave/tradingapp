@@ -50,22 +50,14 @@
                     <div class="col-8 ">
 
                         <div class="d-flex">
-                            
-                            <!-- <div>
-                                <button type="button" (click)="onUpdateCustomFieldAlign('left')"
-                                    class="btn btn-light me-1"><i class="bi bi-text-left"></i></button>
-                                <button type="button" (click)="onUpdateCustomFieldAlign('center')"
-                                    class="btn btn-light me-1"><i class="bi bi-text-center"></i></button>
-                                <button type="button" (click)="onUpdateCustomFieldAlign('right')"
-                                    class="btn btn-light me-2"><i class="bi bi-text-right"></i></button>
-                            </div> -->
+                             
 
                             <div class="resizable" data-id="{{x.id}}" [ngStyle]="{'width': x.width+'px'}">
                                 <input type="text" [(ngModel)]="x.name" class="form-control rounded-0 "
                                     (change)="onUpdateCustomField(x)" #updateCustomField
                                     (keyup.enter)="updateCustomField.blur()">
                             </div>
-                            <div class="mx-1" *ngIf="x.iType == 'formula'">
+                            <div class="mx-1" *ngIf="x.iType == 'formula'" [ngbTooltip]="tipContent">
                                 <button type="button" class="btn btn-light border " (click)="fnShowFormulaDev(x,i);">
                                     <img src="./assets/icon/formula-30.png" class="icon">
                                     {{x.eval != "" ? x.eval : "Edit Formula"}}
@@ -88,16 +80,14 @@
                                 <div class="col-3">
                                     <div class="row g-1">
                                         <div class="col-6 d-grid">
-                                            <button type="button" class="btn btn-sm btn-primary" (click)="evalDevCheck(x);">Submit</button>
+                                            <button type="button" class="btn btn-sm btn-primary" (click)="evalDevCheck(x, i);">Submit</button>
                                         </div>
                                         <div class="col-6 d-grid">
                                             <button type="button" class="btn btn-sm btn-light" (click)="x.showEvalDev =false">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 text-break">
-                                   <small  [ngbTooltip]="tipContent" >How</small>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -153,11 +143,17 @@
 
 <ng-template #tipContent>
     <small>
-        You can use formulas in the PHP style, such as <a href="https://www.w3schools.com/php/php_operators.asp" class="text-primary" target="_blank">Arithmetic Operators</a> and  Ternary Operator.
+        You can use formulas in the PHP style, such as 
+        <a href="https://www.w3schools.com/php/php_operators.asp" class="text-primary" target="_blank">Arithmetic Operators</a> and  Ternary Operator.
+       <hr class="py-1 my-1">
+        Example 1 : Simple Arithmetic <br>
+        <span class="p-1 font-monospace"> $f1 * ($f2/100) </span>
+        <hr class="py-1 my-1">
+        Example 2 : Ternary Operator <br>
+        <span class="p-1 font-monospace">( $f1 * ($f2/100) ) < 50 ? ( $f1 * ($f2/100) )."% is Low" : ( $f1 * ($f2/100) )."% is high"</span>
+        <hr class="py-1 my-1">
+        Example 3 : Concat text or number<br>
+        <span class="p-1 font-monospace">"halo" . "world"</span>
         <br>
-        Example 1 : <span class="p-1 font-monospace"> $f1 * ($f2/100) </span>
-        <br>
-        Example 2 :<span class="p-1 font-monospace">( $f1 * ($f2/100) ) < 50 ? ( $f1 * ($f2/100) )."% is Low" : ( $f1 * ($f2/100) )."% is high"</span>
-
     </small>
 </ng-template>

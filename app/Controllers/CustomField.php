@@ -72,7 +72,7 @@ class CustomField extends BaseController
                 "update_date" => date("Y-m-d H:i:s"),
             ], "id = '" . $post['newItem']['id'] . "' ");
 
-           
+
 
             $data = [
                 "error" => false,
@@ -210,7 +210,7 @@ class CustomField extends BaseController
             $data = array(
                 "error" => false,
                 "post" => $post,
-            //    "detail" => self::getRow($post),
+                //    "detail" => self::getRow($post),
             );
         }
 
@@ -285,11 +285,11 @@ class CustomField extends BaseController
                         "input_by" => model("Core")->accountId(),
                         "input_date" => date("Y-m-d H:i:s"),
                     ]);
- 
+
                     $items = "SELECT *
                     FROM journal_custom_field 
                     where journalId = '" . $post['id'] . "' order by sorting ASC, id DESC";
-          
+
                     $data = array(
                         "error" => false,
                         "post" => $post,
@@ -297,7 +297,7 @@ class CustomField extends BaseController
                         "items" => $this->db->query($items)->getResultArray(),
                     );
                 }
- 
+
 
             } else {
                 $data = array(
@@ -330,8 +330,9 @@ class CustomField extends BaseController
         }
         return $this->response->setJSON($data);
     }
- 
-    function getRow($post){
+
+    function getRow($post)
+    {
         $newId = $post['newItem']['id'];
         $journalId = model("Core")->select("journalId", "journal_detail", "id = '$newId' ");
         $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field WHERE journalId = '$journalId' ORDER BY sorting ASC ";
@@ -354,7 +355,7 @@ class CustomField extends BaseController
             $evaluateFormula = function ($data, $formula) {
                 extract($data);
                 return eval("return $formula;");
-            }; 
+            };
             $index = 0;
             foreach ($detail as $rec) {
                 $data = [];
@@ -371,8 +372,9 @@ class CustomField extends BaseController
         }
         return $detail;
     }
- 
-    function evalDevCheck(){
+
+    function evalDevCheck()
+    {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
         $data = [
@@ -384,7 +386,28 @@ class CustomField extends BaseController
                 "post" => $post,
                 "error" => false,
                 "evalDev" => $post['field']['evalDev'],
-                "resultData" => model("Core")->journalTableFormula($post['id'], $post['journalTableViewId'], $post['field']['evalDev'], 'f'.$post['field']['f'])
+                "resultData" => model("Core")->journalTableFormula($post['id'], $post['journalTableViewId'], $post['field']['evalDev'], 'f' . $post['field']['f']),
+                
+            ];
+        }
+        return $this->response->setJSON($data);
+    }
+    function updateEval()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $this->db->table("journal_custom_field")->update([
+                "eval" => $post['field']['evalDev'],
+                "evalDev" => $post['field']['evalDev'], 
+            ]," id = ".$post['field']['id']);
+            $data = [
+                "post" => $post,
+                "error" => false,
             ];
         }
         return $this->response->setJSON($data);

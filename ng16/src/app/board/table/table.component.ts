@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
@@ -43,7 +43,10 @@ export class NewCustomField {
 export class TableComponent implements OnInit {
   @ViewChild('canvasRight') canvasRight: any;
   @ViewChild('contentEditSelect') contentEditSelect: any;
-
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event: any) {
+    this.reload(this.journalTableViewId);
+  }
   leftSide: boolean = true;
  
   fields: any = [];
@@ -129,8 +132,7 @@ export class TableComponent implements OnInit {
     this.journalTableViewId =  newItem['id']; 
     this.httpHeader();
     this.httpGet(true);
-    this.httpJournalSelect();
-
+    this.httpJournalSelect(); 
   }
 
   httpHeader() {
