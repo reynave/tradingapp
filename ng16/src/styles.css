@@ -76,7 +76,7 @@ a{
 .icon{
   height: 1rem;
 }
-
+ 
 .tables-body {
   overflow-y: scroll;
   overflow-x: auto;
@@ -175,7 +175,23 @@ input:focus {
 .ui-icon-gripsmall-diagonal-se {
   background-position: -210px -50px;
 }
- 
+
+.popup-floating-top{
+  position: fixed;
+  top: 1rem;
+  width: 100%; 
+  z-index: 9999;
+  text-align: center;
+}
+.popup-floating-top .popup-floating-top-content{
+  min-width: 400px;
+  margin: 0 auto;
+  display: inline-block; 
+}
+
+.popup-floating-top-content .btn{
+  min-width: 60px;
+}
 
 .order-6{  order: 6 !important; }
 .order-7{  order: 7 !important; }

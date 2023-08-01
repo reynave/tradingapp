@@ -5,44 +5,18 @@
         <div class="col-12">
             <div class="bg-white rounded mb-2 pb-4 px-2" style="border-left: 5px solid #a3e2e2">
                 <div class="px-3 py-2">
+                    <div class="row g-0">
+                        <div class="col-11">
+                            <app-board-title></app-board-title>
+                        </div>
+                        <div class="col-1 align-self-center text-end">
+                            <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
+                            (click)="openComponent('CustomFieldFormComponent')"
+                            (newItemEvent)="onChild($event)" ngbTooltip="Tooltip on top"><i
+                                class="bi bi-gear"></i></a>
+                        </div>
+                    </div>
                     <div class="row mb-2">
-                        <div class="col-8">
-                            <input class="form-control form-control-lg border-0 p-0" placeholder=""
-                                [(ngModel)]="item.name" (change)="onSubmit()" #itemName (keyup.enter)="itemName.blur()">
-                        </div>
-
-                        <div class="col-4 text-end align-self-center">
-                            <div class="d-flex flex-row-reverse ">
-
-                                <div>
-                                    <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
-                                        (click)="openComponent('CustomFieldFormComponent')"
-                                        (newItemEvent)="onChild($event)" ngbTooltip="Tooltip on top"><i
-                                            class="bi bi-gear"></i></a>
-                                </div>
-
-
-                                <div ngbDropdown container="body" class="mx-1">
-                                    <button type="button" class="btn btn-outline-dark btn-sm" ngbDropdownToggle>
-                                        <span class="me-2"
-                                            [innerHTML]="fnPermission(item.permissionId)['fontIcon']"></span>
-                                        {{fnPermission(item.permissionId)['name']}}
-                                    </button>
-                                    <div ngbDropdownMenu>
-                                        <button ngbDropdownItem (click)="item.permissionId = a.id; onSubmit()"
-                                            *ngFor="let a of permission">
-                                            <span class="me-2" [innerHTML]="a.fontIcon"></span> {{a.name}}
-                                        </button>
-                                    </div>
-                                </div>
-                                <div [hidden]="fnPermission(item.permissionId)['share'] != 1" placement="top"
-                                    ngbTooltip="http://localhost:4200/#/board/{{journal.url}}">
-                                    <a href="http://localhost:4200/#/board/{{journal.url}}" target="_blank"
-                                        class="btn btn-sm text-dark"><i class="bi bi-link-45deg"></i> Copy</a>
-                                </div>
-
-                            </div>
-                        </div>
                         <div class="col-12 ">
                             <app-board-view (newItemEvent)="reload($event)"></app-board-view>
                         </div>

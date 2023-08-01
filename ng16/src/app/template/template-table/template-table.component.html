@@ -1,8 +1,24 @@
 <app-header></app-header>
+
+<div class="popup-floating-top">
+    <div class="border bg-white popup-floating-top-content">
+        popup-floating-top
+    </div>
+</div>
+
+<div class="wrapper body-margin-top">
+    <div class="wrapper-child " style="width: 30%; ">
+        <div class="border bg-white">asdf</div>
+    </div>
+    <div class="wrapper-child " style="width: 70%;">
+        <div class="border bg-white">asdf</div>
+    </div>
+</div>
+
 <div class="container-fluid body-margin-top">
     <div class="row g-1">
 
-        <div class="col-lg-4 col-12" [hidden]="!leftSide">
+        <div class="col-lg-12 col-12">
             <div class="mt-1">
                 <div class="border bg-white rounded ">
                     <div class="text-end">
@@ -25,178 +41,11 @@
                 </div>
             </div>
         </div>
+        sayama@panasonicgobelawards.com
+        7E70wJcWstqFl&e#
 
-
-        <div class="col-lg-{{leftSide == false ? 12:8}} col-12">
-
-            <div class="border bg-white rounded p-3 mt-1">
-                <div class="row">
-                    <div class="col-8">
-                        <h4 class="d-inline" placement="top-left" ngbTooltip="Tooltip on top">Title of setup trading
-                        </h4>
-                    </div>
-                    <div class="col-4 text-end">
-                        <div class="d-flex flex-row-reverse ">
-                            <div>
-                                <a href="javascript:;" class="btn btn-outline-dark" placement="top-right"
-                                    (click)="openModalFullscreen(contentCustomField)" ngbTooltip="Tooltip on top"><i
-                                        class="bi bi-gear"></i></a>
-                            </div>
-
-                            <div ngbDropdown container="body" class="mx-1">
-                                <button type="button" class="btn btn-outline-dark " ngbDropdownToggle>Share
-                                    Link</button>
-                                <div ngbDropdownMenu>
-                                    <button ngbDropdownItem>Edit</button>
-                                    <button ngbDropdownItem>Duplicate</button>
-                                    <button ngbDropdownItem>Move</button>
-                                    <div class="dropdown-divider"></div>
-                                    <button ngbDropdownItem>Delete</button>
-                                </div>
-                            </div>
-                            <div [hidden]="leftSide">
-                                <a (click)="leftSide=true"> <i class="bi bi-arrow-bar-right h2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div>
-                            <label>
-                                https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/?share=sha384-9ndCyUaIbzAi
-                            </label>
-                            <a href="" class="badge bg-info mx-2">Copy Link</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="border bg-white rounded mt-1">
-
-                <div class="tables-body">
-                    <div class="sticky-top">
-                        <div class="d-flex tables-header-td bg-white">
-                            <div class="floating-div bg-white">
-                                <div class="py-1 px-2">
-                                    <i class="bi bi-check-square-fill text-primary"></i>
-                                </div>
-                            </div>
-                            <div class=" order-1 bg-white ">
-                                <div class="p-1 text-center orders ">Market</div>
-                            </div>
-                            <div class=" order-2 bg-white">
-                                <div class="p-1 text-center orders"> Position </div>
-                            </div>
-                            <div class=" order-3 bg-white">
-                                <div class="p-1 text-center orders">Stop Loss </div>
-                            </div>
-                            <div class=" order-4 bg-white">
-                                <div class="p-1 text-center orders">Risk Ratio</div>
-                            </div>
-                            <div class=" order-5 bg-white">
-                                <div class="p-1 text-center orders">Take Profit </div>
-                            </div>
-                            <div class=" order-6 bg-white">
-                                <div class="p-1 text-center orders">Order Date</div>
-                            </div>
-                            <div class=" order-7 bg-white">
-                                <div class="p-1 text-center orders">Close Date</div>
-                            </div>
-                            <div class=" order-7 bg-white">
-                                <div class="p-1 text-center orders">Notes</div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="d-flex tables-body-td" *ngFor="let item of items">
-                        <div class="floating-div bg-white">
-                            <div class="py-1  px-2 ">
-                                <i class="bi bi-square"></i>
-                            </div>
-                        </div>
-                        <div class=" order-1 ">
-                            <div class="orders text-center ">
-                                <div ngbDropdown>
-                                    <div id="dropdownForm2" class="bg-success select p-1" ngbDropdownToggle>
-                                        BUY
-                                    </div>
-                                    <div ngbDropdownMenu aria-labelledby="dropdownForm2">
-                                        <div style="width: 200px;" class="p-2 d-grid">
-                                            <div class="mb-3">
-                                                <input type="text" class="form-control form-control-sm"
-                                                    placeholder="Search Option">
-                                            </div>
-                                            <div class="mb-1 d-grid" style="overflow-y: auto; max-height: 200px;">
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-                                                <button type="button" class="btn btn-primary mb-1">BUY</button>
-                                                <button type="button" class="btn btn-warning mb-1">SELL</button>
-
-                                            </div>
-                                            <hr>
-                                            <button type="button"
-                                                class="btn btn-outline-light border text-black mb-1"><i
-                                                    class="bi bi-pencil"></i> Edit Select</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class=" order-2">
-                            <div class="orders">
-                               <app-custom-field  [item]="item"  (newItemEvent)="onChild($event)"></app-custom-field>
-                            </div>
-                        </div>
-                        <div class=" order-3">
-                            <div class="orders"> <input type="number" class="p-1  text-end" value="123" #justInput
-                                    (keydown.enter)="justInput.blur();update();false"></div>
-                        </div>
-                        <div class=" order-4">
-                            <div class="orders"> <input type="text" class="p-1" value="123"> </div>
-                        </div>
-                        <div class=" order-5">
-                            <div class="orders"> 
-                                <div class="p-1 text-center" ngbDropdown>
-                                    <small id="dropdownForm2" ngbDropdownToggle> 2023-01-03 12:21 </small>
-                                  
-                                    <div ngbDropdownMenu aria-labelledby="dropdownForm2">
-                                        <ngb-datepicker #dp123   (navigate)="$event.next"></ngb-datepicker>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class=" order-6">
-                            <div class="orders">
-                                <input   type="text" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker readonly class="text-center p-1"
-                                    #dp="ngbDatepicker" (click)="dp.toggle()" />
-                            </div>
-                        </div>
-                        <div class=" order-7">
-                            <div class="orders"><input type="text" class="p-1" value="123"></div>
-                        </div>
-                        <div class=" order-7">
-                            <div class="orders ">
-                                <div class="p-1 text-center">
-                                    <a href="javascript:;" (click)="openCanvas(content)">
-                                        <small><i class="bi bi-chat"></i> Add Notes</small>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        superadmin123@panasonicgobelawards.com
+        6vArTISni@kWZ#5B
     </div>
 </div>
 

@@ -3,11 +3,69 @@
 <div [hidden]="leftSide" class="absolut-area">
     <a (click)="leftSide=true" class="btn btn-outline-dark"> <i class="bi bi-arrow-bar-right"></i></a>
 </div>
+
+<div class="popup-floating-top" [hidden]="!tools">
+    <div class="border bg-white popup-floating-top-content shadow rounded p-3">
+        <div class="d-flex">
+ 
+            <div class="me-2">
+                <a class="btn btn-sm btn-light px-2" (click)="actionTask('duplicate')">
+                    <h5 class="bi bi-files p-0 m-0"></h5>
+                    <small> Duplicate</small>
+                </a>
+            </div>
+
+            <div class="me-2">
+                <a class="btn btn-sm btn-light px-2" (click)="actionTask('delete')">
+                    <h5 class="bi bi-trash  p-0 m-0"></h5>
+                    <small>Delete</small>
+                </a>
+            </div>
+            <div class="mx-1 ">
+                &nbsp;
+            </div>
+            <div class="me-2">
+                <a class="btn btn-sm btn-light px-2" (click)="actionTask('lock')">
+                    <h5 class="bi bi-lock  p-0 m-0"></h5>
+                    <small>Lock</small>
+                </a>
+            </div>
+
+            <div class="me-2">
+                <a class="btn btn-sm btn-light px-2" (click)="actionTask('unlock')">
+                    <h5 class="bi bi-unlock  p-0 m-0"></h5>
+                    <small>Unlock</small>
+                </a>
+            </div>
+            <div class="mx-1 ">
+                &nbsp;
+            </div>
+            <div class="me-2">
+                <a class="btn btn-sm btn-light px-2" (click)="actionTask('archives')">
+                    <h5 class="bi bi-archive  p-0 m-0"></h5>
+                    <small>Archives</small>
+                </a>
+            </div>
+            <div class="me-2">
+                <a class="btn btn-sm btn-light px-2" >
+                    <h5 class=" p-0 m-0"><i class="bi bi-folder-symlink "></i> </h5>
+                    <small>Unarchives</small>
+                </a>
+            </div>
+            <div class="me-2">
+                <a class="btn btn-sm btn-light px-2">
+                    <h5 class=" p-0 m-0"><i class="bi bi-eye-fill"></i></h5>
+                    <small>Show All</small>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid body-margin-top">
     <div class="row g-2">
-
-        <div class="col-lg-3 col-12" [hidden]="!leftSide">
-
+        <!-- <div class="col-lg-3 col-12" [hidden]="!leftSide"> -->
+        <div class="col-lg-3 col-12" [hidden]="true">
             <div class="bg-white rounded ">
                 <div class="text-end">
                     <button type="button" (click)="leftSide=false" class="btn btn-light"><i
@@ -21,66 +79,34 @@
                     <div class="mb-2">
                         <h4>Summary</h4>
                     </div>
-                    <div class="mb-2">
-                        Total Trades
-                    </div>
-                    <a class="m-1 btn" [title]="i.color" *ngFor="let i of backgroundColorOption">
-                        <i class="bi bi-square-fill fs-4" [ngStyle]="{'color': i.color }"></i>
-                    </a>
+
                 </div>
             </div>
 
         </div>
 
 
-        <div class="col-lg-{{leftSide == false ? 12:9}} col-12">
+        <div class="col-lg-12 col-12">
             <div class="bg-white rounded" style="border-left: 5px solid rgb(114, 194, 254);">
 
                 <div class="px-3 py-2">
+                    <div class="row g-0">
+                        <div class="col-11">
+                            <app-board-title></app-board-title>
+                        </div>
+                        <div class="col-1 align-self-center text-end">
+                            <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
+                                (click)="openComponent('CustomFieldFormComponent')" (newItemEvent)="onChild($event)"
+                                ngbTooltip="Tooltip on top"><i class="bi bi-gear"></i> Fields</a>
+                        </div>
+                    </div>
+
                     <div class="row mb-2">
-                        <div class="col-8">
-                            <input class="form-control form-control-lg border-0 p-0" placeholder=""
-                                [(ngModel)]="item.name" (change)="onSubmit()" #itemName (keyup.enter)="itemName.blur()">
-                        </div>
-
-                        <div class="col-4 text-end align-self-center">
-                            <div class="d-flex flex-row-reverse ">
-
-                                <div>
-                                    <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
-                                        (click)="openComponent('CustomFieldFormComponent')"
-                                        (newItemEvent)="onChild($event)" ngbTooltip="Tooltip on top"><i
-                                            class="bi bi-gear"></i></a>
-                                </div>
-
-
-                                <div ngbDropdown container="body" class="mx-1">
-                                    <button type="button" class="btn btn-outline-dark btn-sm" ngbDropdownToggle>
-                                        <span class="me-2"
-                                            [innerHTML]="fnPermission(item.permissionId)['fontIcon']"></span>
-                                        {{fnPermission(item.permissionId)['name']}}
-                                    </button>
-                                    <div ngbDropdownMenu>
-                                        <button ngbDropdownItem (click)="item.permissionId = a.id; onSubmit()"
-                                            *ngFor="let a of permission">
-                                            <span class="me-2" [innerHTML]="a.fontIcon"></span> {{a.name}}
-                                        </button>
-                                    </div>
-                                </div>
-                                <div [hidden]="fnPermission(item.permissionId)['share'] != 1" placement="top"
-                                    ngbTooltip="http://localhost:4200/#/board/{{journal.url}}">
-                                    <a href="http://localhost:4200/#/board/{{journal.url}}" target="_blank"
-                                        class="btn btn-sm text-dark"><i class="bi bi-link-45deg"></i> Copy</a>
-                                </div>
-
-                            </div>
-                        </div>
                         <div class="col-12 ">
-
-                           <app-board-view (newItemEvent)="reload($event)"></app-board-view>
-
+                            <app-board-view (newItemEvent)="reload($event)"></app-board-view>
                         </div>
-                        <div class="col-12">
+
+                        <div class="col-11">
                             <div class="d-flex">
                                 <div class="me-2">
                                     <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New
@@ -92,8 +118,7 @@
                                 </div>
 
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light"><i
-                                            class="bi bi-sliders"></i></button>
+                                    <button type="button" class="btn btn-sm btn-light"><i  class="bi bi-sliders"></i></button>
                                 </div>
 
                                 <div class="me-2">
@@ -104,13 +129,14 @@
                                         </button>
                                         <div ngbDropdownMenu aria-labelledby="dropdownFormHide" style="width: 240px;">
                                             <div class="px-3 py-2">
-                                                <div *ngFor="let x of customField; let i = index" class="border-bottom py-1">
+                                                <div *ngFor="let x of customField; let i = index"
+                                                    class="border-bottom py-1">
                                                     <div class="row g-1">
                                                         <div class="col-10"
                                                             [ngClass]="{'text-gray': x.hide==1 ? true :false}">
                                                             {{x.name}}
                                                         </div>
-                                                        <div class="col-2 text-end"> 
+                                                        <div class="col-2 text-end">
                                                             <span *ngIf="x.hide==1" (click)="fnHide(1,i,x);">
                                                                 <i class="bi bi-square"></i>
                                                             </span>
@@ -126,26 +152,8 @@
 
                                 </div>
 
-                                <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light"
-                                        (click)="actionTask('duplicate')"><i class="bi bi-files"></i>
-                                        Duplicate</button>
-                                </div>
-
-                                <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('delete')"><i
-                                            class="bi bi-trash"></i>
-                                        Delete</button>
-                                </div>
-
-                                <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('lock')"><i
-                                            class="bi bi-lock"></i> Lock</button>
-                                </div>
-
-                                <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('unlock')"><i
-                                            class="bi bi-unlock"></i> Unlock</button>
+                                <div class="me-2" [hidden]="archives < 1"> 
+                                    <button type="button" class="btn btn-sm btn-light" (click)="actionTask('unarchives');">  {{archives}} <i  class="bi bi-archive"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -154,7 +162,7 @@
                 </div>
 
                 <div class="text-center my-5" *ngIf="!startUpTable">
-                    <img src="./assets/gif/loading-board.gif" class="w-100" style="max-width: 300px;">
+                    <img src="./assets/gif/loading-board.gif" class="w-100" style="max-width: 200px;">
                 </div>
 
                 <div class="ps-3 pt-0">
@@ -182,7 +190,7 @@
                         </div>
 
                         <div class="sortable">
-                            <span *ngFor="let x of detail; let i = index">
+                            <span *ngFor="let x of detail; let i = index" [hidden]="x.archives == '1'">
                                 <div class="d-flex tables-body-td ">
                                     <div class="floating-div bg-white border-start table-body-td-first">
                                         <div class="py-1 px-3 position-relative orders-left-fixed">
@@ -195,10 +203,10 @@
                                                 </div>
                                             </div>
 
-                                            <span *ngIf="x.checkbox===true" (click)="x.checkbox=false">
+                                            <span *ngIf="x.checkbox===true" (click)="x.checkbox=false;fnTools();">
                                                 <i class="bi bi-check-square-fill text-primary"></i>
                                             </span>
-                                            <span *ngIf="x.checkbox!=true" (click)="x.checkbox=true">
+                                            <span *ngIf="x.checkbox!=true" (click)="x.checkbox=true;fnTools();">
                                                 <i class="bi bi-square"></i>
                                             </span>
                                         </div>
@@ -227,7 +235,6 @@
                                     <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
@@ -238,6 +245,7 @@
         </div>
     </div>
 </div>
+
 
 
 <ng-template #canvasRight let-offcanvas>

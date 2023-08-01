@@ -288,7 +288,8 @@ class CustomField extends BaseController
 
                     $items = "SELECT *
                     FROM journal_custom_field 
-                    where journalId = '" . $post['id'] . "' order by sorting ASC, id DESC";
+                    where journalId = '" . $post['id'] . "' AND presence = 1 
+                    ORDER BY sorting ASC, id DESC";
 
                     $data = array(
                         "error" => false,
@@ -320,9 +321,9 @@ class CustomField extends BaseController
             "post" => $post,
         ];
         if ($post) {
-            $this->db->table("journal_custom_field")->delete([
-                "id" => $post['id'],
-            ]);
+            $this->db->table("journal_custom_field")->update([
+                "presence" => 0,
+            ],"id = '".$post['id']."'" );
             $data = array(
                 "error" => false,
                 "post" => $post,
@@ -335,7 +336,9 @@ class CustomField extends BaseController
     {
         $newId = $post['newItem']['id'];
         $journalId = model("Core")->select("journalId", "journal_detail", "id = '$newId' ");
-        $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field WHERE journalId = '$journalId' ORDER BY sorting ASC ";
+        $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field 
+        WHERE journalId = '$journalId' and presence = 1
+        ORDER BY sorting ASC ";
         $journal_custom_field = $this->db->query($c)->getResultArray();
 
         $customField = "";

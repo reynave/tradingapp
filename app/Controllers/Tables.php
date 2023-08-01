@@ -14,6 +14,30 @@ class Tables extends BaseController
         return $this->response->setJSON($data);
     }
 
+    function boardTitle()
+    {
+        $data = array(
+            "error" => true,
+            "request" => $this->request->getVar(),
+        );
+
+        $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
+        if ($data['request']['id'] && $id) {
+  
+            $b = "SELECT * FROM color   ORDER BY id ASC ";
+            $backgroundColorOption = $this->db->query($b)->getResultArray();
+ 
+            $data = array(
+                "error" => false,
+                "id" => $id,
+                "item" => $this->db->query("SELECT * from journal where id = '$id' ")->getResultArray()[0],
+                "permission" => $this->db->query("SELECT * from permission")->getResultArray(), 
+                "backgroundColorOption" => $backgroundColorOption, 
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+
     function header()
     {
         $data = array(
@@ -24,54 +48,17 @@ class Tables extends BaseController
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
         if ($data['request']['id'] && $id) {
 
-            $c = "SELECT *, '' as showEvalDev  FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
+            $c = "SELECT *, '' as showEvalDev  FROM journal_custom_field 
+            WHERE journalId = '$id' and presence = 1
+            ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
-
-            $customField = "";
-            $customFieldNo = [];
-            foreach ($journal_custom_field as $r) {
-                $customField .= ", f" . $r['f'];
-                array_push($customFieldNo, "f" . $r['f']);
-            }
-            $q = "SELECT id, journalId, positionId,  marketId, openDate, closeDate,  sl, rr,  tp,  resultId, note,
-            time_to_sec(timediff(closeDate, openDate )) / 3600  AS 'tradingTime', false AS 'checkbox' $customField 
-            FROM journal_detail 
-            where journalId = '$id' and presence = 1";
-            $detail = $this->db->query($q)->getResultArray();
-
-            $select = [];
-            foreach ($customFieldNo as $rec) {
-                $option = "SELECT *
-                FROM journal_select 
-                where journalId = '$id' and field = '$rec' and presence = 1 order by sorting ASC, id DESC";
-
-                $optionDelete = "SELECT *
-                FROM journal_select 
-                where journalId = '$id' and field = '$rec' and presence = 0 order by sorting ASC, id DESC";
-
-                $temp = array(
-                    "field" => $rec,
-                    "option" => $this->db->query($option)->getResultArray(),
-                    "optionDelete" => $this->db->query($optionDelete)->getResultArray(),
-                );
-                array_push($select, $temp);
-            }
-
-            $b = "SELECT * FROM color   ORDER BY id ASC ";
-            $backgroundColorOption = $this->db->query($b)->getResultArray();
-
+ 
 
             $data = array(
                 "error" => false,
-                "id" => $id,
-                "item" => $this->db->query("SELECT * from journal where id = '$id' ")->getResultArray()[0],
-                "permission" => $this->db->query("SELECT * from permission")->getResultArray(),
-                "detail" => $detail,
-                "customFieldNo" => $customFieldNo,
-                "select" => $select,
+                "id" => $id,   
                 "customField" => $journal_custom_field,
-                "backgroundColorOption" => $backgroundColorOption,
-                "q" => $q,
+             
             );
         }
         return $this->response->setJSON($data);
@@ -90,7 +77,9 @@ class Tables extends BaseController
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
         if ($data['request']['id'] && $id) {
 
-            $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
+            $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field 
+            WHERE journalId = '$id' and presence = 1
+            ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
 
             $customField = "";
@@ -128,13 +117,12 @@ class Tables extends BaseController
                 "error" => false,
                 "id" => $id,
                 "backgroundColorOption" => $backgroundColorOption,
-                "select" => $select,
-                //  "customFieldNo" => $customFieldNo,
-                //  "customField" => $journal_custom_field,
-                //  "detail" => $detail,
+                "select" => $select, 
                 "customFieldNo" => $journalTable['customFieldNo'],
                 "customField" => $journalTable['journal_custom_field'],
                 "detail" => $journalTable['detail'],
+                "archives" => $journalTable['archives'],
+                
             );
 
 
@@ -181,7 +169,9 @@ class Tables extends BaseController
 
             $newId = model("Core")->select("id", "journal_detail", "journalId = '$id' ORDER BY input_date desc");
 
-            $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
+            $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field 
+            WHERE journalId = '$id' and presence = 1
+            ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
 
             $customField = "";
@@ -314,7 +304,52 @@ class Tables extends BaseController
         }
         return $this->response->setJSON($data);
     }
-
+    function archives()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            foreach ($post['detail'] as $row) {
+                $this->db->table("journal_detail")->update([
+                    'archives' => 1,
+                    "input_by" => model("Core")->accountId(),
+                    "input_date" => date("Y-m-d H:i:s"),
+                ], " id = '" . $row['id'] . "' ");
+            }
+            $data = array(
+                "error" => false,
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+    function unarchives()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) { 
+            $this->db->table("journal_detail")->update([
+                'archives' => 0,
+                "update_by" => model("Core")->accountId(),
+                "update_date" => date("Y-m-d H:i:s"),
+            ], " journalId = '" . $post['id'] . "' ");
+        
+            $data = array(
+                "error" => false,
+                "post" => $post,
+            );
+        }
+        return $this->response->setJSON($data);
+    }
+    
     function fnHide()
     {
         $json = file_get_contents('php://input');
@@ -344,8 +379,7 @@ class Tables extends BaseController
         }
         return $this->response->setJSON($data);
     }
-
-
+ 
     function sortableDetail()
     {
         $json = file_get_contents('php://input');
@@ -379,7 +413,9 @@ class Tables extends BaseController
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
         if ($data['request']['id'] && $id) {
 
-            $c = "SELECT * FROM journal_custom_field WHERE journalId = '$id'  ORDER BY sorting ASC ";
+            $c = "SELECT * FROM journal_custom_field
+             WHERE journalId = '$id'  and presence = 1 
+             ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
 
             $customField = "";

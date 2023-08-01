@@ -6,7 +6,7 @@
                 (change)="emitToParent(childItem);" [disabled]="item['ilock']===true"
                 [ngClass]="{'text-gray': item['itype'] == 'date' && !childItem['value']}">
         </div>
-        <div class="mx-1 py-1" *ngIf="item['customField']['suffix']">
+        <div class="mx-1 py-1" *ngIf="item['customField']['suffix']" >
             <small>{{item['customField']['suffix']}}</small>
         </div>
     </div>
@@ -106,7 +106,7 @@
 </div>
 
 <div *ngIf=" item['itype']=='formula'">
-    <div class="p-1 {{'text-'+childItem['customField']['textAlign']}}">
+    <div class="p-1 {{'text-'+childItem['customField']['textAlign']}} " [ngClass]="{'disabled': item['ilock'] == true}">
         <small>{{isNumber(childItem['value'])}}</small>
     </div>
 </div>

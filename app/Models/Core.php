@@ -135,7 +135,10 @@ class Core extends Model
 
     function journalTable($id = "", $journalTableViewId = "", $where = "")
     {
-        $c = "SELECT *, CONCAT('f',f) AS 'key', '' as showEvalDev FROM journal_custom_field WHERE journalId = '$id' ORDER BY sorting ASC ";
+        $c = "SELECT *, CONCAT('f',f) AS 'key', '' as showEvalDev 
+        FROM journal_custom_field 
+        WHERE journalId = '$id' AND presence = 1
+        ORDER BY sorting ASC ";
 
         $journal_custom_field = [];
         foreach ($this->db->query($c)->getResultArray() as $r) {
@@ -161,7 +164,7 @@ class Core extends Model
         }
 
 
-        $q = "SELECT id, ilock, journalId, false AS 'checkbox' $customField 
+        $q = "SELECT id, ilock, journalId, archives,  archives as 'historyArchives', false AS 'checkbox' $customField 
         FROM journal_detail 
         where journalId = '$id' $where
         AND presence = 1 order by sorting ASC";
@@ -202,6 +205,7 @@ class Core extends Model
             "customFieldNo" => $customFieldNo,
             "journal_custom_field" => $journal_custom_field,
             "detail" => $detail,
+            "archives" => (int)self::select("count(id)","journal_detail","presence = 1 and archives = 1 and journalId = '$id' "),
         );
 
         return $data;

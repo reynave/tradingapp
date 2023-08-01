@@ -96,19 +96,16 @@ export class ChartjsComponent implements OnInit {
   }
 
   httpHeader() {
-    this.http.get<any>(environment.api + "Tables/header?id=" + this.id, {
+    this.http.get<any>(environment.api + "Tables/header" , {
       headers: this.configService.headers(),
+      params : {
+        id : this.id
+      }
     }).subscribe(
       data => {
-        //    console.log("httpHeader",data);
-        this.journal = data['item'];
-        this.titleService.setTitle(data['item']['name']);
-        this.item.name = data['item']['name'];
+        //    console.log("httpHeader",data); 
 
-        this.customFieldForm = data['customField'];
-        this.item.permissionId = data['item']['permissionId'];
-        this.permission = data['permission'];
-        this.item.url = environment.api + '?share=' + data['item']['url'];
+        this.customFieldForm = data['customField']; 
       },
       e => {
         console.log(e);

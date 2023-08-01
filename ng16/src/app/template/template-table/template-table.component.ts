@@ -31,21 +31,21 @@ export class TemplateTableComponent implements OnInit{
   }
   ngOnInit(): void {
   
-    for (let i = 0; i < 100; i++) {
-      this.items.push({
-        id: i + 1,
-        name: "test "+i,
-        itype: ( i % 5 == 0) ? 'select':'text',
-        value : "value "+i, 
-      });
-    }
-    for (let i = 0; i < 15; i++) {
-      this.fields.push({
-        id: i + 1,
-        name: "Name_"+(i*7),
-      });
+    // for (let i = 0; i < 100; i++) {
+    //   this.items.push({
+    //     id: i + 1,
+    //     name: "test "+i,
+    //     itype: ( i % 5 == 0) ? 'select':'text',
+    //     value : "value "+i, 
+    //   });
+    // }
+    // for (let i = 0; i < 15; i++) {
+    //   this.fields.push({
+    //     id: i + 1,
+    //     name: "Name_"+(i*7),
+    //   });
      
-    }
+    // }
     console.log(this.items); 
   }
 

@@ -28,10 +28,9 @@
     content: '%';
 }
 
-.cut-text { 
-    
-    overflow:hidden;
-    display:inline-block;
+.cut-text {  
+    overflow: hidden;
+    display: inline-block;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
+}
