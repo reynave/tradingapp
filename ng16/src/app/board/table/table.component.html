@@ -230,12 +230,14 @@
                                         <i class="bi bi-file-spreadsheet text-white"></i>
                                     </div>
                                 </div>
-                                <div class=" order-{{n.sorting}} bg-light border-bottom  "
+                                <div class=" order-{{n.sorting}} bg-light border-bottom "
                                     *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
-                                    <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">{{n.name}}
+                                    <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}"> 
+                                        {{fnDetailTotal(n) }}
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
 
                     </div>

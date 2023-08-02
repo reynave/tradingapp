@@ -51,7 +51,9 @@
                                     <select class="form-control" (change)="updateChartJs()"
                                         [(ngModel)]="journalChart.xAxis">
                                         <option [hidden]="journalChart.xAxis != '' ">- Select -</option>
-                                        <option *ngFor="let n of x" [value]="n.key">{{n.name}} [{{n.iType}}]</option>
+                                        <option *ngFor="let n of x" [value]="n.key" [hidden]="n.presence == '0'">
+                                            {{n.name}} [{{n.iType}}] 
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="mb-2">
@@ -75,8 +77,7 @@
                                                     class="bi bi-check-square-fill"></i>
                                                 <i *ngIf="n.checkbox != true"
                                                     (click)="n.checkbox = true;updateChartJs()"
-                                                    class="bi bi-square"></i>
-
+                                                    class="bi bi-square"></i> 
                                             </div>
 
                                         </div>
@@ -88,8 +89,8 @@
                                     <div class="form-control scrollarea">
                                         <div class="row g-1 mb-1 " [ngClass]="{'border-top': (i > 0) ? true : false}"
                                             *ngFor="let n of y; let i = index">
-                                            <div class="col-10">
-                                                {{n.name}}
+                                            <div class="col-10" [ngClass]="{'text-decoration-line-through': n.presence == '0'}">
+                                                {{n.name}}  
                                                 <small *ngIf="n.iType == 'number'"><i class="bi bi-123"></i></small>
                                                 <span *ngIf="n.iType == 'formula'"><img
                                                         src="./assets/icon/formula-30.png" class="icon"></span>
@@ -98,8 +99,7 @@
                                                 <i *ngIf="n.check == true" (click)="n.check = false;updateChartJs()"
                                                     class="bi bi-check-square-fill"></i>
                                                 <i *ngIf="n.check != true" (click)="n.check = true;updateChartJs()"
-                                                    class="bi bi-square"></i>
-
+                                                    class="bi bi-square"></i> 
                                             </div>
 
                                         </div>

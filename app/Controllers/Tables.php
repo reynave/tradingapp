@@ -23,16 +23,16 @@ class Tables extends BaseController
 
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
         if ($data['request']['id'] && $id) {
-  
+
             $b = "SELECT * FROM color   ORDER BY id ASC ";
             $backgroundColorOption = $this->db->query($b)->getResultArray();
- 
+
             $data = array(
                 "error" => false,
                 "id" => $id,
                 "item" => $this->db->query("SELECT * from journal where id = '$id' ")->getResultArray()[0],
-                "permission" => $this->db->query("SELECT * from permission")->getResultArray(), 
-                "backgroundColorOption" => $backgroundColorOption, 
+                "permission" => $this->db->query("SELECT * from permission")->getResultArray(),
+                "backgroundColorOption" => $backgroundColorOption,
             );
         }
         return $this->response->setJSON($data);
@@ -52,13 +52,13 @@ class Tables extends BaseController
             WHERE journalId = '$id' and presence = 1
             ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
- 
+
 
             $data = array(
                 "error" => false,
-                "id" => $id,   
+                "id" => $id,
                 "customField" => $journal_custom_field,
-             
+
             );
         }
         return $this->response->setJSON($data);
@@ -100,10 +100,26 @@ class Tables extends BaseController
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 0 order by sorting ASC, id DESC";
 
+                $users = "SELECT ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId', a.presence AS 'accountPresence'
+                FROM journal_access AS ja
+                LEFT join account AS a ON a.id = ja.accountId
+                WHERE ja.journalId = '$id' AND ja.presence = 1
+                ORDER BY a.name asc;";
+
+                $usersDelete = "SELECT ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId', a.presence AS 'accountPresence'
+                FROM journal_access AS ja
+                LEFT join account AS a ON a.id = ja.accountId
+                WHERE ja.journalId = '$id' AND ja.presence = 0
+                ORDER BY a.name asc;";
+                
                 $temp = array(
                     "field" => $rec,
                     "option" => $this->db->query($option)->getResultArray(),
                     "optionDelete" => $this->db->query($optionDelete)->getResultArray(),
+
+                    "users" => $this->db->query($users)->getResultArray(),
+                    "usersDelete" => $this->db->query($usersDelete)->getResultArray(),
+
                 );
                 array_push($select, $temp);
             }
@@ -117,12 +133,13 @@ class Tables extends BaseController
                 "error" => false,
                 "id" => $id,
                 "backgroundColorOption" => $backgroundColorOption,
-                "select" => $select, 
-                "customFieldNo" => $journalTable['customFieldNo'],
+                "select" => $select,
+
+                "customFieldKey" => $journalTable['customFieldKey'],
                 "customField" => $journalTable['journal_custom_field'],
                 "detail" => $journalTable['detail'],
                 "archives" => $journalTable['archives'],
-                
+
             );
 
 
@@ -130,21 +147,21 @@ class Tables extends BaseController
         return $this->response->setJSON($data);
     }
     function httpDataFormula()
-    { 
+    {
         $data = array(
             "error" => true,
             "request" => $this->request->getVar(),
-        ); 
+        );
         $accountId = model("Core")->accountId();
         $journalTableViewId = $data['request']['journalTableViewId'];
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
-        if ($data['request']['id'] && $id) { 
-            $journalTable = model("Core")->journalTableFormula($id, $journalTableViewId); 
+        if ($data['request']['id'] && $id) {
+            $journalTable = model("Core")->journalTableFormula($id, $journalTableViewId);
             $data = array(
                 "error" => false,
-                "id" => $id,  
+                "id" => $id,
                 "detail" => $journalTable,
-            ); 
+            );
         }
         return $this->response->setJSON($data);
     }
@@ -335,13 +352,13 @@ class Tables extends BaseController
             "error" => true,
             "post" => $post,
         ];
-        if ($post) { 
+        if ($post) {
             $this->db->table("journal_detail")->update([
                 'archives' => 0,
                 "update_by" => model("Core")->accountId(),
                 "update_date" => date("Y-m-d H:i:s"),
             ], " journalId = '" . $post['id'] . "' ");
-        
+
             $data = array(
                 "error" => false,
                 "post" => $post,
@@ -349,7 +366,7 @@ class Tables extends BaseController
         }
         return $this->response->setJSON($data);
     }
-    
+
     function fnHide()
     {
         $json = file_get_contents('php://input');
@@ -379,7 +396,7 @@ class Tables extends BaseController
         }
         return $this->response->setJSON($data);
     }
- 
+
     function sortableDetail()
     {
         $json = file_get_contents('php://input');

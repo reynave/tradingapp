@@ -6,7 +6,7 @@
                 (change)="emitToParent(childItem);" [disabled]="item['ilock']===true"
                 [ngClass]="{'text-gray': item['itype'] == 'date' && !childItem['value']}">
         </div>
-        <div class="mx-1 py-1" *ngIf="item['customField']['suffix']" >
+        <div class="mx-1 py-1" *ngIf="item['customField']['suffix']">
             <small>{{item['customField']['suffix']}}</small>
         </div>
     </div>
@@ -110,3 +110,57 @@
         <small>{{isNumber(childItem['value'])}}</small>
     </div>
 </div>
+
+<span *ngIf="item['itype']=='user'">
+    <div *ngIf="item['ilock']===true">
+        <div class="select p-1 text-center "
+            [innerHTML]="fnChildItemSelectOptionUser(childItem['value'])">
+        </div>
+    </div>
+
+   
+
+    <div ngbDropdown container="body" *ngIf="item['ilock']!==true">
+        <div id="dropdownForm2" class="select p-1 text-center " ngbDropdownToggle
+            [innerHTML]="fnChildItemSelectOptionUser(childItem['value'])"> 
+        </div>
+       
+        <div ngbDropdownMenu aria-labelledby="dropdownForm2">
+            <div style="width: 250px;" class="p-2">
+                <small>Select User</small>
+                
+                <div style="overflow-y: auto; max-height: 200px;" class="my-2" >
+                    <div *ngFor="let x of childItem.select.users"  (click)="emitSelectToParent(x.accountId);" ngbDropdownItem class="d-flex mb-1">
+                        <div>
+                            <img src="https://i.pravatar.cc/30?img={{x.id}}" class="rounded-circle border"> 
+                        </div>
+                        <div class="align-self-center px-3">
+                            {{x.value}}
+                        </div> 
+                    </div>
+                </div>
+                
+                <hr>
+
+                <div class="mb-3 text-center">
+                    <small><i class="bi bi-person-plus me-2"></i> Invite a new member with link</small>
+                </div>
+                <input type="text" class="form-control form-control-sm mb-2" readonly  value="https://www.evernote.com/client/web?login=true#/note/39c535f7-6f8f-47be-a3d2-f9e9b8d431ce" #userinput>
+               
+                <div class="d-grid"> 
+                    <button type="button" class="btn btn-outline-success btn-sm"  (click)="copyInputMessage(userinput)">
+                        <i class="bi bi-clipboard me-2" *ngIf="copyClipboard == false"></i>  
+                        <i class="bi bi-clipboard-check-fill me-2" *ngIf="copyClipboard != false"></i> 
+                        Copy to Clipboard
+                    </button>
+                </div>
+
+                <!-- <div class="mb-1 d-grid" style="overflow-y: auto; max-height: 200px;">
+                    <button class="btn btn-primary mb-1 text-center" (click)="emitSelectToParent(x.id);" ngbDropdownItem
+                        *ngFor="let x of childItem.select.users">{{x.value}}</button>
+                </div> -->
+            </div>
+
+        </div>
+    </div>
+</span>

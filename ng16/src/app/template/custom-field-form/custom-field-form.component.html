@@ -11,7 +11,7 @@
         <div class="tables-body " style="height: 90vh;">
             <div class="sticky-top  bg-white">
                 <div class="container mt-5 ">
-                    <div class="row g-1 "> 
+                    <div class="row g-1 ">
                         <div class="col-2 border-bottom">
                             <strong>TYPE OF FIELD</strong>
                         </div>
@@ -26,7 +26,7 @@
 
             <div class="container sortable pb-2">
                 <div class="row g-1 border-bottom py-1" *ngFor="let x of customFieldForm ; let i = index">
-                     
+
                     <div class="col-2 align-self-center">
 
                         <span class="mx-2" *ngIf="x.iType == 'text'"><i class="bi bi-textarea-t"></i></span>
@@ -39,6 +39,7 @@
                                 class="icon"> </span>
                         <span class="mx-2" *ngIf="x.iType == 'url'"> <i class="bi bi-link-45deg"></i> </span>
                         <span class="mx-2" *ngIf="x.iType == 'image'"> <i class="bi bi-images"></i> </span>
+                        <span class="mx-2" *ngIf="x.iType == 'user'"> <i class="bi bi-person-circle"></i> </span>
 
                         <small> {{x.iType | uppercase}}</small>
 
@@ -50,7 +51,7 @@
                     <div class="col-8 ">
 
                         <div class="d-flex">
-                             
+
 
                             <div class="resizable" data-id="{{x.id}}" [ngStyle]="{'width': x.width+'px'}">
                                 <input type="text" [(ngModel)]="x.name" class="form-control rounded-0 "
@@ -74,20 +75,23 @@
                         <div class="my-2" *ngIf="x.showEvalDev == true">
                             <div class="row g-1">
                                 <div class="col-9">
-                                    <textarea type="text" class="form-control form-control-sm rounded-0 bg-light font-monospace"
+                                    <textarea type="text"
+                                        class="form-control form-control-sm rounded-0 bg-light font-monospace"
                                         [(ngModel)]="x.evalDev"></textarea>
                                 </div>
                                 <div class="col-3">
                                     <div class="row g-1">
                                         <div class="col-6 d-grid">
-                                            <button type="button" class="btn btn-sm btn-primary" (click)="evalDevCheck(x, i);">Submit</button>
+                                            <button type="button" class="btn btn-sm btn-primary"
+                                                (click)="evalDevCheck(x, i);">Submit</button>
                                         </div>
                                         <div class="col-6 d-grid">
-                                            <button type="button" class="btn btn-sm btn-light" (click)="x.showEvalDev =false">Cancel</button>
+                                            <button type="button" class="btn btn-sm btn-light"
+                                                (click)="x.showEvalDev =false">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -122,6 +126,8 @@
                                 <option value="note">Note</option>
                                 <option value="image">Image</option>
                                 <option value="formula">Formula</option>
+                                <option value="user">User</option>
+
                             </select>
                         </div>
                         <div class="col-8">
@@ -143,17 +149,19 @@
 
 <ng-template #tipContent>
     <small>
-        You can use formulas in the PHP style, such as 
-        <a href="https://www.w3schools.com/php/php_operators.asp" class="text-primary" target="_blank">Arithmetic Operators</a> and  Ternary Operator.
-       <hr class="py-1 my-1">
+        You can use formulas in the PHP style, such as
+        <a href="https://www.w3schools.com/php/php_operators.asp" class="text-primary" target="_blank">Arithmetic
+            Operators</a> and Ternary Operator.
+        <hr class="py-1 my-1">
         Example 1 : Simple Arithmetic <br>
         <span class="p-1 font-monospace"> $f1 * ($f2/100) </span>
         <hr class="py-1 my-1">
         Example 2 : Ternary Operator <br>
-        <span class="p-1 font-monospace">( $f1 * ($f2/100) ) < 50 ? ( $f1 * ($f2/100) )."% is Low" : ( $f1 * ($f2/100) )."% is high"</span>
-        <hr class="py-1 my-1">
-        Example 3 : Concat text or number<br>
-        <span class="p-1 font-monospace">"halo" . "world"</span>
-        <br>
+        <span class="p-1 font-monospace">( $f1 * ($f2/100) ) < 50 ? ( $f1 * ($f2/100) )."% is Low" : ( $f1 * ($f2/100)
+                )."% is high"</span>
+                <hr class="py-1 my-1">
+                Example 3 : Concat text or number<br>
+                <span class="p-1 font-monospace">"halo" . "world"</span>
+                <br>
     </small>
 </ng-template>

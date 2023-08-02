@@ -15,6 +15,7 @@ export class CustomFieldComponent implements OnInit {
   // @Input() itemSelect :any = [];
   @Output() newItemEvent = new EventEmitter<string>();
 
+  env : any = environment;
   childItem: any;
   constructor(
     private http: HttpClient,
@@ -47,6 +48,26 @@ export class CustomFieldComponent implements OnInit {
     }
   }
 
+  fnChildItemSelectOptionUser(accountId: string) {
+    let data = "";
+
+    let objIndex = this.childItem.select.users.findIndex(((obj: { accountId: string; }) => obj.accountId == accountId));
+    if (objIndex > -1) {
+      return this.childItem.select.users[objIndex]['value'];
+    }
+    else {
+      if (accountId !== "") {
+        let objIndexHistory = this.childItem.select.usersDelete.findIndex(((obj: { accountId: string; }) => obj.accountId == accountId))
+
+        if (objIndexHistory > -1) {
+          data = this.childItem.select.usersDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
+          //   data = objIndexHistory;
+        } 
+      }
+      return data;
+    }
+  }
+ 
   emitToParent(newValue: string) {
     this.newItemEvent.emit(this.childItem);
   }
@@ -103,5 +124,17 @@ export class CustomFieldComponent implements OnInit {
 
   isNumber(str : string) {   
       return str.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","); 
+  }
+
+  copyClipboard : boolean = false;
+  copyInputMessage(inputElement : any){
+    inputElement.select();
+    this.copyClipboard = true;
+    document.execCommand('copy');
+    inputElement.setSelectionRange(0, 0);
+
+    setTimeout(() => {
+      this.copyClipboard = false;
+    }, 10000);
   }
 }

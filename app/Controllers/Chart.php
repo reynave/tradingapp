@@ -21,7 +21,7 @@ class Chart extends BaseController
         if ($data['request']['id'] && $id) {
 
 
-            $journalTable = model("Core")->journalTable($id, $journalTableViewId);
+            $journalTable = model("Core")->journalChart($id, $journalTableViewId);
             $customField = $journalTable['journal_custom_field'];
             $x = [];
             $y = [];
@@ -42,7 +42,7 @@ class Chart extends BaseController
                     "iType" => $row['iType'],
                     "check" => model("Core")->select("status", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
                     "fill" => (bool)model("Core")->select("fill", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
-                    
+                    "presence" => $row['presence'],
                     "option" => $option,
                      
                 );
@@ -59,6 +59,7 @@ class Chart extends BaseController
                     "key" => $row['key'],
                     "name" => $row['name'],
                     "iType" => $row['iType'],
+                    "presence" => $row['presence'],
                 );
                 if ($row['iType'] == 'text' || $row['iType'] == 'formula' || $row['iType'] == 'date' || $row['iType'] == 'time' || $row['iType'] == 'select') {
                     array_push($x, $temp);

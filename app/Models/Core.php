@@ -135,6 +135,7 @@ class Core extends Model
 
     function journalTable($id = "", $journalTableViewId = "", $where = "")
     {
+       
         $c = "SELECT *, CONCAT('f',f) AS 'key', '' as showEvalDev 
         FROM journal_custom_field 
         WHERE journalId = '$id' AND presence = 1
@@ -202,7 +203,60 @@ class Core extends Model
         //     $index++;
         // }
         $data = array(
-            "customFieldNo" => $customFieldNo,
+            "customFieldKey" => $customFieldNo,
+            "journal_custom_field" => $journal_custom_field,
+            "detail" => $detail,
+            "archives" => (int)self::select("count(id)","journal_detail","presence = 1 and archives = 1 and journalId = '$id' "),
+        );
+
+        return $data;
+    }
+
+    function journalChart($id = "", $journalTableViewId = "", $where = "")
+    {
+       
+        $c = "SELECT *, CONCAT('f',f) AS 'key', '' as showEvalDev , presence
+        FROM journal_custom_field 
+        WHERE journalId = '$id' 
+        ORDER BY sorting ASC ";
+
+        $journal_custom_field = $this->db->query($c)->getResultArray();
+          
+        $customField = "";
+        $customFieldNo = [];
+        foreach ($journal_custom_field as $r) {
+            $customField .= ", f" . $r['f'];
+            array_push($customFieldNo, "f" . $r['f']);
+        }
+
+
+        $q = "SELECT id, ilock, journalId, archives,  archives as 'historyArchives', false AS 'checkbox' $customField 
+        FROM journal_detail 
+        where journalId = '$id' $where
+        AND presence = 1 order by sorting ASC";
+        $detail = $this->db->query($q)->getResultArray();
+
+        $evaluateFormula = function ($data, $formula) {
+            extract($data);
+            return eval("return $formula;");
+        };
+
+        $index = 0;
+        foreach ($detail as $rec) {
+            $data = [];
+            foreach ($journal_custom_field as $field) {
+                if ($field['iType'] == 'formula') {
+                    foreach (array_keys($rec) as $key) {
+                        $data[$key] = (int) $rec[$key];
+                    }
+                    $detail[$index][$field['key']] = $evaluateFormula($data, $field['eval']);
+                }
+            }
+            $index++;
+        }
+       
+        $data = array(
+            "customFieldKey" => $customFieldNo,
             "journal_custom_field" => $journal_custom_field,
             "detail" => $detail,
             "archives" => (int)self::select("count(id)","journal_detail","presence = 1 and archives = 1 and journalId = '$id' "),

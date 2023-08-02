@@ -10,7 +10,7 @@ import { Title } from '@angular/platform-browser';
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
 declare var $: any;
 
- 
+
 export class NewSelect {
   constructor(
     public value: string,
@@ -43,11 +43,11 @@ export class TableComponent implements OnInit {
   //   console.log("PUSH");
   //   this.reload(this.journalTableViewId);
   // }
-  
+
   leftSide: boolean = true;
 
   fields: any = [];
-   
+
   newCustomField = new NewCustomField("", "text");
   id: string = "";
   journalTableViewId: string = "";
@@ -68,7 +68,7 @@ export class TableComponent implements OnInit {
     data: [],
     label: [],
   }
-  tools : boolean = false;
+  tools: boolean = false;
   detailImageUrl: string = "";
   journalDetailId: string = "";
   startUpTable: boolean = false;
@@ -76,7 +76,11 @@ export class TableComponent implements OnInit {
   detailObject: any = [];
   newSelect = new NewSelect("", "", "", "#393737");
   backgroundColorOption: any = [];
-  archives : number = 0;
+  archives: number = 0;
+  tableFooter: any = [];
+  customFieldKey: any = [];
+  users : any = [];
+
   constructor(
     private titleService: Title,
     private http: HttpClient,
@@ -136,13 +140,12 @@ export class TableComponent implements OnInit {
   httpHeader() {
     this.http.get<any>(environment.api + "Tables/header", {
       headers: this.configService.headers(),
-      params : {
-        id : this.id
+      params: {
+        id: this.id
       }
     }).subscribe(
       data => {
-        console.log("httpHeader", data); 
-        this.customFieldForm = data['customField']; 
+        this.customFieldForm = data['customField'];
       },
       e => {
         console.log(e);
@@ -163,12 +166,18 @@ export class TableComponent implements OnInit {
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
+        this.customFieldKey = data['customFieldKey'];
+
         this.detail = data['detail'];
+
         // this.httpDataFormula();
         this.select = data['select'];
-        if (recalulate == true) {
-          // this.onCalculation();
-        }
+        this.users = data['select'];
+        
+        // if (recalulate == true) {
+        // this.onCalculation();
+        //}
+
         this.startUpTable = true;
         let self = this;
         $(function () {
@@ -202,13 +211,33 @@ export class TableComponent implements OnInit {
             }
           });
         });
+        this.calculationFooter();
       },
       e => {
         console.log(e);
       }
     )
   }
-  
+ 
+  calculationFooter() {
+    let i = 0;
+
+    this.customField.forEach((el: any) => {
+      let value = 0;
+      this.detail.forEach((item: any) => {
+        if (el['iType'] == 'number' || el['iType'] == 'formula') {
+          value += parseFloat(item[el['key']]);
+        }
+      });
+      const total = {
+        key: el['key'],
+        iType: el['iType'],
+        total: parseFloat(value.toFixed(2))
+      }
+      this.tableFooter.push(total)
+    }); 
+  }
+ 
   httpCustomField() {
     this.http.get<any>(environment.api + "Tables/detail", {
       headers: this.configService.headers(),
@@ -234,7 +263,8 @@ export class TableComponent implements OnInit {
     if (newItem['itype'] == 'note') {
       this.detailObject = newItem;
       this.openCanvasRight();
-    } else if (newItem['itype'] == 'editSelect') {
+    } 
+    else if (newItem['itype'] == 'editSelect') {
       this.detailObject = newItem;
       this.newSelect.field = this.detailObject.select.field;
       this.newSelect.journalId = this.detailObject.customField.journalId;
@@ -271,7 +301,8 @@ export class TableComponent implements OnInit {
           }
         });
       });
-    } else {
+    } 
+    else {
 
       this.detail[newItem.index]["f" + newItem.customField.f] = newItem.value;
       if (this.waiting == false) {
@@ -414,9 +445,9 @@ export class TableComponent implements OnInit {
         }
       )
     }
-    if (action == 'unarchives') { 
+    if (action == 'unarchives') {
       const bodyAll = {
-        id : this.id,
+        id: this.id,
       }
       console.log(bodyAll)
       this.http.post<any>(environment.api + "Tables/unarchives", bodyAll, {
@@ -569,7 +600,7 @@ export class TableComponent implements OnInit {
   checkBoxAll(status: boolean = false) {
     if (status == true) {
       this.isCheckBoxAll = true;
-    
+
       // for (let i = 0; i < this.detail.length; i++) {
       //   this.detail[i].checkbox = true;
       // }
@@ -579,7 +610,7 @@ export class TableComponent implements OnInit {
     }
     else if (status == false) {
       this.isCheckBoxAll = false;
-     
+
       // for (let i = 0; i < this.detail.length; i++) {
       //   this.detail[i].checkbox = false;
       // }
@@ -587,18 +618,18 @@ export class TableComponent implements OnInit {
         el.checkbox = false;
       });
     }
-    this.tools = this.isCheckBoxAll ; 
+    this.tools = this.isCheckBoxAll;
   }
 
-  fnTools(){
-    this.tools = false; 
+  fnTools() {
+    this.tools = false;
     this.detail.forEach((el: any) => {
-      if(el.checkbox == true){
-        this.tools = true; 
+      if (el.checkbox == true) {
+        this.tools = true;
         return;
       }
     });
-  }  
+  }
 
   openComponent(componentName: string) {
     if (componentName == 'CustomFieldFormComponent') {
@@ -619,5 +650,13 @@ export class TableComponent implements OnInit {
     }
   }
 
+  fnDetailTotal(x: any) {
+    let objIndex = this.tableFooter.findIndex(((obj: { key: any; }) => obj.key == x.key)); 
+    let value = x.name;
+    if(x.iType == 'number' || x.iType == 'formula'){
+       value = new Intl.NumberFormat('en-US').format(this.tableFooter[objIndex]['total']);
+    }
+    return value ;
+  }
 
 }
