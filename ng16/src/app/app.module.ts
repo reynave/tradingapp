@@ -25,6 +25,7 @@ import { CustomFieldFormComponent } from './template/custom-field-form/custom-fi
 import { BoardViewComponent } from './global/board-view/board-view.component';
 import { ChartjsComponent } from './board/chartjs/chartjs.component';
 import { BoardTitleComponent } from './global/board-title/board-title.component';
+import { ShareBoardComponent } from './template/share-board/share-board.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { BoardTitleComponent } from './global/board-title/board-title.component'
     CustomFieldFormComponent,
     BoardViewComponent,
     ChartjsComponent,
-    BoardTitleComponent
+    BoardTitleComponent,
+    ShareBoardComponent
   ],
   imports: [
     BrowserModule,

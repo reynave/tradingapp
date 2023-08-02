@@ -1,0 +1,70 @@
+<div class="modal-header">
+    <h4>Share "{{item.name}}"</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close();"></button>
+</div>
+<div class="modal-body">
+
+    <div class="row mb-2">
+        <div class="col-12 mb-4">
+            <div>
+                <strong>General access</strong>
+            </div>
+            <div ngbDropdown >
+                <button type="button" class="btn   btn-light " id="dropdownBasic1" ngbDropdownToggle>
+                    <span [innerHTML]="item.fontIcon" class="mx-2"></span> {{item.permission}}
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button ngbDropdownItem (click)="onUpdatePermission(x)" *ngFor="let x of permission">
+                        <span [innerHTML]="x.fontIcon" class="mx-2"></span> {{x.name}}
+                    </button>
+                </div>
+            </div>
+            <div>
+                <small>Only people with access can open with the link</small>
+            </div>
+        </div>
+
+        <div class="col-12 mb-1">
+            <strong> Invite a new member with link</strong>
+        </div>
+    </div>
+
+    <div class="row mb-2" *ngFor="let x of journalAccess">
+       
+        <div class="col-9">
+            <div>
+                <strong> {{x.name}} </strong>{{x.owner == '1' ? "(you)":""}}
+            </div>
+            <small>{{x.email}}</small>
+        </div>
+        <div class="col-3 align-self-center text-end">
+            <span *ngIf="x.owner == '1'">
+                Owner
+            </span>
+            <span *ngIf="x.owner != '1'">
+                <a (click)="onRemoveAccess(x)"> <i class="bi bi-x-circle"></i> </a>
+            </span>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-12 ">
+
+            <input type="email" class="form-control " required placeholder="Add People with email"
+                [(ngModel)]="addUser" (keydown.enter)="onSubmitUser()" #email="ngModel" email>
+            <div [hidden]="email.valid || email.pristine" class="text-danger my-1">
+                Email is required
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-6">
+            <button type="button" class="btn btn-outline-dark rounded-pill"><i class="bi bi-link"></i> Copy
+                Link</button>
+        </div>
+        <div class="col-6 text-end">
+            <button type="button" class="btn btn-dark" (click)="close();">Done</button>
+        </div>
+
+    </div>
+</div>

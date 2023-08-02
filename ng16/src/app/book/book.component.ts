@@ -3,11 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import Chart from 'chart.js/auto';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; 
+import { ShareBoardComponent } from '../template/share-board/share-board.component';
 
 declare var $: any;
 
+export class Hero { 
+  constructor( 
+    public name: string,
+    public permissionId: string,
+    public template: string
+  ) {  }
+}
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
@@ -28,6 +35,8 @@ export class BookComponent implements OnInit {
   editable :any = {
     title : false,
   }
+  model = new Hero("","1","blank");
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private http: HttpClient,
@@ -161,12 +170,11 @@ export class BookComponent implements OnInit {
   }
 
   onCreateNew() {
-    if (this.newJournal != "") {
-
-
+    if (this.model.name != "") {
+ 
       const body = {
         insert: true,
-        name: this.newJournal,
+        model: this.model,
         id: this.id
       }
       this.http.post<any>(environment.api + "journal/onCreateNew", body, {
@@ -174,8 +182,8 @@ export class BookComponent implements OnInit {
       }).subscribe(
         data => {
           console.log(data);
-          this.newJournal = "";
-          //   this.items = data['items'];
+          this.model.name = "";
+          this.modalService.dismissAll();
           this.httpGet();
         },
         e => {
@@ -184,44 +192,11 @@ export class BookComponent implements OnInit {
       )
     }
   }
-
-  onUpdatePermission(x: any) {
-    console.log(x, this.item);
-    const body = {
-      permission: x,
-      item: this.item,
-    }
-    this.http.post<any>(environment.api + "journal/onUpdatePermission", body, {
-      headers: this.configService.headers()
-    }).subscribe(
-      data => {
-        console.log(data);
-        this.item['fontIcon'] = x.fontIcon;
-        this.item['permission'] = x.name;
-
-        this.httpGet();
-      },
-      e => {
-        console.log(e);
-      }
-    )
+ 
+  open(content: any) { 
+    this.modalService.open(content, { size: 'md' }); 
   }
-
-  open(content: any, x: any) {
-    this.item = x;
-    this.http.get<any>(environment.api + "journal/access?journalId=" + x.id, {
-      headers: this.configService.headers()
-    }).subscribe(
-      data => {
-        console.log(data);
-        this.journalAccess = data['journal_access'];
-        this.modalService.open(content, { size: 'md' });
-
-      },
-      e => {
-        console.log(e);
-      }
-    )
+  onSubmit(){
 
   }
 
@@ -268,51 +243,18 @@ export class BookComponent implements OnInit {
     }
     return isDelete;
   }
-
-  onSubmitUser() {
-    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (!this.addUser.match(mailformat)) {
-      alert("Valid email address!");
-    } else {
-      const body = {
-        addUser: this.addUser,
-        item: this.item,
-      }
-      this.http.post<any>(environment.api + "journal/onSubmitUser", body, {
-        headers: this.configService.headers()
-      }).subscribe(
-        data => {
-          console.log(data);
-          this.journalAccess = data['journal_access'];
-          if (data['duplicate'] == true) {
-            alert("Email already join.");
-          }
-          //this.httpGet();
-        },
-        e => {
-          console.log(e);
-        }
-      )
-    }
-
-  }
-
-  onRemoveAccess(x: any) {
-    const body = {
-      access: x,
-      item: this.item,
-    }
-    this.http.post<any>(environment.api + "journal/onRemoveAccess", body, {
-      headers: this.configService.headers()
-    }).subscribe(
-      data => {
+  
+  openComponent(componentName: string, item:any) {
+    if (componentName == 'ShareBoardComponent') {
+      const modalRef = this.modalService.open(ShareBoardComponent, { size: 'md' });
+      modalRef.componentInstance.item = item;
+      modalRef.componentInstance.permission = this.permission;
+  
+      modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log(data);
-        this.journalAccess = data['journal_access'];
-      },
-      e => {
-        console.log(e);
-      }
-    )
+      });
+    }
   }
+
 
 }

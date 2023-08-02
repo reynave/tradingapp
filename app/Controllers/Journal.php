@@ -18,6 +18,7 @@ class Journal extends BaseController
         JOIN account AS a ON a.id = j.accountId
         WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$id'
         ORDER BY ja.sorting ASC, ja.input_date ASC";
+        
         $items = $this->db->query($q1)->getResultArray();
 
         $permission = "SELECT * FROM permission 
@@ -26,13 +27,20 @@ class Journal extends BaseController
 
         $book = "SELECT * FROM book WHERE accountId  = '$accountId' and id = '$id'";
         $book = $this->db->query($book)->getResultArray();
- 
+
         $bookSelect = "SELECT  * from book where presence  = 1 and  accountId = '$accountId' order by sorting ASC, name ASC";
-        $bookSelect = $this->db->query($bookSelect)->getResultArray(); 
+        $bookSelect = $this->db->query($bookSelect)->getResultArray();
+
+        $itemJoin = [];
+        foreach($items as $rec){
+            array_push($itemJoin, array_merge($rec,[
+                "viewId" => model("Core")->select("id","journal_table_view","ilock = 1 and journalId = '".$rec['id']."' order by id ASC "),
+            ]));
+        };
 
         $data = array(
             "error" => false,
-            "items" => $items,
+            "items" => $itemJoin,
             "book" => $book[0],
             "bookSelect" => $bookSelect,
             "permission" => $permission,
@@ -42,22 +50,23 @@ class Journal extends BaseController
         return $this->response->setJSON($data);
     }
 
-    function onChangesBook(){
+    function onChangesBook()
+    {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
         $data = [
             "error" => true,
             "post" => $post,
         ];
-        if ($post ) { 
-            $this->db->table("journal_access")->update([ 
-                "bookId" => $post['book']['id'],    
+        if ($post) {
+            $this->db->table("journal_access")->update([
+                "bookId" => $post['book']['id'],
                 "update_date" => date("Y-m-d H:i:s"),
-                "update_by" => model("Core")->accountId(), 
-            ]," id = '".$post['item']['journal_accessID']."' ");
-             
+                "update_by" => model("Core")->accountId(),
+            ], " id = '" . $post['item']['journal_accessID'] . "' ");
+
             $data = array(
-                "error" => false, 
+                "error" => false,
                 "post" => $post,
             );
 
@@ -91,18 +100,32 @@ class Journal extends BaseController
             "error" => true,
             "post" => $post,
         ];
-        if ($post &&  $post['name'] != "") {
+        if ($post && $post['model']['name'] != "") {
             $this->db->transStart();
             $journalId = model("Core")->number("backtest");
             $this->db->table("journal")->insert([
                 "id" => $journalId,
-                "name" => $post['name'],
+                "name" => $post['model']['name'],
+                "permissionId" => $post['model']['permissionId'],
                 "url" => uniqid(),
-                "borderColor" => "#3AA6B9",
-                "backgroundColor" => "#C1ECE4",
+                "templateCode" => $post['model']['template'],
+                // "borderColor" => "#3AA6B9",
+                // "backgroundColor" => "#C1ECE4",
                 "accountId" => model("Core")->accountId(),
                 "presence" => 1,
                 "version" => 1,
+                "update_date" => date("Y-m-d H:i:s"),
+                "update_by" => model("Core")->accountId(),
+                "input_date" => date("Y-m-d H:i:s"),
+                "input_by" => model("Core")->accountId(),
+            ]);
+            $this->db->table("journal_table_view")->insert([
+                "journalId" => $journalId,
+                "board" => 'table',
+                "name" => 'New Table',
+                "ilock" => 1,
+                "presence" => 1,
+
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
                 "input_date" => date("Y-m-d H:i:s"),
@@ -139,24 +162,25 @@ class Journal extends BaseController
         }
         return $this->response->setJSON($data);
     }
- 
-    function fnEditableChange() {
+
+    function fnEditableChange()
+    {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
         $data = [
             "error" => true,
             "post" => $post,
         ];
-        if ($post &&  $post['book']['name'] != "") {
-              
-            $this->db->table("book")->update([ 
-                "name"          => $post['book']['name'], 
-                "update_date"   => date("Y-m-d H:i:s"),
-                "update_by"     => model("Core")->accountId(), 
-            ]," id = '".$post['book']['id']."' AND ilock = 0 AND accountId = '".model("Core")->accountId()."' ");
-             
+        if ($post && $post['book']['name'] != "") {
+
+            $this->db->table("book")->update([
+                "name" => $post['book']['name'],
+                "update_date" => date("Y-m-d H:i:s"),
+                "update_by" => model("Core")->accountId(),
+            ], " id = '" . $post['book']['id'] . "' AND ilock = 0 AND accountId = '" . model("Core")->accountId() . "' ");
+
             $data = array(
-                "error" => false, 
+                "error" => false,
             );
 
         }
@@ -317,7 +341,7 @@ class Journal extends BaseController
                 "presence" => 4,
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
-            ], "id = '" . $post['access']['id'] . "' and accountId = '" .$post['access']['accountId']  . "' ");
+            ], "id = '" . $post['access']['id'] . "' and accountId = '" . $post['access']['accountId'] . "' ");
 
             $q1 = "SELECT ja.*, a.name, a.email
             FROM journal_access AS ja
@@ -327,8 +351,8 @@ class Journal extends BaseController
             $journal_access = $this->db->query($q1)->getResultArray();
 
             $data = [
-                "error" => false, 
-                "post" =>$post,
+                "error" => false,
+                "post" => $post,
                 "journal_access" => $journal_access,
             ];
 

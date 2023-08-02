@@ -1,7 +1,7 @@
 <app-header (sendToParent)="onChild($event)" [item]="updateHeader()"></app-header>
 
-<div class="body-margin-top"> 
-    
+<div class="body-margin-top">
+
     <div class="container-fluid ">
         <div class="bg-white p-3 rounded shadow-md border">
 
@@ -27,7 +27,7 @@
 
 
                                     <th>Title</th>
-                                    <th>Version</th>
+                                    <th>Template</th>
                                     <th>Color </th>
                                     <th>Update Date</th>
                                     <th>Owner</th>
@@ -48,14 +48,12 @@
                                         </span>
                                     </td>
 
-
                                     <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
-                                        <a [routerLink]="[ '/backtest', x.id ]">{{x.name}}</a>
+                                        <a  class="text-primary"  [routerLink]="[ '/board/table/', x.id, x.viewId ]"><b>{{x.name}}</b></a>
                                     </td>
 
-                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.version}}
+                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.templateCode}}
                                     </td>
-
 
 
                                     <td>
@@ -65,9 +63,7 @@
                                             Bin</span>
                                     </td>
 
-                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.update_date
-                                        |
-                                        date:'medium'}}
+                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.update_date  | date:'medium'}}
                                     </td>
 
                                     <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}"> {{x.ownBy}}
@@ -83,8 +79,7 @@
                                             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                                                 <button ngbDropdownItem *ngFor="let n of bookSelect"
                                                     (click)="onChangesBook(n, x);">
-                                                    <span *ngIf="book.id == n.id"> <i class="bi bi-check2-square"></i>
-                                                    </span>
+                                                    <span *ngIf="book.id == n.id"> <i class="bi bi-check2-square"></i> </span>
                                                     <span *ngIf="book.id != n.id"> <i class="bi bi-square"></i> </span>
                                                     <span class="mx-1"> {{n.name}}</span>
                                                 </button>
@@ -93,9 +88,10 @@
                                     </td>
 
                                     <td width="40px">
+
                                         <span *ngIf="itemSetting(x)">
-                                            <a (click)="open(content,x)" class="mx-1"> <i class="bi bi-person-plus"></i>
-                                            </a>
+                                            <a (click)="openComponent('ShareBoardComponent',x)" class="mx-1"> <i
+                                                    class="bi bi-person-plus"></i></a>
                                         </span>
                                     </td>
 
@@ -109,18 +105,7 @@
                                         </span>
                                     </td>
 
-                                </tr>
-
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td colspan="3">
-                                        <input type="text" class="form-control form-control-sm"
-                                            (keyup.enter)="onCreateNew()" [(ngModel)]="newJournal"
-                                            placeholder="+ Add Journal">
-                                    </td>
-                                    <td colspan="17"></td>
-                                </tr>
+                                </tr> 
                             </tbody>
 
                         </table>
@@ -129,8 +114,11 @@
                         <button type="button" (click)="fnClearTrashBin();" class="btn btn-warning mx-1">Clear Trash bin
                         </button>
                         <button type="button" (click)="fnDeleteAll();" class="btn btn-danger mx-1">Delete </button>
-                        <button type="button" (click)="onCreateNew();" class="btn btn-primary mx-1">New
-                            backtest</button>
+                         
+
+                        <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Launch demo
+                            modal</button>
+
                     </div>
                 </div>
 
@@ -138,81 +126,49 @@
 
             </div>
         </div>
-    </div> 
+    </div>
 
 </div>
-
-
 <ng-template #content let-modal>
-    <div class="modal-header">
-        <h4>Share "{{item.name}}"</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-
-        <div class="row mb-2">
-            <div class="col-12 mb-4">
-                <div>
-                    <strong>General access</strong>
-                </div>
-                <div ngbDropdown class="d-inline-block">
-                    <button type="button" class="btn btn-sm  " id="dropdownBasic1" ngbDropdownToggle>
-                        <span [innerHTML]="item.fontIcon" class="mx-2"></span> {{item.permission}}
-                    </button>
-                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                        <button ngbDropdownItem (click)="onUpdatePermission(x)" *ngFor="let x of permission">
-                            <span [innerHTML]="x.fontIcon" class="mx-2"></span> {{x.name}}
-                        </button>
-                    </div>
-                </div>
-                <div>
-                    <small>Only people with access can open with the link</small>
-                </div>
-            </div>
-
-            <div class="col-12 mb-2">
-                <strong> People with access</strong>
-            </div>
+    <form (ngSubmit)="onCreateNew()" #heroForm="ngForm">
+        <div class="modal-header">
+            <div class="modal-title" id="modal-basic-title">Add Journal</div>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
-
-        <div class="row mb-2" *ngFor="let x of journalAccess">
-
-            <div class="col-9">
-                <div>
-                    <strong> {{x.name}} </strong>{{x.owner == '1' ? "(you)":""}}
+        <div class="modal-body">
+            <form>
+                <div class="mb-3">
+                    <label for="name" class="mb-1">Journal Name</label>
+                    <input id="name" class="form-control" required [(ngModel)]="model.name" name="name"
+                        #name="ngModel" />
+                    <small [hidden]="name.valid || name.pristine" class="text-danger">
+                        Name is required
+                    </small>
                 </div>
-                <small>{{x.email}}</small>
-            </div>
-            <div class="col-3 align-self-center text-end">
-                <span *ngIf="x.owner == '1'">
-                    Owner
-                </span>
-                <span *ngIf="x.owner != '1'">
-                    <a (click)="onRemoveAccess(x)"> <i class="bi bi-x-circle"></i> </a>
-                </span>
-            </div>
-        </div>
-        <div class="row my-3">
-            <div class="col-12 ">
 
-                <input type="email" class="form-control " required placeholder="Add People with email"
-                    [(ngModel)]="addUser" (keydown.enter)="onSubmitUser()" #email="ngModel" email>
-                <div [hidden]="email.valid || email.pristine" class="text-danger my-1">
-                    Email is required
+                <div class="mb-3">
+                    <label for="access" class="mb-1">General Access</label>
+                    <select id="permissionId" class="form-control" required [(ngModel)]="model.permissionId"
+                        name="permissionId" #permissionId="ngModel">
+                        <option *ngFor="let x of permission" [value]="x.id">{{x.name}}</option>
+                    </select>
                 </div>
-            </div>
+
+                <div class="mb-3">
+                    <label for="template" class="mb-1">Select Tamplate</label>
+                    <select id="template" class="form-control" required [(ngModel)]="model.template" name="template"
+                        #template="ngModel">
+                        <option value="blank" selected>Blank</option>
+                        <option value="backtest">Backtest Trading</option>
+                        <option value="journalTrading">Journal Trading</option>
+
+                    </select>
+                </div>
+            </form>
         </div>
-
-        <div class="row mt-4">
-            <div class="col-6">
-                <button type="button" class="btn btn-outline-dark rounded-pill"><i class="bi bi-link"></i> Copy
-                    Link</button>
-            </div>
-            <div class="col-6 text-end">
-                <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Done</button>
-            </div>
-
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close </button>
+            <button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid">Submit</button>
         </div>
-    </div>
-
+    </form>
 </ng-template>
