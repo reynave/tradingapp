@@ -35,7 +35,8 @@ export class BookComponent implements OnInit {
   editable :any = {
     title : false,
   }
-  model = new Hero("","1","blank");
+  templatejson : any = [];
+  model = new Hero("","1","general");
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -93,6 +94,7 @@ export class BookComponent implements OnInit {
         this.items = data['items']; 
         this.book = data['book'];
         this.bookSelect = data['bookSelect'];
+        this.templatejson = data['templatejson'];
         var self = this;
         $(function () {
           $(".sortable").sortable({

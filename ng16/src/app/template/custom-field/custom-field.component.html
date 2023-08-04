@@ -107,7 +107,7 @@
 
 <div *ngIf=" item['itype']=='formula'">
     <div class="p-1 {{'text-'+childItem['customField']['textAlign']}} " [ngClass]="{'disabled': item['ilock'] == true}">
-        <small>{{isNumber(childItem['value'])}}</small>
+        <small><b>{{isNumber(childItem['value'])}}</b></small>
     </div>
 </div>
 

@@ -18,7 +18,7 @@ class Journal extends BaseController
         JOIN account AS a ON a.id = j.accountId
         WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$id'
         ORDER BY ja.sorting ASC, ja.input_date ASC";
-        
+
         $items = $this->db->query($q1)->getResultArray();
 
         $permission = "SELECT * FROM permission 
@@ -32,11 +32,15 @@ class Journal extends BaseController
         $bookSelect = $this->db->query($bookSelect)->getResultArray();
 
         $itemJoin = [];
-        foreach($items as $rec){
-            array_push($itemJoin, array_merge($rec,[
-                "viewId" => model("Core")->select("id","journal_table_view","ilock = 1 and journalId = '".$rec['id']."' order by id ASC "),
+        foreach ($items as $rec) {
+            array_push($itemJoin, array_merge($rec, [
+                "viewId" => model("Core")->select("id", "journal_table_view", "ilock = 1 and journalId = '" . $rec['id'] . "' order by id ASC "),
             ]));
-        };
+        } 
+
+        $templatejson = "SELECT  * FROM template WHERE presence  = 1  order by id ASC, name ASC";
+        $templatejson = $this->db->query($templatejson)->getResultArray();
+
 
         $data = array(
             "error" => false,
@@ -45,6 +49,7 @@ class Journal extends BaseController
             "bookSelect" => $bookSelect,
             "permission" => $permission,
             "header" => model("Core")->header(),
+            "templatejson" => $templatejson,
             "q1" => $q1,
         );
         return $this->response->setJSON($data);
@@ -103,6 +108,7 @@ class Journal extends BaseController
         if ($post && $post['model']['name'] != "") {
             $this->db->transStart();
             $journalId = model("Core")->number("backtest");
+
             $this->db->table("journal")->insert([
                 "id" => $journalId,
                 "name" => $post['model']['name'],
@@ -119,13 +125,13 @@ class Journal extends BaseController
                 "input_date" => date("Y-m-d H:i:s"),
                 "input_by" => model("Core")->accountId(),
             ]);
+
             $this->db->table("journal_table_view")->insert([
                 "journalId" => $journalId,
                 "board" => 'table',
                 "name" => 'New Table',
                 "ilock" => 1,
                 "presence" => 1,
-
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
                 "input_date" => date("Y-m-d H:i:s"),
@@ -147,6 +153,40 @@ class Journal extends BaseController
                 "input_date" => date("Y-m-d H:i:s"),
                 "input_by" => model("Core")->accountId(),
             ]);
+
+            $this->db->table("journal_detail")->insert([
+                "journalId" => $journalId,
+                "presence" => 1,
+                "sorting" => 1,
+                "update_date" => date("Y-m-d H:i:s"),
+                "update_by" => model("Core")->accountId(),
+                "input_date" => date("Y-m-d H:i:s"),
+                "input_by" => model("Core")->accountId(),
+            ]);
+
+            if($post['model']['template'] != "" )
+            $path = './template/master/'.$post['model']['template'].'.json';
+            $jsonString = file_get_contents($path);
+            $jsonData = json_decode($jsonString, true);
+            $i = 0;
+            foreach($jsonData['field'] as $rec){
+                $i++;
+                $this->db->table("journal_custom_field")->insert([
+                    "journalId"=> $journalId,
+                    "f" => $rec['f'],
+                    "name" => $rec['name'],
+                    "iType" => $rec['iType'], 
+                    "width" => 150,
+                    "eval" => $rec['iType'] == 'formula' ? $rec['eval'] : "",
+                    "sorting" => $i,
+                    "input_date" => date("Y-m-d H:i:s")
+                ]);
+            }
+             $this->db->table("journal_detail")->insert([
+                    "journalId"=> $journalId, 
+                    "input_date" => date("Y-m-d H:i:s")
+                ]);
+
             $this->db->transComplete();
             if ($this->db->transStatus() === false) {
                 $this->db->transRollback();
@@ -403,5 +443,13 @@ class Journal extends BaseController
         ];
 
         return $this->response->setJSON($data);
+    }
+
+    function jsonfile()
+    {
+        $path = './template/master/backtest.json';
+        $jsonString = file_get_contents($path);
+        $jsonData = json_decode($jsonString, true);
+        return $this->response->setJSON($jsonData);
     }
 }

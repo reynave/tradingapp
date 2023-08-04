@@ -5,6 +5,7 @@ import { ConfigService } from 'src/app/service/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Output, EventEmitter } from '@angular/core'; 
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-board-view',
@@ -21,10 +22,13 @@ export class BoardViewComponent implements OnInit {
     private configService: ConfigService, 
     private ativatedRoute: ActivatedRoute,
     private router: Router,
-    config: NgbDropdownConfig
+    private modalService: NgbModal,
+    configDropdown: NgbDropdownConfig,
+    config: NgbModalConfig,
   ) {
-    config.placement = 'bottom-end';
-	 
+   // configDropdown.placement = 'bottom-end';
+    config.backdrop = 'static';
+		config.keyboard = false;
    }
 
   ngOnInit(): void {
@@ -72,9 +76,11 @@ export class BoardViewComponent implements OnInit {
       data => {
         
         this.httpGet();
+        this.modalService.dismissAll();
       },
       e => {
         console.log(e);
+        this.modalService.dismissAll();
       }
     )
   }
@@ -95,6 +101,7 @@ export class BoardViewComponent implements OnInit {
       }
     )
   }
+  
   delete(x:any){
     const body ={
       item: x,  
@@ -108,11 +115,16 @@ export class BoardViewComponent implements OnInit {
         if(x.id == this.journalTableViewId){
           this.goToView(data);
         }
+        this.modalService.dismissAll();
       },
       e => {
         console.log(e);
+        this.modalService.dismissAll();
       }
     )
   }
 
+  open(content: any) {
+		this.modalService.open(content);
+	}
 }

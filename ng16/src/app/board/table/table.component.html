@@ -109,8 +109,7 @@
                         <div class="col-11">
                             <div class="d-flex">
                                 <div class="me-2">
-                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New
-                                        Task</button>
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New  Task</button>
                                 </div>
 
                                 <div class="me-2">
@@ -169,6 +168,7 @@
                     <div class="tables-body " *ngIf="startUpTable">
                         <div class="sticky-top border-bottom">
                             <div class="d-flex tables-header-td bg-white">
+
                                 <div class="floating-div bg-white  border-start">
                                     <div class="py-1 px-3">
                                         <i class="bi bi-check-square-fill text-primary" *ngIf="isCheckBoxAll"
@@ -176,12 +176,15 @@
                                         <i class="bi bi-square" *ngIf="!isCheckBoxAll" (click)="checkBoxAll(true)"></i>
                                     </div>
                                 </div>
+
                                 <div class=" order-{{n.sorting}} bg-white "
                                     *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
                                     <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
                                         <b>{{n.name}}</b>
-                                        <span *ngIf="n.iType === 'formula'" class="mx-1">
-                                            <button class="btn btn-sm btn-light py-0"><i class="bi bi-pen"></i></button>
+                                        <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top" ngbTooltip="{{n.eval}}" container="body">
+                                            <button class="btn btn-sm btn-light py-0">
+                                                <img src="./assets/icon/formula-30.png" height="20px">
+                                            </button>
                                         </span>
                                     </div>
                                 </div>
@@ -233,7 +236,8 @@
                                 <div class=" order-{{n.sorting}} bg-light border-bottom "
                                     *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
                                     <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}"> 
-                                        {{fnDetailTotal(n) }}
+                                        <!-- {{fnDetailTotal(n) }} -->
+                                        {{n.total}}
                                     </div>
                                 </div>
                             </div>
@@ -247,7 +251,7 @@
         </div>
     </div>
 </div>
-
+{{customField | json}}
 
 
 <ng-template #canvasRight let-offcanvas>

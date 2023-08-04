@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 :root{
     --font-manrope : 'Manrope', sans-serif;
-    --bg-body-1:#D7EAEA;
+    --bg-body-1:#D7EAEA; 
+    
     --color-white: #fff;
     --color-light-1: #ecf8ef; 
     --body-margin-top: 40px;
@@ -47,13 +48,24 @@
 *::-webkit-scrollbar-thumb:active {
   background-color:var(--scroll-color-active); 
 }
- 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 html{
     font-size: 14px; 
 }
 code{
     font-size: 0.7rem;
 }
+
+.bg-blur{
+  transition: opacity 150ms ease-out 0s;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);  
+}
+
 .body-margin-top{
     margin-top: var(--body-margin-top);
 }

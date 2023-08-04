@@ -128,7 +128,7 @@ export class ChartjsComponent implements OnInit {
         this.journalChart.xAxis = data['journal_chart']['xaxis'];
         this.journalChart.idWhere = data['journal_chart']['idWhere'];
 
-        this.detail = data['detail'];
+        //this.detail = data['detail'];
         this.x = data['x'];
         this.y = data['y'];
         this.iWhere = data['iWhere'];

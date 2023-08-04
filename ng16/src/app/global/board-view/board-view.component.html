@@ -29,10 +29,10 @@
                             </div>
                         </div>
                         <div class="mb-2 ">
-                            <button class="btn bg-primary text-center text-white" ngbDropdownItem (click)="update(x)"><i class="bi bi-cloud-upload me-1"></i> Update</button>
+                            <button class="btn bg-primary text-center text-white" ngbDropdownItem (click)="update(x);"><i class="bi bi-cloud-upload me-1"></i> Update</button>
                         </div>
                         <div class="mb-2">
-                            <button class="btn bg-danger text-center text-white" ngbDropdownItem (click)="delete(x)"><i class="bi bi-trash me-1"></i> Delete</button>
+                            <button class="btn bg-danger text-center text-white" ngbDropdownItem (click)="delete(x);open(content)"><i class="bi bi-trash me-1"></i> Delete</button>
                         </div>
                     </div>
                 </div>
@@ -54,16 +54,15 @@
                             <small>Add Board View</small>
                         </div>
                         <div class="list-group list-group-flush">
-                            <button type="button" (click)="addView('table')" ngbDropdownItem
+                            <button type="button" (click)="addView('table');open(content)" ngbDropdownItem
                                 class="list-group-item list-group-item-action"><i class="bi bi-table me-3"></i>
                                 Table</button>
-                            <button type="button" (click)="addView('chart')" class="list-group-item list-group-item-action"><i
-                                    class="bi bi-graph-up  me-3"></i> Chart</button>
-                            <button type="button" class="list-group-item list-group-item-action disabled"><i
-                                    class="bi bi-kanban-fill  me-3"></i> Kanban</button>
+                            <button type="button" (click)="addView('chart');open(content)" ngbDropdownItem
+                                class="list-group-item list-group-item-action"><i  class="bi bi-graph-up  me-3"></i> 
+                                Chart</button>
+                            <!-- <button type="button" class="list-group-item list-group-item-action disabled"><i  class="bi bi-kanban-fill  me-3"></i> Kanban</button>
 
-                            <button type="button" class="list-group-item list-group-item-action"><i
-                                    class="bi bi-pencil-square me-3"></i> Form</button>
+                            <button type="button" class="list-group-item list-group-item-action"><i   class="bi bi-pencil-square me-3"></i> Form</button>
                             <button type="button" class="list-group-item list-group-item-action "><i
                                     class="bi bi-check2-square me-3"></i> Check List</button>
 
@@ -71,7 +70,7 @@
                                     class="bi bi-calendar2-range me-3"></i> Gantt Chart</button>
 
                             <button type="button" class="list-group-item list-group-item-action disabled"><i
-                                    class="bi bi-calendar3 me-3"></i> Calendar</button>
+                                    class="bi bi-calendar3 me-3"></i> Calendar</button> -->
 
                         </div>
                     </div>
@@ -81,3 +80,19 @@
         </div>
     </div>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+   
+ 
+	<div class="modal-body">
+        <div class="row"> 
+            <div class="col-12 text-center my-5">
+                <img src="./assets/gif/giphy-loading.gif" width="40%" class="mb-4">
+                <h4>is being made..</h4>
+                <p>Let our robot create new board for you!</p>
+            </div>
+        </div>
+	
+	</div>
+	 
+</ng-template>

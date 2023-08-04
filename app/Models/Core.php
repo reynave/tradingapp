@@ -135,8 +135,8 @@ class Core extends Model
 
     function journalTable($id = "", $journalTableViewId = "", $where = "")
     {
-       
-        $c = "SELECT *, CONCAT('f',f) AS 'key', '' as showEvalDev 
+
+        $c = "SELECT *, CONCAT('f',f) AS 'key', '' as showEvalDev , '' as 'total'
         FROM journal_custom_field 
         WHERE journalId = '$id' AND presence = 1
         ORDER BY sorting ASC ";
@@ -206,7 +206,7 @@ class Core extends Model
             "customFieldKey" => $customFieldNo,
             "journal_custom_field" => $journal_custom_field,
             "detail" => $detail,
-            "archives" => (int)self::select("count(id)","journal_detail","presence = 1 and archives = 1 and journalId = '$id' "),
+            "archives" => (int) self::select("count(id)", "journal_detail", "presence = 1 and archives = 1 and journalId = '$id' "),
         );
 
         return $data;
@@ -214,14 +214,14 @@ class Core extends Model
 
     function journalChart($id = "", $journalTableViewId = "", $where = "")
     {
-       
+
         $c = "SELECT *, CONCAT('f',f) AS 'key', '' as showEvalDev , presence
         FROM journal_custom_field 
         WHERE journalId = '$id' 
         ORDER BY sorting ASC ";
 
         $journal_custom_field = $this->db->query($c)->getResultArray();
-          
+
         $customField = "";
         $customFieldNo = [];
         foreach ($journal_custom_field as $r) {
@@ -254,12 +254,12 @@ class Core extends Model
             }
             $index++;
         }
-       
+
         $data = array(
             "customFieldKey" => $customFieldNo,
             "journal_custom_field" => $journal_custom_field,
             "detail" => $detail,
-            "archives" => (int)self::select("count(id)","journal_detail","presence = 1 and archives = 1 and journalId = '$id' "),
+            "archives" => (int) self::select("count(id)", "journal_detail", "presence = 1 and archives = 1 and journalId = '$id' "),
         );
 
         return $data;
@@ -267,8 +267,8 @@ class Core extends Model
     function journalTableFormula($id = "", $journalTableViewId = "", $evalDev = "", $f = "")
     {
         $c = "SELECT *, CONCAT('f',f) AS 'key'  FROM journal_custom_field WHERE  journalId = '$id' ORDER BY sorting ASC ";
-        $journal_custom_field = $this->db->query($c)->getResultArray() ;
-        
+        $journal_custom_field = $this->db->query($c)->getResultArray();
+
         $customField = "";
         $customFieldNo = [];
         foreach ($journal_custom_field as $r) {
@@ -292,21 +292,22 @@ class Core extends Model
             }
         };
 
-        $index = 0; $detailEval = [];
+        $index = 0;
+        $detailEval = [];
         foreach ($detail as $rec) {
             $data = [];
             foreach ($journal_custom_field as $field) {
-                if ($field['iType'] == 'formula' && $field['key'] == $f ) {
+                if ($field['iType'] == 'formula' && $field['key'] == $f) {
                     foreach (array_keys($rec) as $key) {
                         $data[$key] = (int) $rec[$key];
-                    } 
-                    $detailEval[$index][$field['key']] = $evaluateFormula($data,  $evalDev);
-                    
+                    }
+                    $detailEval[$index][$field['key']] = $evaluateFormula($data, $evalDev);
+
                 }
             }
             $index++;
         }
-        
+
         // $data = array(  
         //     "detailEval" =>$detailEval
         // );
@@ -314,14 +315,41 @@ class Core extends Model
         return $detailEval;
     }
 
-    function chartJsData($journal_chart, $detail, $y)
+    function chartJsDataDEL($journal_chart, $detail, $y, $iWhere)
     {
         $datasets = [];
         $labels = [];
-        foreach ($detail as $row) {
-            //echo $row[$journal_chart['xaxis']];
-            array_push($labels, $row[$journal_chart['xaxis']]);
+
+
+        // Xaxis | LABELS
+        if ($journal_chart['xaxis'] != null) {
+            foreach ($detail as $rec) {
+                //echo $row[$journal_chart['xaxis']];
+                $input = false;
+
+
+                foreach ($journal_chart['idWhere'] as $whereKey) {
+                    foreach ($iWhere as $w) {
+                        if ($whereKey == $w['key']) {
+                            foreach ($w['option'] as $opt) {
+                                if ($rec[$whereKey] == $opt['id'] && $opt['checkbox'] == '1') {
+                                    $input = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                if ($input == true || count($journal_chart['idWhere']) == 0) {
+                    array_push($labels, $rec[$journal_chart['xaxis']]);
+                }
+
+            }
         }
+
+        // Yaxix  | DATASETS
+        $idSelect = [];
         foreach ($journal_chart['yaxis'] as $row) {
             if ($row['status'] == '1') {
 
@@ -332,22 +360,130 @@ class Core extends Model
                 // }
                 $label = $row['value'];
                 foreach ($y as $src) {
-                    if($src['key'] == $row['value']){
+
+                    if ($src['key'] == $row['value']) {
+                        $label = $src['name'];
+                        break;
+                    }
+                }
+
+                $data = [];
+                foreach ($detail as $rec) {
+                    $input = false;
+                    // foreach( $journal_chart['idWhere'] as  $whereKey ){
+                    //     if($rec[$whereKey] == '23'){
+                    //         $input = true;
+                    //     } 
+                    // }
+
+                    foreach ($journal_chart['idWhere'] as $whereKey) {
+                        foreach ($iWhere as $w) {
+                            if ($whereKey == $w['key']) {
+                                foreach ($w['option'] as $opt) {
+                                    if ($rec[$whereKey] == $opt['id'] && $opt['checkbox'] == '1') {
+                                        $input = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+
+                    if ($input == true || count($journal_chart['idWhere']) == 0) {
+                        array_push($data, (float) $rec[$row['value']]);
+
+                    }
+
+                }
+
+                $dataDetail = array(
+                    "key" => $row['value'],
+                    "label" => $label,
+                    "data" => $data,
+                    "idSelect" => $idSelect,
+                    "fill" => (bool) $row['fill'],
+                );
+                array_push($datasets, $dataDetail);
+            }
+        }
+
+        // SAMPLE
+        // $dataDetail = array(
+        //     "label" => "data Lable 1",
+        //     "data" => [0, -21, -43, -64, 20, -1, -23, -45, 39, 123, 102, 80],
+        //     "fill" => false,
+        // );
+
+        // array_push($datasets , $dataDetail); 
+
+        $obj = array(
+            "labels" => $labels,
+            "datasets" => $datasets
+        );
+        return $obj;
+    }
+    function chartJsData($journal_chart, $detail, $y, $selectWhereOption)
+    {
+        $datasets = [];
+        $labels = [];
+        // Xaxis
+        foreach ($detail as $rec) {
+            $insert = false;
+            if (count($selectWhereOption) > 0) {
+                foreach ($selectWhereOption as $opt) {
+                    if ($rec[$opt['field']] == $opt['id'] && $opt['checkbox'] == '1') {
+                        $insert = true;
+                    }
+                }
+            } else {
+                $insert = true;
+            }
+
+            if ($insert == true) {
+                array_push($labels, $rec[$journal_chart['xaxis']]);
+            }
+        }
+        //YAXIS
+        foreach ($journal_chart['yaxis'] as $row) {
+            if ($row['status'] == '1') {
+
+                // $yItem = [];
+                // foreach($detail as $rec){
+                //     //echo $row[$journal_chart['xaxis']];
+                //     array_push($yItem,$row['value']);
+                // }
+                $label = $row['value'];
+                foreach ($y as $src) {
+                    if ($src['key'] == $row['value']) {
                         $label = $src['name'];
                         break;
                     }
                 }
                 $data = [];
                 foreach ($detail as $rec) {
-                    //echo $row[$journal_chart['xaxis']];
-                    array_push($data, (float)$rec[$row['value']]);
+                    $insert = false;
+                    if (count($selectWhereOption) > 0) {
+                        foreach ($selectWhereOption as $opt) {
+                            if ($rec[$opt['field']] == $opt['id'] && $opt['checkbox'] == '1') {
+                                $insert = true;
+                            }
+                        }
+                    }else{
+                        $insert = true;
+                    }
+
+                    if ($insert == true) {
+                        array_push($data, (float) $rec[$row['value']]);
+                    }
+
                 }
-               
+
                 $dataDetail = array(
                     "key" => $row['value'],
                     "label" => $label,
                     "data" => $data,
-                    "fill" => (bool)$row['fill'], 
+                    "fill" => (bool) $row['fill'],
                 );
                 array_push($datasets, $dataDetail);
             }
@@ -363,7 +499,8 @@ class Core extends Model
 
         $obj = array(
             "labels" => $labels,
-            "datasets" => $datasets
+            "datasets" => $datasets,
+            "selectWhereOption" => $selectWhereOption,
         );
         return $obj;
     }

@@ -32,19 +32,46 @@ class Chart extends BaseController
                 $q1 = "SELECT a.id, a.value, IF(s.status = 1, TRUE, FALSE) as checkbox  , a.field
                 FROM journal_select AS a 
                 LEFT JOIN journal_chart_where_select AS s ON s.journalSelectId = a.id
-                WHERE   a.presence = 1   and a.field = '" . $row['key'] . "'
+                WHERE   a.presence = 1   and a.field = '" . $row['key'] . "'  AND  s.journalTableViewId = $journalTableViewId 
                 ORDER BY a.sorting ASC";
                 $option = $this->db->query($q1)->getResultArray();
+
+
+                if(count($option) < 1 ){
+                    
+                    $q2 = "SELECT * 
+                    FROM journal_select
+                    WHERE  presence = 1  AND field = '" . $row['key'] . "' and journalId = '".$id."'
+                    ORDER BY sorting ASC";
+                    $optionMaster = $this->db->query($q2)->getResultArray();
+
+                    foreach($optionMaster  as $res){
+                        $this->db->table('journal_chart_where_select')->insert([
+                            "journalTableViewId" => $journalTableViewId,
+                            "journalSelectId" => $res['id'],
+                            "status" => 0,
+                            "presence" =>1, 
+                        ]);
+                        
+                    }
+                    $q1 = "SELECT a.id, a.value, IF(s.status = 1, TRUE, FALSE) as checkbox  , a.field
+                    FROM journal_select AS a 
+                    LEFT JOIN journal_chart_where_select AS s ON s.journalSelectId = a.id
+                    WHERE   a.presence = 1   and a.field = '" . $row['key'] . "'  AND  s.journalTableViewId = $journalTableViewId 
+                    ORDER BY a.sorting ASC";
+                    $option = $this->db->query($q1)->getResultArray();
+                }
+
 
                 $temp = array(
                     "key" => $row['key'],
                     "name" => $row['name'],
                     "iType" => $row['iType'],
                     "check" => model("Core")->select("status", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
-                    "fill" => (bool)model("Core")->select("fill", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
+                    "fill" => (bool) model("Core")->select("fill", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
                     "presence" => $row['presence'],
                     "option" => $option,
-                     
+
                 );
 
                 if ($row['iType'] == 'number' || $row['iType'] == 'formula') {
@@ -80,12 +107,21 @@ class Chart extends BaseController
             $yaxis = $this->db->query($q1)->getResultArray();
 
             $journal_chart = [
-                "chartjsTypeId" => $chartjsTypeId,
-                "xaxis" => $xaxis,
+                "chartjsTypeId" => $chartjsTypeId ? $chartjsTypeId : 0,
+                "xaxis" => $xaxis != null ? $xaxis : "",
                 "yaxis" => $yaxis,
                 "idWhere" => $idWhere ? $idWhere : "",
             ];
-
+            $selectWhereOption = [];
+            foreach($iWhere as $k){
+                if($k['key']  == $journal_chart['idWhere']){
+                    $selectWhereOption = $k['option'];
+                }
+            }
+            $startup = true;
+            if($journal_chart['xaxis'] != ""){
+                $startup = false;
+            }
             $data = array(
                 "error" => false,
                 "id" => $id,
@@ -93,10 +129,14 @@ class Chart extends BaseController
                 "y" => $y,
                 "typeOfChart" => $typeOfChart,
                 "iWhere" => $iWhere,
-                "chartJsData" => model("Core")->chartJsData($journal_chart, $journalTable['detail'], $y),
-                "detail" => $journalTable['detail'],
                 "journal_chart" => $journal_chart,
-                "request" => $this->request->getVar()
+                "selectWhereOption" => $selectWhereOption,
+                //"c" => count($journal_chart['idWhere']),
+
+                 "chartJsData" => $startup == false ? model("Core")->chartJsData($journal_chart, $journalTable['detail'], $y,$selectWhereOption) : [],
+               
+                
+                "detail" => $journalTable['detail'],
             );
 
 
@@ -185,12 +225,13 @@ class Chart extends BaseController
 
             //  iWhere
             $id_journal_chart_where = model("Core")->select("id", "journal_chart_where", "presence = 1 and  journalTableViewId = '" . $post['journalTableViewId'] . "'  and presence = 1 ");
+  
             if (!$id_journal_chart_where) {
                 $this->db->table("journal_chart_where")->insert([
                     "journalTableViewId" => $post['journalTableViewId'],
                     "presence" => 1,
                     "status" => 1,
-                    "value" => isset($post['journalChart']['idWhere']) ? $post['journalChart']['idWhere'] : "",
+                    "value" => $post['journalChart']['idWhere'],
                     "update_date" => date("Y-m-d H:i:s"),
                     "update_by" => model("Core")->accountId(),
                     "input_date" => date("Y-m-d H:i:s"),
@@ -204,8 +245,35 @@ class Chart extends BaseController
                     "update_date" => date("Y-m-d H:i:s"),
                     "update_by" => model("Core")->accountId(),
                 ], " id =  $id_journal_chart_where ");
-            }
+            } 
 
+            // $this->db->table("journal_chart_where_select")->update([
+            //     "presence" => 0,
+            // ], " journalTableViewId = '" . $post['journalTableViewId'] . "' ");
+ 
+            // foreach ($post['journalChart']['whereOption'] as $row) {
+            //     $id1 = model("Core")->select(
+            //         "id",
+            //         "journal_chart_where_select",
+            //         "journalTableViewId = '" . $post['journalTableViewId'] . "' and journalSelectId = '" . $row['id'] . "'"
+            //     );
+            //     if ($id1) {
+            //         $this->db->table("journal_chart_where_select")->update([
+            //             "journalTableViewId" => $post['journalTableViewId'],
+            //             "journalSelectId" => $row['id'],
+            //             "status" => $row['checkbox'] == true ? 1 : 0,
+            //             "presence" => 1,
+            //         ], " id = $id1 ");
+            //     } else {
+            //         $this->db->table("journal_chart_where_select")->insert([
+            //             "journalTableViewId" => $post['journalTableViewId'],
+            //             "journalSelectId" => $row['id'],
+            //             "presence" => 1,
+            //             "status" => $row['checkbox'] == true ? 1 : 0,
+            //         ]);
+            //     }
+
+            // }
             $this->db->table("journal_chart_where_select")->delete([
                 "journalTableViewId" => $post['journalTableViewId'],
             ]);
@@ -214,8 +282,10 @@ class Chart extends BaseController
                     "journalTableViewId" => $post['journalTableViewId'],
                     "journalSelectId" => $row['id'],
                     "status" => $row['checkbox'] == true ? 1 : 0,
+                    "presence" => 1,
                 ]);
-            }
+            } 
+
 
             $data = [
                 "error" => true,

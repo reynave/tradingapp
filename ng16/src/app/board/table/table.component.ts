@@ -77,9 +77,9 @@ export class TableComponent implements OnInit {
   newSelect = new NewSelect("", "", "", "#393737");
   backgroundColorOption: any = [];
   archives: number = 0;
-  tableFooter: any = [];
+  //tableFooter: any = [];
   customFieldKey: any = [];
-  users : any = [];
+  users: any = [];
 
   constructor(
     private titleService: Title,
@@ -173,7 +173,7 @@ export class TableComponent implements OnInit {
         // this.httpDataFormula();
         this.select = data['select'];
         this.users = data['select'];
-        
+
         // if (recalulate == true) {
         // this.onCalculation();
         //}
@@ -218,7 +218,7 @@ export class TableComponent implements OnInit {
       }
     )
   }
- 
+
   calculationFooter() {
     let i = 0;
 
@@ -234,10 +234,15 @@ export class TableComponent implements OnInit {
         iType: el['iType'],
         total: parseFloat(value.toFixed(2))
       }
-      this.tableFooter.push(total)
-    }); 
+      if (el['iType'] == 'number' || el['iType'] == 'formula') {
+        this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2)));
+      }
+      // this.tableFooter.push(total);
+      i++;
+    });
+    console.log(this.detail);
   }
- 
+
   httpCustomField() {
     this.http.get<any>(environment.api + "Tables/detail", {
       headers: this.configService.headers(),
@@ -263,7 +268,7 @@ export class TableComponent implements OnInit {
     if (newItem['itype'] == 'note') {
       this.detailObject = newItem;
       this.openCanvasRight();
-    } 
+    }
     else if (newItem['itype'] == 'editSelect') {
       this.detailObject = newItem;
       this.newSelect.field = this.detailObject.select.field;
@@ -301,7 +306,7 @@ export class TableComponent implements OnInit {
           }
         });
       });
-    } 
+    }
     else {
 
       this.detail[newItem.index]["f" + newItem.customField.f] = newItem.value;
@@ -467,9 +472,10 @@ export class TableComponent implements OnInit {
   }
 
   reloadRow(data: any) {
-    console.log("reloadRow");
+    console.log("reloadRow ", data);
     let objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == data.id));
     this.detail[objIndex] = data;
+    this.calculationFooter();
   }
 
   reloadAddRow(data: any) {
@@ -650,13 +656,13 @@ export class TableComponent implements OnInit {
     }
   }
 
-  fnDetailTotal(x: any) {
-    let objIndex = this.tableFooter.findIndex(((obj: { key: any; }) => obj.key == x.key)); 
-    let value = x.name;
-    if(x.iType == 'number' || x.iType == 'formula'){
-       value = new Intl.NumberFormat('en-US').format(this.tableFooter[objIndex]['total']);
-    }
-    return value ;
-  }
+  // fnDetailTotal(customField: any) {
+  //   let objIndex = this.tableFooter.findIndex(((obj: { key: any; }) => obj.key == customField.key)); 
+  //   let value = customField.name;
+  //   if(customField.iType == 'number' || customField.iType == 'formula'){
+  //      value = new Intl.NumberFormat('en-US').format(this.tableFooter[objIndex]['total']); 
+  //   }
+  //   return value ;
+  // }
 
 }
