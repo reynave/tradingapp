@@ -32,8 +32,12 @@ export class BoardViewComponent implements OnInit {
    }
 
   ngOnInit(): void {
+   
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
+
+    const ab : any = localStorage.getItem(this.id);
+    this.items = JSON.parse(ab );
     this.httpGet();
 
   }
@@ -48,6 +52,7 @@ export class BoardViewComponent implements OnInit {
       data => {
          
         this.items = data['items'];
+        localStorage.setItem(this.id, JSON.stringify(data['items']));
       },
       e => {
         console.log(e);

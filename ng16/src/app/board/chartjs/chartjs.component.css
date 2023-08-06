@@ -6,3 +6,8 @@
 label{
     font-size: 0.9rem;
 }
+
+.chartIcon:hover img{
+    background-color: var(--color-style-1);
+    cursor: pointer;
+}

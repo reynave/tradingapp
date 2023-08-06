@@ -9,8 +9,7 @@
 
             <div ngbDropdown  class="mx-1">
                 <button type="button" class="btn btn-outline-dark btn-sm" ngbDropdownToggle>
-                    <span class="me-2"
-                        [innerHTML]="fnPermission(item.permissionId)['fontIcon']"></span>
+                    <span class="me-2"  [innerHTML]="fnPermission(item.permissionId)['fontIcon']"></span>
                     {{fnPermission(item.permissionId)['name']}}
                 </button>
                 <div ngbDropdownMenu>

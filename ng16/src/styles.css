@@ -10,6 +10,8 @@
     --color-gray : #ccc;
     --color-border-1: #F5F5F5;
     --scroll-color-active:#aab7b8;
+
+    --color-style-1 : #a3e2e2;
 }
 
 /* Firefox */
@@ -59,7 +61,9 @@ html{
 code{
     font-size: 0.7rem;
 }
-
+.pointer{
+  cursor: pointer;
+}
 .bg-blur{
   transition: opacity 150ms ease-out 0s;
   background: rgba(255, 255, 255, 0.1);

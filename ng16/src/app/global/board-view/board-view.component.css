@@ -4,5 +4,20 @@
 }
 
 .minWidth{
+    min-width: 82px;
+    position: relative;
+}
+.minWidth .minWidth_menu{ 
+    position: absolute;
+    right: 5px;
+    top: 0px;
+}
+
+.minWidth a{
+    display: inline-block;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     
 }
