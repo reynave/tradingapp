@@ -5,6 +5,8 @@ import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service'; 
 import { ActivatedRoute, Router } from '@angular/router'; 
 import { Title } from '@angular/platform-browser';  
+import { ShareBoardComponent } from 'src/app/template/share-board/share-board.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; 
 
 export class Model {
   constructor(
@@ -41,6 +43,7 @@ export class BoardTitleComponent implements OnInit {
     public functionsService: FunctionsService,
     private configService: ConfigService, 
     private ativatedRoute: ActivatedRoute, 
+    private modalService: NgbModal
   ) { }
   
   ngOnInit()  {
@@ -58,7 +61,7 @@ export class BoardTitleComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        //console.log("httpHeader",data);
+        console.log("board-title",data);
         this.journal = data['item'];
         this.titleService.setTitle(data['item']['name']);
         this.item.name = data['item']['name'];
@@ -106,6 +109,22 @@ export class BoardTitleComponent implements OnInit {
     return data;
   }
 
+
+  public onChild(obj: any) { 
+    console.log('obj child : ', obj); 
+  }
+  openComponent(componentName: string, item:any) {
+    if (componentName == 'ShareBoardComponent') {
+      const modalRef = this.modalService.open(ShareBoardComponent, { size: 'md' });
+      modalRef.componentInstance.item =  this.journal;
+      modalRef.componentInstance.permission = this.permission;
+  
+      modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
+        console.log(data);
+        this.httpHeader();
+      });
+    }
+  }
  
 
 

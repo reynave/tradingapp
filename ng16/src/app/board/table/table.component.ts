@@ -162,7 +162,7 @@ export class TableComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        console.log("httpGet", data);
+        //console.log("httpGet", data);
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
@@ -240,7 +240,7 @@ export class TableComponent implements OnInit {
       // this.tableFooter.push(total);
       i++;
     });
-    console.log(this.detail);
+   // console.log(this.detail);
   }
 
   httpCustomField() {

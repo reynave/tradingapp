@@ -36,7 +36,7 @@ class Journal extends BaseController
             array_push($itemJoin, array_merge($rec, [
                 "viewId" => model("Core")->select("id", "journal_table_view", "ilock = 1 and journalId = '" . $rec['id'] . "' order by id ASC "),
             ]));
-        } 
+        }
 
         $templatejson = "SELECT  * FROM template WHERE presence  = 1  order by id ASC, name ASC";
         $templatejson = $this->db->query($templatejson)->getResultArray();
@@ -164,28 +164,28 @@ class Journal extends BaseController
                 "input_by" => model("Core")->accountId(),
             ]);
 
-            if($post['model']['template'] != "" )
-            $path = './template/master/'.$post['model']['template'].'.json';
+            if ($post['model']['template'] != "")
+                $path = './template/master/' . $post['model']['template'] . '.json';
             $jsonString = file_get_contents($path);
             $jsonData = json_decode($jsonString, true);
             $i = 0;
-            foreach($jsonData['field'] as $rec){
+            foreach ($jsonData['field'] as $rec) {
                 $i++;
                 $this->db->table("journal_custom_field")->insert([
-                    "journalId"=> $journalId,
+                    "journalId" => $journalId,
                     "f" => $rec['f'],
                     "name" => $rec['name'],
-                    "iType" => $rec['iType'], 
+                    "iType" => $rec['iType'],
                     "width" => 150,
                     "eval" => $rec['iType'] == 'formula' ? $rec['eval'] : "",
                     "sorting" => $i,
                     "input_date" => date("Y-m-d H:i:s")
                 ]);
             }
-             $this->db->table("journal_detail")->insert([
-                    "journalId"=> $journalId, 
-                    "input_date" => date("Y-m-d H:i:s")
-                ]);
+            $this->db->table("journal_detail")->insert([
+                "journalId" => $journalId,
+                "input_date" => date("Y-m-d H:i:s")
+            ]);
 
             $this->db->transComplete();
             if ($this->db->transStatus() === false) {
@@ -313,6 +313,7 @@ class Journal extends BaseController
             $avaiable = $accountId ? true : false;
             $duplicate = false;
             $journal_access = [];
+            $note = "";
             if ($avaiable == true) {
 
                 $duplicate = model("Core")->select("id", "journal_access", "accountId = '" . $accountId . "' and journalId = '" . $post['item']['id'] . "' and presence = 1 ") ? true : false;
@@ -339,8 +340,11 @@ class Journal extends BaseController
                         "update_date" => date("Y-m-d H:i:s"),
                         "update_by" => model("Core")->accountId(),
                     ]);
+                }else{
+                    $note = "Email already join!";
                 }
             } else {
+                $note = "The email you entered has not been registered,<br> please invite via the link below ";
                 // $this->db->table("journal_access")->update([
                 //     "presence" => 0,
                 //     "update_date" => date("Y-m-d H:i:s"),
@@ -361,6 +365,7 @@ class Journal extends BaseController
                 "post" => $post,
                 "duplicate" => $duplicate,
                 "journal_access" => $journal_access,
+                "note" => $note,
             ];
 
         }

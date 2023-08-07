@@ -27,10 +27,24 @@ class Tables extends BaseController
             $b = "SELECT * FROM color   ORDER BY id ASC ";
             $backgroundColorOption = $this->db->query($b)->getResultArray();
 
+            $accountId =  model("Core")->accountId();
+            $q1 = "SELECT  ja.id as journal_accessID, ja.bookId, p.name AS 'permission', p.fontIcon, 
+            a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin
+            FROM journal_access AS ja
+            LEFT JOIN journal AS j ON j.id = ja.journalId
+            LEFT JOIN permission AS p ON p.id = j.permissionId
+            JOIN account AS a ON a.id = j.accountId
+            WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and j.id = '$id'
+            ORDER BY ja.sorting ASC, ja.input_date ASC";
+    
+            $items = $this->db->query($q1)->getResultArray();
+  
             $data = array(
                 "error" => false,
                 "id" => $id,
-                "item" => $this->db->query("SELECT * from journal where id = '$id' ")->getResultArray()[0],
+                //"item" => $this->db->query("SELECT * from journal where id = '$id' ")->getResultArray()[0],
+                 "item" =>  $items[0],
+                
                 "permission" => $this->db->query("SELECT * from permission")->getResultArray(),
                 "backgroundColorOption" => $backgroundColorOption,
             );

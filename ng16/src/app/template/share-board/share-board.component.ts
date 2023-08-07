@@ -46,13 +46,13 @@ export class ShareBoardComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  onUpdatePermission(x: any) {
-    
+  onUpdatePermission(x: any) { 
     console.log(x, this.item);
     const body = {
       permission: x,
       item: this.item,
     }
+    this.item.permissionId = x.id;
     this.http.post<any>(environment.api + "journal/onUpdatePermission", body, {
       headers: this.configService.headers()
     }).subscribe(
@@ -86,7 +86,7 @@ export class ShareBoardComponent implements OnInit {
       }
     )
   }
-
+  note : string = "";
   onSubmitUser(){
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!this.addUser.match(mailformat)) {
@@ -105,13 +105,24 @@ export class ShareBoardComponent implements OnInit {
           if (data['duplicate'] == true) {
             alert("Email already join.");
           }
-          //this.httpGet();
+          if (data['avaiable'] == true) {
+            this.addUser = "";
+          }
+          this.note = data['note'];
         },
         e => {
           console.log(e);
         }
       )
     }
+  }
+
+  cb2note :string = "";
+  fnCb2(){
+    this.cb2note = "Copy to clipboard";
+    setTimeout(()=>{
+      this.cb2note = "";
+    },3000);
   }
 
 }

@@ -9,28 +9,36 @@
             <div>
                 <strong>General access</strong>
             </div>
-            <div ngbDropdown >
+            <div ngbDropdown class="mb-3">
                 <button type="button" class="btn   btn-light " id="dropdownBasic1" ngbDropdownToggle>
                     <span [innerHTML]="item.fontIcon" class="mx-2"></span> {{item.permission}}
                 </button>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                     <button ngbDropdownItem (click)="onUpdatePermission(x)" *ngFor="let x of permission">
-                        <span [innerHTML]="x.fontIcon" class="mx-2"></span> {{x.name}}
+                        <span [innerHTML]="x.fontIcon" class="me-2"></span> {{x.name}}
                     </button>
                 </div>
             </div>
-            <div>
-                <small>Only people with access can open with the link</small>
+            
+            <div class="mb-2" *ngIf="item.permissionId == '20'">
+                <div class="mb-1">
+                    <small>Only people with access can open with the link</small>
+                </div>
+                <div class="input-group input-group-sm ">
+                    <input type="text" class="form-control bg-light" [value]="env.shareLink+item.url" readonly>
+                    <button class="btn btn-outline-secondary" [cdkCopyToClipboard]="env.shareLink+item.url" type="button" id="button-addon1"><i
+                            class="bi bi-link-45deg"></i>  Copy Share Link</button>
+                </div>
             </div>
         </div>
 
         <div class="col-12 mb-1">
-            <strong> Invite a new member with link</strong>
+            <strong> Invite a new member with link to collaboration this board</strong>
         </div>
     </div>
 
     <div class="row mb-2" *ngFor="let x of journalAccess">
-       
+
         <div class="col-9">
             <div>
                 <strong> {{x.name}} </strong>{{x.owner == '1' ? "(you)":""}}
@@ -47,22 +55,26 @@
         </div>
     </div>
     <div class="row my-3">
-        <div class="col-12 ">
+        <div class="col-12 mb-3">
 
-            <input type="email" class="form-control " required placeholder="Add People with email"
-                [(ngModel)]="addUser" (keydown.enter)="onSubmitUser()" #email="ngModel" email>
+            <input type="email" class="form-control " required placeholder="Add People with email" [(ngModel)]="addUser"
+                (keydown.enter)="onSubmitUser()" #email="ngModel" email>
             <div [hidden]="email.valid || email.pristine" class="text-danger my-1">
                 Email is required
             </div>
         </div>
+        <div class="col-12" *ngIf="note != ''">
+            <div class="alert alert-warning" [innerHTML]="note"></div>
+        </div>
     </div>
 
     <div class="row mt-4">
-        <div class="col-6">
-            <button type="button" class="btn btn-outline-dark rounded-pill"><i class="bi bi-link"></i> Copy
-                Link</button>
+        <div class="col-8">
+            <button type="button" (click)="fnCb2();" [cdkCopyToClipboard]="env.inviteLink+item.url" class="btn btn-outline-dark btn-sm rounded-pill"> <i class="bi bi-link-45deg"></i> Copy
+                Invite Link </button>
+                <small class="mx-2">{{cb2note}}</small>
         </div>
-        <div class="col-6 text-end">
+        <div class="col-4 text-end">
             <button type="button" class="btn btn-dark" (click)="close();">Done</button>
         </div>
 

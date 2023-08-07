@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -57,7 +58,7 @@ import { ShareBoardComponent } from './template/share-board/share-board.componen
     GoogleChartsModule,
     EditorModule,
     NgbDatepickerModule,
-    
+    ClipboardModule 
   ],
   providers: [],
   bootstrap: [AppComponent]

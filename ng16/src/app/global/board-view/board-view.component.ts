@@ -50,7 +50,7 @@ export class BoardViewComponent implements OnInit {
       }
     }).subscribe(
       data => {
-         
+        //console.log('boardView-httpGet',data)
         this.items = data['items'];
         localStorage.setItem(this.id, JSON.stringify(data['items']));
       },
