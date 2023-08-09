@@ -1,0 +1,17 @@
+{
+    "iss": "https://accounts.google.com",
+    "azp": "480785640282-pri4rt3btbv7gtv0f68r0aoj96v44559.apps.googleusercontent.com",
+    "aud": "480785640282-pri4rt3btbv7gtv0f68r0aoj96v44559.apps.googleusercontent.com",
+    "sub": "101221617854665478148",
+    "email": "felix.renaldi@gmail.com",
+    "email_verified": true,
+    "nbf": 1691430905,
+    "name": "Felix Reynave",
+    "picture": "https://lh3.googleusercontent.com/a/AAcHTteF-aAeCUrnrEsBw0F8ma24A2kHTqOzCXVzRlwIMfyd6DM=s96-c",
+    "given_name": "Felix",
+    "family_name": "Reynave",
+    "locale": "en",
+    "iat": 1691431205,
+    "exp": 1691434805,
+    "jti": "c75532594f7c98fa10526e92f2e9a633811a9cf8"
+}

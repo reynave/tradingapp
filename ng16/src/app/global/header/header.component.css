@@ -5,3 +5,24 @@
  .offcanvas-backdrop.show {
    opacity: .1;
 }
+
+.offcanvas-title{
+   font-family: var(--font-poppins);
+   font-weight: 500;
+   font-size: 1.2rem;
+}
+
+i.rating {
+   font-size: 1.5rem;
+   padding-right: 0.1rem;
+   color: #b0c4de;
+}
+.rating .filled {
+   color: #F8DE22;
+}
+.rating .low {
+   color: #deb0b0;
+}
+.rating .filled.low {
+   color: #ff1e1e;
+}

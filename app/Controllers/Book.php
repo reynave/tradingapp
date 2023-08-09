@@ -18,4 +18,34 @@ class Book extends BaseController
         );
         return $this->response->setJSON($data);
     }
+
+    function insert()  {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $id = model("Core")->number("book");
+            $this->db->table("book")->insert([  
+                "id" => $id,
+                "name" => $post['newBook']['name'],
+                "accountId" => model("Core")->accountId(),
+                "ilock" => 0,
+                "sorting" => (int)model("Core")->select("sorting","book","accountId = '".model("Core")->accountId()."' order by sorting DESC") + 1,
+                "presence" => 1, 
+                "input_by" => model("Core")->accountId(),
+                "input_date" => date("Y-m-d H:i:s"),
+            ]); 
+             
+            $data = [
+                "error" => false,
+                "post" => $post, 
+                "id" => $id , 
+            ];
+        }
+       
+        return $this->response->setJSON($data);
+    }
 }

@@ -20,7 +20,6 @@ const routes: Routes = [
   { path: "login", component: LoginComponent, data: { active: "" },  canActivate:[]  }, 
   { path: "relogin", component: ReloginComponent, data: { active: "" },  canActivate:[]  }, 
 
-  
   { path: "book/:id", component: BookComponent, data: { active: "book" },  canActivate:[authGuard]  }, 
  
 

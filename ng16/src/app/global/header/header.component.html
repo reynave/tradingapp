@@ -1,39 +1,61 @@
 <header class="fixed-top bg-blur">
     <nav class="navbar navbar-expand py-0">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Mirrel</a>
-            
+            <a class="navbar-brand" [routerLink]="[ '/home' ]">
+                <img src="./assets/img/mirrel.png" height="20">
+            </a>
+
             <div class="collapse navbar-collapse" id="navbarsExample02">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
                     <li class="nav-item dropdown ">
                         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
                             aria-expanded="false">Trading Book</a>
                         <ul class="dropdown-menu">
-                            <li *ngFor="let x of items"><a class="dropdown-item" (click)="navigator(x);">{{x.name}}</a> </li>
+                            <li *ngFor="let x of items">
+                                <a class="dropdown-item" (click)="navigator(x);">
+                                    <i class="bi bi-folder me-2" *ngIf="x.id != id"></i>
+                                    <i class="bi bi-folder2-open me-2 text-primary" *ngIf="x.id == id"></i>   
+                                    {{x.name}}</a>
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-share me-2"></i> Share to Me</a></li>
+
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="#">Separated link</a></li>
+
+                            <li><a class="dropdown-item" (click)="open(contentNewBook)"><i class="bi bi-folder-plus me-2"></i> New Book</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
-                <ul class="navbar-nav   ">
-                    <li>
-                        <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
+
+                <ul class="navbar-nav ">
+                    <li class="nav-item ">
+                        <a href="javascript:;" class="nav-link text-primary me-2" (click)="open(contentGiveFeedBack)">
+                            <i class="bi bi-chat-right-heart me-1"></i> Give Feedback
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript:;" class="nav-link text-danger me-2" (click)="open(contentReportBugs)">
+                            <i class="bi bi-bug me-1"></i> Report Bugs
+                        </a>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link " data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling"
                             aria-controls="offcanvasScrolling">
-                            <i class="bi bi-three-dots"></i>
+
+                            <img [src]="account['picture']" height="25" class="rounded-circle border">
+                            {{account['given_name']}}
                         </a>
                     </li>
                 </ul>
+
             </div>
         </div>
-    </nav> 
+    </nav>
 </header>
 
 <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="true" tabindex="-1" id="offcanvasScrolling"
@@ -43,6 +65,7 @@
         <div class="offcanvas-title" id="offcanvasScrollingLabel">MIRREL.COM</div>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
+
     <div class="offcanvas-body">
         <div class="row g-1">
             <div class="col-6">
@@ -90,4 +113,99 @@
             </div>
         </div>
     </div>
+
 </div>
+
+<ng-template #contentNewBook let-modal>
+
+    <div class="modal-body">
+        <div class="row mb-3">
+            <div class="col-6"> </div>
+            <div class="col-6 text-end"> <button type="button" class="btn-close" aria-label="Close"
+                    (click)="modal.dismiss('Cross click')"></button> </div>
+        </div> 
+
+        <form (ngSubmit)="onSubmitNewBook()" #heroForm="ngForm">
+            <div class="mb-4 text-center">
+                <img src="./assets/icon/icons8-book-100.png">
+                <div>
+                    <label for="bookname" class="mb-1">New book name</label>
+                </div>
+            </div>
+            <div class="mb-4">
+                <input type="text" class="form-control form-control-lg" id="bookname" required
+                    [(ngModel)]="newBook.name" name="bookname" #bookname="ngModel">
+
+                <div [hidden]="bookname.valid || bookname.pristine" class="text-danger mt-1">
+                    Name is required
+                </div>
+            </div>
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-dark px-3 mx-2"
+                    (click)="modal.close('Save click')">Cancel</button>
+                <button type="submit" class="btn btn-dark px-3" [disabled]="!heroForm.form.valid">Save</button>
+            </div>
+        </form>
+
+    </div>
+
+</ng-template>
+
+
+<ng-template #contentGiveFeedBack let-modal>
+
+    <div class="modal-body">
+        <div class="row mb-3">
+            <div class="col-6">Give Us Feedback </div>
+            <div class="col-6 text-end"> <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button> </div>
+        </div> 
+
+        
+        
+    </div>
+
+</ng-template>
+
+
+<ng-template #contentReportBugs let-modal>
+
+    <div class="modal-body">
+        <div class="row mb-3">
+            <div class="col-6">Report Bugs </div>
+            <div class="col-6 text-end"> <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')"></button> </div>
+        </div> 
+
+        <form (ngSubmit)="onSubmitNewBook()" #feedbackForm="ngForm">
+             
+            <div class="mb-4">
+                 <textarea class="form-control" [(ngModel)]="myRating.msg" rows="10" id="msg" name="msg"></textarea>
+            </div>
+            <div class="mb-4">
+                 <label>Upload Image</label>
+           </div>
+            <div class="mb-4 text-center rating">
+                <ngb-rating [(rate)]="currentRate">
+                    <ng-template let-fill="fill" let-index="index">
+                        <i class="bi-star{{fill === 100 ? '-fill' : ''}} h4 me-1" [class.filled]="fill === 100" [class.low]="index < 3"></i>
+                    </ng-template>
+                </ngb-rating>
+               
+            </div>
+            <div class="mb-4">
+                <div class="text-center">
+                   <h5> My Rating  {{currentRate}} </h5>
+                </div>
+            </div>
+            
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-dark px-3 mx-2"
+                    (click)="modal.close('Save click')">Cancel</button>
+                <button type="submit" class="btn btn-success px-3" [disabled]="!feedbackForm.form.valid">Send</button>
+            </div>
+
+            
+        </form>
+        
+    </div>
+
+</ng-template>

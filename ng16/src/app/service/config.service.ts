@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService {
-  private tokenKey: string = "mirrelTradingAppV1";
+  private tokenKey: string = "app.mirrel.com";
   constructor() { }
 
   setToken(token: string): Observable<boolean> {
@@ -20,8 +20,7 @@ export class ConfigService {
 
 
   account() {
-    const jwtObj = this.getToken().split(".");
-
+    const jwtObj = this.getToken().split("."); 
     return JSON.parse(atob(jwtObj[1]));
   }
 
@@ -31,6 +30,9 @@ export class ConfigService {
     return localStorage.getItem(this.tokenKey);
   }
 
+  jti(){
+    return this.account()['jti'];
+  }
   headers() {
     return new HttpHeaders({
       'Content-Type': 'application/json',

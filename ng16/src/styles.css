@@ -1,23 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
-:root{
-    --font-manrope : 'Manrope', sans-serif;
-    --bg-body-1:#D7EAEA; 
-    
-    --color-white: #fff;
-    --color-light-1: #ecf8ef; 
-    --body-margin-top: 40px;
-    
-    --color-gray : #ccc;
-    --color-border-1: #F5F5F5;
-    --scroll-color-active:#aab7b8;
+:root {
+  --font-manrope: 'Manrope', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+  --bg-body-1: #D7EAEA;
 
-    --color-style-1 : #a3e2e2;
+  --color-white: #fff;
+  --color-light-1: #ecf8ef;
+  --body-margin-top: 40px;
+
+  --color-gray: #ccc;
+  --color-border-1: #F5F5F5;
+  --scroll-color-active: #aab7b8;
+
+  --color-style-1: #a3e2e2;
+
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--scroll-color-active) var(--color-white);;
+  scrollbar-color: var(--scroll-color-active) var(--color-white);
+  ;
 }
 
 /* Chrome, Edge and Safari */
@@ -25,105 +28,124 @@
   width: 6px;
   width: 6px;
 }
+
 *::-webkit-scrollbar-track {
   border-radius: 0px;
   background-color: var(--color-white);
 }
 
 *::-webkit-scrollbar-track:hover {
-  background-color:  var(--color-white);
+  background-color: var(--color-white);
 }
 
 *::-webkit-scrollbar-track:active {
-  background-color:  var(--color-white);
+  background-color: var(--color-white);
 }
 
 *::-webkit-scrollbar-thumb {
   border-radius: 0px;
-  background-color: var(--scroll-color-active); 
+  background-color: var(--scroll-color-active);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color:var(--scroll-color-active); 
+  background-color: var(--scroll-color-active);
 }
 
 *::-webkit-scrollbar-thumb:active {
-  background-color:var(--scroll-color-active); 
+  background-color: var(--scroll-color-active);
 }
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-html{
-    font-size: 14px; 
+
+html {
+  font-size: 14px;
 }
-code{
-    font-size: 0.7rem;
+
+code {
+  font-size: 0.7rem;
 }
-.pointer{
+a{
   cursor: pointer;
 }
-.bg-blur{
+
+.pointer {
+  cursor: pointer;
+}
+
+.bg-blur {
   transition: opacity 150ms ease-out 0s;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(4px);  
+  backdrop-filter: blur(4px);
 }
 
-.body-margin-top{
-    margin-top: var(--body-margin-top);
+.body-margin-top {
+  margin-top: var(--body-margin-top);
 }
-body{
-    background-color: var(--bg-body-1); 
-    font-family: var(--font-manrope);
+
+body {
+  background-color: var(--bg-body-1);
+  font-family: var(--font-manrope);
 }
+
 .offcanvas-backdrop.show {
-    opacity: .1;
- }
-  
-a{
-    text-decoration: none;
-    color: #333;
+  opacity: .1;
 }
 
-.text-gray{
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+.text-gray {
   color: var(--color-gray);
 }
-.icon{
+
+.icon {
   height: 1rem;
 }
- 
+
 .tables-body {
   overflow-y: scroll;
   overflow-x: auto;
   white-space: nowrap;
   max-width: 1900px;
-  height: calc(100vh - (var(--body-margin-top)) - 130px );
+  height: calc(100vh - (var(--body-margin-top)) - 130px);
 }
-.tables-body .ui-sortable-placeholder{
+
+.tables-body .ui-sortable-placeholder {
   display: block;
   height: 40px;
 }
-.handle{
-   cursor: pointer;
+
+.handle {
+  cursor: pointer;
 }
-.ui-sortable-helper{ 
+
+.ui-sortable-helper {
   transform: rotateY(0deg) rotate(1deg) !important;
 }
+
 .orders {
   border-top: 1px solid var(--color-gray);
-  border-right: 1px solid var(--color-gray); 
+  border-right: 1px solid var(--color-gray);
   width: 140px;
   min-height: 30px;
 }
-.tables-body-td{
+
+.tables-body-td {
   position: relative;
 }
-.tables-body-td .floating-div , .tables-header-td .floating-div{
+
+.tables-body-td .floating-div,
+.tables-header-td .floating-div {
   position: sticky;
   background-color: #fff;
   border-top: 1px solid var(--color-gray);
- 
+
   left: 0px;
   top: 0px;
   z-index: 99;
@@ -133,7 +155,7 @@ a{
 
 
 
-.table-sorting-area{
+.table-sorting-area {
   position: absolute;
   left: -3px;
   top: 0px;
@@ -153,21 +175,23 @@ a{
 }
 
 input:focus {
-  background-color: var(--color-white)!important;
+  background-color: var(--color-white) !important;
 }
 
 .tables-body-td:hover .orders,
-.tables-body-td:hover .orders input, .tables-body-td:hover  .orders-left-fixed {
+.tables-body-td:hover .orders input,
+.tables-body-td:hover .orders-left-fixed {
   background-color: var(--color-border-1);
 }
 
 .details-panel {
-  width: 40% !important;  
+  width: 40% !important;
 }
 
-.bg-warning, .bg-success{
-  color:var(--color-white);
-} 
+.bg-warning,
+.bg-success {
+  color: var(--color-white);
+}
 
 .dropdown-menu.show {
   background-color: var(--color-white);
@@ -176,14 +200,14 @@ input:focus {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
-.ui-sortable-helper{
-  background-color:var(--color-white);
+.ui-sortable-helper {
+  background-color: var(--color-white);
   border: none;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
-.ui-state-highlight{
-  background-color:#FBFFDC !important; 
+.ui-state-highlight {
+  background-color: #FBFFDC !important;
   height: 50px;
   border: none;
 }
@@ -192,114 +216,396 @@ input:focus {
   background-position: -210px -50px;
 }
 
-.popup-floating-top{
+.popup-floating-top {
   position: fixed;
   top: 1rem;
-  width: 100%; 
+  width: 100%;
   z-index: 9999;
   text-align: center;
 }
-.popup-floating-top .popup-floating-top-content{
+
+.popup-floating-top .popup-floating-top-content {
   min-width: 400px;
   margin: 0 auto;
-  display: inline-block; 
+  display: inline-block;
 }
 
-.popup-floating-top-content .btn{
+.popup-floating-top-content .btn {
   min-width: 60px;
 }
 
-.order-6{  order: 6 !important; }
-.order-7{  order: 7 !important; }
-.order-8{  order: 8 !important; }
-.order-9{  order: 9 !important; }
-.order-10{  order: 10 !important; }
-.order-11{  order: 11 !important; }
-.order-12{  order: 12 !important; }
-.order-13{  order: 13 !important; }
-.order-14{  order: 14 !important; }
-.order-15{  order: 15 !important; }
-.order-16{  order: 16 !important; }
-.order-17{  order: 17 !important; }
-.order-18{  order: 18 !important; }
-.order-19{  order: 19 !important; }
-.order-20{  order: 20 !important; }
-.order-21{  order: 21 !important; }
-.order-22{  order: 22 !important; }
-.order-23{  order: 23 !important; }
-.order-24{  order: 24 !important; }
-.order-25{  order: 25 !important; }
-.order-26{  order: 26 !important; }
-.order-27{  order: 27 !important; }
-.order-28{  order: 28 !important; }
-.order-29{  order: 29 !important; }
-.order-30{  order: 30 !important; }
-.order-31{  order: 31 !important; }
-.order-32{  order: 32 !important; }
-.order-33{  order: 33 !important; }
-.order-34{  order: 34 !important; }
-.order-35{  order: 35 !important; }
-.order-36{  order: 36 !important; }
-.order-37{  order: 37 !important; }
-.order-38{  order: 38 !important; }
-.order-39{  order: 39 !important; }
-.order-40{  order: 40 !important; }
-.order-41{  order: 41 !important; }
-.order-42{  order: 42 !important; }
-.order-43{  order: 43 !important; }
-.order-44{  order: 44 !important; }
-.order-45{  order: 45 !important; }
-.order-46{  order: 46 !important; }
-.order-47{  order: 47 !important; }
-.order-48{  order: 48 !important; }
-.order-49{  order: 49 !important; }
-.order-50{  order: 50 !important; }
-.order-51{  order: 51 !important; }
-.order-52{  order: 52 !important; }
-.order-53{  order: 53 !important; }
-.order-54{  order: 54 !important; }
-.order-55{  order: 55 !important; }
-.order-56{  order: 56 !important; }
-.order-57{  order: 57 !important; }
-.order-58{  order: 58 !important; }
-.order-59{  order: 59 !important; }
-.order-60{  order: 60 !important; }
-.order-61{  order: 61 !important; }
-.order-62{  order: 62 !important; }
-.order-63{  order: 63 !important; }
-.order-64{  order: 64 !important; }
-.order-65{  order: 65 !important; }
-.order-66{  order: 66 !important; }
-.order-67{  order: 67 !important; }
-.order-68{  order: 68 !important; }
-.order-69{  order: 69 !important; }
-.order-70{  order: 70 !important; }
-.order-71{  order: 71 !important; }
-.order-72{  order: 72 !important; }
-.order-73{  order: 73 !important; }
-.order-74{  order: 74 !important; }
-.order-75{  order: 75 !important; }
-.order-76{  order: 76 !important; }
-.order-77{  order: 77 !important; }
-.order-78{  order: 78 !important; }
-.order-79{  order: 79 !important; }
-.order-80{  order: 80 !important; }
-.order-81{  order: 81 !important; }
-.order-82{  order: 82 !important; }
-.order-83{  order: 83 !important; }
-.order-84{  order: 84 !important; }
-.order-85{  order: 85 !important; }
-.order-86{  order: 86 !important; }
-.order-87{  order: 87 !important; }
-.order-88{  order: 88 !important; }
-.order-89{  order: 89 !important; }
-.order-90{  order: 90 !important; }
-.order-91{  order: 91 !important; }
-.order-92{  order: 92 !important; }
-.order-93{  order: 93 !important; }
-.order-94{  order: 94 !important; }
-.order-95{  order: 95 !important; }
-.order-96{  order: 96 !important; }
-.order-97{  order: 97 !important; }
-.order-98{  order: 98 !important; }
-.order-99{  order: 99 !important; }
+.order-6 {
+  order: 6 !important;
+}
+
+.order-7 {
+  order: 7 !important;
+}
+
+.order-8 {
+  order: 8 !important;
+}
+
+.order-9 {
+  order: 9 !important;
+}
+
+.order-10 {
+  order: 10 !important;
+}
+
+.order-11 {
+  order: 11 !important;
+}
+
+.order-12 {
+  order: 12 !important;
+}
+
+.order-13 {
+  order: 13 !important;
+}
+
+.order-14 {
+  order: 14 !important;
+}
+
+.order-15 {
+  order: 15 !important;
+}
+
+.order-16 {
+  order: 16 !important;
+}
+
+.order-17 {
+  order: 17 !important;
+}
+
+.order-18 {
+  order: 18 !important;
+}
+
+.order-19 {
+  order: 19 !important;
+}
+
+.order-20 {
+  order: 20 !important;
+}
+
+.order-21 {
+  order: 21 !important;
+}
+
+.order-22 {
+  order: 22 !important;
+}
+
+.order-23 {
+  order: 23 !important;
+}
+
+.order-24 {
+  order: 24 !important;
+}
+
+.order-25 {
+  order: 25 !important;
+}
+
+.order-26 {
+  order: 26 !important;
+}
+
+.order-27 {
+  order: 27 !important;
+}
+
+.order-28 {
+  order: 28 !important;
+}
+
+.order-29 {
+  order: 29 !important;
+}
+
+.order-30 {
+  order: 30 !important;
+}
+
+.order-31 {
+  order: 31 !important;
+}
+
+.order-32 {
+  order: 32 !important;
+}
+
+.order-33 {
+  order: 33 !important;
+}
+
+.order-34 {
+  order: 34 !important;
+}
+
+.order-35 {
+  order: 35 !important;
+}
+
+.order-36 {
+  order: 36 !important;
+}
+
+.order-37 {
+  order: 37 !important;
+}
+
+.order-38 {
+  order: 38 !important;
+}
+
+.order-39 {
+  order: 39 !important;
+}
+
+.order-40 {
+  order: 40 !important;
+}
+
+.order-41 {
+  order: 41 !important;
+}
+
+.order-42 {
+  order: 42 !important;
+}
+
+.order-43 {
+  order: 43 !important;
+}
+
+.order-44 {
+  order: 44 !important;
+}
+
+.order-45 {
+  order: 45 !important;
+}
+
+.order-46 {
+  order: 46 !important;
+}
+
+.order-47 {
+  order: 47 !important;
+}
+
+.order-48 {
+  order: 48 !important;
+}
+
+.order-49 {
+  order: 49 !important;
+}
+
+.order-50 {
+  order: 50 !important;
+}
+
+.order-51 {
+  order: 51 !important;
+}
+
+.order-52 {
+  order: 52 !important;
+}
+
+.order-53 {
+  order: 53 !important;
+}
+
+.order-54 {
+  order: 54 !important;
+}
+
+.order-55 {
+  order: 55 !important;
+}
+
+.order-56 {
+  order: 56 !important;
+}
+
+.order-57 {
+  order: 57 !important;
+}
+
+.order-58 {
+  order: 58 !important;
+}
+
+.order-59 {
+  order: 59 !important;
+}
+
+.order-60 {
+  order: 60 !important;
+}
+
+.order-61 {
+  order: 61 !important;
+}
+
+.order-62 {
+  order: 62 !important;
+}
+
+.order-63 {
+  order: 63 !important;
+}
+
+.order-64 {
+  order: 64 !important;
+}
+
+.order-65 {
+  order: 65 !important;
+}
+
+.order-66 {
+  order: 66 !important;
+}
+
+.order-67 {
+  order: 67 !important;
+}
+
+.order-68 {
+  order: 68 !important;
+}
+
+.order-69 {
+  order: 69 !important;
+}
+
+.order-70 {
+  order: 70 !important;
+}
+
+.order-71 {
+  order: 71 !important;
+}
+
+.order-72 {
+  order: 72 !important;
+}
+
+.order-73 {
+  order: 73 !important;
+}
+
+.order-74 {
+  order: 74 !important;
+}
+
+.order-75 {
+  order: 75 !important;
+}
+
+.order-76 {
+  order: 76 !important;
+}
+
+.order-77 {
+  order: 77 !important;
+}
+
+.order-78 {
+  order: 78 !important;
+}
+
+.order-79 {
+  order: 79 !important;
+}
+
+.order-80 {
+  order: 80 !important;
+}
+
+.order-81 {
+  order: 81 !important;
+}
+
+.order-82 {
+  order: 82 !important;
+}
+
+.order-83 {
+  order: 83 !important;
+}
+
+.order-84 {
+  order: 84 !important;
+}
+
+.order-85 {
+  order: 85 !important;
+}
+
+.order-86 {
+  order: 86 !important;
+}
+
+.order-87 {
+  order: 87 !important;
+}
+
+.order-88 {
+  order: 88 !important;
+}
+
+.order-89 {
+  order: 89 !important;
+}
+
+.order-90 {
+  order: 90 !important;
+}
+
+.order-91 {
+  order: 91 !important;
+}
+
+.order-92 {
+  order: 92 !important;
+}
+
+.order-93 {
+  order: 93 !important;
+}
+
+.order-94 {
+  order: 94 !important;
+}
+
+.order-95 {
+  order: 95 !important;
+}
+
+.order-96 {
+  order: 96 !important;
+}
+
+.order-97 {
+  order: 97 !important;
+}
+
+.order-98 {
+  order: 98 !important;
+}
+
+.order-99 {
+  order: 99 !important;
+}
