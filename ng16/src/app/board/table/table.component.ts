@@ -226,13 +226,17 @@ export class TableComponent implements OnInit {
       let value = 0;
       this.detail.forEach((item: any) => {
         if (el['iType'] == 'number' || el['iType'] == 'formula') {
-          value += parseFloat(item[el['key']]);
+          if(item[el['key']] != ""){
+            value += parseFloat(item[el['key']]);
+          } 
         }
       });
       const total = {
         key: el['key'],
         iType: el['iType'],
-        total: parseFloat(value.toFixed(2))
+       total: parseFloat(value.toFixed(2))
+        
+       
       }
       if (el['iType'] == 'number' || el['iType'] == 'formula') {
         this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2)));
