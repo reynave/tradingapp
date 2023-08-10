@@ -17,9 +17,12 @@
 -- Dumping structure for table tradingbook.account
 CREATE TABLE IF NOT EXISTS `account` (
   `id` varchar(50) NOT NULL DEFAULT '',
-  `name` varchar(250) NOT NULL,
   `email` varchar(250) NOT NULL,
+  `googleSub` varchar(250) NOT NULL,
+  `facebookSub` varchar(250) NOT NULL,
+  `name` varchar(250) NOT NULL,
   `password` varchar(250) NOT NULL,
+  `picture` varchar(250) NOT NULL,
   `presence` int(1) NOT NULL DEFAULT 1,
   `status` int(3) NOT NULL DEFAULT 1,
   `input_date` datetime NOT NULL DEFAULT '2022-01-01 00:00:00',
@@ -28,50 +31,69 @@ CREATE TABLE IF NOT EXISTS `account` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Dumping data for table tradingbook.account: ~4 rows (approximately)
-INSERT INTO `account` (`id`, `name`, `email`, `password`, `presence`, `status`, `input_date`, `update_date`) VALUES
-	('230101.0001', 'Felix', 'cso1@email.com', '4297f44b13955235245b2497399d7a93', 1, 1, '2022-01-01 00:00:00', '2022-01-01 00:00:00'),
-	('C0012', 'Wawa', 'wawa@email.com', '4297f44b13955235245b2497399d7a93', 1, 1, '2022-01-01 00:00:00', '2022-01-01 00:00:00'),
-	('C5555', 'Mada', 'mada@email.com', '4297f44b13955235245b2497399d7a93', 1, 1, '2022-01-01 00:00:00', '2022-01-01 00:00:00'),
-	('U1', 'dia', 'dia2', '4297f44b13955235245b2497399d7a93', 1, 1, '2022-01-01 00:00:00', '2022-01-01 00:00:00');
+-- Dumping data for table tradingbook.account: ~5 rows (approximately)
+INSERT INTO `account` (`id`, `email`, `googleSub`, `facebookSub`, `name`, `password`, `picture`, `presence`, `status`, `input_date`, `update_date`) VALUES
+	('230101.0001', 'sayamaai@emai.com', '', '', 'dia', '4297f44b13955235245b2497399d7a93', 'https://i.pravatar.cc/150?img=24', 1, 1, '2022-01-01 00:00:00', '2022-01-01 00:00:00'),
+	('230808.000005', 'felix.mirrel@gmail.com', '108631244313733297359', '', 'Felix Mirrel', '', 'https://lh3.googleusercontent.com/a/AAcHTtd7docEnQHAmhogI-8lEVJ9giw7wmguIy4nPMBY5Y6oEzc=s96-c', 1, 1, '2023-08-08 18:14:52', '2022-01-01 00:00:00'),
+	('230809.000006', 'felix.renaldi@gmail.com', '101221617854665478148', '', 'Felix Reynave', '', 'https://lh3.googleusercontent.com/a/AAcHTteF-aAeCUrnrEsBw0F8ma24A2kHTqOzCXVzRlwIMfyd6DM=s96-c', 1, 1, '2023-08-09 04:12:53', '2022-01-01 00:00:00'),
+	('C0012', 'wawa@email.com', '', '', 'Wawa', '4297f44b13955235245b2497399d7a93', 'https://i.pravatar.cc/150?img=37', 1, 1, '2022-01-01 00:00:00', '2022-01-01 00:00:00'),
+	('C5555', 'mada@email.com', '', '', 'Mada', '4297f44b13955235245b2497399d7a93', 'https://i.pravatar.cc/150?img=32', 1, 1, '2022-01-01 00:00:00', '2022-01-01 00:00:00');
 
 -- Dumping structure for table tradingbook.account_login
 CREATE TABLE IF NOT EXISTS `account_login` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `accountId` varchar(50) NOT NULL DEFAULT '',
-  `ip` varchar(50) NOT NULL DEFAULT '',
+  `jti` varchar(50) DEFAULT NULL,
+  `iss` varchar(50) DEFAULT NULL,
+  `expDate` datetime DEFAULT NULL,
   `getUserAgent` varchar(250) NOT NULL DEFAULT '',
+  `ip` varchar(50) NOT NULL DEFAULT '',
   `input_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Dumping data for table tradingbook.account_login: ~23 rows (approximately)
-INSERT INTO `account_login` (`id`, `accountId`, `ip`, `getUserAgent`, `input_date`) VALUES
-	(2, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:06:55'),
-	(3, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:07:17'),
-	(4, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:08:47'),
-	(5, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:41:39'),
-	(6, '1', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-18 19:50:53'),
-	(7, '1', '::1', 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1', '2023-06-22 10:44:37'),
-	(8, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-22 17:25:53'),
-	(9, 'C0012', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-06-28 17:54:36'),
-	(10, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 10:29:58'),
-	(11, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 11:33:31'),
-	(12, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 11:36:03'),
-	(13, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 11:38:28'),
-	(14, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 11:43:18'),
-	(15, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 15:58:58'),
-	(16, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 15:59:52'),
-	(17, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 16:06:08'),
-	(18, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 16:07:46'),
-	(19, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 16:14:34'),
-	(20, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 16:18:36'),
-	(21, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 16:18:58'),
-	(22, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 16:19:28'),
-	(23, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 16:19:51'),
-	(24, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', '2023-07-01 19:02:48'),
-	(25, 'C0012', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82', '2023-07-20 04:53:07'),
-	(26, '230101.0001', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82', '2023-07-20 04:54:10');
+-- Dumping data for table tradingbook.account_login: ~9 rows (approximately)
+INSERT INTO `account_login` (`id`, `accountId`, `jti`, `iss`, `expDate`, `getUserAgent`, `ip`, `input_date`) VALUES
+	(26, '230101.0001', NULL, NULL, NULL, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82', '::1', '2023-07-20 04:54:10'),
+	(29, '230101.0001', 'a16ad5e58572c11ee67290978a71d0d102e8d37a', 'https://accounts.google.com', '2023-09-07 17:55:13', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36', '::1', '2023-08-08 17:55:13'),
+	(30, '230101.0001', '4b36856fe692367a06d8487eda94182a23ffafce', 'https://accounts.google.com', '2023-09-07 18:02:21', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36', '::1', '2023-08-08 18:02:21'),
+	(31, '00000002', 'e3e1497a3bbdabe8575f6725d140c94d8ba772bb', 'https://accounts.google.com', '2023-09-07 18:10:33', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36', '::1', '2023-08-08 18:10:33'),
+	(44, '230809.000006', '88976ebc74206f9b7ddba249ffc02c9573cf800c', 'https://accounts.google.com', '2023-09-08 09:01:20', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36', '::1', '2023-08-09 09:01:20'),
+	(45, '230809.000006', 'ceb4f6338b70cd860035556e5b255160299abb6e', 'https://accounts.google.com', '2023-09-08 09:35:21', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36', '::1', '2023-08-09 09:35:21'),
+	(46, '230809.000006', 'aeb3a1f8e09ee6e8bda9c0ef6a5cbf517fc032bf', 'https://accounts.google.com', '2023-09-08 09:36:04', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36', '::1', '2023-08-09 09:36:04'),
+	(47, '230809.000006', 'ee6fae8ca518a2f67cc32bb8d873df8cf1c6921a', 'https://accounts.google.com', '2023-09-08 09:36:32', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36', '::1', '2023-08-09 09:36:32'),
+	(48, '230809.000006', 'bd9cf0abeda51d04ba5d4802d607241713f8389a', 'https://accounts.google.com', '2023-09-08 09:40:13', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36', '::1', '2023-08-09 09:40:13');
+
+-- Dumping structure for table tradingbook.account_team
+CREATE TABLE IF NOT EXISTS `account_team` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `accountId` varchar(50) NOT NULL,
+  `invitedId` varchar(50) NOT NULL,
+  `presence` int(1) NOT NULL DEFAULT 1,
+  `status` int(1) NOT NULL DEFAULT 1,
+  `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  `input_by` varchar(50) NOT NULL,
+  `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
+  `update_by` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table tradingbook.account_team: ~4 rows (approximately)
+INSERT INTO `account_team` (`id`, `accountId`, `invitedId`, `presence`, `status`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
+	(1, '230809.000006', '230101.0001', 0, 1, '2023-01-01 00:00:00', '', '2023-01-01 00:00:00', ''),
+	(2, '230809.000006', 'C0012', 0, 1, '2023-01-01 00:00:00', '', '2023-01-01 00:00:00', ''),
+	(3, '230809.000006', 'C5555', 0, 1, '2023-01-01 00:00:00', '', '2023-01-01 00:00:00', ''),
+	(4, '230809.000006', '230809.000006', 0, 1, '2023-01-01 00:00:00', '', '2023-01-01 00:00:00', '');
+
+-- Dumping structure for table tradingbook.account_token
+CREATE TABLE IF NOT EXISTS `account_token` (
+  `id` varchar(50) NOT NULL,
+  `accountId` varchar(50) DEFAULT NULL,
+  `token` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table tradingbook.account_token: ~0 rows (approximately)
 
 -- Dumping structure for table tradingbook.auto_number
 CREATE TABLE IF NOT EXISTS `auto_number` (
@@ -84,10 +106,11 @@ CREATE TABLE IF NOT EXISTS `auto_number` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.auto_number: ~0 rows (approximately)
+-- Dumping data for table tradingbook.auto_number: ~3 rows (approximately)
 INSERT INTO `auto_number` (`id`, `name`, `prefix`, `digit`, `runningNumber`, `updateDate`) VALUES
-	(10, 'backtest', 'B1-', 6, 49, '0000-00-00 00:00:00'),
-	(11, 'book', '2306', 4, 1, '2023-01-01 00:00:00');
+	(1, 'account', '', 6, 6, '0000-00-00 00:00:00'),
+	(10, 'backtest', 'J23-', 6, 56, '0000-00-00 00:00:00'),
+	(11, 'book', 'B23-', 4, 11, '0000-00-00 00:00:00');
 
 -- Dumping structure for table tradingbook.book
 CREATE TABLE IF NOT EXISTS `book` (
@@ -104,11 +127,15 @@ CREATE TABLE IF NOT EXISTS `book` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Dumping data for table tradingbook.book: ~5 rows (approximately)
+-- Dumping data for table tradingbook.book: ~9 rows (approximately)
 INSERT INTO `book` (`id`, `accountId`, `name`, `ilock`, `sorting`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
 	('23060001', '230101.0001', 'Real Trading MT4', 0, 1, 1, '2023-01-01 00:00:00', NULL, '2023-07-25 05:51:57', '230101.0001'),
 	('23060003', '230101.0001', 'Backtest 2023 Feb1', 0, 2, 1, '2023-01-01 00:00:00', NULL, '2023-07-03 08:01:52', '230101.0001'),
 	('23060004', '230101.0001', 'Share to Me', 1, 999, 1, '2023-01-01 00:00:00', NULL, '2023-07-08 18:45:03', '230101.0001'),
+	('23060008', '230809.000006', 'Trader 101', 0, 1, 1, '2023-08-09 10:46:52', '230809.000006', '2023-01-01 00:00:00', NULL),
+	('23060009', '230809.000006', 'trade for dummy', 0, 2, 1, '2023-08-09 10:47:08', '230809.000006', '2023-01-01 00:00:00', NULL),
+	('23060010', '230809.000006', 'SMC Hub 1.0', 0, 3, 1, '2023-08-09 10:48:41', '230809.000006', '2023-01-01 00:00:00', NULL),
+	('23060011', '230809.000006', 'AB', 0, 4, 1, '2023-08-09 18:52:04', '230809.000006', '2023-01-01 00:00:00', NULL),
 	('cook1', 'C0012', 'Book1', 0, 99, 1, '2023-01-01 00:00:00', NULL, '2023-01-01 00:00:00', NULL),
 	('zook1', 'C5555', 'Book1', 0, 99, 1, '2023-01-01 00:00:00', NULL, '2023-01-01 00:00:00', NULL);
 
@@ -126,15 +153,15 @@ CREATE TABLE IF NOT EXISTS `chartjs_type` (
 
 -- Dumping data for table tradingbook.chartjs_type: ~9 rows (approximately)
 INSERT INTO `chartjs_type` (`id`, `itype`, `label`, `status`, `image`, `doc`, `sorting`) VALUES
-	(1, 'bar', 'Bars', 1, '', 'https://www.chartjs.org/docs/latest/samples/bar/stacked.html', 1),
-	(2, 'bar', 'Stacked Bars', 1, '', 'https://www.chartjs.org/docs/latest/samples/bar/stacked.html', 2),
-	(3, 'line', 'Line', 1, '', 'https://www.chartjs.org/docs/latest/samples/line/line.html', 3),
-	(4, 'line', 'Line Filled', 1, '', '', 4),
-	(5, 'line', 'Stepped Line', 1, '', '', 5),
-	(6, 'radar', 'Radar', 1, '', 'https://www.chartjs.org/docs/latest/samples/other-charts/radar.html', 6),
-	(7, 'pie', 'Pie', 1, '', 'https://www.chartjs.org/docs/latest/samples/other-charts/pie.html', 7),
-	(8, 'pie', 'Polar area', 1, '', '', 8),
-	(9, 'scatter', 'Scatter', 1, '', 'https://www.chartjs.org/docs/latest/samples/other-charts/scatter.html', 9);
+	(1, 'bar', 'Bars', 1, './assets/img/chartjs/bar.jpg', 'https://www.chartjs.org/docs/latest/samples/bar/stacked.html', 1),
+	(2, 'bar', 'Stacked Bars', 1, './assets/img/chartjs/stackedBars.jpg', 'https://www.chartjs.org/docs/latest/samples/bar/stacked.html', 2),
+	(3, 'line', 'Line', 1, './assets/img/chartjs/line.jpg', 'https://www.chartjs.org/docs/latest/samples/line/line.html', 3),
+	(4, 'line', 'Line Filled', 1, './assets/img/chartjs/lineFilled.jpg', '', 4),
+	(5, 'line', 'Stepped Line', 1, './assets/img/chartjs/steppedLine.jpg', 'https://www.chartjs.org/docs/latest/samples/line/stepped.html', 5),
+	(6, 'radar', 'Radar', 1, './assets/img/chartjs/radar.jpg', 'https://www.chartjs.org/docs/latest/samples/other-charts/radar.html', 6),
+	(7, 'pie', 'Pie', 1, './assets/img/chartjs/pie.jpg', 'https://www.chartjs.org/docs/latest/samples/other-charts/pie.html', 7),
+	(8, 'pie', 'Polar area', 1, './assets/img/chartjs/polarArea.jpg', '', 8),
+	(9, 'scatter', 'Scatter', 1, './assets/img/chartjs/scatter.jpg', 'https://www.chartjs.org/docs/latest/samples/other-charts/scatter.html', 9);
 
 -- Dumping structure for table tradingbook.color
 CREATE TABLE IF NOT EXISTS `color` (
@@ -187,10 +214,10 @@ CREATE TABLE IF NOT EXISTS `journal` (
   UNIQUE KEY `url` (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table tradingbook.journal: ~22 rows (approximately)
+-- Dumping data for table tradingbook.journal: ~30 rows (approximately)
 INSERT INTO `journal` (`id`, `accountId`, `templateCode`, `name`, `url`, `permissionId`, `borderColor`, `backgroundColor`, `version`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
-	('B1-000026', '230101.0001', '0', 'SETUP NORA', '649d34f8bb389', 0, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:32', '230101.0001', '2023-07-01 19:03:16', '230101.0001'),
-	('B1-000027', '230101.0001', '0', 'Book Order 充サ際査メフカ', '649d34fa55074', 20, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:34', '230101.0001', '2023-08-02 10:23:58', '230101.0001'),
+	('B1-000026', '230101.0001', '0', 'SETUP NORA', '649d34f8bb389', 1, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:32', '230101.0001', '2023-08-06 18:45:40', '230101.0001'),
+	('B1-000027', '230101.0001', '0', 'Book Order 充サ際査メフカ234', '649d34fa55074', 20, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:34', '230101.0001', '2023-08-07 12:06:34', '230101.0001'),
 	('B1-000028', '230101.0001', '0', 'QM1', '649d34fb0bd97', 1, '#3AA6B9', '#C1ECE4', '1', 1, '2023-06-29 07:38:35', '230101.0001', '2023-08-02 05:42:26', '230101.0001'),
 	('B1-000029', '230101.0001', '0', 'SNR 100', '649d34feba584', 0, '#3AA6B9', '#C1ECE4', '1', 0, '2023-06-29 07:38:38', '230101.0001', '2023-07-02 12:40:58', '230101.0001'),
 	('B1-000031', '230101.0001', '1', 'New 2023-07-02 18:34', '64a1c33be7377', 0, '#3AA6B9', '#C1ECE4', '1', 0, '2023-07-02 18:34:35', '230101.0001', '2023-07-02 18:55:15', '230101.0001'),
@@ -209,9 +236,16 @@ INSERT INTO `journal` (`id`, `accountId`, `templateCode`, `name`, `url`, `permis
 	('B1-000044', '230101.0001', '1', 'abc', '64ca422390c27', 1, '', '', '1', 0, '2023-08-02 11:46:43', '230101.0001', '2023-08-02 11:54:47', '230101.0001'),
 	('B1-000045', '230101.0001', '1', 'abc 1', '64ca423f21ef8', 20, '', '', '1', 0, '2023-08-02 11:47:11', '230101.0001', '2023-08-02 11:54:47', '230101.0001'),
 	('B1-000046', '230101.0001', '1', 'SMC ver 1', '64ca42ad5c33c', 20, '', '', '1', 0, '2023-08-02 11:49:01', '230101.0001', '2023-08-02 11:54:47', '230101.0001'),
-	('B1-000047', '230101.0001', 'blank', 'templateCode', '64ca442137c84', 1, '', '', '1', 1, '2023-08-02 11:55:13', '230101.0001', '2023-08-02 11:55:13', '230101.0001'),
+	('B1-000047', '230101.0001', 'blank', 'templateCode', '64ca442137c84', 1, '', '', '1', 0, '2023-08-02 11:55:13', '230101.0001', '2023-08-03 08:55:44', '230101.0001'),
 	('B1-000048', '230101.0001', 'backtest', 'asa', '64ca45c851d76', 1, '', '', '1', 1, '2023-08-02 12:02:16', '230101.0001', '2023-08-02 12:02:16', '230101.0001'),
-	('B1-000049', '230101.0001', 'backtest', 'asa', '64ca45ea9069b', 1, '', '', '1', 1, '2023-08-02 12:02:50', '230101.0001', '2023-08-02 12:02:50', '230101.0001');
+	('B1-000049', '230101.0001', 'backtest', 'asa', '64ca45ea9069b', 1, '', '', '1', 0, '2023-08-02 12:02:50', '230101.0001', '2023-08-02 17:22:03', '230101.0001'),
+	('B1-000050', '230101.0001', 'backtest', 'An1', '64ca907770760', 1, '', '', '1', 0, '2023-08-02 17:20:55', '230101.0001', '2023-08-02 17:22:03', '230101.0001'),
+	('B1-000051', '230101.0001', 'backtest', 'test123', '64ca90e4c6a98', 1, '', '', '1', 1, '2023-08-02 17:22:44', '230101.0001', '2023-08-02 17:22:44', '230101.0001'),
+	('B1-000052', '230101.0001', 'backtest', 'SMC33', '64ce07dd40dc4', 1, '', '', '1', 1, '2023-08-05 08:27:09', '230101.0001', '2023-08-07 10:57:12', '230101.0001'),
+	('B1-000053', '230809.000006', 'backtest', 'Jonnyf', '64d37951ee136', 1, '', '', '1', 1, '2023-08-09 11:32:33', '230809.000006', '2023-08-09 11:32:33', '230809.000006'),
+	('B1-000054', '230809.000006', 'backtest', 'MS setup', '64d4f98b48502', 1, '', '', '1', 1, '2023-08-10 14:51:55', '230809.000006', '2023-08-10 14:51:55', '230809.000006'),
+	('B1-000055', '230809.000006', 'backtest', 'missAV trade database', '64d4f99a42016', 1, '', '', '1', 1, '2023-08-10 14:52:10', '230809.000006', '2023-08-10 14:52:10', '230809.000006'),
+	('B1-000056', '230809.000006', 'general', 'eToro channel', '64d4f9b114be6', 1, '', '', '1', 1, '2023-08-10 14:52:33', '230809.000006', '2023-08-10 14:52:33', '230809.000006');
 
 -- Dumping structure for table tradingbook.journal_access
 CREATE TABLE IF NOT EXISTS `journal_access` (
@@ -220,6 +254,7 @@ CREATE TABLE IF NOT EXISTS `journal_access` (
   `accountId` varchar(50) NOT NULL DEFAULT '',
   `journalId` varchar(50) NOT NULL DEFAULT '',
   `owner` int(1) NOT NULL DEFAULT 0,
+  `star` int(1) NOT NULL DEFAULT 0,
   `editable` int(1) NOT NULL DEFAULT 0,
   `changeable` int(1) NOT NULL DEFAULT 0,
   `admin` int(11) NOT NULL DEFAULT 0,
@@ -230,30 +265,41 @@ CREATE TABLE IF NOT EXISTS `journal_access` (
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_by` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_access: ~19 rows (approximately)
-INSERT INTO `journal_access` (`id`, `bookId`, `accountId`, `journalId`, `owner`, `editable`, `changeable`, `admin`, `sorting`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
-	(26, '23060001', '230101.0001', 'B1-000026', 1, 1, 1, 1, 3, 1, '2023-06-29 07:38:32', '230101.0001', '2023-07-02 12:35:56', '230101.0001'),
-	(27, '23060001', '230101.0001', 'B1-000027', 1, 1, 1, 1, 2, 1, '2023-06-29 07:38:34', '230101.0001', '2023-07-18 06:38:30', '230101.0001'),
-	(28, '23060001', '230101.0001', 'B1-000028', 1, 1, 1, 1, 1, 1, '2023-06-29 07:38:35', '230101.0001', '2023-07-02 12:35:56', '230101.0001'),
-	(31, 'zook1', 'C5555', 'B1-000026', 0, 1, 0, 0, 99, 1, '2023-06-29 07:40:07', '230101.0001', '2023-06-29 07:40:07', '230101.0001'),
-	(43, 'zook1', 'C5555', 'B1-000027', 0, 1, 0, 0, 99, 4, '2023-06-29 18:48:11', '230101.0001', '2023-08-02 10:23:45', '230101.0001'),
-	(44, 'cook1', 'C0012', 'B1-000029', 0, 1, 0, 0, 99, 4, '2023-06-29 18:49:27', '230101.0001', '2023-07-02 12:40:58', '230101.0001'),
-	(47, 'zook1', 'C5555', 'B1-000029', 0, 1, 0, 0, 99, 4, '2023-06-29 18:54:37', '230101.0001', '2023-07-02 12:40:58', '230101.0001'),
-	(51, '23060003', '230101.0001', 'B1-000033', 1, 1, 1, 1, 99, 1, '2023-07-02 18:50:03', '230101.0001', '2023-07-08 18:32:48', '230101.0001'),
-	(52, '23060003', '230101.0001', 'B1-000034', 1, 1, 1, 1, 99, 1, '2023-07-02 18:54:31', '230101.0001', '2023-07-08 18:32:45', '230101.0001'),
-	(53, '23060004', '230101.0001', 'B1-000035', 1, 1, 1, 1, 99, 1, '2023-07-02 18:58:27', '230101.0001', '2023-07-08 18:32:55', '230101.0001'),
-	(54, '23060004', '230101.0001', 'B1-000036', 1, 1, 1, 1, 99, 1, '2023-07-03 05:00:11', '230101.0001', '2023-07-08 18:32:53', '230101.0001'),
-	(58, 'cook1', 'C0012', 'B1-000040', 1, 1, 1, 1, 99, 1, '2023-07-20 04:53:57', 'C0012', '2023-07-20 04:53:57', 'C0012'),
-	(59, '23060001', '230101.0001', 'B1-000041', 1, 1, 1, 1, 99, 1, '2023-07-25 05:03:48', '230101.0001', '2023-07-25 05:03:48', '230101.0001'),
-	(60, '23060001', '230101.0001', 'B1-000042', 1, 1, 1, 1, 99, 1, '2023-07-25 05:04:48', '230101.0001', '2023-07-25 05:04:48', '230101.0001'),
-	(61, '23060001', '230101.0001', 'B1-000043', 1, 1, 1, 1, 99, 4, '2023-08-02 05:44:02', '230101.0001', '2023-08-02 05:44:21', '230101.0001'),
-	(62, '23060001', '230101.0001', 'B1-000044', 1, 1, 1, 1, 99, 4, '2023-08-02 11:46:43', '230101.0001', '2023-08-02 11:54:47', '230101.0001'),
-	(63, '23060001', '230101.0001', 'B1-000045', 1, 1, 1, 1, 99, 4, '2023-08-02 11:47:11', '230101.0001', '2023-08-02 11:54:47', '230101.0001'),
-	(64, '23060001', '230101.0001', 'B1-000046', 1, 1, 1, 1, 99, 4, '2023-08-02 11:49:01', '230101.0001', '2023-08-02 11:54:47', '230101.0001'),
-	(69, '23060001', '230101.0001', 'B1-000047', 1, 1, 1, 1, 99, 1, '2023-08-02 11:55:13', '230101.0001', '2023-08-02 11:55:13', '230101.0001'),
-	(71, '23060001', '230101.0001', 'B1-000049', 1, 1, 1, 1, 99, 1, '2023-08-02 12:02:50', '230101.0001', '2023-08-02 12:02:50', '230101.0001');
+-- Dumping data for table tradingbook.journal_access: ~31 rows (approximately)
+INSERT INTO `journal_access` (`id`, `bookId`, `accountId`, `journalId`, `owner`, `star`, `editable`, `changeable`, `admin`, `sorting`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
+	(26, '23060001', '230101.0001', 'B1-000026', 1, 0, 1, 1, 1, 3, 1, '2023-06-29 07:38:32', '230101.0001', '2023-07-02 12:35:56', '230101.0001'),
+	(27, '23060001', '230101.0001', 'B1-000027', 1, 0, 1, 1, 1, 2, 1, '2023-06-29 07:38:34', '230101.0001', '2023-07-18 06:38:30', '230101.0001'),
+	(28, '23060001', '230101.0001', 'B1-000028', 1, 0, 1, 1, 1, 1, 1, '2023-06-29 07:38:35', '230101.0001', '2023-07-02 12:35:56', '230101.0001'),
+	(31, 'zook1', 'C5555', 'B1-000026', 0, 0, 1, 0, 0, 99, 1, '2023-06-29 07:40:07', '230101.0001', '2023-06-29 07:40:07', '230101.0001'),
+	(43, 'zook1', 'C5555', 'B1-000027', 0, 0, 1, 0, 0, 99, 4, '2023-06-29 18:48:11', '230101.0001', '2023-08-02 10:23:45', '230101.0001'),
+	(44, 'cook1', 'C0012', 'B1-000029', 0, 0, 1, 0, 0, 99, 4, '2023-06-29 18:49:27', '230101.0001', '2023-07-02 12:40:58', '230101.0001'),
+	(47, 'zook1', 'C5555', 'B1-000029', 0, 0, 1, 0, 0, 99, 4, '2023-06-29 18:54:37', '230101.0001', '2023-07-02 12:40:58', '230101.0001'),
+	(51, '23060003', '230101.0001', 'B1-000033', 1, 0, 1, 1, 1, 99, 1, '2023-07-02 18:50:03', '230101.0001', '2023-07-08 18:32:48', '230101.0001'),
+	(52, '23060003', '230101.0001', 'B1-000034', 1, 0, 1, 1, 1, 99, 1, '2023-07-02 18:54:31', '230101.0001', '2023-07-08 18:32:45', '230101.0001'),
+	(53, '23060004', '230101.0001', 'B1-000035', 1, 0, 1, 1, 1, 99, 1, '2023-07-02 18:58:27', '230101.0001', '2023-07-08 18:32:55', '230101.0001'),
+	(54, '23060004', '230101.0001', 'B1-000036', 1, 0, 1, 1, 1, 99, 1, '2023-07-03 05:00:11', '230101.0001', '2023-07-08 18:32:53', '230101.0001'),
+	(58, 'cook1', 'C0012', 'B1-000040', 1, 0, 1, 1, 1, 99, 1, '2023-07-20 04:53:57', 'C0012', '2023-07-20 04:53:57', 'C0012'),
+	(59, '23060001', '230101.0001', 'B1-000041', 1, 0, 1, 1, 1, 99, 1, '2023-07-25 05:03:48', '230101.0001', '2023-07-25 05:03:48', '230101.0001'),
+	(60, '23060001', '230101.0001', 'B1-000042', 1, 0, 1, 1, 1, 99, 1, '2023-07-25 05:04:48', '230101.0001', '2023-07-25 05:04:48', '230101.0001'),
+	(61, '23060001', '230101.0001', 'B1-000043', 1, 0, 1, 1, 1, 99, 0, '2023-08-02 05:44:02', '230101.0001', '2023-08-02 17:21:58', '230101.0001'),
+	(62, '23060001', '230101.0001', 'B1-000044', 1, 0, 1, 1, 1, 99, 0, '2023-08-02 11:46:43', '230101.0001', '2023-08-02 17:21:58', '230101.0001'),
+	(63, '23060001', '230101.0001', 'B1-000045', 1, 0, 1, 1, 1, 99, 0, '2023-08-02 11:47:11', '230101.0001', '2023-08-02 17:21:58', '230101.0001'),
+	(64, '23060001', '230101.0001', 'B1-000046', 1, 0, 1, 1, 1, 99, 0, '2023-08-02 11:49:01', '230101.0001', '2023-08-02 17:21:58', '230101.0001'),
+	(69, '23060001', '230101.0001', 'B1-000047', 1, 0, 1, 1, 1, 99, 4, '2023-08-02 11:55:13', '230101.0001', '2023-08-03 08:55:44', '230101.0001'),
+	(71, '23060001', '230101.0001', 'B1-000049', 1, 0, 1, 1, 1, 99, 0, '2023-08-02 12:02:50', '230101.0001', '2023-08-02 17:22:05', '230101.0001'),
+	(72, '23060001', '230101.0001', 'B1-000050', 1, 0, 1, 1, 1, 99, 0, '2023-08-02 17:20:55', '230101.0001', '2023-08-02 17:22:05', '230101.0001'),
+	(73, '23060001', '230101.0001', 'B1-000051', 1, 0, 1, 1, 1, 99, 1, '2023-08-02 17:22:44', '230101.0001', '2023-08-02 17:22:44', '230101.0001'),
+	(74, '23060001', '230101.0001', 'B1-000052', 1, 0, 1, 1, 1, 99, 1, '2023-08-05 08:27:09', '230101.0001', '2023-08-05 08:27:09', '230101.0001'),
+	(75, '', 'C0012', 'B1-000051', 0, 0, 1, 0, 0, 99, 1, '2023-08-06 18:43:27', '230101.0001', '2023-08-06 18:43:27', '230101.0001'),
+	(76, '', 'C0012', 'B1-000027', 0, 0, 1, 0, 0, 99, 0, '2023-08-07 11:26:00', '230101.0001', '2023-08-07 11:26:00', '230101.0001'),
+	(77, '', 'C0012', 'B1-000027', 0, 0, 1, 0, 0, 99, 1, '2023-08-07 11:26:00', '230101.0001', '2023-08-07 11:26:00', '230101.0001'),
+	(78, '23060008', '230809.000006', 'B1-000053', 1, 0, 1, 1, 1, 99, 1, '2023-08-09 11:32:33', '230809.000006', '2023-08-09 11:32:33', '230809.000006'),
+	(79, '23060008', '230809.000006', 'B1-000054', 1, 0, 1, 1, 1, 99, 1, '2023-08-10 14:51:55', '230809.000006', '2023-08-10 14:51:55', '230809.000006'),
+	(80, '23060008', '230809.000006', 'B1-000055', 1, 1, 1, 1, 1, 99, 1, '2023-08-10 14:52:10', '230809.000006', '2023-08-10 14:52:10', '230809.000006'),
+	(81, '23060009', '230809.000006', 'B1-000056', 1, 1, 1, 1, 1, 99, 1, '2023-08-10 14:52:33', '230809.000006', '2023-08-10 14:52:33', '230809.000006'),
+	(82, '23060001', '230809.000006', 'B1-000027', 0, 1, 1, 1, 0, 2, 1, '2023-06-29 07:38:34', '230101.0001', '2023-07-18 06:38:30', '230101.0001');
 
 -- Dumping structure for table tradingbook.journal_chart_type
 CREATE TABLE IF NOT EXISTS `journal_chart_type` (
@@ -267,12 +313,33 @@ CREATE TABLE IF NOT EXISTS `journal_chart_type` (
   `input_by` varchar(50) NOT NULL DEFAULT '',
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_chart_type: ~2 rows (approximately)
+-- Dumping data for table tradingbook.journal_chart_type: ~23 rows (approximately)
 INSERT INTO `journal_chart_type` (`id`, `journalTableViewId`, `chartjsTypeId`, `status`, `presence`, `update_by`, `update_date`, `input_by`, `input_date`) VALUES
-	(12, 11, 3, 1, 1, '230101.0001', '2023-07-31 05:57:58', '230101.0001', '2023-07-28 09:50:42'),
-	(13, 12, 1, 1, 1, '230101.0001', '2023-08-02 05:41:10', '230101.0001', '2023-07-28 09:55:35');
+	(12, 11, 3, 1, 1, '230101.0001', '2023-08-04 15:58:49', '230101.0001', '2023-07-28 09:50:42'),
+	(13, 12, 1, 1, 1, '230101.0001', '2023-08-03 18:01:43', '230101.0001', '2023-07-28 09:55:35'),
+	(14, 18, 1, 1, 1, '230101.0001', '2023-08-03 05:19:36', '230101.0001', '2023-08-02 17:57:44'),
+	(15, 25, 3, 1, 1, '230101.0001', '2023-08-03 17:00:25', '230101.0001', '2023-08-03 17:00:12'),
+	(16, 22, 1, 1, 1, '230101.0001', '2023-08-03 17:00:49', '230101.0001', '2023-08-03 17:00:39'),
+	(17, 23, 1, 1, 1, '230101.0001', '2023-08-03 17:01:03', '230101.0001', '2023-08-03 17:01:01'),
+	(18, 24, 1, 1, 1, '230101.0001', '2023-08-03 17:12:09', '230101.0001', '2023-08-03 17:09:13'),
+	(19, 26, 1, 1, 1, '230101.0001', '2023-08-03 17:15:34', '230101.0001', '2023-08-03 17:14:32'),
+	(20, 27, 1, 1, 1, '230101.0001', '2023-08-03 17:28:42', '230101.0001', '2023-08-03 17:24:05'),
+	(21, 29, 1, 1, 1, '230101.0001', '2023-08-03 17:29:41', '230101.0001', '2023-08-03 17:29:17'),
+	(22, 13, 1, 1, 1, '230101.0001', '2023-08-03 18:17:25', '230101.0001', '2023-08-03 17:34:51'),
+	(23, 19, 1, 1, 1, '230101.0001', '2023-08-03 18:09:20', '230101.0001', '2023-08-03 18:07:51'),
+	(24, 30, 1, 1, 1, '230101.0001', '2023-08-03 18:48:48', '230101.0001', '2023-08-03 18:10:07'),
+	(25, 31, 1, 1, 1, '230101.0001', '2023-08-03 18:51:55', '230101.0001', '2023-08-03 18:50:01'),
+	(26, 32, 1, 1, 1, '230101.0001', '2023-08-04 03:54:19', '230101.0001', '2023-08-03 19:02:27'),
+	(27, 33, 1, 1, 1, '230101.0001', '2023-08-03 20:14:11', '230101.0001', '2023-08-03 20:12:55'),
+	(28, 36, 1, 1, 1, '230101.0001', '2023-08-04 03:56:52', '230101.0001', '2023-08-04 03:56:43'),
+	(29, 35, 1, 1, 1, '230101.0001', '2023-08-04 11:33:59', '230101.0001', '2023-08-04 11:33:54'),
+	(30, 37, 1, 1, 1, '230101.0001', '2023-08-04 11:34:10', '230101.0001', '2023-08-04 11:34:07'),
+	(31, 39, 1, 1, 1, '230101.0001', '2023-08-05 08:28:18', '230101.0001', '2023-08-05 08:28:03'),
+	(32, 40, 3, 1, 1, '230101.0001', '2023-08-06 04:12:41', '230101.0001', '2023-08-06 04:12:40'),
+	(33, 42, 1, 1, 1, '230101.0001', '2023-08-06 18:08:00', '230101.0001', '2023-08-06 04:34:59'),
+	(34, 43, 3, 1, 1, '230101.0001', '2023-08-06 04:35:27', '230101.0001', '2023-08-06 04:35:17');
 
 -- Dumping structure for table tradingbook.journal_chart_where
 CREATE TABLE IF NOT EXISTS `journal_chart_where` (
@@ -286,12 +353,26 @@ CREATE TABLE IF NOT EXISTS `journal_chart_where` (
   `input_by` varchar(50) NOT NULL DEFAULT '',
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_chart_where: ~2 rows (approximately)
+-- Dumping data for table tradingbook.journal_chart_where: ~16 rows (approximately)
 INSERT INTO `journal_chart_where` (`id`, `journalTableViewId`, `value`, `status`, `presence`, `update_by`, `update_date`, `input_by`, `input_date`) VALUES
-	(9, 11, 'f4', 1, 1, '230101.0001', '2023-07-31 05:57:58', '230101.0001', '2023-07-28 09:50:42'),
-	(10, 12, '', 1, 1, '230101.0001', '2023-08-02 05:41:11', '230101.0001', '2023-07-28 09:55:35');
+	(9, 11, '', 1, 1, '230101.0001', '2023-08-04 15:58:49', '230101.0001', '2023-07-28 09:50:42'),
+	(10, 12, 'f4', 1, 1, '230101.0001', '2023-08-03 18:01:43', '230101.0001', '2023-07-28 09:55:35'),
+	(11, 18, '', 1, 1, '230101.0001', '2023-08-03 05:19:36', '230101.0001', '2023-08-02 17:57:44'),
+	(12, 13, 'f13', 1, 1, '230101.0001', '2023-08-03 18:17:25', '230101.0001', '2023-08-03 17:46:50'),
+	(14, 19, 'f13', 1, 1, '230101.0001', '2023-08-03 18:09:20', '230101.0001', '2023-08-03 18:08:43'),
+	(15, 30, '', 1, 1, '230101.0001', '2023-08-03 18:48:48', '230101.0001', '2023-08-03 18:10:12'),
+	(16, 31, '', 1, 1, '230101.0001', '2023-08-03 18:50:12', '230101.0001', '2023-08-03 18:50:11'),
+	(17, 33, '', 1, 1, '230101.0001', '2023-08-03 20:14:11', '230101.0001', '2023-08-03 20:12:57'),
+	(18, 32, '', 1, 1, '230101.0001', '2023-08-04 03:54:19', '230101.0001', '2023-08-04 03:54:19'),
+	(19, 36, 'f13', 1, 1, '230101.0001', '2023-08-04 03:56:52', '230101.0001', '2023-08-04 03:56:43'),
+	(20, 35, '', 1, 1, '230101.0001', '2023-08-04 11:33:59', '230101.0001', '2023-08-04 11:33:54'),
+	(21, 37, '', 1, 1, '230101.0001', '2023-08-04 11:34:10', '230101.0001', '2023-08-04 11:34:07'),
+	(22, 39, '', 1, 1, '230101.0001', '2023-08-05 08:28:18', '230101.0001', '2023-08-05 08:28:03'),
+	(23, 40, '', 1, 1, '230101.0001', '2023-08-06 04:12:41', '230101.0001', '2023-08-06 04:12:40'),
+	(24, 42, '', 1, 1, '230101.0001', '2023-08-06 18:08:00', '230101.0001', '2023-08-06 04:34:59'),
+	(25, 43, '', 1, 1, '230101.0001', '2023-08-06 04:35:27', '230101.0001', '2023-08-06 04:35:17');
 
 -- Dumping structure for table tradingbook.journal_chart_where_select
 CREATE TABLE IF NOT EXISTS `journal_chart_where_select` (
@@ -305,13 +386,38 @@ CREATE TABLE IF NOT EXISTS `journal_chart_where_select` (
   `input_by` varchar(50) NOT NULL DEFAULT '',
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=332 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=971 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_chart_where_select: ~3 rows (approximately)
+-- Dumping data for table tradingbook.journal_chart_where_select: ~28 rows (approximately)
 INSERT INTO `journal_chart_where_select` (`id`, `journalTableViewId`, `journalSelectId`, `status`, `presence`, `update_by`, `update_date`, `input_by`, `input_date`) VALUES
-	(329, 11, 2, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
-	(330, 11, 7, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
-	(331, 11, 19, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00');
+	(740, 31, 2, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(741, 31, 7, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(742, 31, 19, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(743, 31, 23, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(744, 31, 24, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(745, 31, 25, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(746, 31, 26, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(901, 32, 2, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(902, 32, 7, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(903, 32, 19, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(904, 32, 23, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(905, 32, 24, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(906, 32, 25, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(907, 32, 26, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(943, 36, 23, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(944, 36, 24, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(945, 36, 25, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(946, 36, 26, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(947, 36, 2, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(948, 36, 7, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(949, 36, 19, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(964, 11, 2, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(965, 11, 7, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(966, 11, 19, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(967, 11, 23, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(968, 11, 24, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(969, 11, 25, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(970, 11, 26, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00');
 
 -- Dumping structure for table tradingbook.journal_chart_xaxis
 CREATE TABLE IF NOT EXISTS `journal_chart_xaxis` (
@@ -325,12 +431,33 @@ CREATE TABLE IF NOT EXISTS `journal_chart_xaxis` (
   `input_by` varchar(50) NOT NULL DEFAULT '',
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_chart_xaxis: ~2 rows (approximately)
+-- Dumping data for table tradingbook.journal_chart_xaxis: ~23 rows (approximately)
 INSERT INTO `journal_chart_xaxis` (`id`, `journalTableViewId`, `value`, `status`, `presence`, `update_by`, `update_date`, `input_by`, `input_date`) VALUES
-	(13, 11, 'f6', 1, 1, '230101.0001', '2023-07-31 05:57:58', '230101.0001', '2023-07-28 09:50:42'),
-	(14, 12, 'f14', 1, 1, '230101.0001', '2023-08-02 05:41:11', '230101.0001', '2023-07-28 09:55:35');
+	(13, 11, 'f9', 1, 1, '230101.0001', '2023-08-04 15:58:49', '230101.0001', '2023-07-28 09:50:42'),
+	(14, 12, 'f14', 1, 1, '230101.0001', '2023-08-03 18:01:43', '230101.0001', '2023-07-28 09:55:35'),
+	(16, 18, 'f3', 1, 1, '230101.0001', '2023-08-03 05:19:36', '230101.0001', '2023-08-03 05:19:23'),
+	(17, 25, 'f4', 1, 1, '230101.0001', '2023-08-03 17:00:25', '230101.0001', '2023-08-03 17:00:16'),
+	(18, 22, 'f4', 1, 1, '230101.0001', '2023-08-03 17:00:49', '230101.0001', '2023-08-03 17:00:40'),
+	(19, 23, 'f3', 1, 1, '230101.0001', '2023-08-03 17:01:03', '230101.0001', '2023-08-03 17:01:03'),
+	(20, 24, 'f3', 1, 1, '230101.0001', '2023-08-03 17:12:09', '230101.0001', '2023-08-03 17:12:09'),
+	(21, 26, 'f3', 1, 1, '230101.0001', '2023-08-03 17:15:34', '230101.0001', '2023-08-03 17:14:51'),
+	(22, 27, 'f3', 1, 1, '230101.0001', '2023-08-03 17:28:42', '230101.0001', '2023-08-03 17:24:14'),
+	(23, 29, 'f3', 1, 1, '230101.0001', '2023-08-03 17:29:41', '230101.0001', '2023-08-03 17:29:37'),
+	(24, 13, 'f14', 1, 1, '230101.0001', '2023-08-03 18:17:25', '230101.0001', '2023-08-03 17:34:53'),
+	(25, 19, 'f14', 1, 1, '230101.0001', '2023-08-03 18:09:20', '230101.0001', '2023-08-03 18:07:53'),
+	(26, 30, 'f14', 1, 1, '230101.0001', '2023-08-03 18:48:48', '230101.0001', '2023-08-03 18:10:07'),
+	(27, 31, 'f14', 1, 1, '230101.0001', '2023-08-03 18:51:55', '230101.0001', '2023-08-03 18:50:03'),
+	(28, 33, 'f3', 1, 1, '230101.0001', '2023-08-03 20:14:11', '230101.0001', '2023-08-03 20:12:57'),
+	(29, 32, 'f14', 1, 1, '230101.0001', '2023-08-04 03:54:19', '230101.0001', '2023-08-04 03:54:19'),
+	(30, 36, 'f14', 1, 1, '230101.0001', '2023-08-04 03:56:52', '230101.0001', '2023-08-04 03:56:43'),
+	(31, 35, 'f3', 1, 1, '230101.0001', '2023-08-04 11:33:59', '230101.0001', '2023-08-04 11:33:54'),
+	(32, 37, 'f3', 1, 1, '230101.0001', '2023-08-04 11:34:10', '230101.0001', '2023-08-04 11:34:07'),
+	(33, 39, 'f3', 1, 1, '230101.0001', '2023-08-05 08:28:18', '230101.0001', '2023-08-05 08:28:03'),
+	(34, 40, 'f3', 1, 1, '230101.0001', '2023-08-06 04:12:41', '230101.0001', '2023-08-06 04:12:40'),
+	(35, 42, 'f3', 1, 1, '230101.0001', '2023-08-06 18:08:00', '230101.0001', '2023-08-06 04:34:59'),
+	(36, 43, 'f4', 1, 1, '230101.0001', '2023-08-06 04:35:27', '230101.0001', '2023-08-06 04:35:17');
 
 -- Dumping structure for table tradingbook.journal_chart_yaxis
 CREATE TABLE IF NOT EXISTS `journal_chart_yaxis` (
@@ -345,11 +472,11 @@ CREATE TABLE IF NOT EXISTS `journal_chart_yaxis` (
   `input_by` varchar(50) NOT NULL DEFAULT '',
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_chart_yaxis: ~10 rows (approximately)
+-- Dumping data for table tradingbook.journal_chart_yaxis: ~85 rows (approximately)
 INSERT INTO `journal_chart_yaxis` (`id`, `journalTableViewId`, `value`, `fill`, `status`, `presence`, `update_by`, `update_date`, `input_by`, `input_date`) VALUES
-	(32, 11, 'f7', 1, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(32, 11, 'f7', 1, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
 	(33, 11, 'f8', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
 	(34, 11, 'f9', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
 	(35, 11, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
@@ -358,7 +485,82 @@ INSERT INTO `journal_chart_yaxis` (`id`, `journalTableViewId`, `value`, `fill`, 
 	(38, 12, 'f9', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
 	(39, 12, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
 	(40, 12, 'f14', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
-	(41, 11, 'f14', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00');
+	(41, 11, 'f14', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(42, 18, 'f1', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(43, 18, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(44, 18, 'f3', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(45, 25, 'f1', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(46, 25, 'f2', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(47, 25, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(48, 22, 'f1', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(49, 22, 'f2', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(50, 22, 'f3', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(51, 23, 'f1', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(52, 23, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(53, 23, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(54, 24, 'f1', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(55, 24, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(56, 24, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(57, 26, 'f1', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(58, 26, 'f2', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(59, 26, 'f3', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(60, 27, 'f1', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(61, 27, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(62, 27, 'f3', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(63, 29, 'f1', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(64, 29, 'f2', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(65, 29, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(66, 13, 'f7', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(67, 13, 'f8', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(68, 13, 'f14', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(69, 13, 'f9', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(70, 13, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(71, 19, 'f7', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(72, 19, 'f8', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(73, 19, 'f14', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(74, 19, 'f9', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(75, 19, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(76, 30, 'f7', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(77, 30, 'f8', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(78, 30, 'f14', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(79, 30, 'f9', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(80, 30, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(81, 31, 'f7', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(82, 31, 'f8', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(83, 31, 'f14', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(84, 31, 'f9', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(85, 31, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(86, 32, 'f7', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(87, 32, 'f8', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(88, 32, 'f14', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(89, 32, 'f9', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(90, 32, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(91, 33, 'f1', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(92, 33, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(93, 33, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(94, 36, 'f7', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(95, 36, 'f8', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(96, 36, 'f14', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(97, 36, 'f9', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(98, 36, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(99, 35, 'f1', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(100, 35, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(101, 35, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(102, 37, 'f1', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(103, 37, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(104, 37, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(105, 39, 'f1', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(106, 39, 'f2', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(107, 39, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(108, 40, 'f1', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(109, 40, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(110, 40, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(111, 42, 'f1', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(112, 42, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(113, 42, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(114, 43, 'f1', 0, 1, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(115, 43, 'f2', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00'),
+	(116, 43, 'f3', 0, 0, 1, '', '2023-01-01 00:00:00', '', '2023-01-01 00:00:00');
 
 -- Dumping structure for table tradingbook.journal_custom_field
 CREATE TABLE IF NOT EXISTS `journal_custom_field` (
@@ -381,9 +583,9 @@ CREATE TABLE IF NOT EXISTS `journal_custom_field` (
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_by` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_custom_field: ~25 rows (approximately)
+-- Dumping data for table tradingbook.journal_custom_field: ~52 rows (approximately)
 INSERT INTO `journal_custom_field` (`id`, `journalId`, `ilock`, `hideDEL`, `f`, `name`, `iType`, `width`, `textAlign`, `suffix`, `sorting`, `eval`, `evalDev`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
 	(39, 'B1-000014', 0, 0, 1, 'custom Field 1', 'text', 300, 'center', '', 10, '', '', 1, '2023-06-27 17:38:35', '230101.0001', '2023-01-01 00:00:00', ''),
 	(41, 'B1-000014', 0, 0, 2, 'custom Field 2', 'text', 300, 'center', '', 20, '', '', 1, '2023-06-27 17:38:57', '230101.0001', '2023-01-01 00:00:00', ''),
@@ -404,12 +606,39 @@ INSERT INTO `journal_custom_field` (`id`, `journalId`, `ilock`, `hideDEL`, `f`, 
 	(76, 'B1-000027', 0, 0, 10, 'Label 1', 'text', 150, 'center', '', 12, '', '', 1, '2023-07-27 07:43:44', '230101.0001', '2023-08-02 10:18:09', '230101.0001'),
 	(77, 'B1-000027', 0, 0, 11, 'label 2', 'text', 150, 'center', '', 14, '', '', 1, '2023-07-27 07:43:58', '230101.0001', '2023-08-02 10:18:09', '230101.0001'),
 	(78, 'B1-000027', 0, 0, 12, 'label 4', 'text', 150, 'center', '', 24, '', '', 0, '2023-07-27 08:52:19', '230101.0001', '2023-08-01 05:56:18', '230101.0001'),
-	(79, 'B1-000027', 0, 0, 13, 'Line Select Style', 'select', 150, 'center', '', 19, '', '', 1, '2023-07-27 18:02:19', '230101.0001', '2023-08-02 10:18:09', '230101.0001'),
+	(79, 'B1-000027', 0, 0, 13, 'Forex NEWS', 'select', 150, 'center', '', 19, '', '', 1, '2023-07-27 18:02:19', '230101.0001', '2023-08-03 10:36:51', '230101.0001'),
 	(80, 'B1-000027', 0, 0, 14, 'Formual profit', 'formula', 150, 'center', '', 10, '(20*2) /7.6 . " Haha"', '(20*2) /7.6 . " Haha"', 1, '2023-07-30 17:53:19', '230101.0001', '2023-08-02 10:18:09', '230101.0001'),
 	(81, 'B1-000027', 0, 0, 15, 'Mandona Code', 'text', 150, 'center', '', 20, '', '', 1, '2023-08-01 12:04:05', '230101.0001', '2023-08-02 10:18:09', '230101.0001'),
 	(82, 'B1-000027', 0, 0, 16, 'Capsule Code', 'text', 150, 'center', '', 21, '', '', 1, '2023-08-01 12:04:55', '230101.0001', '2023-08-02 10:18:09', '230101.0001'),
 	(83, 'B1-000027', 0, 0, 17, 'User Select', 'user', 150, 'center', '', 11, '', '', 1, '2023-08-01 18:38:23', '230101.0001', '2023-08-02 10:18:09', '230101.0001'),
-	(84, 'B1-000049', 0, 0, 1, 'abc', 'text', 150, 'center', '', 1, '', '', 1, '2023-08-02 12:11:03', '230101.0001', '2023-01-01 00:00:00', '');
+	(84, 'B1-000049', 0, 0, 1, 'abc', 'text', 150, 'center', '', 1, '', '', 1, '2023-08-02 12:11:03', '230101.0001', '2023-01-01 00:00:00', ''),
+	(85, 'B1-000050', 0, 0, 1, 'number A', 'number', 188, 'center', '', 1, '', '', 1, '2023-08-02 17:20:55', '', '2023-08-02 17:21:14', '230101.0001'),
+	(86, 'B1-000050', 0, 0, 2, 'number B', 'number', 300, 'center', '', 2, '', '', 1, '2023-08-02 17:20:55', '', '2023-01-01 00:00:00', ''),
+	(87, 'B1-000050', 0, 0, 3, 'formula1', 'formula', 300, 'center', '', 3, '$f1 * $f2', '', 1, '2023-08-02 17:20:55', '', '2023-01-01 00:00:00', ''),
+	(88, 'B1-000050', 0, 0, 4, 'text 1', 'text', 300, 'center', '', 4, '', '', 1, '2023-08-02 17:20:55', '', '2023-01-01 00:00:00', ''),
+	(89, 'B1-000051', 0, 0, 1, 'number A', 'number', 150, 'center', '', 1, '', '', 1, '2023-08-02 17:22:44', '', '2023-01-01 00:00:00', ''),
+	(90, 'B1-000051', 0, 0, 2, 'number B', 'number', 150, 'center', '', 2, '', '', 1, '2023-08-02 17:22:44', '', '2023-01-01 00:00:00', ''),
+	(91, 'B1-000051', 0, 0, 3, 'formula1', 'formula', 150, 'center', '', 3, '$f1 * $f2', '', 1, '2023-08-02 17:22:44', '', '2023-01-01 00:00:00', ''),
+	(92, 'B1-000051', 0, 0, 4, 'text 1', 'text', 150, 'center', '', 4, '', '', 1, '2023-08-02 17:22:44', '', '2023-01-01 00:00:00', ''),
+	(93, 'B1-000042', 0, 0, 1, 'abc', 'text', 150, 'center', '', 1, '', '', 1, '2023-08-05 08:26:52', '230101.0001', '2023-01-01 00:00:00', ''),
+	(94, 'B1-000052', 0, 0, 1, 'number A', 'number', 150, 'center', '', 1, '', '', 1, '2023-08-05 08:27:09', '', '2023-01-01 00:00:00', ''),
+	(95, 'B1-000052', 0, 0, 2, 'number B', 'number', 150, 'center', '', 2, '', '', 1, '2023-08-05 08:27:09', '', '2023-01-01 00:00:00', ''),
+	(96, 'B1-000052', 0, 0, 3, 'formula1', 'formula', 150, 'center', '', 3, '$f1 * $f2', '', 1, '2023-08-05 08:27:09', '', '2023-01-01 00:00:00', ''),
+	(97, 'B1-000052', 0, 0, 4, 'text 1', 'text', 150, 'center', '', 4, '', '', 1, '2023-08-05 08:27:09', '', '2023-01-01 00:00:00', ''),
+	(98, 'B1-000053', 0, 0, 1, 'number A', 'number', 150, 'center', '', 1, '', '', 1, '2023-08-09 11:32:33', '', '2023-01-01 00:00:00', ''),
+	(99, 'B1-000053', 0, 0, 2, 'number B', 'number', 150, 'center', '', 2, '', '', 1, '2023-08-09 11:32:33', '', '2023-01-01 00:00:00', ''),
+	(100, 'B1-000053', 0, 0, 3, 'formula1', 'formula', 150, 'center', '', 3, '$f1 * $f2', '', 1, '2023-08-09 11:32:33', '', '2023-01-01 00:00:00', ''),
+	(101, 'B1-000053', 0, 0, 4, 'text 1', 'text', 150, 'center', '', 4, '', '', 1, '2023-08-09 11:32:33', '', '2023-01-01 00:00:00', ''),
+	(102, 'B1-000054', 0, 0, 1, 'number A', 'number', 150, 'center', '', 1, '', '', 1, '2023-08-10 14:51:55', '', '2023-01-01 00:00:00', ''),
+	(103, 'B1-000054', 0, 0, 2, 'number B', 'number', 150, 'center', '', 2, '', '', 1, '2023-08-10 14:51:55', '', '2023-01-01 00:00:00', ''),
+	(104, 'B1-000054', 0, 0, 3, 'formula1', 'formula', 150, 'center', '', 3, '$f1 * $f2', '', 1, '2023-08-10 14:51:55', '', '2023-01-01 00:00:00', ''),
+	(105, 'B1-000054', 0, 0, 4, 'text 1', 'text', 150, 'center', '', 4, '', '', 1, '2023-08-10 14:51:55', '', '2023-01-01 00:00:00', ''),
+	(106, 'B1-000055', 0, 0, 1, 'number A', 'number', 150, 'center', '', 1, '', '', 1, '2023-08-10 14:52:10', '', '2023-01-01 00:00:00', ''),
+	(107, 'B1-000055', 0, 0, 2, 'number B', 'number', 150, 'center', '', 2, '', '', 1, '2023-08-10 14:52:10', '', '2023-01-01 00:00:00', ''),
+	(108, 'B1-000055', 0, 0, 3, 'formula1', 'formula', 150, 'center', '', 3, '$f1 * $f2', '', 1, '2023-08-10 14:52:10', '', '2023-01-01 00:00:00', ''),
+	(109, 'B1-000055', 0, 0, 4, 'text 1', 'text', 150, 'center', '', 4, '', '', 1, '2023-08-10 14:52:10', '', '2023-01-01 00:00:00', ''),
+	(110, 'B1-000056', 0, 0, 1, 'Abc', 'text', 150, 'center', '', 1, '', '', 1, '2023-08-10 14:52:33', '', '2023-01-01 00:00:00', ''),
+	(111, 'B1-000056', 0, 0, 2, 'CDE', 'number', 150, 'center', '', 2, '', '', 1, '2023-08-10 14:52:33', '', '2023-01-01 00:00:00', '');
 
 -- Dumping structure for table tradingbook.journal_detail
 CREATE TABLE IF NOT EXISTS `journal_detail` (
@@ -453,9 +682,9 @@ CREATE TABLE IF NOT EXISTS `journal_detail` (
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_by` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table tradingbook.journal_detail: ~52 rows (approximately)
+-- Dumping data for table tradingbook.journal_detail: ~67 rows (approximately)
 INSERT INTO `journal_detail` (`id`, `journalId`, `archives`, `presence`, `sorting`, `ilock`, `positionId`, `marketId`, `openDate`, `closeDate`, `sl`, `rr`, `tp`, `resultId`, `note`, `f1`, `f2`, `f3`, `f4`, `f5`, `f6`, `f7`, `f8`, `f9`, `f10`, `f11`, `f12`, `f13`, `f14`, `f15`, `f16`, `f17`, `f18`, `f19`, `f20`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
 	(1, 'B1-000026', 0, 1, 0, 1, 2, 2, '2023-01-13 06:05:00', '2023-01-13 20:34:00', 23.00, -1.00, -23.00, -1, '', '18:30', '1.244223', 'akao434', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-01-01 00:00:00', '', '2023-07-01 19:03:16', ''),
 	(2, 'B1-000026', 0, 1, 0, 1, 1, 3, '2022-12-02 04:04:00', '2022-12-08 18:25:00', 20.00, 3.00, 60.00, 1, '', '18:30', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-01-01 00:00:00', '', '2023-07-01 19:03:16', ''),
@@ -473,43 +702,59 @@ INSERT INTO `journal_detail` (`id`, `journalId`, `archives`, `presence`, `sortin
 	(14, 'B1-000029', 0, 0, 0, 0, 0, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-06-29 19:15:59', '', '2023-07-02 12:40:58', '230101.0001'),
 	(15, 'B1-000029', 0, 0, 0, 0, 0, 5, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-06-29 19:16:00', '', '2023-07-02 12:40:58', '230101.0001'),
 	(16, 'B1-000029', 0, 0, 0, 0, 0, 4, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-06-29 19:16:01', '', '2023-07-02 12:40:58', '230101.0001'),
-	(17, 'B1-000027', 0, 0, 0, 0, 1, 2, '2020-01-02 00:00:00', '2020-01-03 00:00:00', 22.00, 2.00, 44.00, 1, '', '17:31', '44', 'test', '2', 'sdfasdf', '2023-07-01', '充サ際査メフ', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-21 09:05:45', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(18, 'B1-000027', 0, 0, 0, 0, 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, 3.00, 63.00, 1, '', '19:43', '431', '', '7', 'abc', '1990-01-13', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-22 04:08:10', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(19, 'B1-000027', 0, 1, 7, 0, 1, 2, '2020-01-01 04:03:00', '2020-01-01 04:03:00', 21.00, -1.00, -21.00, -1, '', '18:34', '12', '', '6', 'abc', '2023-07-21', '3', '-3', '', '', '', '', '', '', '', '', '230101.0001', '', '', '', '2023-08-02 04:52:40', '230101.0001', '2023-08-02 04:52:44', '230101.0001'),
-	(20, 'B1-000027', 0, 0, 0, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 22.00, -1.00, -22.00, -1, '', '18:30', '13', '', '3', '', '1990-01-27', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-21 09:20:45', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(21, 'B1-000027', 0, 0, 0, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-04 00:00:00', 21.00, -1.00, -21.00, -1, '', '18:30', '67', '', '3', '', '2023-07-08', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-21 09:20:45', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(22, 'B1-000027', 0, 0, 6, 0, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 22.00, -1.00, -22.00, -1, '', '18:30', '3434', '', '6', 'abcdfdrer', '2023-07-09', '4', '-1', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-01 10:17:00', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(23, 'B1-000027', 1, 1, 1, 1, 1, 3, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, -1.00, -21.00, -1, '', '18:30', '12323123', '', '6', 'dgsdfg', '2023-07-07', '3', '-2', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-01 15:32:32', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(24, 'B1-000027', 0, 1, 4, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, 4.00, 84.00, 1, '', '18:30', '61', '', '3', '234234', '2023-06-30', '1', '-1', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-01 12:20:35', '230101.0001', '2023-08-01 17:04:43', '230101.0001'),
+	(17, 'B1-000027', 0, 0, 0, 0, 1, 2, '2020-01-02 00:00:00', '2020-01-03 00:00:00', 22.00, 2.00, 44.00, 1, '', '17:31', '44', 'test', '2', 'sdfasdf', '2023-07-01', '充サ際査メフ', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-21 09:05:45', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(18, 'B1-000027', 0, 0, 0, 0, 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, 3.00, 63.00, 1, '', '19:43', '431', '', '7', 'abc', '1990-01-13', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-22 04:08:10', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(19, 'B1-000027', 0, 1, 7, 0, 1, 2, '2020-01-01 04:03:00', '2020-01-01 04:03:00', 21.00, -1.00, -21.00, -1, '', '18:34', '12', '', '2', 'abc', '2023-07-21', '3', '15', '', '2', '', '', '23', '', '', '', '230101.0001', '', '', '', '2023-08-07 12:10:30', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(20, 'B1-000027', 0, 0, 0, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 22.00, -1.00, -22.00, -1, '', '18:30', '13', '', '3', '', '1990-01-27', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-21 09:20:45', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(21, 'B1-000027', 0, 0, 0, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-04 00:00:00', 21.00, -1.00, -21.00, -1, '', '18:30', '67', '', '3', '', '2023-07-08', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-21 09:20:45', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(22, 'B1-000027', 0, 0, 6, 0, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 22.00, -1.00, -22.00, -1, '', '18:30', '3434', '', '6', 'abcdfdrer', '2023-07-09', '4', '-1', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-01 10:17:00', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(23, 'B1-000027', 0, 1, 1, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, -1.00, -21.00, -1, '', '18:30', '12323123', '', '6', 'dgsdfg', '2023-07-07', '3', '1', '', '234', '', '', '26', '', '', '', '230101.0001', '', '', '', '2023-08-01 15:32:32', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(24, 'B1-000027', 0, 1, 4, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, 4.00, 84.00, 1, '', '18:30', '61', '', '3', '234234', '2023-06-30', '1', '13', '', '', '', '', '23', '', '', '', '230101.0001', '', '', '', '2023-08-07 12:10:30', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
 	(25, 'B1-000028', 0, 1, 0, 0, 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 20.00, 1.00, 20.00, 1, '', '18:30', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-01 17:12:27', '', '2023-07-02 05:24:46', ''),
 	(26, 'B1-000028', 0, 1, 0, 0, 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, -4.00, -84.00, -1, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-01 17:12:29', '', '2023-07-02 05:24:46', ''),
-	(48, 'B1-000027', 0, 0, 22, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '1', '', '6', '24234234', '2023-07-14', 'abbb', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-21 09:05:45', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(49, 'B1-000027', 0, 0, 28, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '45', '', '', '124234', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-21 09:05:45', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(50, 'B1-000027', 0, 0, 17, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-22 05:04:58', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(51, 'B1-000027', 0, 0, 19, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-22 05:04:58', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(52, 'B1-000027', 0, 0, 18, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-22 05:04:58', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(53, 'B1-000027', 0, 0, 20, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-22 05:04:58', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(54, 'B1-000027', 1, 1, 3, 1, 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, -1.00, -21.00, -1, '', '15:31', '12', '', '7', 'abc', '2023-07-21', '9', '-3', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-01 15:32:32', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(55, 'B1-000027', 0, 1, 5, 0, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 22.00, -1.00, -22.00, -1, '', '18:30', '3434', '', '2', 'abcdfdrer', '2023-07-09', '2', '-3', '', '', '', '', '', '', '', '', 'C5555', '', '', '', '2023-08-01 12:20:35', '230101.0001', '2023-08-02 04:56:52', '230101.0001'),
-	(56, 'B1-000027', 0, 1, 9, 0, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 22.00, -1.00, -22.00, -1, '', '18:30', '3434', '', '21', 'abcdfdrer', '2023-07-09', '-12', '5', '', '', '', '', '', '', '', '', '230101.0001', '', '', '', '2023-08-01 12:52:44', '230101.0001', '2023-08-02 04:49:50', '230101.0001'),
-	(57, 'B1-000027', 0, 1, 10, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, 4.00, 84.00, 1, '', '18:30', '61', '', '3', '234234', '2023-06-30', '323', '-3', '', '', '', '', '', '', '', '', 'C5555', '', '', '', '2023-08-01 12:52:44', '230101.0001', '2023-08-02 04:58:45', '230101.0001'),
-	(58, 'B1-000027', 0, 1, 14, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, 4.00, 84.00, 1, '', '18:30', '61', '', '3', '234234', '2023-06-30', '12', '-2', '', '', '', '', '', '', '', '', '230101.0001', '', '', '', '2023-08-01 12:52:44', '230101.0001', '2023-08-02 04:46:36', '230101.0001'),
-	(59, 'B1-000027', 0, 0, 0, 0, 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, -1.00, -21.00, -1, '', '15:31', '112', '', '2', 'abc34234', '2023-07-21', '1', '-1', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-01 12:15:50', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(60, 'B1-000027', 0, 1, 8, 0, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 22.00, -1.00, -22.00, -1, '', '18:30', '3434', '', '19', 'abcdfdrer', '2023-07-09', '24', '-13', '', '', '', '', '', '', '', '', 'C5555', '', '', '', '2023-08-01 12:15:32', '230101.0001', '2023-08-02 09:20:28', '230101.0001'),
-	(61, 'B1-000027', 0, 0, 11, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(62, 'B1-000027', 0, 0, 12, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(63, 'B1-000027', 0, 0, 13, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(64, 'B1-000027', 0, 0, 14, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(65, 'B1-000027', 0, 0, 15, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(66, 'B1-000027', 0, 0, 16, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(67, 'B1-000027', 0, 0, 17, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(68, 'B1-000027', 0, 0, 18, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(69, 'B1-000027', 0, 0, 19, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(70, 'B1-000027', 0, 0, 19, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(71, 'B1-000027', 0, 0, 10, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(72, 'B1-000027', 0, 0, 0, 0, 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, -1.00, -21.00, -1, '', '15:31', '112', '', '2', 'abc34234', '2023-07-21', '1', '-1', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-01 12:15:50', '230101.0001', '2023-08-01 15:32:26', '230101.0001'),
-	(73, 'B1-000027', 1, 1, 7, 0, 1, 2, '2020-01-01 04:03:00', '2020-01-01 04:03:00', 21.00, -1.00, -21.00, -1, '', '18:34', '12', '', '6', 'abc', '2023-07-21', '2', '-3', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-01 12:20:35', '230101.0001', '2023-07-27 06:14:37', '230101.0001'),
-	(74, 'B1-000049', 0, 1, 0, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', 'ag', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-02 12:11:06', '230101.0001', '2023-08-02 12:11:09', '230101.0001');
+	(48, 'B1-000027', 0, 0, 22, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '1', '', '6', '24234234', '2023-07-14', 'abbb', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-21 09:05:45', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(49, 'B1-000027', 0, 0, 28, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '45', '', '', '124234', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-21 09:05:45', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(50, 'B1-000027', 0, 0, 17, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-22 05:04:58', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(51, 'B1-000027', 0, 0, 19, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-22 05:04:58', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(52, 'B1-000027', 0, 0, 18, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-22 05:04:58', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(53, 'B1-000027', 0, 0, 20, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-22 05:04:58', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(54, 'B1-000027', 0, 1, 3, 0, 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, -1.00, -21.00, -1, '', '15:31', '12', '', '7', 'abc', '2023-07-21', '9', '11', '', '4343', '', '', '23', '', '', '', 'C0012', '', '', '', '2023-08-07 12:10:30', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(55, 'B1-000027', 0, 1, 5, 0, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 22.00, -1.00, -22.00, -1, '', '18:30', '3434', '', '2', 'abcdfdrer', '2023-07-09', '2', '14', '', '12313', '232', '', '23', '', '', '', '230101.0001', '', '', '', '2023-08-07 12:10:30', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(56, 'B1-000027', 0, 1, 9, 0, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 22.00, -1.00, -22.00, -1, '', '18:30', '3434', '', '21', 'abcdfdrer', '2023-07-09', '-12', '38', '', '', '', '', '25', '', '', '', '230101.0001', '', '', '', '2023-08-07 12:10:30', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(57, 'B1-000027', 0, 1, 10, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, 4.00, 84.00, 1, '', '18:30', '61', '', '3', '234234', '2023-06-30', '323', '39', '', '34', '', '', '25', '', '', '', 'C5555', '', '', '', '2023-08-07 12:10:30', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(58, 'B1-000027', 0, 1, 14, 0, 1, 3, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, 4.00, 84.00, 1, '', '18:30', '61', '', '3', '234234', '2023-06-30', '12', '31', '', '', '', '', '26', '', '', '', '230101.0001', '', '', '', '2023-08-07 12:10:30', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(59, 'B1-000027', 0, 0, 0, 0, 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, -1.00, -21.00, -1, '', '15:31', '112', '', '2', 'abc34234', '2023-07-21', '1', '-1', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-01 12:15:50', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(60, 'B1-000027', 0, 1, 8, 0, 2, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 22.00, -1.00, -22.00, -1, '', '18:30', '3434', '', '19', 'abcdfdrer', '2023-07-09', '24', '27', '', '', '', '', '24', '', '', '', 'C5555', '', '', '', '2023-08-07 12:10:30', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(61, 'B1-000027', 0, 0, 11, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(62, 'B1-000027', 0, 0, 12, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(63, 'B1-000027', 0, 0, 13, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(64, 'B1-000027', 0, 0, 14, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(65, 'B1-000027', 0, 0, 15, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(66, 'B1-000027', 0, 0, 16, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(67, 'B1-000027', 0, 0, 17, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(68, 'B1-000027', 0, 0, 18, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(69, 'B1-000027', 0, 0, 19, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(70, 'B1-000027', 0, 0, 19, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(71, 'B1-000027', 0, 0, 10, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-07-25 12:39:40', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(72, 'B1-000027', 0, 0, 0, 0, 1, 2, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 21.00, -1.00, -21.00, -1, '', '15:31', '112', '', '2', 'abc34234', '2023-07-21', '1', '-1', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-01 12:15:50', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(73, 'B1-000027', 0, 1, 7, 0, 1, 2, '2020-01-01 04:03:00', '2020-01-01 04:03:00', 21.00, -1.00, -21.00, -1, '', '18:34', '12', '', '6', 'abc', '2023-07-21', '2', '6', '', '2', '', '', '26', '', '', '', 'C0012', '', '', '', '2023-08-07 12:10:30', '230101.0001', '2023-08-07 12:15:23', '230101.0001'),
+	(74, 'B1-000049', 0, 0, 0, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', 'ag', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-02 12:11:06', '230101.0001', '2023-08-02 17:22:03', '230101.0001'),
+	(75, 'B1-000050', 0, 0, 1, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-02 17:20:55', '230101.0001', '2023-08-02 17:22:03', '230101.0001'),
+	(76, 'B1-000051', 0, 1, 1, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '3545', '21432', '', 'abc', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-02 17:22:44', '230101.0001', '2023-08-02 17:56:53', '230101.0001'),
+	(77, 'B1-000051', 0, 1, 0, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '9', '2', '', 're', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-02 17:22:44', '', '2023-08-02 17:35:37', '230101.0001'),
+	(78, 'B1-000051', 0, 1, 1, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '13', '2', '', 'abc', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-02 17:22:44', '230101.0001', '2023-08-02 17:53:42', '230101.0001'),
+	(79, 'B1-000042', 0, 1, 0, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-05 08:26:38', '230101.0001', '2023-01-01 00:00:00', ''),
+	(80, 'B1-000052', 0, 1, 1, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '12', '222', '', 'a', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-05 08:27:09', '230101.0001', '2023-08-05 08:27:56', '230101.0001'),
+	(81, 'B1-000052', 0, 1, 9999, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '53', '45', '', '3c', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-05 08:27:09', '', '2023-08-07 11:22:45', '230101.0001'),
+	(82, 'B1-000052', 0, 1, 2, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '2', '234', '', '3424', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-06 04:40:05', '230101.0001', '2023-08-07 10:46:12', '230101.0001'),
+	(83, 'B1-000053', 0, 1, 1, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '3', '3', '', '4', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-09 11:32:33', '230809.000006', '2023-08-09 19:11:10', '230809.000006'),
+	(84, 'B1-000053', 0, 1, 9999, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '3', '43', '', '43', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-09 11:32:33', '', '2023-08-09 19:16:11', '230809.000006'),
+	(85, 'B1-000054', 0, 1, 1, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-10 14:51:55', '230809.000006', '2023-08-10 14:51:55', '230809.000006'),
+	(86, 'B1-000054', 0, 1, 9999, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-10 14:51:55', '', '2023-01-01 00:00:00', ''),
+	(87, 'B1-000055', 0, 1, 1, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-10 14:52:10', '230809.000006', '2023-08-10 14:52:10', '230809.000006'),
+	(88, 'B1-000055', 0, 1, 9999, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-10 14:52:10', '', '2023-01-01 00:00:00', ''),
+	(89, 'B1-000056', 0, 1, 1, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-10 14:52:33', '230809.000006', '2023-08-10 14:52:33', '230809.000006'),
+	(90, 'B1-000056', 0, 1, 9999, 0, 0, 0, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 0.00, 0.00, 0.00, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2023-08-10 14:52:33', '', '2023-01-01 00:00:00', '');
 
 -- Dumping structure for table tradingbook.journal_detail_images
 CREATE TABLE IF NOT EXISTS `journal_detail_images` (
@@ -598,9 +843,9 @@ CREATE TABLE IF NOT EXISTS `journal_table_view` (
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_by` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_table_view: ~15 rows (approximately)
+-- Dumping data for table tradingbook.journal_table_view: ~53 rows (approximately)
 INSERT INTO `journal_table_view` (`id`, `journalId`, `board`, `name`, `ilock`, `share`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
 	(1, 'B1-000027', 'table', 'Main Table', 1, 0, 1, '2023-01-01 00:00:00', '', '2023-01-01 00:00:00', ''),
 	(2, 'B1-000027', 'table', 'Table Kazama 3123', 0, 1, 1, '2023-07-26 08:05:28', '230101.0001', '2023-01-01 00:00:00', ''),
@@ -613,10 +858,48 @@ INSERT INTO `journal_table_view` (`id`, `journalId`, `board`, `name`, `ilock`, `
 	(9, 'B1-000027', 'table', 'New table', 0, 1, 1, '2023-07-26 08:15:43', '230101.0001', '2023-01-01 00:00:00', ''),
 	(10, 'B1-000027', 'table', 'New table', 0, 1, 1, '2023-07-26 08:15:45', '230101.0001', '2023-01-01 00:00:00', ''),
 	(11, 'B1-000027', 'chart', 'Chart JS test', 0, 1, 1, '2023-07-27 08:14:11', '230101.0001', '2023-01-01 00:00:00', ''),
-	(12, 'B1-000027', 'chart', 'New chart', 0, 1, 1, '2023-07-28 07:10:40', '230101.0001', '2023-01-01 00:00:00', ''),
-	(13, 'B1-000027', 'chart', 'New chart', 0, 1, 1, '2023-07-28 16:52:41', '230101.0001', '2023-01-01 00:00:00', ''),
+	(12, 'B1-000027', 'chart', 'New chart', 0, 1, 0, '2023-08-03 18:09:57', '230101.0001', '2023-01-01 00:00:00', ''),
+	(13, 'B1-000027', 'chart', 'New chart', 0, 1, 0, '2023-08-03 18:49:52', '230101.0001', '2023-01-01 00:00:00', ''),
 	(14, 'B1-000049', 'table', 'New Table', 1, 0, 1, '2023-08-02 12:02:50', '230101.0001', '2023-08-02 12:02:50', '230101.0001'),
-	(15, 'B1-000049', 'table', 'New table', 0, 1, 1, '2023-08-02 12:10:57', '230101.0001', '2023-01-01 00:00:00', '');
+	(15, 'B1-000049', 'table', 'New table', 0, 1, 1, '2023-08-02 12:10:57', '230101.0001', '2023-01-01 00:00:00', ''),
+	(16, 'B1-000050', 'table', 'New Table', 1, 0, 1, '2023-08-02 17:20:55', '230101.0001', '2023-08-02 17:20:55', '230101.0001'),
+	(17, 'B1-000051', 'table', 'New Table', 1, 0, 1, '2023-08-02 17:22:44', '230101.0001', '2023-08-02 17:22:44', '230101.0001'),
+	(18, 'B1-000051', 'chart', 'New chart', 0, 1, 0, '2023-08-03 17:14:25', '230101.0001', '2023-01-01 00:00:00', ''),
+	(19, 'B1-000027', 'chart', 'New chart', 0, 1, 0, '2023-08-03 18:09:51', '230101.0001', '2023-01-01 00:00:00', ''),
+	(20, 'B1-000051', 'chart', 'New chart', 0, 1, 0, '2023-08-03 08:47:28', '230101.0001', '2023-01-01 00:00:00', ''),
+	(21, 'B1-000051', 'chart', 'New chart', 0, 1, 0, '2023-08-03 08:12:31', '230101.0001', '2023-01-01 00:00:00', ''),
+	(22, 'B1-000051', 'chart', 'New chart', 0, 1, 0, '2023-08-03 17:14:14', '230101.0001', '2023-01-01 00:00:00', ''),
+	(23, 'B1-000051', 'chart', 'New chart', 0, 1, 0, '2023-08-03 17:14:17', '230101.0001', '2023-01-01 00:00:00', ''),
+	(24, 'B1-000051', 'chart', 'New chart', 0, 1, 0, '2023-08-03 17:14:20', '230101.0001', '2023-01-01 00:00:00', ''),
+	(25, 'B1-000051', 'chart', 'New chart', 0, 1, 0, '2023-08-03 17:14:22', '230101.0001', '2023-01-01 00:00:00', ''),
+	(26, 'B1-000051', 'chart', 'New chart', 0, 1, 1, '2023-08-03 17:14:27', '230101.0001', '2023-01-01 00:00:00', ''),
+	(27, 'B1-000051', 'chart', 'New chart', 0, 1, 1, '2023-08-03 17:23:59', '230101.0001', '2023-01-01 00:00:00', ''),
+	(28, 'B1-000051', 'table', 'New table', 0, 1, 0, '2023-08-03 17:29:03', '230101.0001', '2023-01-01 00:00:00', ''),
+	(29, 'B1-000051', 'chart', 'New chart', 0, 1, 1, '2023-08-03 17:29:08', '230101.0001', '2023-01-01 00:00:00', ''),
+	(30, 'B1-000027', 'chart', 'New chart', 0, 1, 0, '2023-08-03 18:49:46', '230101.0001', '2023-01-01 00:00:00', ''),
+	(31, 'B1-000027', 'chart', 'New chart', 0, 1, 1, '2023-08-03 18:49:56', '230101.0001', '2023-01-01 00:00:00', ''),
+	(32, 'B1-000027', 'chart', 'New chart', 0, 1, 0, '2023-08-04 04:20:46', '230101.0001', '2023-01-01 00:00:00', ''),
+	(33, 'B1-000051', 'chart', 'New chart', 0, 1, 1, '2023-08-03 20:11:26', '230101.0001', '2023-01-01 00:00:00', ''),
+	(34, 'B1-000051', 'chart', 'New chart', 0, 1, 1, '2023-08-03 20:15:35', '230101.0001', '2023-01-01 00:00:00', ''),
+	(35, 'B1-000051', 'chart', 'New chart ', 0, 1, 1, '2023-08-04 11:34:41', '230101.0001', '2023-01-01 00:00:00', ''),
+	(36, 'B1-000027', 'chart', 'New chart', 0, 1, 1, '2023-08-04 03:56:39', '230101.0001', '2023-01-01 00:00:00', ''),
+	(37, 'B1-000051', 'chart', 'New chart', 0, 1, 1, '2023-08-04 11:34:03', '230101.0001', '2023-01-01 00:00:00', ''),
+	(38, 'B1-000052', 'table', 'New Table', 1, 0, 1, '2023-08-05 08:27:09', '230101.0001', '2023-08-05 08:27:09', '230101.0001'),
+	(39, 'B1-000052', 'chart', 'New chart', 0, 1, 1, '2023-08-05 08:27:58', '230101.0001', '2023-01-01 00:00:00', ''),
+	(40, 'B1-000052', 'chart', 'New chart', 0, 1, 1, '2023-08-05 08:31:42', '230101.0001', '2023-01-01 00:00:00', ''),
+	(41, 'B1-000052', 'table', 'New table', 0, 1, 1, '2023-08-06 04:33:51', '230101.0001', '2023-01-01 00:00:00', ''),
+	(42, 'B1-000052', 'chart', 'New chart', 0, 1, 1, '2023-08-06 04:33:55', '230101.0001', '2023-01-01 00:00:00', ''),
+	(43, 'B1-000052', 'chart', 'Rainy Coffee Shop Ambience with Calm Jazz Music an', 0, 1, 1, '2023-08-06 18:26:16', '230101.0001', '2023-01-01 00:00:00', ''),
+	(44, 'B1-000052', 'chart', 'New chart', 0, 1, 1, '2023-08-06 05:29:36', '230101.0001', '2023-01-01 00:00:00', ''),
+	(45, 'B1-000052', 'table', 'New table', 0, 1, 0, '2023-08-06 18:04:03', '230101.0001', '2023-01-01 00:00:00', ''),
+	(46, 'B1-000026', 'table', 'New table', 0, 1, 0, '2023-08-06 18:46:06', '230101.0001', '2023-01-01 00:00:00', ''),
+	(47, 'B1-000026', 'table', 'New table', 0, 1, 0, '2023-08-06 18:46:08', '230101.0001', '2023-01-01 00:00:00', ''),
+	(48, 'B1-000026', 'chart', 'New chart', 0, 1, 0, '2023-08-06 18:46:16', '230101.0001', '2023-01-01 00:00:00', ''),
+	(49, 'B1-000052', 'table', 'New table', 0, 1, 1, '2023-08-07 10:46:07', '230101.0001', '2023-01-01 00:00:00', ''),
+	(50, 'B1-000053', 'table', 'New Table', 1, 0, 1, '2023-08-09 11:32:33', '230809.000006', '2023-08-09 11:32:33', '230809.000006'),
+	(51, 'B1-000054', 'table', 'New Table', 1, 0, 1, '2023-08-10 14:51:55', '230809.000006', '2023-08-10 14:51:55', '230809.000006'),
+	(52, 'B1-000055', 'table', 'New Table', 1, 0, 1, '2023-08-10 14:52:10', '230809.000006', '2023-08-10 14:52:10', '230809.000006'),
+	(53, 'B1-000056', 'table', 'New Table', 1, 0, 1, '2023-08-10 14:52:33', '230809.000006', '2023-08-10 14:52:33', '230809.000006');
 
 -- Dumping structure for table tradingbook.journal_table_view_show
 CREATE TABLE IF NOT EXISTS `journal_table_view_show` (
@@ -625,9 +908,9 @@ CREATE TABLE IF NOT EXISTS `journal_table_view_show` (
   `journalCustomFieldId` int(9) NOT NULL DEFAULT 0,
   `hide` int(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=145 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingbook.journal_table_view_show: ~32 rows (approximately)
+-- Dumping data for table tradingbook.journal_table_view_show: ~35 rows (approximately)
 INSERT INTO `journal_table_view_show` (`id`, `journalTableViewId`, `journalCustomFieldId`, `hide`) VALUES
 	(108, 1, 50, 0),
 	(109, 1, 58, 0),
@@ -636,7 +919,7 @@ INSERT INTO `journal_table_view_show` (`id`, `journalTableViewId`, `journalCusto
 	(112, 1, 48, 0),
 	(113, 1, 47, 0),
 	(114, 1, 51, 0),
-	(115, 2, 58, 0),
+	(115, 2, 58, 1),
 	(116, 2, 50, 1),
 	(117, 2, 52, 1),
 	(118, 2, 51, 1),
@@ -660,8 +943,12 @@ INSERT INTO `journal_table_view_show` (`id`, `journalTableViewId`, `journalCusto
 	(136, 2, 47, 1),
 	(137, 2, 48, 1),
 	(138, 2, 78, 1),
-	(139, 2, 79, 1),
-	(140, 15, 84, 0);
+	(139, 2, 79, 0),
+	(140, 15, 84, 0),
+	(141, 2, 81, 1),
+	(142, 2, 82, 1),
+	(143, 2, 80, 1),
+	(144, 2, 83, 1);
 
 -- Dumping structure for table tradingbook.market
 CREATE TABLE IF NOT EXISTS `market` (
@@ -721,7 +1008,7 @@ CREATE TABLE IF NOT EXISTS `template` (
 
 -- Dumping data for table tradingbook.template: ~3 rows (approximately)
 INSERT INTO `template` (`id`, `name`, `code`, `presence`) VALUES
-	(1, 'Blank', 'blank', 1),
+	(1, 'General Purpose', 'general', 1),
 	(10, 'Backtest', 'backtest', 1),
 	(100, 'Journal Trading', 'journalTrading', 1);
 

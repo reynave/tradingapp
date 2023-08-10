@@ -21,14 +21,16 @@ const routes: Routes = [
   { path: "relogin", component: ReloginComponent, data: { active: "" },  canActivate:[]  }, 
 
   { path: "book/:id", component: BookComponent, data: { active: "book" },  canActivate:[authGuard]  }, 
- 
-
- // { path: "board/table/:id", component: TableComponent, data: { active: "trade" },  canActivate:[authGuard]  }, 
   { path: "board/table/:id/:journalTableViewId", component: TableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   { path: "board/chart/:id/:journalTableViewId", component: ChartjsComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
-  
+
+  { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivate:[authGuard] },
+
+
+  // TEMPLATE FOR DEV UX UI DESIGN
   { path: "template/table", component: TemplateTableComponent, data: { active: "template" },  canActivate:[authGuard]  }, 
   
+  // VERSI LAMA, AKAN TIDAK DIPAKAH UNTUK KENANGAN SAJA
   { path: "backtest", component: BacktestComponent, data: { active: "backtest" },  canActivate:[authGuard]  }, 
   { path: "backtest/:id", component: BacktestDetailComponent, data: { active: "backtest" },  canActivate:[authGuard]  }, 
  

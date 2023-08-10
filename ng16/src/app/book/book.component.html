@@ -3,11 +3,9 @@
 <div class="body-margin-top">
 
     <div class="container-fluid ">
-        <div class="bg-white p-3 rounded shadow-md border">
-
+        <div class="bg-white p-3 rounded shadow-md border"> 
             <div class="row mb-3">
-                <div class="col-6">
-
+                <div class="col-6"> 
                     <h4 (click)="onFocus(book)" *ngIf="editable.title == false">{{book.name}}</h4>
                     <input type="text" id="bookTitle" [(ngModel)]="book.name" #inputField *ngIf="editable.title == true"
                         (change)="fnEditableChange();" placeholder="Book Title" class="form-control form-control-lg "
@@ -15,10 +13,8 @@
                 </div>
                 <div class="col-6 text-end align-self-center">
                     <button type="button" (click)="fnClearTrashBin();" class="btn btn-sm  btn-light mx-1">Clear Trash bin </button>
-                    <button type="button" (click)="fnDeleteAll();" class="btn btn-sm  btn-danger mx-1">Delete </button>
-                      
-                    <button class="btn btn-sm  btn-info mx-1 text-white" (click)="open(content)">New Journal</button>
-
+                    <button type="button" (click)="fnDeleteAll();" class="btn btn-sm  btn-danger mx-1">Delete </button> 
+                    <button class="btn btn-sm  btn-info mx-1 text-white" (click)="open(content)">New Journal</button> 
                 </div>
             </div>
             <div class="row">
@@ -30,9 +26,7 @@
                             <thead>
                                 <tr>
                                     <th width="30px"></th>
-                                    <th width="40px"></th>
-
-
+                                    <th width="40px"></th> 
                                     <th>Title</th>
                                     <th>Template</th> 
                                     <th>Update Date</th>

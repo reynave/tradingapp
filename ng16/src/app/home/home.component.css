@@ -1,0 +1,19 @@
+.minHeight{ 
+    height: calc(100vh - 50px);
+}
+.divHover:hover{
+    background-color: var(--bg-gray);
+}
+.homeBoards:hover{
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+}
+
+@media (max-width: 600px) {
+    .body-margin-top{
+        margin-top: 80px;
+    }
+    .minHeight {
+        height: auto !important;
+    }
+  }
+  

@@ -33,10 +33,10 @@ export class BoardTitleComponent implements OnInit {
   journalTableViewId: string = ""; 
   waiting: boolean = false;
   loading: boolean = false; 
-  myTimeout: any;  
- 
+  myTimeout: any;   
   permission: any = []; 
   backgroundColorOption: any = [];
+  
   constructor(
     private titleService: Title,
     private http: HttpClient,
@@ -97,8 +97,7 @@ export class BoardTitleComponent implements OnInit {
       },
     );
   }
-
-  
+ 
   fnPermission(id: number) {
     let data = [];
     if (this.permission.length > 0) {
@@ -108,11 +107,11 @@ export class BoardTitleComponent implements OnInit {
     } 
     return data;
   }
-
-
+ 
   public onChild(obj: any) { 
     console.log('obj child : ', obj); 
   }
+
   openComponent(componentName: string, item:any) {
     if (componentName == 'ShareBoardComponent') {
       const modalRef = this.modalService.open(ShareBoardComponent, { size: 'md' });

@@ -40,4 +40,42 @@ class Home extends BaseController
 
         return $this->response->setJSON($data);
     }
+
+    function welcome(){
+        $accountId = model("Core")->accountId();
+        $qbooks = "SELECT id, name, sorting  FROM book
+        WHERE  accountId = '$accountId' AND presence = 1 
+        ORDER BY sorting ASC, input_date ASC";
+        $books = $this->db->query($qbooks)->getResultArray();
+
+        $qjournal = "SELECT a.id, a.journalId, a.owner , j.name AS 'journal', b.name AS 'book', a.star,
+        a.update_date
+        FROM journal_access AS a
+        LEFT JOIN journal AS j ON j.id = a.journalId
+        LEFT JOIN book AS b ON b.id = a.bookId
+        WHERE a.accountId = '$accountId' AND a.presence = 1  AND a.star = 1
+        ORDER BY update_date DESC";
+        $journalsData = $this->db->query($qjournal)->getResultArray();
+        
+        $journals = [];
+        foreach( $journalsData as $row){
+            array_push( $journals, array_merge($row,[
+                "viewId" => model("Core")->select("id","journal_table_view","journalId = '".$row['journalId']."' order by id ASC "),
+            ]));
+        }
+
+        $qTeams = "SELECT a.id, a.email, a.name, a.picture
+        FROM account_team AS t
+        JOIN account AS a ON a.id = t.invitedId 
+        WHERE t.accountId = '$accountId' ";
+        $teams = $this->db->query($qTeams)->getResultArray();
+  
+        $data = array(
+            "error" => false,
+            "books" => $books,
+            "journals" => $journals,
+            "teams" => $teams
+        );
+        return $this->response->setJSON($data); 
+    }
 }

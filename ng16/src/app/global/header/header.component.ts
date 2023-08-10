@@ -5,7 +5,7 @@ import { ConfigService } from 'src/app/service/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { Title } from '@angular/platform-browser';  
 
 export class NewBook { 
   constructor( 
@@ -36,6 +36,7 @@ export class HeaderComponent implements OnInit, OnChanges {
   myRating = new MyRating("",this.currentRate);
  
   constructor(
+    private titleService: Title,
     private http: HttpClient,
     private configService: ConfigService,
     private route: Router,
@@ -44,9 +45,12 @@ export class HeaderComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void { 
-    console.log(this.configService.account())
+    //console.log(this.configService.account())
     this.account = this.configService.account();
-    console.log(this.configService.jti())
+    //console.log(this.configService.jti())
+    console.log(this.activatedRoute);
+    this.titleService.setTitle("Mirrel.com");
+
     this.checkJwtToken();
     this.httpGet();
     this.getId();

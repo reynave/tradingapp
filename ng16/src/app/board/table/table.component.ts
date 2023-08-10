@@ -35,14 +35,7 @@ export class TableComponent implements OnInit {
   @ViewChild('canvasRight') canvasRight: any;
   @ViewChild('contentEditSelect') contentEditSelect: any;
   @HostListener('window:popstate', ['$event'])
-  // onPopState(event: any) {
-  //   console.log("POP");
-  //   this.reload(this.journalTableViewId);
-  // }
-  // onPushState(event: any) {
-  //   console.log("PUSH");
-  //   this.reload(this.journalTableViewId);
-  // }
+ 
 
   leftSide: boolean = true;
 
