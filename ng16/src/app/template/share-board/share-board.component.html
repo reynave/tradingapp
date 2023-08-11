@@ -58,22 +58,20 @@
     <div class="row my-3">
         <div class="col-12 mb-3">
 
-            <input type="email" class="form-control " required placeholder="Add People with email" [(ngModel)]="addUser"
-                (keydown.enter)="onSubmitUser()" #email="ngModel" email>
-            <div [hidden]="email.valid || email.pristine" class="text-danger my-1">
-                Email is required
-            </div>
+            <input id="typeahead-template" type="text" class="form-control col" [(ngModel)]="model"
+                placeholder="Add Team by Name" [ngbTypeahead]="search" [resultTemplate]="rt"
+                [inputFormatter]="formatter" (keydown.enter)="onSubmitUser()" />
+
         </div>
         <div class="col-12" *ngIf="note != ''">
             <div class="alert alert-warning" [innerHTML]="note"></div>
         </div>
         <div class="col-12">
-            <input id="typeahead-template" type="text" class="form-control col" [(ngModel)]="model" placeholder="Add Team by Name" 
-                [ngbTypeahead]="search" [resultTemplate]="rt" [inputFormatter]="formatter" (keydown.enter)="onSubmitUser()" />
+
         </div>
     </div>
 
-     
+
 
     <div class="row mt-4">
         <div class="col-8">
@@ -96,7 +94,7 @@
         <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
     </ng-template>
 
-    
+
     <hr />
     <pre>Model: {{ model | json }}</pre>
 </div>
