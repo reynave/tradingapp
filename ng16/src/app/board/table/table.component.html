@@ -82,8 +82,7 @@
             </div>
 
         </div>
-
-
+ 
         <div class="col-lg-12 col-12">
             <div class="bg-white rounded" style="border-left: 5px solid rgb(114, 194, 254);">
 
@@ -103,8 +102,7 @@
                             <div class="d-flex">
                               
                                 <div class="me-2">
-                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New
-                                        Task</button>
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New  Task</button>
                                 </div>
 
                                 <div class="me-2">
@@ -153,11 +151,11 @@
                                             class="bi bi-archive"></i></button>
                                 </div>
 
-                                <div class="me-2">
+                                <div class="me-2" *ngIf="journalAccess.owner == '1' "> 
                                     <a href="javascript:;" class="btn btn-sm btn-light" placement="top-right"
                                         (click)="openComponent('CustomFieldFormComponent')"
-                                        (newItemEvent)="onChild($event)" ngbTooltip="Custom Field"><i
-                                            class="bi bi-gear"></i></a>
+                                        (newItemEvent)="onChild($event)" ngbTooltip="Custom Field"><i  class="bi bi-gear"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -255,6 +253,7 @@
             </div>
 
         </div>
+
     </div>
 </div>
 

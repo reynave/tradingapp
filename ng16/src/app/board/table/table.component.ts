@@ -73,7 +73,7 @@ export class TableComponent implements OnInit {
   //tableFooter: any = [];
   customFieldKey: any = [];
   users: any = [];
-
+  journalAccess : any = [];
   constructor(
     private titleService: Title,
     private http: HttpClient,
@@ -138,7 +138,9 @@ export class TableComponent implements OnInit {
       }
     }).subscribe(
       data => {
+        console.log("httpHeader", data);
         this.customFieldForm = data['customField'];
+        this.journalAccess = data['journal_access'];
       },
       e => {
         console.log(e);
@@ -155,7 +157,7 @@ export class TableComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        //console.log("httpGet", data);
+      
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];

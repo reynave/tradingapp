@@ -235,6 +235,10 @@ input:focus {
   min-width: 60px;
 }
 
+.divHover:hover{
+  background-color: var(--bg-gray);
+}
+
 .order-6 {
   order: 6 !important;
 }

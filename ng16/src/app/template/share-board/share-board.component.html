@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h4>Share "{{item.name}}"</h4>
+    <h4>Share "{{item.name}}"</h4> 
     <button type="button" class="btn-close" aria-label="Close" (click)="close();"></button>
 </div>
 <div class="modal-body">
@@ -9,7 +9,11 @@
             <div>
                 <strong>General access</strong>
             </div>
-            <div ngbDropdown class="mb-3">
+            <div *ngIf="item.owner == '0' " class="form-control bg-light mb-3">
+                <span [innerHTML]="item.fontIcon" class="mx-2"></span> {{item.permission}}
+            </div>
+
+            <div ngbDropdown class="mb-3" *ngIf="item.owner == '1' ">
                 <button type="button" class="btn   btn-light " id="dropdownBasic1" ngbDropdownToggle>
                     <span [innerHTML]="item.fontIcon" class="mx-2"></span> {{item.permission}}
                 </button>
@@ -37,64 +41,55 @@
         </div>
     </div>
 
-    <div class="row mb-2" *ngFor="let x of journalAccess">
+    <div class="row py-2 divHover pointer" *ngFor="let x of journalAccess">
 
-        <div class="col-9">
-            <div>
-                <strong> {{x.name}} </strong>{{x.owner == '1' ? "(you)":""}}
+        <div class="col-10">
+            <div class="d-flex">
+                <div>
+                    <img [src]="x.picture" height="35" class="me-2 rounded-circle">
+                </div>
+                <div>
+                    <div class="lh-1">
+                        <strong> {{x.name}} </strong><sup>{{x.owner == '1' ? "Admin":""}}</sup>
+                    </div>
+                    <small>{{x.email}}</small>
+                </div>
             </div>
-            <small>{{x.email}}</small>
+           
         </div>
-        <div class="col-3 align-self-center text-end">
+        <div class="col-2 align-self-center text-center">
             <span *ngIf="x.owner == '1'">
                 Owner
             </span>
-            <span *ngIf="x.owner != '1'">
-                <a (click)="onRemoveAccess(x)"> <i class="bi bi-x-circle"></i> </a>
+            <span *ngIf="x.owner != '1'"> 
+                <a (click)="onRemoveAccess(x)" *ngIf="item.owner == '1' "> <i class="bi bi-x-circle"></i> </a>
             </span>
         </div>
     </div>
 
-    <div class="row my-3">
-        <div class="col-12 mb-3">
-
+    <div class="row my-2" *ngIf="item.owner == '1' ">
+        <div class="col-12 mb-3"> 
             <input id="typeahead-template" type="text" class="form-control col" [(ngModel)]="model"
                 placeholder="Add Team by Name" [ngbTypeahead]="search" [resultTemplate]="rt"
-                [inputFormatter]="formatter" (keydown.enter)="onSubmitUser()" />
-
+                [inputFormatter]="formatter" (keydown.enter)="onSubmitUser()" /> 
         </div>
         <div class="col-12" *ngIf="note != ''">
             <div class="alert alert-warning" [innerHTML]="note"></div>
-        </div>
-        <div class="col-12">
-
-        </div>
+        </div> 
     </div>
-
-
-
-    <div class="row mt-4">
-        <div class="col-8">
-            <button type="button" (click)="fnCb2();" [cdkCopyToClipboard]="env.inviteLink+item.url"
-                class="btn btn-outline-dark btn-sm rounded-pill"> <i class="bi bi-link-45deg"></i> Copy
-                Invite Link </button>
-            <small class="mx-2">{{cb2note}}</small>
-        </div>
-        <div class="col-4 text-end">
-            <button type="button" class="btn btn-dark" (click)="close();">Done</button>
-        </div>
-
-    </div>
-
-
-
-
+  
     <ng-template #rt let-r="result" let-t="term">
         <img [src]="r['picture']" class="me-2 rounded-circle" height="25" />
         <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
     </ng-template>
+  
+    <!-- <hr />
+    <pre>Model: {{ model | json }}</pre> -->
+</div>
 
-
-    <hr />
-    <pre>Model: {{ model | json }}</pre>
+<div class="modal-footer">
+    <small class="mx-2">{{cb2note}}</small>
+    <button type="button" (click)="fnCb2();" [cdkCopyToClipboard]="env.inviteLink+item.url"
+    class="btn btn-outline-dark btn-sm rounded-pill"> <i class="bi bi-link-45deg"></i> Copy
+    Invite Link </button> 
 </div>

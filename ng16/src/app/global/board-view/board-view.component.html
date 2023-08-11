@@ -19,7 +19,7 @@
                                 <input type="text" class="form-control" [(ngModel)]="x.tempName" name="name"
                                     placeholder="{{x.name}}" maxlength="50">
                             </div>
-                            <div class="mb-4 mx-3">
+                            <div class="mb-2 mx-3">
                                 <div class="row">
                                     <div class="col-10">
                                         <span [ngClass]="{'text-gray': x.share == '0'}">Share</span>
@@ -33,12 +33,12 @@
                                 </div>
                             </div>
                             <div class="mb-2 ">
-                                <button class="btn bg-primary text-center text-white" ngbDropdownItem
-                                    (click)="update(x);"><i class="bi bi-cloud-upload me-1"></i> Update</button>
+                                <button class="btn bg-light text-center border" ngbDropdownItem
+                                    (click)="update(x);"> Update</button>
                             </div>
-                            <div class="mb-2">
+                            <div class="mb-2" *ngIf="journalAccess.owner == '1' ">
                                 <button class="btn bg-danger text-center text-white" ngbDropdownItem
-                                    (click)="delete(x);open(content)"><i class="bi bi-trash me-1"></i> Delete</button>
+                                    (click)="delete(x);open(content)"> Delete</button>
                             </div>
                         </div>
                     </div>

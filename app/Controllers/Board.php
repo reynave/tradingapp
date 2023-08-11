@@ -15,9 +15,16 @@ class Board extends BaseController
         ORDER BY id ASC";
         $items = $this->db->query($q1)->getResultArray();
 
+        $accountId = model("Core")->accountId();
+        $d = "SELECT * 
+        FROM journal_access
+        WHERE accountId = '$accountId' and journalId = '".$post['id']."' AND presence = 1";
+        $journal_access = $this->db->query($d)->getResultArray()[0];
+
         $data = array(
             "error" => false,
             "items" => $items,
+            "journal_access" => $journal_access,
         );
         return $this->response->setJSON($data);
     }

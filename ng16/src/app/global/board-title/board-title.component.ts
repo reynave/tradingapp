@@ -54,6 +54,7 @@ export class BoardTitleComponent implements OnInit {
   }
 
   httpHeader() {
+    this.loading=true;
     this.http.get<any>(environment.api + "Tables/boardTitle", {
       headers: this.configService.headers(),
       params: {
@@ -70,6 +71,7 @@ export class BoardTitleComponent implements OnInit {
         this.item.borderColor = data['item']['borderColor'];
         this.item.backgroundColor = data['item']['backgroundColor'];
         this.item.url = environment.api + '?share=' + data['item']['url'];
+        this.loading=false;
       },
       e => {
         console.log(e);

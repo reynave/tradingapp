@@ -66,9 +66,15 @@ class Tables extends BaseController
             WHERE journalId = '$id' and presence = 1
             ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
-
+ 
+            $accountId = model("Core")->accountId();
+            $d = "SELECT * 
+            FROM journal_access
+            WHERE accountId = '$accountId' and journalId = '".$data['request']['id']."' AND presence = 1";
+            $journal_access = $this->db->query($d)->getResultArray()[0];
 
             $data = array(
+                "journal_access" => $journal_access,
                 "error" => false,
                 "id" => $id,
                 "customField" => $journal_custom_field,

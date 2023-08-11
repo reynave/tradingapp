@@ -17,6 +17,7 @@ export class BoardViewComponent implements OnInit {
   id: string = "";
   journalTableViewId: string = "";
   items: any = [];
+  journalAccess : any = [];
   constructor(
     private http: HttpClient,
     private configService: ConfigService, 
@@ -50,8 +51,9 @@ export class BoardViewComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        //console.log('boardView-httpGet',data)
+        console.log('boardView-httpGet',data);
         this.items = data['items'];
+        this.journalAccess = data['journal_access'];
         localStorage.setItem(this.id, JSON.stringify(data['items']));
       },
       e => {

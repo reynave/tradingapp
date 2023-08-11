@@ -107,7 +107,7 @@ class Journal extends BaseController
     {
         // $accountId = model("Core")->accountId();
 
-        $q1 = "SELECT ja.*, a.name, a.email
+        $q1 = "SELECT ja.*, a.name, a.email, a.picture
         FROM journal_access AS ja
         JOIN account AS a ON a.id = ja.accountId
         WHERE ja.presence = 1 and ja.journalId = '" . $this->request->getVar()['journalId'] . "'
@@ -376,7 +376,7 @@ class Journal extends BaseController
                         "update_by" => model("Core")->accountId(),
                     ]);
                 } else {
-                    $note = "Email already join!";
+                    $note = "Account already join!";
                 }
             } else {
                 $note = "The email you entered has not been registered,<br> please invite via the link below ";
@@ -387,7 +387,7 @@ class Journal extends BaseController
                 // ], "presence  = 4 AND accountId =  '".model("Core")->accountId()."' "); 
             }
 
-            $q1 = "SELECT ja.*, a.name, a.email
+            $q1 = "SELECT ja.*, a.name, a.email, a.picture
             FROM journal_access AS ja
             JOIN account AS a ON a.id = ja.accountId
             WHERE ja.presence = 1 and ja.journalId = '" . $post['item']['id'] . "'
@@ -423,7 +423,7 @@ class Journal extends BaseController
                 "update_by" => model("Core")->accountId(),
             ], "id = '" . $post['access']['id'] . "' and accountId = '" . $post['access']['accountId'] . "' ");
 
-            $q1 = "SELECT ja.*, a.name, a.email
+            $q1 = "SELECT ja.*, a.name, a.email, a.picture
             FROM journal_access AS ja
             JOIN account AS a ON a.id = ja.accountId
             WHERE ja.presence = 1 and ja.journalId = '" . $post['item']['id'] . "'
