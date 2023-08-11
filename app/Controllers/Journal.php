@@ -10,33 +10,57 @@ class Journal extends BaseController
     {
 
         $accountId = model("Core")->accountId();
-        $q1 = "SELECT  ja.id as journal_accessID, ja.bookId, p.name AS 'permission', p.fontIcon, 
-        a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin
-        FROM journal_access AS ja
-        LEFT JOIN journal AS j ON j.id = ja.journalId
-        LEFT JOIN permission AS p ON p.id = j.permissionId
-        JOIN account AS a ON a.id = j.accountId
-        WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$id'
-        ORDER BY ja.sorting ASC, ja.input_date ASC";
 
-        $items = $this->db->query($q1)->getResultArray();
-
-        $permission = "SELECT * FROM permission 
-        ORDER BY id ASC";
+        $permission = "SELECT * FROM permission  ORDER BY id ASC";
         $permission = $this->db->query($permission)->getResultArray();
 
-        $book = "SELECT * FROM book WHERE accountId  = '$accountId' and id = '$id'";
-        $book = $this->db->query($book)->getResultArray();
-
-        $bookSelect = "SELECT  * from book where presence  = 1 and  accountId = '$accountId' order by sorting ASC, name ASC";
-        $bookSelect = $this->db->query($bookSelect)->getResultArray();
-
+      
         $itemJoin = [];
+        $book = [];
+        $items = [];
+       
+        $itemFields = "ja.id as journal_accessID, ja.bookId, p.name AS 'permission', p.fontIcon, 
+        a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin, ja.star";
+      
+        if ($id == 'undefined' || !$id) {
+            
+            $q1 = "SELECT  $itemFields
+            FROM journal_access AS ja
+            LEFT JOIN journal AS j ON j.id = ja.journalId
+            LEFT JOIN permission AS p ON p.id = j.permissionId
+            JOIN account AS a ON a.id = j.accountId
+            WHERE ja.accountId = '$accountId' AND ja.owner = 0;";
+    
+            $items = $this->db->query($q1)->getResultArray();
+            $book = array( 
+                "id" => 0,
+                "name" => "Share to Me",
+                "iLock" => 1,
+            );
+        } else {
+            $q1 = "SELECT  $itemFields
+            FROM journal_access AS ja
+            LEFT JOIN journal AS j ON j.id = ja.journalId
+            LEFT JOIN permission AS p ON p.id = j.permissionId
+            JOIN account AS a ON a.id = j.accountId
+            WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$id'
+            ORDER BY ja.sorting ASC, ja.input_date ASC";
+    
+            $items = $this->db->query($q1)->getResultArray(); 
+            $book = "SELECT * FROM book WHERE accountId  = '$accountId' and id = '$id'"; 
+            $book = $this->db->query($book)->getResultArray()[0];
+           
+
+        }
         foreach ($items as $rec) {
             array_push($itemJoin, array_merge($rec, [
                 "viewId" => model("Core")->select("id", "journal_table_view", "ilock = 1 and journalId = '" . $rec['id'] . "' order by id ASC "),
             ]));
         }
+       
+        $bookSelect = "SELECT  * from book where presence  = 1 and  accountId = '$accountId' order by sorting ASC, name ASC";
+        $bookSelect = $this->db->query($bookSelect)->getResultArray();
+        
 
         $templatejson = "SELECT  * FROM template WHERE presence  = 1  order by id ASC, name ASC";
         $templatejson = $this->db->query($templatejson)->getResultArray();
@@ -45,12 +69,12 @@ class Journal extends BaseController
         $data = array(
             "error" => false,
             "items" => $itemJoin,
-            "book" => $book[0],
+            "book" => $book,
             "bookSelect" => $bookSelect,
             "permission" => $permission,
             "header" => model("Core")->header(),
-            "templatejson" => $templatejson,
-            "q1" => $q1,
+            "templatejson" => $templatejson, 
+            "q1" =>  $q1 ,
         );
         return $this->response->setJSON($data);
     }
@@ -82,6 +106,7 @@ class Journal extends BaseController
     function access()
     {
         // $accountId = model("Core")->accountId();
+
         $q1 = "SELECT ja.*, a.name, a.email
         FROM journal_access AS ja
         JOIN account AS a ON a.id = ja.accountId
@@ -89,10 +114,20 @@ class Journal extends BaseController
         ORDER BY  ja.owner DESC, ja.input_date  ASC ";
         $items = $this->db->query($q1)->getResultArray();
 
+        $accountId = model("Core")->accountId();
+        $q2 = "SELECT a.id, a.name, a.picture, a.email, t.accountId
+        FROM account_team AS t
+        LEFT JOIN account AS a ON a.id = t.invitedId 
+        WHERE t.presence = 1 and  t.accountId = '$accountId' AND a.id != '$accountId' ";
+        $teams = $this->db->query($q2)->getResultArray();
+
+        
         $data = array(
             "error" => false,
             "q1" => $q1,
             "journal_access" => $items,
+            "teams" => $teams,
+
         );
         return $this->response->setJSON($data);
     }
@@ -309,7 +344,7 @@ class Journal extends BaseController
             "post" => $post,
         ];
         if ($post) {
-            $accountId = model("Core")->select("id", "account", "email = '" . $post['addUser'] . "' and presence = 1 ");
+            $accountId = model("Core")->select("id", "account", "id = '" . $post['addUser']['id'] . "' and presence = 1 ");
             $avaiable = $accountId ? true : false;
             $duplicate = false;
             $journal_access = [];
@@ -340,7 +375,7 @@ class Journal extends BaseController
                         "update_date" => date("Y-m-d H:i:s"),
                         "update_by" => model("Core")->accountId(),
                     ]);
-                }else{
+                } else {
                     $note = "Email already join!";
                 }
             } else {
@@ -445,7 +480,31 @@ class Journal extends BaseController
         }
         $data = [
             "error" => false,
+            "post" => $post,
         ];
+
+        return $this->response->setJSON($data);
+    }
+
+    function updateStar() {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $this->db->table("journal_access")->update([
+                "star"=> $post['journal']['star'],
+                "update_date" => date("Y-m-d H:i:s"),
+                "update_by" => model("Core")->accountId(),
+            ]," id = '".$post['journal']['journal_accessID']."'");
+
+            $data = [
+                "error" => false,
+                "post" => $post,
+            ];
+        }
 
         return $this->response->setJSON($data);
     }
@@ -457,4 +516,5 @@ class Journal extends BaseController
         $jsonData = json_decode($jsonString, true);
         return $this->response->setJSON($jsonData);
     }
+
 }

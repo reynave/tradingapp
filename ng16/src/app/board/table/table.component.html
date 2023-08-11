@@ -89,14 +89,9 @@
 
                 <div class="px-3 py-2">
                     <div class="row g-0">
-                        <div class="col-11">
+                        <div class="col-12">
                             <app-board-title></app-board-title>
-                        </div>
-                        <div class="col-1 align-self-center text-end"> 
-                            <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
-                                (click)="openComponent('CustomFieldFormComponent')" (newItemEvent)="onChild($event)"
-                                ngbTooltip="Custom Field"><i class="bi bi-gear"></i></a>
-                        </div>
+                        </div> 
                     </div>
 
                     <div class="row mb-2">
@@ -106,6 +101,7 @@
 
                         <div class="col-11">
                             <div class="d-flex">
+                              
                                 <div class="me-2">
                                     <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New
                                         Task</button>
@@ -155,6 +151,13 @@
                                     <button type="button" class="btn btn-sm btn-light"
                                         (click)="actionTask('unarchives');"> {{archives}} <i
                                             class="bi bi-archive"></i></button>
+                                </div>
+
+                                <div class="me-2">
+                                    <a href="javascript:;" class="btn btn-sm btn-light" placement="top-right"
+                                        (click)="openComponent('CustomFieldFormComponent')"
+                                        (newItemEvent)="onChild($event)" ngbTooltip="Custom Field"><i
+                                            class="bi bi-gear"></i></a>
                                 </div>
                             </div>
                         </div>

@@ -79,7 +79,14 @@ export class HomeComponent implements OnInit {
     return parseInt(str.slice(-3));
   }
 
-  goTo(x:any){
+  goToJournal(x:any){
     this.router.navigate(['board/table/',x.journalId,x.viewId]);
+  }
+  goToBook(x:any){
+    this.router.navigate(['book/',x.id]);
+  }
+
+  updateTeam(x:any, action :string){
+
   }
 }

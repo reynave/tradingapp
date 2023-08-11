@@ -1,34 +1,32 @@
 <div class="row ">
     <div class="col-8">
-        <input class="form-control form-control-lg border-0 p-0" placeholder=""
+        <input class="form-control form-control-lg border-0 p-0" placeholder="" *ngIf="journal.owner != '0'"
             [(ngModel)]="item.name" (change)="onSubmit()" #itemName (keyup.enter)="itemName.blur()">
+
+        <div class="form-control form-control-lg border-0 p-0" *ngIf="journal.owner == '0'">
+            {{ item.name}}
+        </div>
     </div>
 
     <div class="col-4 text-end align-self-center">
         <div class="d-flex flex-row-reverse "> 
-            <a href="javascript:;" class="btn btn-outline-dark btn-sm me-1"
-            (click)="openComponent('ShareBoardComponent','')" (newItemEvent)="onChild($event)"
-            ><i class="bi bi-person-plus"></i> Share</a>
+            <div > 
+                <a href="javascript:;" class="btn btn-outline-dark btn-sm me-1"
+                    (click)="openComponent('ShareBoardComponent','')" (newItemEvent)="onChild($event)"><i
+                        class="bi bi-person-plus"></i> Share</a>
+            </div>
 
-            <!-- <div ngbDropdown  class="mx-1">
-                <button type="button" class="btn btn-outline-dark btn-sm" ngbDropdownToggle>
-                    <span class="me-2"  [innerHTML]="fnPermission(item.permissionId)['fontIcon']"></span>
-                    {{fnPermission(item.permissionId)['name']}}
-                </button>
-                <div ngbDropdownMenu>
-                    <button ngbDropdownItem (click)="item.permissionId = a.id; onSubmit()"
-                        *ngFor="let a of permission">
-                        <span class="me-2" [innerHTML]="a.fontIcon"></span> {{a.name}}
-                    </button>
-                </div>
-            </div> -->
-            <div [hidden]="fnPermission(item.permissionId)['share'] != 1" placement="top"
+            <div class="me-2" [hidden]="fnPermission(item.permissionId)['share'] != 1" placement="top" *ngIf="journal.owner != '0'"
                 ngbTooltip="http://localhost:4200/#/board/{{journal.url}}">
-                <button  [cdkCopyToClipboard]="'http://localhost:4200/#/board/{{journal.url}}'"
+                <button [cdkCopyToClipboard]="'http://localhost:4200/#/board/{{journal.url}}'"
                     class="btn btn-sm text-dark mx-1"><i class="bi bi-link-45deg"></i> Copy</button>
             </div>
-            
 
+            <div class="align-self-center me-3">
+              <sup class="me-1">Own By </sup> <img [src]="journal.picture" height="24" class="rounded-circle"> {{journal.ownBy}}
+            </div>
         </div>
     </div>
+ 
+
 </div>

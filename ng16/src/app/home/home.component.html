@@ -3,6 +3,8 @@
 
     <div class="container-fluid">
         <div class="row g-2">
+
+
             <div class="col-md-2 col-12">
                 <div class="bg-white rounded minHeight">
                     <div class="p-3">
@@ -11,18 +13,49 @@
                             Books your Workspace
                         </div>
                     </div>
-                    <div class="p-2 mx-2" *ngFor="let x of books">
-                        <div class="row g-1">
+                    <div class="p-2 mx-2 divHover pointer" *ngFor="let x of books">
+                        <div class="row g-1 ">
                             <div class="col-11">
-                                {{x.name}}
+                                <div (click)="goToBook(x);">
+                                    {{x.name}}
+                                </div>
                             </div>
                             <div class="col-1">
-                                <i class="bi bi-three-dots"></i>
+                                <div class="col-2 text-end align-self-center">
+                                    <div ngbDropdown class="d-inline-block">
+                                        <a id="dropdownForm1" ngbDropdownToggle> &nbsp; </a>
+                                        <div ngbDropdownMenu aria-labelledby="dropdownManual">
+                                            <button ngbDropdownItem (click)="updateTeam(x, 'remove')">Remove</button>
+                                            <button ngbDropdownItem (click)="updateTeam(x, 'disable')"> Disable</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-2 mx-2">
+                        <div class="row">
+                            <div class="col-12">
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-2 mx-2 divHover">
+
+                        <div class="row g-1 ">
+                            <div class="col-11">
+                                <i class="bi bi-share me-2"></i> Share to Me
+                            </div>
+                            <div class="col-1">
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+
             <div class="col-md-7 col-12">
                 <div class="bg-white rounded p-3 minHeight">
                     <div class="mb-3">
@@ -34,16 +67,17 @@
 
                     <div class="row g-3">
 
-                        <div class="col-md-6  col-lg-4 col-6 pointer" *ngFor="let x of journals" (click)="goTo(x);" >
+                        <div class="col-md-6  col-lg-4 col-6 pointer" *ngFor="let x of journals" (click)="goToJournal(x);">
                             <div class="border p-2 bg-white rounded homeBoards">
-                                <img src="https://picsum.photos/id/{{fnSlice(x.id)}}/300/200" width="100%" class="rounded">
+                                <img src="https://picsum.photos/id/{{fnSlice(x.id)}}/300/200" width="100%"
+                                    class="rounded">
                                 <div class="py-2">
                                     <div class="py-1">
-                                        <b><i class="bi bi-folder me-1" *ngIf="x.owner == '1'"></i> 
-                                            <i class="bi bi-share me-1" *ngIf="x.owner != '1'"></i> 
+                                        <b><i class="bi bi-folder me-1" *ngIf="x.owner == '1'"></i>
+                                            <i class="bi bi-share me-1" *ngIf="x.owner != '1'"></i>
                                             {{x.book}}</b>
                                     </div>
-                                    <div class="lh-sm "> 
+                                    <div class="lh-sm ">
                                         <small>{{x.journal}}</small>
                                     </div>
                                 </div>
@@ -59,12 +93,14 @@
                             {{time | date}}
                             <br>
                             {{date}}<br>
-                            {{now}} 
+                            {{now}}
                         </div>
                     </div>
                 </div>
 
             </div>
+
+
 
             <div class="col-md-3 col-12">
                 <div class="bg-white rounded p-3">
@@ -76,8 +112,8 @@
                     </div>
                     <div class="row  mb-3">
                         <div class="col-12">
-                            <input type="text" class="form-control" placeholder="Search by name or email" [(ngModel)]="keyword"
-                            (ngModelChange)="onSearchChange()">
+                            <input type="text" class="form-control" placeholder="Search by name or email"
+                                [(ngModel)]="keyword" (ngModelChange)="onSearchChange()">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -105,13 +141,11 @@
                             </div>
                         </div>
                         <div class="col-2 text-end align-self-center">
-                           
-
                             <div ngbDropdown class="d-inline-block">
-                                <a  id="dropdownForm1" ngbDropdownToggle> &nbsp; </a>
+                                <a id="dropdownForm1" ngbDropdownToggle> &nbsp; </a>
                                 <div ngbDropdownMenu aria-labelledby="dropdownManual">
-                                    <button ngbDropdownItem>Remove</button>
-                                    <button ngbDropdownItem>Disable</button> 
+                                    <button ngbDropdownItem (click)="updateTeam(x, 'remove')">Remove</button>
+                                    <button ngbDropdownItem (click)="updateTeam(x, 'disable')"> Disable</button>
                                 </div>
                             </div>
                         </div>
@@ -123,5 +157,5 @@
         </div>
     </div>
 
- 
+
 </div>

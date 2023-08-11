@@ -20,7 +20,7 @@
                                     <i class="bi bi-folder2-open me-2 text-primary" *ngIf="x.id == id"></i>   
                                     {{x.name}}</a>
                             </li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-share me-2"></i> Share to Me</a></li>
+                            <li><a class="dropdown-item" [routerLink]="[ '/book' ]"><i class="bi bi-share me-2"></i> Share to Me</a></li>
 
                             <li>
                                 <hr class="dropdown-divider">
@@ -73,7 +73,8 @@
     <div class="offcanvas-body">
         <div class="row g-1">
             <div class="col-6">
-                <a class="d-block btn btn-outline-secondary border-0 text-start mb-1" href="javascript:;">
+              
+                <a class="d-block btn btn-outline-secondary border-0 text-start mb-1" href="javascript:;" [routerLink]="[ '/profile' ]">
                     <div>
                         <span class="mx-1"> <i class="bi bi-person"></i> </span>
                         My Profile

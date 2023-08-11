@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from 'src/app/service/config.service';
-import { environment } from 'src/environments/environment'; 
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-custom-field',
@@ -15,7 +15,7 @@ export class CustomFieldComponent implements OnInit {
   // @Input() itemSelect :any = [];
   @Output() newItemEvent = new EventEmitter<string>();
 
-  env : any = environment;
+  env: any = environment;
   childItem: any;
   constructor(
     private http: HttpClient,
@@ -24,7 +24,7 @@ export class CustomFieldComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.childItem = { ...this.item }; 
+    this.childItem = { ...this.item };
   }
 
   fnChildItemSelectOption(id: string) {
@@ -50,10 +50,13 @@ export class CustomFieldComponent implements OnInit {
 
   fnChildItemSelectOptionUser(accountId: string) {
     let data = "";
-
+    let pic = "";
+    let value = "";
     let objIndex = this.childItem.select.users.findIndex(((obj: { accountId: string; }) => obj.accountId == accountId));
     if (objIndex > -1) {
-      return this.childItem.select.users[objIndex]['value'];
+      pic = this.childItem.select.users[objIndex]['picture'];
+      value = this.childItem.select.users[objIndex]['value'];
+      return '<img src="' + pic + '" class="rounded-circle border me-1" height="25" alt="'+value+'" title="'+value+'">';
     }
     else {
       if (accountId !== "") {
@@ -62,12 +65,12 @@ export class CustomFieldComponent implements OnInit {
         if (objIndexHistory > -1) {
           data = this.childItem.select.usersDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
           //   data = objIndexHistory;
-        } 
+        }
       }
       return data;
     }
   }
- 
+
   emitToParent(newValue: string) {
     this.newItemEvent.emit(this.childItem);
   }
@@ -122,12 +125,12 @@ export class CustomFieldComponent implements OnInit {
   }
 
 
-  isNumber(str : string) {   
-      return str.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","); 
+  isNumber(str: string) {
+    return str.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  copyClipboard : boolean = false;
-  copyInputMessage(inputElement : any){
+  copyClipboard: boolean = false;
+  copyInputMessage(inputElement: any) {
     inputElement.select();
     this.copyClipboard = true;
     document.execCommand('copy');

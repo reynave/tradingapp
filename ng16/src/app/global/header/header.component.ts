@@ -48,7 +48,7 @@ export class HeaderComponent implements OnInit, OnChanges {
     //console.log(this.configService.account())
     this.account = this.configService.account();
     //console.log(this.configService.jti())
-    console.log(this.activatedRoute);
+    //console.log(this.activatedRoute);
     this.titleService.setTitle("Mirrel.com");
 
     this.checkJwtToken();
@@ -78,10 +78,8 @@ export class HeaderComponent implements OnInit, OnChanges {
     this.http.get<any>(environment.api + "book", {
       headers: this.configService.headers()
     }).subscribe(
-      data => {
-
-        this.items = data['items'];
-
+      data => { 
+        this.items = data['items']; 
       },
       e => {
         console.log(e);
@@ -106,7 +104,7 @@ export class HeaderComponent implements OnInit, OnChanges {
       headers: this.configService.headers()
     }).subscribe(
       data => {
-        console.log(data);
+//        console.log(data);
       },
       e => {
         console.log(e);
@@ -132,7 +130,7 @@ export class HeaderComponent implements OnInit, OnChanges {
 	}
 
   onSubmitNewBook(){
-    console.log(this.newBook);
+    
     const body = {
       newBook : this.newBook,
     }
@@ -140,7 +138,7 @@ export class HeaderComponent implements OnInit, OnChanges {
       headers: this.configService.headers(),
     }).subscribe(
       data=>{
-        console.log(data);
+        //console.log(data);
         
         this.route.navigate(['./book',data['id']]).then(()=>{
           location.reload();

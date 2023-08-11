@@ -29,7 +29,7 @@ class Tables extends BaseController
 
             $accountId =  model("Core")->accountId();
             $q1 = "SELECT  ja.id as journal_accessID, ja.bookId, p.name AS 'permission', p.fontIcon, 
-            a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin
+            a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin, a.picture
             FROM journal_access AS ja
             LEFT JOIN journal AS j ON j.id = ja.journalId
             LEFT JOIN permission AS p ON p.id = j.permissionId
@@ -114,13 +114,16 @@ class Tables extends BaseController
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 0 order by sorting ASC, id DESC";
 
-                $users = "SELECT ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId', a.presence AS 'accountPresence'
+                $fieldsUser = "ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId', a.picture,
+                a.presence AS 'accountPresence' ";
+
+                $users = "SELECT $fieldsUser
                 FROM journal_access AS ja
                 LEFT join account AS a ON a.id = ja.accountId
                 WHERE ja.journalId = '$id' AND ja.presence = 1
                 ORDER BY a.name asc;";
 
-                $usersDelete = "SELECT ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId', a.presence AS 'accountPresence'
+                $usersDelete = "SELECT $fieldsUser
                 FROM journal_access AS ja
                 LEFT join account AS a ON a.id = ja.accountId
                 WHERE ja.journalId = '$id' AND ja.presence = 0

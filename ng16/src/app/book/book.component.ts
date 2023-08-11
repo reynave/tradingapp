@@ -105,13 +105,14 @@ export class BookComponent implements OnInit {
                 const itemId = $(element).attr("id");
                 order.push(itemId);
               });
+           //   console.log(order);
 
               self.http.post<any>(environment.api + "journal/sorting", order, {
                 headers: self.configService.headers(),
               }).subscribe(
                 data => {
-                  //console.log(data);
-                  // console.log(self.items)  
+                 // console.log(data);
+                 //  console.log(self.items)  
                 },
                 e => {
                   console.log(e);
@@ -258,5 +259,21 @@ export class BookComponent implements OnInit {
     }
   }
 
+  updateStar(x:any){
+    
+    const body = {
+      journal : x,  
+    }
+    this.http.post<any>(environment.api + "journal/updateStar", body, {
+      headers: this.configService.headers()
+    }).subscribe( 
+      data=> { 
+          console.log(data); 
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
 
 }

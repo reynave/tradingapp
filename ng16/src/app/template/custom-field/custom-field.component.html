@@ -113,7 +113,7 @@
 
 <span *ngIf="item['itype']=='user'">
     <div *ngIf="item['ilock']===true">
-        <div class="select p-1 text-center "
+        <div class="select text-center " style="padding-top: 2px;"
             [innerHTML]="fnChildItemSelectOptionUser(childItem['value'])">
         </div>
     </div>
@@ -121,7 +121,7 @@
    
 
     <div ngbDropdown container="body" *ngIf="item['ilock']!==true">
-        <div id="dropdownForm2" class="select p-1 text-center " ngbDropdownToggle
+        <div id="dropdownForm2" class="select   text-center " ngbDropdownToggle style="padding-top: 2px;"
             [innerHTML]="fnChildItemSelectOptionUser(childItem['value'])"> 
         </div>
        
@@ -129,12 +129,12 @@
             <div style="width: 250px;" class="p-2">
                 <small>Select User</small>
                 
-                <div style="overflow-y: auto; max-height: 200px;" class="my-2" >
+                <div style="overflow-y: auto; max-height: 200px;" class="my-2 pointer" >
                     <div *ngFor="let x of childItem.select.users"  (click)="emitSelectToParent(x.accountId);" ngbDropdownItem class="d-flex mb-1">
-                        <div>
-                            <img src="https://i.pravatar.cc/30?img={{x.id}}" class="rounded-circle border"> 
+                        <div> 
+                            <img [src]="x.picture" class="rounded-circle border me-2" height="25" > 
                         </div>
-                        <div class="align-self-center px-3">
+                        <div class="align-self-center">
                             {{x.value}}
                         </div> 
                     </div>

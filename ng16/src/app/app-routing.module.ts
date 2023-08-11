@@ -15,12 +15,17 @@ import { ChartjsComponent } from './board/chartjs/chartjs.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
-  { path: "home", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
  
   { path: "login", component: LoginComponent, data: { active: "" },  canActivate:[]  }, 
   { path: "relogin", component: ReloginComponent, data: { active: "" },  canActivate:[]  }, 
 
-  { path: "book/:id", component: BookComponent, data: { active: "book" },  canActivate:[authGuard]  }, 
+
+  { path: "home", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
+
+  
+  { path: "book", component: BookComponent, data: { active: "book", name :'shareToMe' },  canActivate:[authGuard]  }, 
+  { path: "book/:id", component: BookComponent, data: { active: "book" },  canActivate:[authGuard]  },
+
   { path: "board/table/:id/:journalTableViewId", component: TableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   { path: "board/chart/:id/:journalTableViewId", component: ChartjsComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
 
