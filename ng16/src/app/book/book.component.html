@@ -12,10 +12,11 @@
                         (blur)="onBlur();">
                 </div>
                 <div class="col-6 text-end align-self-center">
-                    <button type="button" (click)="fnClearTrashBin();" class="btn btn-sm  btn-light mx-1">Clear Trash
-                        bin </button>
-                    <button type="button" (click)="fnDeleteAll();" class="btn btn-sm  btn-danger mx-1">Delete </button>
-                    <button class="btn btn-sm  btn-info mx-1 text-white" (click)="open(content)">New Journal</button>
+                    <button type="button" *ngIf="btnTrashBin == true" (click)="fnClearTrashBin();"
+                        class="btn btn-sm  btn-light mx-1">Clear Trash Bin </button>
+                    <button type="button" *ngIf="tools == true " (click)="fnDeleteAll();"
+                        class="btn btn-sm  btn-danger mx-1">Delete </button>
+                    <button class="btn btn-sm  btn-info mx-1 text-white" *ngIf="book.id !== 0" (click)="open(content)">New Journal</button>
                 </div>
             </div>
             <div class="row">
@@ -26,29 +27,32 @@
                         <table class="table table-sm border table-hover">
                             <thead>
                                 <tr>
-                                    <th width="30px"></th>
+                                    <th width="30px" *ngIf="book.id != 0"></th>
                                     <th width="40px"></th>
                                     <th>Title</th>
                                     <th>Template</th>
                                     <th>Update Date</th>
                                     <th>Owner</th>
                                     <th colspan="4"></th>
-
                                 </tr>
                             </thead>
                             <tbody class="sortable">
-                                <tr *ngFor="let x of items; let i = index" >
-                                    <td class="text-center"> 
-                                        <span [hidden]="x.presence == '4'"> 
-                                            <span *ngIf="x.checkbox === true" (click)="x.checkbox = ''"> <i class="bi bi-check-square-fill"></i>  </span>
-                                            <span *ngIf="x.checkbox != true" (click)="x.checkbox = true"> <i class="bi bi-square"></i> </span>
+                                <tr *ngFor="let x of items; let i = index">
+                                    <td class="text-center" *ngIf="book.id != 0">
+                                        <span [hidden]="x.presence == '4'">
+                                            <span *ngIf="x.checkbox === true" (click)="x.checkbox = '';fnTools();"
+                                                class="text-primary"> <i class="bi bi-check-square-fill "></i> </span>
+                                            <span *ngIf="x.checkbox != true" (click)="x.checkbox = true;fnTools();"> <i
+                                                    class="bi bi-square"></i> </span>
                                         </span>
                                     </td>
 
                                     <td class="text-center">
                                         <span [hidden]="x.presence != '1'">
-                                            <span *ngIf="x.star == '1' " (click)="x.star = '0';updateStar(x)">  <i class="bi bi-star-fill text-warning"></i></span>
-                                            <span *ngIf="x.star != '1'" (click)="x.star = '1';updateStar(x); ">  <i class="bi bi-star"></i></span> 
+                                            <span *ngIf="x.star == '1' " (click)="x.star = '0';updateStar(x)"> <i
+                                                    class="bi bi-star-fill text-warning"></i></span>
+                                            <span *ngIf="x.star != '1'" (click)="x.star = '1';updateStar(x); "> <i
+                                                    class="bi bi-star"></i></span>
                                         </span>
                                     </td>
 
@@ -78,7 +82,27 @@
                                             </span>
 
                                             <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                                <button ngbDropdownItem *ngFor="let n of bookSelect"
+                                                <div class="p-1 " style="width: 200px;">
+                                                    <div *ngFor="let n of bookSelect" class="divHover px-2 py-1 pointer"
+                                                        (click)="onChangesBook(n, x, i);">
+
+                                                        <span *ngIf="book.id === 0" class="me-1">
+                                                            <!-- SHARE -->
+                                                            <span *ngIf="x.bookId == n.id"> <i class="bi bi-check-square-fill"></i> </span>
+                                                            <span *ngIf="x.bookId != n.id"> <i class="bi bi-square"></i> </span>
+                                                        </span>
+
+                                                        <span *ngIf="book.id !== 0" class="me-1">
+                                                             
+                                                            <span *ngIf="book.id == n.id "> <i
+                                                                    class="bi bi-check-square-fill"></i> </span>
+                                                            <span *ngIf="book.id != n.id"> <i class="bi bi-square"></i>
+                                                            </span>
+                                                        </span>
+                                                        <span class="mx-1"> {{n.name}}</span>
+                                                    </div>
+                                                </div>
+                                                <!-- <button ngbDropdownItem *ngFor="let n of bookSelect"
                                                     (click)="onChangesBook(n, x);">
 
                                                     <span *ngIf="book.id === 0">
@@ -97,7 +121,7 @@
 
 
                                                     <span class="mx-1"> {{n.name}}</span>
-                                                </button>
+                                                </button> -->
                                             </div>
                                         </div>
                                     </td>
@@ -127,7 +151,6 @@
                     </div>
 
                 </div>
-
 
 
             </div>

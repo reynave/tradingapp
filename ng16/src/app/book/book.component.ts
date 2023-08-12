@@ -95,6 +95,7 @@ export class BookComponent implements OnInit {
         this.book = data['book'];
         this.bookSelect = data['bookSelect'];
         this.templatejson = data['templatejson'];
+        this.showBtnTrashBin();
         var self = this;
         $(function () {
           $(".sortable").sortable({
@@ -129,19 +130,20 @@ export class BookComponent implements OnInit {
     )
   }
  
-  onChangesBook(book:any, item:any){
+  onChangesBook(book:any, item:any, index:number){
     console.log(book,item);
     const body ={
       book : book,
       item : item
     }
-    console.log(body)
+    console.log(body);
+    this.items[index]['bookId'] = book.id;
     this.http.post<any>(environment.api + "journal/onChangesBook", body, {
       headers: this.configService.headers()
     }).subscribe(
       data => {
         console.log(data); 
-        this.httpGet();
+       // this.httpGet();
       },
       e => {
         console.log(e);
@@ -274,6 +276,28 @@ export class BookComponent implements OnInit {
         console.log(error);
       }
     )
+  }
+
+  tools : boolean = false;
+  fnTools() {
+    this.tools = false;
+    this.items.forEach((el: any) => {
+      if (el.checkbox == true) {
+        this.tools = true;
+        return;
+      }
+    });  
+  }
+
+  btnTrashBin : boolean = false;
+  showBtnTrashBin() {
+    this.btnTrashBin = false;
+    this.items.forEach((el: any) => {
+      if (el.presence == '4') {
+        this.btnTrashBin = true;
+        return;
+      }
+    });  
   }
 
 }

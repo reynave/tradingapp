@@ -321,9 +321,10 @@ class Journal extends BaseController
                             "update_date" => date("Y-m-d H:i:s"),
                             "update_by" => model("Core")->accountId(),
                         ], "journalId = '" . $row['id'] . "' ");
+
                     } else {
                         $this->db->table("journal_access")->update([
-                            "presence" => 4,
+                            "bookId" => "",
                             "update_date" => date("Y-m-d H:i:s"),
                             "update_by" => model("Core")->accountId(),
                         ], "journalId = '" . $row['id'] . "' and accountId = '" . model("Core")->accountId() . "' ");
