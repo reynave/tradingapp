@@ -367,8 +367,9 @@ export class TableComponent implements OnInit {
     const body = {
       detail: detail,
     }
-    console.log(body);
+ 
     if (action == 'delete') {
+      this.tools = false;
       detail.forEach(el => {
         var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
         this.detail.splice(objIndex, 1);
@@ -378,18 +379,21 @@ export class TableComponent implements OnInit {
       }).subscribe(
         data => {
           console.log(data);
+         
         },
         e => {
           console.log(e);
         }
       )
     }
+
     if (action == 'duplicate') {
       this.http.post<any>(environment.api + "Tables/duplicateTask", body, {
         headers: this.configService.headers(),
       }).subscribe(
         data => {
           console.log(data);
+          this.tools = false;
           this.httpGet();
         },
         e => {
@@ -397,6 +401,7 @@ export class TableComponent implements OnInit {
         }
       )
     }
+
     if (action == 'lock') {
       detail.forEach(el => {
         var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
@@ -414,6 +419,7 @@ export class TableComponent implements OnInit {
         }
       )
     }
+
     if (action == 'unlock') {
       detail.forEach(el => {
         var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
@@ -431,6 +437,7 @@ export class TableComponent implements OnInit {
         }
       )
     }
+    
     if (action == 'archives') {
       detail.forEach(el => {
         var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
@@ -449,25 +456,7 @@ export class TableComponent implements OnInit {
         }
       )
     }
-    if (action == 'unarchives') {
-      const bodyAll = {
-        id: this.id,
-      }
-      console.log(bodyAll)
-      this.http.post<any>(environment.api + "Tables/unarchives", bodyAll, {
-        headers: this.configService.headers(),
-      }).subscribe(
-        data => {
-          console.log(data);
-          this.checkBoxAll(false);
-          this.httpGet();
-        },
-        e => {
-          console.log(e);
-        }
-      )
-    }
-
+     
   }
 
   reloadRow(data: any) {

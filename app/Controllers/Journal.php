@@ -38,19 +38,25 @@ class Journal extends BaseController
                 "iLock" => 1,
             );
         } else {
-            $q1 = "SELECT  $itemFields
-            FROM journal_access AS ja
-            LEFT JOIN journal AS j ON j.id = ja.journalId
-            LEFT JOIN permission AS p ON p.id = j.permissionId
-            JOIN account AS a ON a.id = j.accountId
-            WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$id'
-            ORDER BY ja.sorting ASC, ja.input_date ASC";
-    
-            $items = $this->db->query($q1)->getResultArray(); 
-            $book = "SELECT * FROM book WHERE accountId  = '$accountId' and id = '$id'"; 
-            $book = $this->db->query($book)->getResultArray()[0];
-           
+            $bookId = model("Core")->select("id","book","id='$id' and presence = 1 ");
+            if($bookId ){
 
+           
+                $q1 = "SELECT  $itemFields
+                FROM journal_access AS ja
+                LEFT JOIN journal AS j ON j.id = ja.journalId
+                LEFT JOIN permission AS p ON p.id = j.permissionId
+                JOIN account AS a ON a.id = j.accountId
+                WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$bookId' 
+                ORDER BY ja.sorting ASC, ja.input_date ASC";
+        
+                $items = $this->db->query($q1)->getResultArray(); 
+                $book = "SELECT * FROM book WHERE presence = 1 and accountId  = '$accountId' and id = '$id'"; 
+                $book = $this->db->query($book)->getResultArray()[0]; 
+            }else{
+                $items = [];  
+                $book = false; 
+            }
         }
         foreach ($items as $rec) {
             array_push($itemJoin, array_merge($rec, [
@@ -73,8 +79,7 @@ class Journal extends BaseController
             "bookSelect" => $bookSelect,
             "permission" => $permission,
             "header" => model("Core")->header(),
-            "templatejson" => $templatejson, 
-            "q1" =>  $q1 ,
+            "templatejson" => $templatejson,  
         );
         return $this->response->setJSON($data);
     }

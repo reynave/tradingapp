@@ -3,161 +3,179 @@
 <div class="body-margin-top">
 
     <div class="container-fluid ">
-        <div class="bg-white p-3 rounded shadow-md border">
-            <div class="row mb-3">
-                <div class="col-6">
-                    <h4 (click)="onFocus(book)" *ngIf="editable.title == false">{{book.name}}</h4>
-                    <input type="text" id="bookTitle" [(ngModel)]="book.name" #inputField *ngIf="editable.title == true"
-                        (change)="fnEditableChange();" placeholder="Book Title" class="form-control form-control-lg "
-                        (blur)="onBlur();">
-                </div>
-                <div class="col-6 text-end align-self-center">
-                    <button type="button" *ngIf="btnTrashBin == true" (click)="fnClearTrashBin();"
-                        class="btn btn-sm  btn-light mx-1">Clear Trash Bin </button>
-                    <button type="button" *ngIf="tools == true " (click)="fnDeleteAll();"
-                        class="btn btn-sm  btn-danger mx-1">Delete </button>
-                    <button class="btn btn-sm  btn-info mx-1 text-white" *ngIf="book.id !== 0" (click)="open(content)">New Journal</button>
-                </div>
-            </div>
-            <div class="row">
+        <div class="row g-2">
 
-                <div class="col-12 mt-2">
-
-                    <div class="">
-                        <table class="table table-sm border table-hover">
-                            <thead>
-                                <tr>
-                                    <th width="30px" *ngIf="book.id != 0"></th>
-                                    <th width="40px"></th>
-                                    <th>Title</th>
-                                    <th>Template</th>
-                                    <th>Update Date</th>
-                                    <th>Owner</th>
-                                    <th colspan="4"></th>
-                                </tr>
-                            </thead>
-                            <tbody class="sortable">
-                                <tr *ngFor="let x of items; let i = index">
-                                    <td class="text-center" *ngIf="book.id != 0">
-                                        <span [hidden]="x.presence == '4'">
-                                            <span *ngIf="x.checkbox === true" (click)="x.checkbox = '';fnTools();"
-                                                class="text-primary"> <i class="bi bi-check-square-fill "></i> </span>
-                                            <span *ngIf="x.checkbox != true" (click)="x.checkbox = true;fnTools();"> <i
-                                                    class="bi bi-square"></i> </span>
-                                        </span>
-                                    </td>
-
-                                    <td class="text-center">
-                                        <span [hidden]="x.presence != '1'">
-                                            <span *ngIf="x.star == '1' " (click)="x.star = '0';updateStar(x)"> <i
-                                                    class="bi bi-star-fill text-warning"></i></span>
-                                            <span *ngIf="x.star != '1'" (click)="x.star = '1';updateStar(x); "> <i
-                                                    class="bi bi-star"></i></span>
-                                        </span>
-                                    </td>
-
-                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
-                                        <a class="text-primary"
-                                            [routerLink]="[ '/board/table/', x.id, x.viewId ]"><b>{{x.name}}</b></a>
-                                    </td>
-
-                                    <td>
-                                        <span class="badge bg-info" *ngIf="x.presence == '1'">{{x.templateCode}}</span>
-                                        <span class="badge bg-light text-warning" *ngIf="x.presence == '4'">Trash
-                                            Bin</span>
-                                    </td>
-
-                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
-                                        <small> {{x.update_date | date:'medium'}}</small>
-                                    </td>
-
-                                    <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
-                                        <small> {{x.ownBy}}</small>
-                                    </td>
-
-                                    <td width="40px">
-                                        <div ngbDropdown class="d-inline-block">
-                                            <span class="" ngbDropdownToggle>
-                                                <i class="bi bi-folder" id="dropdownBasic1"></i>
-                                            </span>
-
-                                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                                <div class="p-1 " style="width: 200px;">
-                                                    <div *ngFor="let n of bookSelect" class="divHover px-2 py-1 pointer"
-                                                        (click)="onChangesBook(n, x, i);">
-
-                                                        <span *ngIf="book.id === 0" class="me-1">
-                                                            <!-- SHARE -->
-                                                            <span *ngIf="x.bookId == n.id"> <i class="bi bi-check-square-fill"></i> </span>
-                                                            <span *ngIf="x.bookId != n.id"> <i class="bi bi-square"></i> </span>
-                                                        </span>
-
-                                                        <span *ngIf="book.id !== 0" class="me-1">
-                                                             
-                                                            <span *ngIf="book.id == n.id "> <i
-                                                                    class="bi bi-check-square-fill"></i> </span>
-                                                            <span *ngIf="book.id != n.id"> <i class="bi bi-square"></i>
+            <div class="col-lg-9 col-12">
+                <div class="bg-white p-3 rounded shadow-md border"> 
+                    <div class="row mb-2">
+                        <div class="col-11">
+                            <h4 (click)="onFocus(book)" *ngIf="editable.title == false">{{book.name}}</h4>
+                            <input type="text" id="bookTitle" [(ngModel)]="book.name" #inputField *ngIf="editable.title == true"
+                                (change)="fnEditableChange();" placeholder="Book Title" class="form-control form-control-lg"
+                                (blur)="onBlur();">
+                        </div>
+                        <div class="col-1 text-end align-self-center">
+                            <button type="button" class="btn btn-sm  btn-danger" (click)="delete()"><i
+                                    class="bi bi-trash"></i></button>
+                        </div>
+        
+        
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-end align-self-center">
+                            <button type="button" *ngIf="btnTrashBin == true" (click)="fnClearTrashBin();"
+                                class="btn btn-sm  btn-light mx-1">Clear Trash Bin </button>
+                            <button type="button" *ngIf="tools == true " (click)="fnDeleteAll();"
+                                class="btn btn-sm  btn-danger mx-1">Delete </button>
+                            <button class="btn btn-sm  btn-info mx-1 text-white" *ngIf="book.id !== 0"
+                                (click)="open(content)">New Journal</button>
+                        </div>
+                        <div class="col-12">
+        
+                            <div class="">
+                                <table class="table   table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th width="30px" *ngIf="book.id != 0"></th>
+                                            <th width="40px"></th>
+                                            <th>Title</th>
+                                            <th>Template</th>
+                                            <th>Update Date</th>
+                                            <th>Owner</th>
+                                            <th colspan="4"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="sortable">
+                                        <tr *ngFor="let x of items; let i = index">
+                                            <td class="text-center" *ngIf="book.id != 0">
+                                                <span [hidden]="x.presence == '4'">
+                                                    <span *ngIf="x.checkbox === true" (click)="x.checkbox = '';fnTools();"
+                                                        class="text-primary"> <i class="bi bi-check-square-fill "></i> </span>
+                                                    <span *ngIf="x.checkbox != true" (click)="x.checkbox = true;fnTools();"> <i
+                                                            class="bi bi-square"></i> </span>
+                                                </span>
+                                            </td>
+        
+                                            <td class="text-center">
+                                                <span [hidden]="x.presence != '1'">
+                                                    <span *ngIf="x.star == '1' " (click)="x.star = '0';updateStar(x)"> <i
+                                                            class="bi bi-star-fill text-warning"></i></span>
+                                                    <span *ngIf="x.star != '1'" (click)="x.star = '1';updateStar(x); "> <i
+                                                            class="bi bi-star"></i></span>
+                                                </span>
+                                            </td>
+        
+                                            <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
+                                                <a class="text-primary"
+                                                    [routerLink]="[ '/board/table/', x.id, x.viewId ]"><b>{{x.name}}</b></a>
+                                            </td>
+        
+                                            <td>
+                                                <span class="badge bg-info" *ngIf="x.presence == '1'">{{x.templateCode}}</span>
+                                                <span class="badge bg-light text-warning" *ngIf="x.presence == '4'">Trash
+                                                    Bin</span>
+                                            </td>
+        
+                                            <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
+                                                <small> {{x.update_date | date:'medium'}}</small>
+                                            </td>
+        
+                                            <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
+                                                <small> {{x.ownBy}}</small>
+                                            </td>
+        
+                                            <td width="40px">
+                                                <div ngbDropdown class="d-inline-block">
+                                                    <span class="" ngbDropdownToggle>
+                                                        <i class="bi bi-folder" id="dropdownBasic1"></i>
+                                                    </span>
+        
+                                                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                                        <div class="p-1 " style="width: 200px;">
+                                                            <div *ngFor="let n of bookSelect" class="divHover px-2 py-1 pointer"
+                                                                (click)="onChangesBook(n, x, i);">
+        
+                                                                <span *ngIf="book.id === 0" class="me-1">
+                                                                    <!-- SHARE -->
+                                                                    <span *ngIf="x.bookId == n.id"> <i
+                                                                            class="bi bi-check-square-fill"></i> </span>
+                                                                    <span *ngIf="x.bookId != n.id"> <i class="bi bi-square"></i>
+                                                                    </span>
+                                                                </span>
+        
+                                                                <span *ngIf="book.id !== 0" class="me-1">
+        
+                                                                    <span *ngIf="book.id == n.id "> <i
+                                                                            class="bi bi-check-square-fill"></i> </span>
+                                                                    <span *ngIf="book.id != n.id"> <i class="bi bi-square"></i>
+                                                                    </span>
+                                                                </span>
+                                                                <span class="mx-1"> {{n.name}}</span>
+                                                            </div>
+                                                        </div>
+                                                        <!-- <button ngbDropdownItem *ngFor="let n of bookSelect"
+                                                            (click)="onChangesBook(n, x);">
+        
+                                                            <span *ngIf="book.id === 0">
+                                                                <span *ngIf="x.bookId == n.id "> <i
+                                                                        class="bi bi-check-square-fill"></i> </span>
+                                                                <span *ngIf="x.bookId != n.id"> <i class="bi bi-square"></i>
+                                                                </span>
                                                             </span>
-                                                        </span>
-                                                        <span class="mx-1"> {{n.name}}</span>
+        
+                                                            <span *ngIf="book.id !== 0">
+                                                                <span *ngIf="book.id == n.id "> <i
+                                                                        class="bi bi-check-square-fill"></i> </span>
+                                                                <span *ngIf="book.id != n.id"> <i class="bi bi-square"></i>
+                                                                </span>
+                                                            </span>
+        
+        
+                                                            <span class="mx-1"> {{n.name}}</span>
+                                                        </button> -->
                                                     </div>
                                                 </div>
-                                                <!-- <button ngbDropdownItem *ngFor="let n of bookSelect"
-                                                    (click)="onChangesBook(n, x);">
-
-                                                    <span *ngIf="book.id === 0">
-                                                        <span *ngIf="x.bookId == n.id "> <i
-                                                                class="bi bi-check-square-fill"></i> </span>
-                                                        <span *ngIf="x.bookId != n.id"> <i class="bi bi-square"></i>
-                                                        </span>
-                                                    </span>
-
-                                                    <span *ngIf="book.id !== 0">
-                                                        <span *ngIf="book.id == n.id "> <i
-                                                                class="bi bi-check-square-fill"></i> </span>
-                                                        <span *ngIf="book.id != n.id"> <i class="bi bi-square"></i>
-                                                        </span>
-                                                    </span>
-
-
-                                                    <span class="mx-1"> {{n.name}}</span>
-                                                </button> -->
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td width="40px">
-
-                                        <span *ngIf="itemSetting(x)">
-                                            <a (click)="openComponent('ShareBoardComponent',x)" class="mx-1"> <i
-                                                    class="bi bi-person-plus"></i></a>
-                                        </span>
-                                    </td>
-
-                                    <td width="40px">
-                                        <span [innerHTML]="x.fontIcon" title="{{x.permission}}"></span>
-                                    </td>
-
-                                    <td width="40px">
-                                        <span class="handle" data-id="{{x.id}}">
-                                            <i class="bi bi-list"></i>
-                                        </span>
-                                    </td>
-
-                                </tr>
-                            </tbody>
-
-                        </table>
+                                            </td>
+        
+                                            <td width="40px">
+        
+                                                <span *ngIf="itemSetting(x)">
+                                                    <a (click)="openComponent('ShareBoardComponent',x)" class="mx-1"> <i
+                                                            class="bi bi-person-plus"></i></a>
+                                                </span>
+                                            </td>
+        
+                                            <td width="40px">
+                                                <span [innerHTML]="x.fontIcon" title="{{x.permission}}"></span>
+                                            </td>
+        
+                                            <td width="40px">
+                                                <span class="handle" data-id="{{x.id}}">
+                                                    <i class="bi bi-list"></i>
+                                                </span>
+                                            </td>
+        
+                                        </tr>
+                                    </tbody>
+        
+                                </table>
+                            </div>
+        
+                        </div>
+        
+        
                     </div>
-
                 </div>
+            </div>
 
-
+            <div class="col-lg-3 col-12">
+                <app-widget-teams></app-widget-teams>
             </div>
         </div>
-    </div>
-
+       
+    </div> 
 </div>
+
 <ng-template #content let-modal>
     <form (ngSubmit)="onCreateNew()" #heroForm="ngForm">
         <div class="modal-header">

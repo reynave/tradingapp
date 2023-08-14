@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; 
 import { ShareBoardComponent } from '../template/share-board/share-board.component';
 
@@ -39,11 +39,11 @@ export class BookComponent implements OnInit {
   model = new Hero("","1","general");
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute, 
+    private router: Router,
     private http: HttpClient,
-    private configService: ConfigService,
-    private route: ActivatedRoute,
-    private modalService: NgbModal
+    private configService: ConfigService, 
+    private modalService: NgbModal, 
   ) { }
 
   public onChild(obj: any) { 
@@ -130,6 +130,25 @@ export class BookComponent implements OnInit {
     )
   }
  
+  delete(){
+    if(confirm("Delete "+this.book['name']+ "'s book ? ")){
+      const body = {
+        book: this.book,
+      }
+      this.http.post<any>(environment.api+"book/delete",body,{
+        headers : this.configService.headers(),
+      }).subscribe(
+        data=>{
+          console.log(data); 
+          this.router.navigate(['home']);
+        },
+        error=>{
+
+        }
+      )
+    }
+  }
+
   onChangesBook(book:any, item:any, index:number){
     console.log(book,item);
     const body ={

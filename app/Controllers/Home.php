@@ -63,18 +63,11 @@ class Home extends BaseController
                 "viewId" => model("Core")->select("id","journal_table_view","journalId = '".$row['journalId']."' order by id ASC "),
             ]));
         }
-
-        $qTeams = "SELECT a.id, a.email, a.name, a.picture
-        FROM account_team AS t
-        JOIN account AS a ON a.id = t.invitedId 
-        WHERE t.accountId = '$accountId' ";
-        $teams = $this->db->query($qTeams)->getResultArray();
   
         $data = array(
             "error" => false,
             "books" => $books,
-            "journals" => $journals,
-            "teams" => $teams
+            "journals" => $journals, 
         );
         return $this->response->setJSON($data); 
     }

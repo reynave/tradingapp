@@ -3,21 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '../service/config.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-interface DataItem {
-  id: number;
-  name: string;
-  address: string;
-  area: string;
+export class NewBook { 
+  constructor( 
+    public name: string, 
+  ) {}
 }
-
-interface DataTeam {
-  id: number;
-  email: string;
-  name: string;
-  picture: string;
-}
-
+  
+ 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -27,17 +21,15 @@ export class HomeComponent implements OnInit {
   time: number = 1690267027;
   date = new Date('2023-12-01 14:52:48 UTC').toString();
   now = new Date().toString();
-  
-  filterTeams: DataTeam[] = [];
-  keyword: string = '';
-  teams: any = [];
+    
   books: any = [];
   journals: any = [];
-
+  newBook = new NewBook('');
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
-    private router: Router,
+    private router: Router, 
+    private modalService: NgbModal,
   ) { }
 
   ngOnInit() {
@@ -49,11 +41,9 @@ export class HomeComponent implements OnInit {
       headers: this.configService.headers()
     }).subscribe(
       data => {
-        console.log(data);
-        this.teams = data['teams'];
+        console.log(data); 
         this.books = data['books'];
-        this.journals = data['journals'];
-        this.filterTeams = this.teams;
+        this.journals = data['journals']; 
       },
       error => {
         console.log(error);
@@ -61,19 +51,7 @@ export class HomeComponent implements OnInit {
 
     )
   }
-  
-  onSearchChange() {
-    if (!this.keyword || this.keyword.trim() === '') { 
-      this.filterTeams = this.teams;
-    } else {
-      this.filterTeams = this.teams.filter((item: { name: string; email: string; }) => { 
-        const matchName = item.name.toLowerCase().includes(this.keyword.toLowerCase());
-        const matchEmail = item.email.toLowerCase().includes(this.keyword.toLowerCase());
-        
-        return matchName || matchEmail;
-      });
-    }
-  }
+   
 
   fnSlice(str : string){
     return parseInt(str.slice(-3));
@@ -89,4 +67,27 @@ export class HomeComponent implements OnInit {
   updateTeam(x:any, action :string){
 
   }
+  open(content: any) {
+		this.modalService.open(content, {size:'md'});
+	}
+  onSubmitNewBook(){
+    
+    const body = {
+      newBook : this.newBook,
+    }
+    this.http.post<any>(environment.api+"book/insert", body,{
+      headers: this.configService.headers(),
+    }).subscribe(
+      data=>{
+        //console.log(data); 
+        this.router.navigate(['./book',data['id']]).then(()=>{
+          this.modalService.dismissAll();
+        })
+      },
+      error=>{
+        console.log(error);
+      }
+    )
+  }
+
 }

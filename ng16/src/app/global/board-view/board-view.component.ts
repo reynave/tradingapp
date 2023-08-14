@@ -4,8 +4,9 @@ import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
-import { Output, EventEmitter } from '@angular/core'; 
+import { Output, EventEmitter } from '@angular/core';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+declare var $: any;
 
 @Component({
   selector: 'app-board-view',
@@ -17,28 +18,28 @@ export class BoardViewComponent implements OnInit {
   id: string = "";
   journalTableViewId: string = "";
   items: any = [];
-  journalAccess : any = [];
+  journalAccess: any = [];
   constructor(
     private http: HttpClient,
-    private configService: ConfigService, 
+    private configService: ConfigService,
     private ativatedRoute: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
     configDropdown: NgbDropdownConfig,
     config: NgbModalConfig,
   ) {
-   // configDropdown.placement = 'bottom-end';
+    // configDropdown.placement = 'bottom-end';
     config.backdrop = 'static';
-		config.keyboard = false;
-   }
+    config.keyboard = false;
+  }
 
   ngOnInit(): void {
-   
+
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
 
-    const ab : any = localStorage.getItem(this.id);
-    this.items = JSON.parse(ab );
+    const ab: any = localStorage.getItem(this.id);
+    this.items = JSON.parse(ab);
     this.httpGet();
 
   }
@@ -51,10 +52,37 @@ export class BoardViewComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        console.log('boardView-httpGet',data);
+        console.log('boardView-httpGet', data);
         this.items = data['items'];
         this.journalAccess = data['journal_access'];
         localStorage.setItem(this.id, JSON.stringify(data['items']));
+        
+        $(document).ready(function () {
+          console.log($('.carouselx'));
+          $('.carouselx').slick({
+            slidesToShow: 9,
+            slidesToScroll: 3,
+            variableWidth: true,
+            centerMode: false,
+            infinite: false,
+            responsive: [
+              {
+                breakpoint: 768,
+                settings: { 
+                  slidesToShow: 3
+                }
+              },
+              {
+                breakpoint: 480,
+                settings: { 
+                  slidesToShow: 1
+                }
+              }
+            ]
+          });
+          
+        });
+
       },
       e => {
         console.log(e);
@@ -62,26 +90,26 @@ export class BoardViewComponent implements OnInit {
     )
   }
 
-  goToView(x: any) { 
+  goToView(x: any) {
     this.journalTableViewId = x.id;
     this.router.navigate(['board', x.board, x.journalId, x.id]).then(
-      ()=>{
+      () => {
         this.newItemEvent.emit(x);
       }
     )
   }
 
-  addView(board : string){
-    const body ={
-      id: this.id, 
-      board : board
+  addView(board: string) {
+    const body = {
+      id: this.id,
+      board: board
     }
-    this.http.post<any>(environment.api + "Board/addView",body, {
+    this.http.post<any>(environment.api + "Board/addView", body, {
       headers: this.configService.headers(),
-     
+
     }).subscribe(
       data => {
-        
+        $('.carouselx').slick('unslick');
         this.httpGet();
         this.modalService.dismissAll();
       },
@@ -92,15 +120,15 @@ export class BoardViewComponent implements OnInit {
     )
   }
 
-  update(x:any){
-    const body ={
-      item: x,  
+  update(x: any) {
+    const body = {
+      item: x,
     }
-    this.http.post<any>(environment.api + "Board/update",body, {
+    this.http.post<any>(environment.api + "Board/update", body, {
       headers: this.configService.headers(),
-     
+
     }).subscribe(
-      data => {  
+      data => {
         this.httpGet();
       },
       e => {
@@ -108,18 +136,18 @@ export class BoardViewComponent implements OnInit {
       }
     )
   }
-  
-  delete(x:any){
-    const body ={
-      item: x,  
+
+  delete(x: any) {
+    const body = {
+      item: x,
     }
-    this.http.post<any>(environment.api + "Board/delete",body, {
+    this.http.post<any>(environment.api + "Board/delete", body, {
       headers: this.configService.headers(),
-     
+
     }).subscribe(
-      data => {  
+      data => {
         this.httpGet();
-        if(x.id == this.journalTableViewId){
+        if (x.id == this.journalTableViewId) {
           this.goToView(data);
         }
         this.modalService.dismissAll();
@@ -132,6 +160,6 @@ export class BoardViewComponent implements OnInit {
   }
 
   open(content: any) {
-		this.modalService.open(content);
-	}
+    this.modalService.open(content);
+  }
 }

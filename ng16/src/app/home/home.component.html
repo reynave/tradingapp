@@ -10,43 +10,75 @@
                     <div class="p-3">
                         <h5><i class="bi bi-folder me-2"></i> My Book</h5>
                         <div>
-                            Books your Workspace
+                            Books for your journey
                         </div>
                     </div>
                     <div class="p-2 mx-2 divHover pointer" *ngFor="let x of books">
                         <div class="row g-1 ">
-                            <div class="col-11">
+                            <div class="col-12">
                                 <div (click)="goToBook(x);">
-                                    {{x.name}}
+                                   <strong> {{x.name}}</strong>
                                 </div>
                             </div>
-                            <div class="col-1">
-                                <div class="col-2 text-end align-self-center">
-                                    <div ngbDropdown class="d-inline-block">
-                                        <a id="dropdownForm1" ngbDropdownToggle> &nbsp; </a>
-                                        <div ngbDropdownMenu aria-labelledby="dropdownManual">
-                                            <button ngbDropdownItem (click)="updateTeam(x, 'remove')">Remove</button>
-                                            <button ngbDropdownItem (click)="updateTeam(x, 'disable')"> Disable</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                           
                         </div>
                     </div> 
                     
-                    <div class="p-2 mx-2 divHover" [routerLink]="[ '/book' ]"> 
-                      
+                    <div class="p-2 mx-2 divHover pointer" [routerLink]="[ '/book' ]">  
                         <div class="row g-1 ">
                             <div class="col-12">
                                 <i class="bi bi-share me-2"></i> Share to Me
                             </div> 
                         </div>
                     </div>
+                    <div class="p-2 mx-2 divHover pointer" (click)="open(contentNewBook)">  
+                        <div class="row g-1 ">
+                            <div class="col-12">
+                                <i class="bi bi-folder-plus me-2"></i> New Book
+                            </div> 
+                        </div>
+                    </div>
+
+                    <ng-template #contentNewBook let-modal>
+
+                        <div class="modal-body">
+                            <div class="row mb-3">
+                                <div class="col-6"> </div>
+                                <div class="col-6 text-end"> <button type="button" class="btn-close" aria-label="Close"
+                                        (click)="modal.dismiss('Cross click')"></button> </div>
+                            </div> 
+                    
+                            <form (ngSubmit)="onSubmitNewBook()" #heroForm="ngForm">
+                                <div class="mb-4 text-center">
+                                    <img src="./assets/icon/icons8-book-100.png">
+                                    <div>
+                                        <label for="bookname" class="mb-1">New book name</label>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <input type="text" class="form-control form-control-lg" id="bookname" required
+                                        [(ngModel)]="newBook.name" name="bookname" #bookname="ngModel">
+                    
+                                    <div [hidden]="bookname.valid || bookname.pristine" class="text-danger mt-1">
+                                        Name is required
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-outline-dark px-3 mx-2"
+                                        (click)="modal.close('Save click')">Cancel</button>
+                                    <button type="submit" class="btn btn-dark px-3" [disabled]="!heroForm.form.valid">Save</button>
+                                </div>
+                            </form>
+                    
+                        </div>
+                    
+                    </ng-template>
+                    
+
+
                 </div>
             </div>
-
-
-
+ 
             <div class="col-lg-7 col-md-6 col-12">
                 <div class="bg-white rounded p-3 minHeight">
                     <div class="mb-3">
@@ -90,59 +122,9 @@
                 </div>
 
             </div>
-
-
-
+  
             <div class="col-md-3 col-12">
-                <div class="bg-white rounded p-3">
-                    <div class="mb-3">
-                        <h5><i class="bi bi-people me-2"></i> Collaborating</h5>
-                        <div>
-                            Your team mates and start collaborating
-                        </div>
-                    </div>
-                    <div class="row  mb-3">
-                        <div class="col-12">
-                            <input type="text" class="form-control" placeholder="Search by name or email"
-                                [(ngModel)]="keyword" (ngModelChange)="onSearchChange()">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-4">
-                            Total : {{this.teams.length}}
-                        </div>
-                        <div class="col-8 text-end">
-                            <button type="button" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Invite
-                                New Team</button>
-                        </div>
-                    </div>
-                    <div class="row pointer py-2 divHover" *ngFor="let x of filterTeams">
-
-                        <div class="col-10">
-                            <div class="d-flex pointer">
-                                <div>
-                                    <img [src]="x.picture" width="35" class="rounded-circle me-2">
-                                </div>
-                                <div class="lh-sm">
-                                    <div>{{x.name}}</div>
-                                    <div>
-                                        <small>{{x.email}}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-2 text-end align-self-center">
-                            <div ngbDropdown class="d-inline-block">
-                                <a id="dropdownForm1" ngbDropdownToggle> &nbsp; </a>
-                                <div ngbDropdownMenu aria-labelledby="dropdownManual">
-                                    <button ngbDropdownItem (click)="updateTeam(x, 'remove')">Remove</button>
-                                    <button ngbDropdownItem (click)="updateTeam(x, 'disable')"> Disable</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <app-widget-teams></app-widget-teams> 
             </div>
 
         </div>

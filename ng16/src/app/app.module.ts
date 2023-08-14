@@ -27,6 +27,7 @@ import { BoardViewComponent } from './global/board-view/board-view.component';
 import { ChartjsComponent } from './board/chartjs/chartjs.component';
 import { BoardTitleComponent } from './global/board-title/board-title.component';
 import { ShareBoardComponent } from './template/share-board/share-board.component';
+import { WidgetTeamsComponent } from './global/widget-teams/widget-teams.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { ShareBoardComponent } from './template/share-board/share-board.componen
     BoardViewComponent,
     ChartjsComponent,
     BoardTitleComponent,
-    ShareBoardComponent
+    ShareBoardComponent,
+    WidgetTeamsComponent
   ],
   imports: [
     BrowserModule,

@@ -48,4 +48,45 @@ class Book extends BaseController
        
         return $this->response->setJSON($data);
     }
+
+    function delete() {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post && !empty($post['book']) ) {
+            $accoundId = model("Core")->accountId();
+            $this->db->transStart();
+            $this->db->table("book")->update([   
+                "presence" => 0, 
+                "update_by" => model("Core")->accountId(),
+                "update_date" => date("Y-m-d H:i:s"),
+            ]," id = '".$post['book']['id']."' and accountId = '$accoundId' "); 
+             
+            $this->db->table("journal_access")->update([   
+                "presence" => 0, 
+                "update_by" => model("Core")->accountId(),
+                "update_date" => date("Y-m-d H:i:s"),
+            ]," bookId = '".$post['book']['id']."' AND owner = 1 AND accountId = '$accoundId'  "); 
+            
+            $journal_access = "SELECT *  FROM journal_access WHERE bookId = '".$post['book']['id']."' AND owner = 1 AND accountId = '$accoundId'  ";
+            $journal_access = $this->db->query( $journal_access )->getResultArray();
+    
+            foreach($journal_access as $row){ 
+                model("Core")->delete_Journal_detail(  $row['journalId'] );
+            }
+
+            $this->db->transComplete();
+           
+            $data = [
+                "error" => false,
+                "post" => $post,  
+                "transStatus" => $this->db->transStatus(),
+            ];
+        }
+       
+        return $this->response->setJSON($data);
+    }
 }

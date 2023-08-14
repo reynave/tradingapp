@@ -1,5 +1,5 @@
 <div class="border-bottom mb-2">
-    <div class="d-flex ">
+    <div class="carouselx">
         <div *ngFor="let x of items; let i = index" class="minWidth "> 
             <a class="btn btn-sm ps-0 {{i> 0 ? 'pe-4':''}} mx-2 " [ngClass]="{'btn-active': x.id == journalTableViewId}" (click)="goToView(x);">
                 <i *ngIf="x.ilock == '1'" class="bi bi-house"></i>
@@ -44,7 +44,6 @@
                     </div>
                 </div> 
             </div>
-            <small>|</small>
         </div>
 
 
@@ -83,6 +82,7 @@
                 </div>
             </div>
         </div>
+         
     </div>
 </div>
 

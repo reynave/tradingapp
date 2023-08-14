@@ -2,14 +2,16 @@
     border-radius: 0px;
     border-bottom: 5px solid rgb(2, 120, 174);
 }
-
+.max{
+    /* max-width: calc(100vw - 50px); */
+}
 .minWidth{
     min-width: 82px;
     position: relative;
 }
 .minWidth .minWidth_menu{ 
     position: absolute;
-    right: 5px;
+    right: 2px;
     top: 0px;
 }
 

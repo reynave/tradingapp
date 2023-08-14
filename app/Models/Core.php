@@ -469,7 +469,7 @@ class Core extends Model
                                 $insert = true;
                             }
                         }
-                    }else{
+                    } else {
                         $insert = true;
                     }
 
@@ -503,5 +503,90 @@ class Core extends Model
             "selectWhereOption" => $selectWhereOption,
         );
         return $obj;
+    }
+
+
+    // SOFT DELETE
+    function delete_Journal_detail($journalId)
+    {
+        $this->db->table("journal")->update([
+            "presence" => 0,
+            "update_by" => self::accountId(),
+            "update_date" => date("Y-m-d H:i:s"), 
+        ], " id = '$journalId' ");
+
+        $this->db->table("journal_detail")->update([
+            "presence" => 0,
+            "update_by" => self::accountId(),
+            "update_date" => date("Y-m-d H:i:s"), 
+        ], " journalId = '$journalId' ");
+  
+        $journalDetailId =  model("Core")->select("id","journal_detail"," journalId = '$journalId' ");
+        $this->db->table("journal_detail_images")->update([
+            "presence" => 0,
+            "update_by" => self::accountId(),
+            "update_date" => date("Y-m-d H:i:s"), 
+        ], " journalDetailId = $journalDetailId ");
+         
+        $this->db->table("journal_select")->update([
+            "presence" => 0,
+            "update_by" => self::accountId(),
+            "update_date" => date("Y-m-d H:i:s"), 
+        ], " journalId = '$journalId' ");
+
+        $this->db->table("journal_table_view")->update([
+            "presence" => 0,
+            "update_by" => self::accountId(),
+            "update_date" => date("Y-m-d H:i:s"), 
+        ], " journalId = '$journalId' ");
+
+
+        $q1 = "SELECT id  FROM journal_table_view WHERE journalId = '$journalId' ";
+        $journal_table_view = $this->db->query( $q1 )->getResultArray();
+
+        foreach($journal_table_view  as $row){
+            $this->db->table("journal_table_view_show")->update([
+                "presence" => 0,
+            ], " journalTableViewId =  ".$row['id']);
+
+            $this->db->table("journal_chart_xaxis")->update([
+                "presence" => 0,
+                "update_by" => self::accountId(),
+                "update_date" => date("Y-m-d H:i:s"), 
+            ], " journalTableViewId =  ".$row['id']);
+
+            $this->db->table("journal_chart_yaxis")->update([
+                "presence" => 0,
+                "update_by" => self::accountId(),
+                "update_date" => date("Y-m-d H:i:s"), 
+            ], " journalTableViewId =  ".$row['id']);
+
+            $this->db->table("journal_chart_where_select")->update([
+                "presence" => 0,
+                "update_by" => self::accountId(),
+                "update_date" => date("Y-m-d H:i:s"), 
+            ], " journalTableViewId =  ".$row['id']);
+
+            $this->db->table("journal_chart_where")->update([
+                "presence" => 0,
+                "update_by" => self::accountId(),
+                "update_date" => date("Y-m-d H:i:s"), 
+            ], " journalTableViewId =  ".$row['id']);
+
+            $this->db->table("journal_chart_type")->update([
+                "presence" => 0,
+                "update_by" => self::accountId(),
+                "update_date" => date("Y-m-d H:i:s"), 
+            ], " journalTableViewId =  ".$row['id']);
+
+        }
+
+        $this->db->table("journal_custom_field")->update([
+            "presence" => 0,
+            "update_by" => self::accountId(),
+            "update_date" => date("Y-m-d H:i:s"), 
+        ], " journalId = '$journalId' ");
+       
+
     }
 }

@@ -1,0 +1,63 @@
+<div class="bg-white rounded p-3">
+    <div class="mb-3">
+        <h5><i class="bi bi-people me-2"></i> Collaborating</h5>
+        <div>
+            Your team mates and start collaborating
+        </div>
+    </div>
+    <div class="row  mb-3">
+        <div class="col-12">
+            <input type="text" class="form-control" placeholder="Search by name or email" [(ngModel)]="keyword"
+                (ngModelChange)="onSearchChange()">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-4">
+            Total : {{this.teams.length}}
+        </div>
+        <div class="col-8 text-end">
+            <button type="button" class="btn btn-sm btn-success" (click)="open(content)"><i class="bi bi-plus-lg"></i>
+                Invite New Team</button>
+        </div>
+    </div>
+    <div class="row pointer py-2 divHover" *ngFor="let x of filterTeams">
+
+        <div class="col-12">
+            <div class="d-flex pointer">
+                <div>
+                    <img [src]="x.picture" width="35" class="rounded-circle me-2">
+                </div>
+                <div class="lh-sm">
+                    <div>{{x.name}}</div>
+                    <div>
+                        <small>{{x.email}}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #content let-modal>
+
+    <div class="modal-body">
+        <div class="text-end">
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="text-center mb-4">
+            <img src="https://cdn.monday.com/images/free-tier-user-limitation.png" width="300">
+        </div>
+        <form>
+
+            <div class="mb-3 text-center">
+                <label for="newTeam" class="mb-2">Invite new Team with Email</label>
+
+                <input type="text" class="form-control" id="newTeam">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+</ng-template>

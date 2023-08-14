@@ -20,14 +20,15 @@
                                     <i class="bi bi-folder2-open me-2 text-primary" *ngIf="x.id == id"></i>   
                                     {{x.name}}</a>
                             </li>
-                            <li><a class="dropdown-item" [routerLink]="[ '/book' ]"><i class="bi bi-share me-2"></i> Share to Me</a></li>
-
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
+                            <li><a class="dropdown-item" [routerLink]="[ '/book' ]"><i class="bi bi-share me-2"></i> Share to Me</a></li>
 
-                            <li><a class="dropdown-item" (click)="open(contentNewBook)"><i class="bi bi-folder-plus me-2"></i> New Book</a>
-                            </li>
+                           
+
+                            <!-- <li><a class="dropdown-item" (click)="open(contentNewBook)"><i class="bi bi-folder-plus me-2"></i> New Book</a>
+                            </li> -->
                         </ul>
                     </li>
                 </ul>

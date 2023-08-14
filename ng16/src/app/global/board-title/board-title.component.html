@@ -27,13 +27,14 @@
                     class="btn btn-sm text-dark mx-1"><i class="bi bi-link-45deg"></i> Copy</button>
             </div>
 
-            <div class="align-self-center me-2">
+            <div class="align-self-center me-3" style="margin-top: -8px;">
                 <div class="d-flex">
                     <div>
-                        <img [src]="journal.picture" height="24" class="rounded-circle me-2">
+                        <img [src]="journal.picture" height="34" class="rounded-circle me-2">
                     </div>
-                    <div>
-                        {{journal.ownBy}} 
+                    <div class="lh-sm text-start">
+                        <small style="font-size: 0.8rem;">Owner</small>
+                        <div>{{journal.ownBy}} </div>
                     </div>
                 </div>
             
