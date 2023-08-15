@@ -2,8 +2,7 @@ import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
-import { FunctionsService } from 'src/app/service/functions.service';
-import Chart from 'chart.js/auto';
+import { FunctionsService } from 'src/app/service/functions.service'; 
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Title } from '@angular/platform-browser';
@@ -33,12 +32,8 @@ export class NewCustomField {
 })
 export class TableComponent implements OnInit {
   @ViewChild('canvasRight') canvasRight: any;
-  @ViewChild('contentEditSelect') contentEditSelect: any;
-  @HostListener('window:popstate', ['$event'])
-
-
-  leftSide: boolean = true;
-
+  @ViewChild('contentEditSelect') contentEditSelect: any; 
+ 
   fields: any = [];
 
   newCustomField = new NewCustomField("", "text");
@@ -56,11 +51,7 @@ export class TableComponent implements OnInit {
   customField: any = [];
   customFieldForm: any = [];
 
-  chart: any = [];
-  chartJsData = {
-    data: [],
-    label: [],
-  }
+ 
   tools: boolean = false;
   detailImageUrl: string = "";
   journalDetailId: string = "";
@@ -86,29 +77,6 @@ export class TableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.chart = new Chart('canvas', {
-      type: 'line',
-      data: {
-        labels: [],
-        datasets: [
-          {
-            label: 'Load data',
-            data: [],
-          },
-        ],
-      },
-
-      options: {
-        // animation: {
-        //   duration: 0
-        // },
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
 

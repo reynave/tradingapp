@@ -123,6 +123,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   update(x: any) {
+    $('.divHiden').hide();
     const body = {
       item: x,
     }
@@ -131,6 +132,7 @@ export class BoardViewComponent implements OnInit {
 
     }).subscribe(
       data => {
+        $('.carouselx').slick('unslick');
         this.httpGet();
       },
       e => {
@@ -140,6 +142,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   delete(x: any) {
+    $('.divHiden').hide();
     const body = {
       item: x,
     }
@@ -148,6 +151,7 @@ export class BoardViewComponent implements OnInit {
 
     }).subscribe(
       data => {
+        $('.carouselx').slick('unslick');
         this.httpGet();
         if (x.id == this.journalTableViewId) {
           this.goToView(data);

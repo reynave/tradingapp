@@ -1,4 +1,4 @@
-<div class="border-bottom mb-2">
+<div class="border-bottom mb-2 " style="min-height: 31px;">
     <div class="carouselx divHiden ">
         <div *ngFor="let x of items; let i = index" class="minWidth "> 
             <a class="btn btn-sm ps-0 {{i> 0 ? 'pe-4':''}} mx-2 " [ngClass]="{'btn-active': x.id == journalTableViewId}" (click)="goToView(x);">
