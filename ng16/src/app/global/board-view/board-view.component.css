@@ -3,11 +3,15 @@
     border-bottom: 5px solid rgb(2, 120, 174);
 }
 .max{
-    /* max-width: calc(100vw - 50px); */
+    max-width: calc(100vw - 50px);
+}
+.divHiden{
+    display: none;
 }
 .minWidth{
     min-width: 82px;
     position: relative;
+   
 }
 .minWidth .minWidth_menu{ 
     position: absolute;

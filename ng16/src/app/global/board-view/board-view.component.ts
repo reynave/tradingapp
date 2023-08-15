@@ -59,6 +59,7 @@ export class BoardViewComponent implements OnInit {
         
         $(document).ready(function () {
           console.log($('.carouselx'));
+          $('.divHiden').show();
           $('.carouselx').slick({
             slidesToShow: 9,
             slidesToScroll: 3,
@@ -100,6 +101,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   addView(board: string) {
+    $('.divHiden').hide();
     const body = {
       id: this.id,
       board: board
@@ -109,6 +111,7 @@ export class BoardViewComponent implements OnInit {
 
     }).subscribe(
       data => {
+       
         $('.carouselx').slick('unslick');
         this.httpGet();
         this.modalService.dismissAll();

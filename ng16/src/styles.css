@@ -92,6 +92,10 @@ body {
   font-family: var(--font-manrope);
 }
 
+body{
+  overflow-x: hidden;
+}
+
 .offcanvas-backdrop.show {
   opacity: .1;
 }
