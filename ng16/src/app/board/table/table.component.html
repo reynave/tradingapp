@@ -94,6 +94,7 @@
                                 <div class="me-2">
                                     <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New  Task</button>
                                 </div>
+                              
 
                                 <div class="me-2">
                                     <input type="text" class="form-control form-control-sm" placeholder="Search">
@@ -137,10 +138,13 @@
 
                                 <div class="me-2" [hidden]="archives < 1">
                                     <button type="button" class="btn btn-sm btn-light"
-                                        (click)="actionTask('unarchives');"> {{archives}} <i
-                                            class="bi bi-archive"></i></button>
+                                        (click)="actionTask('unarchives');"> {{archives}} <i  class="bi bi-archive"></i></button>
                                 </div>
 
+                                <div class="me-2">
+                                    <button type="button" (click)="jqueryResizable()" class="btn btn-sm btn-{{resizableStatus ? 'dark':'light' }}"><i class="bi bi-aspect-ratio"></i> Resizable {{resizableStatus ? 'ON':'OFF'}}</button>
+                                </div>
+                                
                                 <div class="me-2" *ngIf="journalAccess.owner == '1' "> 
                                     <a href="javascript:;" class="btn btn-sm btn-light" placement="top-right"
                                         (click)="openComponent('CustomFieldFormComponent')"
@@ -171,10 +175,11 @@
                                 </div>
 
                                 <div class="order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
-                                    <div class="p-1 text-center orders resizable " [ngStyle]="{'width': n.width+'px'}" data-id="{{n.id}}" >
-                                        <b>{{n.name}} </b>{{n.width}}
+                                    <div class="p-1 text-center orders resizable " 
+                                    [ngStyle]="{'width': n.width+'px'}" data-id="{{n.id}}" data-tabindex="{{a}}"  >
+                                        <b>{{n.name}}</b>
                                         <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top"
-                                            ngbTooltip="{{n.eval}}" container="body">
+                                            ngbTooltip="{{evalDescription(n.eval,customField)}}" container="body">
                                             <button class="btn btn-sm btn-light py-0">
                                                 <img src="./assets/icon/formula-30.png" height="20px">
                                             </button>

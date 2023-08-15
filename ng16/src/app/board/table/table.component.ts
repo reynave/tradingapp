@@ -141,49 +141,15 @@ export class TableComponent implements OnInit {
         console.log("httpHeader", data);
         this.customFieldForm = data['customField'];
         this.journalAccess = data['journal_access'];
-        if (this.customFieldForm.length > 0) {
 
-
-          let self = this;
-          setTimeout(() => {
-            console.log("timeout run");
-            $(function () {
-              $(".resizable").resizable({
-                maxHeight: 33,
-                minHeight: 33,
-                minWidth: 100,
-                stop: function (event: any, ui: any) {
-                  console.log(ui.size);
-                  const body = {
-                    ui: ui.size,
-                    itemId: $(this).attr("id")
-                  }
-
-                  self.customField[0]['width'] = ui.size.width;
-
-                  console.log(body); 
-                  self.http.post<any>(environment.api + "CustomField/fieldResizable", body, {
-                    headers: self.configService.headers(),
-                  }).subscribe(
-                    data => {
-                      console.log(data); 
-                    },
-                    e => {
-                      console.log(e);
-                    }
-                  )
-                }
-              });
-            });
-          }, 1000);
-        }
       },
       e => {
         console.log(e);
       }
     )
   }
-  
+
+
   httpGet(recalulate: boolean = false) {
     this.http.get<any>(environment.api + "Tables/detail", {
       headers: this.configService.headers(),
@@ -193,14 +159,14 @@ export class TableComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        console.log('httpGet',data);
+        console.log('httpGet', data);
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
-        this.customFieldKey = data['customFieldKey']; 
-        this.detail = data['detail']; 
+        this.customFieldKey = data['customFieldKey'];
+        this.detail = data['detail'];
         this.select = data['select'];
-        this.users = data['select']; 
+        this.users = data['select'];
         this.startUpTable = true;
         let self = this;
         $(function () {
@@ -235,11 +201,67 @@ export class TableComponent implements OnInit {
           });
         });
         this.calculationFooter();
+        // if (this.customField.length > 0) { 
+        // setTimeout(() => {
+        //  console.log("timeout run");
+        //  this.jqueryResizable();
+        // }, 1000);
+        //  }
       },
       e => {
         console.log(e);
       }
     )
+  }
+
+  resizableStatus: boolean = false;
+
+  jqueryResizable() {
+    let self = this;
+    if (this.resizableStatus == true) {
+      this.resizableStatus =false;
+      $(".resizable").resizable("destroy");
+    } else { 
+      this.resizableStatus = true;
+      $(function () {
+        $(".resizable").resizable({
+          maxHeight: 30,
+          minHeight: 30,
+          minWidth: 100,
+          resize: function (event: any, ui: any) {
+            let itemIndex = $(this).attr("tabindex");
+            const body = {
+              ui: ui.size,
+              itemId: $(this).attr("id"),
+              itemIndex: itemIndex,
+            }
+            
+            self.customField[itemIndex]['width'] = ui.size.width;
+          },
+          stop: function (event: any, ui: any) {
+
+            let itemIndex = $(this).attr("tabindex");
+            const body = {
+              ui: ui.size,
+              itemId: $(this).attr("id"),
+              itemIndex: itemIndex,
+            } 
+            // self.customField[itemIndex]['width'] = ui.size.width; 
+            console.log(body);
+            self.http.post<any>(environment.api + "CustomField/fieldResizable", body, {
+              headers: self.configService.headers(),
+            }).subscribe(
+              data => {
+                console.log(data);
+              },
+              e => {
+                console.log(e);
+              }
+            )
+          }
+        });
+      });
+    }
   }
 
   calculationFooter() {
@@ -662,12 +684,14 @@ export class TableComponent implements OnInit {
 
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log(data);
+        this.resizableStatus = false;
         if (data == 'httpGet') {
           this.httpGet();
         }
         else if (data == 'httpCustomField') {
           this.httpCustomField();
         }
+
       });
     }
   }
@@ -680,5 +704,15 @@ export class TableComponent implements OnInit {
   //   }
   //   return value ;
   // }
+
+  evalDescription(evals: string, obj: any) {
+    //console.log(obj);
+    let formula = evals;
+
+    obj.forEach((item: { key: any; name: { toString: () => string; }; }) => {
+      formula = formula.replace(`$${item.key}`, item.name.toString());
+    });
+    return formula;
+  }
 
 }

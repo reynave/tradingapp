@@ -34,32 +34,7 @@ export class CustomFieldFormComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.customFieldForm);
     let self = this;
-    $(function () {
-      $(".resizable").resizable({
-        maxHeight: 33,
-        minHeight: 33,
-        minWidth: 100,
-        stop: function (event: any, ui: any) {
-          console.log(ui.size);
-          const body = {
-            ui: ui.size,
-            itemId: $(this).attr("id")
-          }
-          console.log(body);
-          self.http.post<any>(environment.api + "CustomField/fieldResizable", body, {
-            headers: self.configService.headers(),
-          }).subscribe(
-            data => {
-              console.log(data);
-              //  self.httpCustomField();
-              self.emitToParent('httpCustomField');
-            },
-            e => {
-              console.log(e);
-            }
-          )
-        }
-      });
+    $(function () { 
       $(".sortable").sortable({
         handle: ".handle",
         placeholder: "ui-state-highlight",
@@ -186,6 +161,7 @@ export class CustomFieldFormComponent implements OnInit {
       data => {
         console.log(data);  
         this.updateEval(field ,index);
+        this.customFieldForm[index].showEvalDev = false;
       },
       e => {
         console.log(e);

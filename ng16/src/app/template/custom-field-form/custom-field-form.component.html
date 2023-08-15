@@ -53,7 +53,7 @@
                         <div class="d-flex">
 
 
-                            <div class="resizable" data-id="{{x.id}}" [ngStyle]="{'width': x.width+'px'}">
+                            <div class="" data-id="{{x.id}}" [ngStyle]="{'width': x.width+'px'}">
                                 <input type="text" [(ngModel)]="x.name" class="form-control rounded-0 "
                                     (change)="onUpdateCustomField(x)" #updateCustomField
                                     (keyup.enter)="updateCustomField.blur()">
@@ -87,7 +87,7 @@
                                         </div>
                                         <div class="col-6 d-grid">
                                             <button type="button" class="btn btn-sm btn-light"
-                                                (click)="x.showEvalDev =false">Cancel</button>
+                                                (click)="x.showEvalDev =false">Close</button>
                                         </div>
                                     </div>
                                 </div>
