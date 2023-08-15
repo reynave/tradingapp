@@ -170,10 +170,9 @@
                                     </div>
                                 </div>
 
-                                <div class=" order-{{n.sorting}} bg-white "
-                                    *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
-                                    <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
-                                        <b>{{n.name}}</b>
+                                <div class="order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
+                                    <div class="p-1 text-center orders resizable " [ngStyle]="{'width': n.width+'px'}" data-id="{{n.id}}" >
+                                        <b>{{n.name}} </b>{{n.width}}
                                         <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top"
                                             ngbTooltip="{{n.eval}}" container="body">
                                             <button class="btn btn-sm btn-light py-0">

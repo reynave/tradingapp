@@ -37,9 +37,7 @@ export class ShareBoardComponent implements OnInit {
   note: string = "";
   cb2note: string = "";
   model: any;
-
   teams: any[] = [];
-
 
   constructor(
     private http: HttpClient,
@@ -142,6 +140,7 @@ export class ShareBoardComponent implements OnInit {
       )
     }
   }
+
   onSubmitUser() {
     this.addUser = this.model;
 

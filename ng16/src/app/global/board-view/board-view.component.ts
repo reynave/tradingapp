@@ -52,13 +52,12 @@ export class BoardViewComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        console.log('boardView-httpGet', data);
+        
         this.items = data['items'];
         this.journalAccess = data['journal_access'];
         localStorage.setItem(this.id, JSON.stringify(data['items']));
         
-        $(document).ready(function () {
-          console.log($('.carouselx'));
+        $(document).ready(function () { 
           $('.divHiden').show();
           $('.carouselx').slick({
             slidesToShow: 9,

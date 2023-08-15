@@ -62,7 +62,7 @@ export class BoardTitleComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        console.log("board-title",data);
+     
         this.journal = data['item'];
         this.titleService.setTitle(data['item']['name']);
         this.item.name = data['item']['name'];

@@ -2,6 +2,7 @@
     border-radius: 0px;
     border-bottom: 5px solid rgb(2, 120, 174);
 }
+
 .max{
     max-width: calc(100vw - 50px);
 }

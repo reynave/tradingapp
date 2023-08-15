@@ -35,7 +35,7 @@ export class TableComponent implements OnInit {
   @ViewChild('canvasRight') canvasRight: any;
   @ViewChild('contentEditSelect') contentEditSelect: any;
   @HostListener('window:popstate', ['$event'])
- 
+
 
   leftSide: boolean = true;
 
@@ -73,7 +73,7 @@ export class TableComponent implements OnInit {
   //tableFooter: any = [];
   customFieldKey: any = [];
   users: any = [];
-  journalAccess : any = [];
+  journalAccess: any = [];
   constructor(
     private titleService: Title,
     private http: HttpClient,
@@ -141,13 +141,49 @@ export class TableComponent implements OnInit {
         console.log("httpHeader", data);
         this.customFieldForm = data['customField'];
         this.journalAccess = data['journal_access'];
+        if (this.customFieldForm.length > 0) {
+
+
+          let self = this;
+          setTimeout(() => {
+            console.log("timeout run");
+            $(function () {
+              $(".resizable").resizable({
+                maxHeight: 33,
+                minHeight: 33,
+                minWidth: 100,
+                stop: function (event: any, ui: any) {
+                  console.log(ui.size);
+                  const body = {
+                    ui: ui.size,
+                    itemId: $(this).attr("id")
+                  }
+
+                  self.customField[0]['width'] = ui.size.width;
+
+                  console.log(body); 
+                  self.http.post<any>(environment.api + "CustomField/fieldResizable", body, {
+                    headers: self.configService.headers(),
+                  }).subscribe(
+                    data => {
+                      console.log(data); 
+                    },
+                    e => {
+                      console.log(e);
+                    }
+                  )
+                }
+              });
+            });
+          }, 1000);
+        }
       },
       e => {
         console.log(e);
       }
     )
   }
-
+  
   httpGet(recalulate: boolean = false) {
     this.http.get<any>(environment.api + "Tables/detail", {
       headers: this.configService.headers(),
@@ -157,22 +193,14 @@ export class TableComponent implements OnInit {
       }
     }).subscribe(
       data => {
-      
+        console.log('httpGet',data);
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
-        this.customFieldKey = data['customFieldKey'];
-
-        this.detail = data['detail'];
-
-        // this.httpDataFormula();
+        this.customFieldKey = data['customFieldKey']; 
+        this.detail = data['detail']; 
         this.select = data['select'];
-        this.users = data['select'];
-
-        // if (recalulate == true) {
-        // this.onCalculation();
-        //}
-
+        this.users = data['select']; 
         this.startUpTable = true;
         let self = this;
         $(function () {
@@ -221,17 +249,17 @@ export class TableComponent implements OnInit {
       let value = 0;
       this.detail.forEach((item: any) => {
         if (el['iType'] == 'number' || el['iType'] == 'formula') {
-          if(item[el['key']] != ""){
+          if (item[el['key']] != "") {
             value += parseFloat(item[el['key']]);
-          } 
+          }
         }
       });
       const total = {
         key: el['key'],
         iType: el['iType'],
-       total: parseFloat(value.toFixed(2))
-        
-       
+        total: parseFloat(value.toFixed(2))
+
+
       }
       if (el['iType'] == 'number' || el['iType'] == 'formula') {
         this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2)));
@@ -239,7 +267,7 @@ export class TableComponent implements OnInit {
       // this.tableFooter.push(total);
       i++;
     });
-   // console.log(this.detail);
+    // console.log(this.detail);
   }
 
   httpCustomField() {
@@ -367,7 +395,7 @@ export class TableComponent implements OnInit {
     const body = {
       detail: detail,
     }
- 
+
     if (action == 'delete') {
       this.tools = false;
       detail.forEach(el => {
@@ -379,7 +407,7 @@ export class TableComponent implements OnInit {
       }).subscribe(
         data => {
           console.log(data);
-         
+
         },
         e => {
           console.log(e);
@@ -437,7 +465,7 @@ export class TableComponent implements OnInit {
         }
       )
     }
-    
+
     if (action == 'archives') {
       detail.forEach(el => {
         var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
@@ -456,7 +484,7 @@ export class TableComponent implements OnInit {
         }
       )
     }
-     
+
   }
 
   reloadRow(data: any) {
