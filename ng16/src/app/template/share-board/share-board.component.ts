@@ -38,7 +38,11 @@ export class ShareBoardComponent implements OnInit {
   cb2note: string = "";
   model: any;
   teams: any[] = [];
-
+  loading : boolean = true; 
+  searchPhotos: string = "";
+  photos : any = [];
+  photosTotal : number =  0;
+  showSearchPhoto : boolean = false;
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
@@ -48,7 +52,7 @@ export class ShareBoardComponent implements OnInit {
   ngOnInit() {
     //this.childItem = { ...this.item }; 
     console.log(this.item, this.permission);
-
+    this.unsplash();
     this.http.get<any>(environment.api + "journal/access", {
       headers: this.configService.headers(),
       params: {
@@ -193,4 +197,28 @@ export class ShareBoardComponent implements OnInit {
 
   formatter = (x: { name: string }) => x.name;
 
+  unsplash(){
+    this.loading = true;
+    this.photos = [];
+    //http://localhost/app/tradingapp/public/Unsplash?p=1
+    this.http.get<any>(environment.api+"Unsplash",{
+      headers : this.configService.headers(),
+      params : {
+        p:1,
+        searchPhotos : this.searchPhotos,
+      }
+    }).subscribe(
+      data=>{
+        this.loading = false;
+        console.log(data); 
+        this.photos = data['photos']['results'];
+        this.photosTotal =  data['photos']['total'];
+       
+      },
+      error=>{
+        console.log(error);
+      }
+    )
+  }
+ 
 }

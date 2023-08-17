@@ -1,12 +1,31 @@
-<div class="modal-header">
+<div class="modal-header" *ngIf="showSearchPhoto !== true">
     <h4>Share "{{item.name}}"</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="close();"></button>
 </div>
-<div class="modal-body ">
+<div class="p-4 pb-2" *ngIf="showSearchPhoto === true"> 
+    <div class="row" >
+        <div class="col-1 align-self-center">
+            <span (click)="showSearchPhoto=false" class="h4"><i class="bi bi-arrow-left"></i></span>
+        </div>
+        <div class="col-10 text-center">
+            <h6>Photos by <a href="https://unsplash.com/?utm_source=mirrel&utm_medium=referral"
+                    target="_blank"><b>Unsplash.com</b></a></h6>
+        </div>
+        <div class="col-1 text-end align-self-center">
+            <button type="button" class="btn-close" aria-label="Close" (click)="close();"></button>
+        </div>
+    </div>
+  
+</div>
+
+<div class="modal-body " *ngIf="showSearchPhoto !== true">
     <div class="row pb-3">
         <div class="col-md-5 col-12">
             <div class="p-3 border rounded shadow-sm">
                 <div class="mb-3">
+                    <div class="text-end">
+                        <a href="javascript:;" (click)="showSearchPhoto=true">Changes Photo</a>
+                    </div>
                     <img [src]="item.image" width="100%">
                 </div>
                 <div class="mb-3">
@@ -55,18 +74,19 @@
 
             <div class="row">
                 <div class="col-12 mb-2">
-                    <strong>Anyone with the board share link</strong> <small class="mx-2">{{cb2note}}</small>
+                    <strong>Invite a new member with link to collaboration this board</strong> <small
+                        class="mx-2">{{cb2note}}</small>
                 </div>
-                <div class="col-12 mb-2">  
+                <div class="col-12 mb-2">
                     <div class="input-group input-group-sm ">
                         <input type="text" class="form-control bg-light" [value]="env.inviteLink+item.url" readonly>
                         <button class="btn btn-outline-secondary" (click)="fnCb2();"
                             [cdkCopyToClipboard]="env.inviteLink+item.url" type="button" id="button-addon1"><i
                                 class="bi bi-link-45deg"></i> Copy Invite Link</button>
-                    </div> 
-                </div> 
+                    </div>
+                </div>
             </div>
-           
+
             <div class="row">
                 <div class="col-12">
                     <div class="center-line my-2">
@@ -79,11 +99,11 @@
 
             <div class="row">
                 <div class="col-12 mb-2">
-                    <strong> Invite a new member with link to collaboration this board</strong>
+                    <strong> Invite a new member base on your collaboration </strong>
                 </div>
             </div>
 
-            
+
 
             <div class="mx-3">
                 <div class="row py-2 divHover pointer" *ngFor="let x of journalAccess">
@@ -131,7 +151,32 @@
 
         </div>
     </div>
-
 </div>
 
- 
+<div class="modal-body" *ngIf="showSearchPhoto === true">
+    <div class="row mb-3 g-1">
+        <div class="col-10">
+            <input type="text" class="form-control" placeholder="Search photos, power by unsplash.com"
+                [(ngModel)]="searchPhotos" (keyup.enter)="unsplash()">
+        </div>
+        <div class="col-2 d-grid">
+            <button type="button" class="btn btn-primary" (click)="unsplash()">Search</button>
+        </div>
+    </div>
+
+    <div class="row g-1">
+        <div class="col-12 py-2" *ngIf="photosTotal > 0">
+            About <b>{{photosTotal | number}}</b> results of "{{searchPhotos}}"
+        </div>
+        <div class="col-12 text-center py-5 " *ngIf="loading">
+            Loading...
+        </div>
+        <div class="col-3 mb-2" *ngFor="let x of photos">
+            <img [src]="x.urls.raw+'&fit=crop&w=300&h=200&dpr=1'" width="100%" class="shadow-sm border">
+            <div class="lh-1 px-2">
+                <small>Photo by <a [href]="x.links.html" target="_blank"><u>{{x.user.name}}</u></a> </small>
+            </div>
+        </div>
+    </div>
+
+</div>
