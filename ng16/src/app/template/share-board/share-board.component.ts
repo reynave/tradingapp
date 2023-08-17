@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgbModal, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import {  NgbModal, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from 'src/app/service/config.service';
 import { environment } from 'src/environments/environment';
 import { JsonPipe } from '@angular/common';
@@ -42,7 +42,7 @@ export class ShareBoardComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
-    private modalService: NgbModal
+    private modalService: NgbModal, 
   ) { }
 
   ngOnInit() {
@@ -77,6 +77,7 @@ export class ShareBoardComponent implements OnInit {
       item: this.item,
     }
     this.item.permissionId = x.id;
+ 
     this.http.post<any>(environment.api + "journal/onUpdatePermission", body, {
       headers: this.configService.headers()
     }).subscribe(

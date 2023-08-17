@@ -238,7 +238,17 @@ input:focus {
 .popup-floating-top-content .btn {
   min-width: 60px;
 }
+.center-line {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
 
+.line {
+  flex-grow: 1;
+  height: 0.5px;
+  background-color: #000;
+}
 .divHover:hover{
   background-color: var(--bg-gray);
 }

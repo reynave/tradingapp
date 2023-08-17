@@ -116,7 +116,7 @@ export class BoardTitleComponent implements OnInit {
 
   openComponent(componentName: string, item:any) {
     if (componentName == 'ShareBoardComponent') {
-      const modalRef = this.modalService.open(ShareBoardComponent, { size: 'md' });
+      const modalRef = this.modalService.open(ShareBoardComponent, { size: 'lg' });
       modalRef.componentInstance.item =  this.journal;
       modalRef.componentInstance.permission = this.permission;
   
