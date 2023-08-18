@@ -92,7 +92,7 @@
 
                         <div class="col-md-6  col-lg-4 col-6 pointer" *ngFor="let x of journals" (click)="goToJournal(x);">
                             <div class="border p-2 bg-white rounded homeBoards">
-                                <img src="https://picsum.photos/id/{{fnSlice(x.id)}}/300/200" width="100%"
+                                <img [src]="x.image" width="100%"
                                     class="rounded">
                                 <div class="py-2">
                                     <div class="py-1">
@@ -110,13 +110,25 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12">
-                            <p>home works!</p>
+                        <div class="col-12"> 
                             {{time}}
                             {{time | date}}
                             <br>
                             {{date}}<br>
                             {{now}}
+                        </div>
+                        <div class="col-12">
+                            <b>To Do List</b>
+                            <ul>
+                                <li>export to excel</li>
+                                <li>setting DINAMIC TIME UTC +7</li>
+                                <li>profile</li>
+                                <li>PPT</li>
+                                <li>share link</li>
+                                <li>invite link</li>
+                                <li>User management</li>
+
+                            </ul>
                         </div>
                     </div>
                 </div>

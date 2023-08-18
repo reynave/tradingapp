@@ -16,7 +16,7 @@ class Home extends BaseController
         return $this->response->setJSON($data);
     }
 
-    public function tableViewReset($id,$viewId)
+    function tableViewReset($id,$viewId)
     {
   
         $q1 = "SELECT  *  FROM journal_custom_field 
@@ -49,7 +49,7 @@ class Home extends BaseController
         $books = $this->db->query($qbooks)->getResultArray();
 
         $qjournal = "SELECT a.id, a.journalId, a.owner , j.name AS 'journal', b.name AS 'book', a.star,
-        a.update_date
+        a.update_date, j.image
         FROM journal_access AS a
         LEFT JOIN journal AS j ON j.id = a.journalId
         LEFT JOIN book AS b ON b.id = a.bookId
@@ -71,4 +71,9 @@ class Home extends BaseController
         );
         return $this->response->setJSON($data); 
     }
+
+    function user($username) {
+        echo 'masuk '.$username;
+    }
+   
 }

@@ -2,8 +2,8 @@
     <h4>Share "{{item.name}}"</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="close();"></button>
 </div>
-<div class="p-4 pb-2" *ngIf="showSearchPhoto === true"> 
-    <div class="row" >
+<div class="p-4 pb-2" *ngIf="showSearchPhoto === true">
+    <div class="row">
         <div class="col-1 align-self-center">
             <span (click)="showSearchPhoto=false" class="h4"><i class="bi bi-arrow-left"></i></span>
         </div>
@@ -15,18 +15,16 @@
             <button type="button" class="btn-close" aria-label="Close" (click)="close();"></button>
         </div>
     </div>
-  
+
 </div>
 
 <div class="modal-body " *ngIf="showSearchPhoto !== true">
     <div class="row pb-3">
         <div class="col-md-5 col-12">
             <div class="p-3 border rounded shadow-sm">
-                <div class="mb-3">
-                    <div class="text-end">
-                        <a href="javascript:;" (click)="showSearchPhoto=true">Changes Photo</a>
-                    </div>
-                    <img [src]="item.image" width="100%">
+                <div class="mb-3 pointer" > 
+                    <img *ngIf="item.owner == '1' " [src]="item.image" width="100%" (click)="showSearchPhoto=true" placement="top" ngbTooltip="Change photos">
+                    <img *ngIf="item.owner == '0' " [src]="item.image" width="100%"> 
                 </div>
                 <div class="mb-3">
                     <div class="row">
@@ -34,7 +32,7 @@
                             <strong>General access :</strong>
                         </div>
                         <div class="col-6 align-self-center ">
-                            <div *ngIf="item.owner == '0' " class="form-control bg-light mb-3">
+                            <div *ngIf="item.owner == '0' " class="form-control bg-light">
                                 <span [innerHTML]="item.fontIcon" class="mx-2"></span> {{item.permission}}
                             </div>
                             <div ngbDropdown *ngIf="item.owner == '1' ">
@@ -52,27 +50,36 @@
                     </div>
 
                 </div>
-
-
-
-
+  
                 <div class="mb-2" *ngIf="item.permissionId == '20'">
                     <div class="mb-1">
-                        <small>This journal can be accessed by everyone with the following link</small>
+                        <h5>
+                            <img src="./assets/icon/share-50.png" width="25"> Share
+                        </h5>
+                       <div class="lh-sm mb-2">
+                        <small>This journal can be accessed by everyone with this link</small>
+                       </div>
                     </div>
                     <div class="input-group input-group-sm ">
                         <input type="text" class="form-control bg-light" [value]="env.shareLink+item.url" readonly>
                         <button class="btn btn-outline-secondary" [cdkCopyToClipboard]="env.shareLink+item.url"
-                            type="button" id="button-addon1"><i class="bi bi-link-45deg"></i> Copy Share Link</button>
+                            type="button" id="button-addon1"><i class="bi bi-link-45deg"></i> Copy</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-7 col-12">
-
-
+        <div class="col-md-7 col-12 border-start" >
+ 
             <div class="row">
+                <div class="col-12 mb-2">
+                    <div class="mb-1">
+                        <h5>
+                            <img src="./assets/icon/collaboration-50.png" width="25" class="me-2"> Collaboration
+                        </h5>
+                        
+                    </div>
+                </div>
                 <div class="col-12 mb-2">
                     <strong>Invite a new member with link to collaboration this board</strong> <small
                         class="mx-2">{{cb2note}}</small>
@@ -105,7 +112,7 @@
 
 
 
-            <div class="mx-3">
+            <div class="cmaxHeight px-3">
                 <div class="row py-2 divHover pointer" *ngFor="let x of journalAccess">
 
                     <div class="col-10">
@@ -133,6 +140,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="row my-2" *ngIf="item.owner == '1' ">
                 <div class="col-12 mb-3">
                     <input id="typeahead-template" type="text" class="form-control col" [(ngModel)]="model"
@@ -165,14 +173,28 @@
     </div>
 
     <div class="row g-1">
-        <div class="col-12 py-2" *ngIf="photosTotal > 0">
-            About <b>{{photosTotal | number}}</b> results of "{{searchPhotos}}"
+        <div class="col-12 py-2" >
+            <div class="row g-1">
+                <div class="col-8">
+                    <span *ngIf="photosTotal > 0">
+                        About <b>{{photosTotal | number}}</b> results of "{{searchPhotos}}"
+                    </span> 
+                </div>
+                <div class="col-4 text-end" *ngIf="!loading">
+                    Page : {{page}}
+                    <button type="button" class="btn btn-sm btn-light mx-1" *ngIf="page > 1" (click)="fnPrev()">Prev</button>
+                    <button type="button" class="btn btn-sm btn-light mx-1" (click)="fnNext()">Next</button>
+                </div>
+            </div>
+
         </div>
         <div class="col-12 text-center py-5 " *ngIf="loading">
             Loading...
         </div>
-        <div class="col-3 mb-2" *ngFor="let x of photos">
-            <img [src]="x.urls.raw+'&fit=crop&w=300&h=200&dpr=1'" width="100%" class="shadow-sm border">
+       
+        <div class="col-md-3 col-4 mb-2" *ngFor="let x of photos">
+
+            <img [src]="x.urls.raw+'&fit=crop&w=300&h=200&dpr=1'" width="100%" class="shadow-sm border" (click)="updatePhoto(x.urls.raw+'&fit=crop&w=300&h=200&dpr=1');">
             <div class="lh-1 px-2">
                 <small>Photo by <a [href]="x.links.html" target="_blank"><u>{{x.user.name}}</u></a> </small>
             </div>

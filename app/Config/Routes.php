@@ -29,7 +29,14 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+
 $routes->get('/', 'Home::index');
+$routes->get('share/(:segment)', 'Share::index/$1');
+$routes->get('invited/(:segment)', 'Invited::index/$1');
+$routes->get('user/(:segment)', 'User::index/$1');
+$routes->get('user/(:segment)/(:segment)', 'User::share/$1/$2'); 
+
+// sample https://tokopedia.link/vv2X4AfnlCb
 
 /*
  * --------------------------------------------------------------------

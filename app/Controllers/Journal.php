@@ -523,4 +523,26 @@ class Journal extends BaseController
         return $this->response->setJSON($jsonData);
     }
 
+    function updatePhoto() {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $this->db->table("journal")->update([
+                "image"=> $post['image'],
+                "update_date" => date("Y-m-d H:i:s"),
+                "update_by" => model("Core")->accountId(),
+            ]," id = '".$post['id']."'");
+
+            $data = [
+                "error" => false,
+                "post" => $post,
+            ];
+        }
+
+        return $this->response->setJSON($data);
+    }
 }

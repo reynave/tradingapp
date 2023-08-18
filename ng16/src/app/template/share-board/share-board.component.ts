@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {  NgbModal, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from 'src/app/service/config.service';
 import { environment } from 'src/environments/environment';
 import { JsonPipe } from '@angular/common';
 import { Observable, OperatorFunction } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 
 // const teams: { name: string; picture: string }[] = [
@@ -38,15 +39,17 @@ export class ShareBoardComponent implements OnInit {
   cb2note: string = "";
   model: any;
   teams: any[] = [];
-  loading : boolean = true; 
+  loading: boolean = true;
   searchPhotos: string = "";
-  photos : any = [];
-  photosTotal : number =  0;
-  showSearchPhoto : boolean = false;
+  photos: any = [];
+  photosTotal: number = 0;
+  showSearchPhoto: boolean = false;
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
-    private modalService: NgbModal, 
+    private modalService: NgbModal,
+    private router: Router,
+    
   ) { }
 
   ngOnInit() {
@@ -81,7 +84,7 @@ export class ShareBoardComponent implements OnInit {
       item: this.item,
     }
     this.item.permissionId = x.id;
- 
+
     this.http.post<any>(environment.api + "journal/onUpdatePermission", body, {
       headers: this.configService.headers()
     }).subscribe(
@@ -155,7 +158,7 @@ export class ShareBoardComponent implements OnInit {
     }
     console.log(body, this.model['id']);
     if (this.model['id'] != undefined) {
-      console.log("MAUSK"); 
+      console.log("MAUSK");
       this.http.post<any>(environment.api + "journal/onSubmitUser", body, {
         headers: this.configService.headers()
       }).subscribe(
@@ -173,7 +176,7 @@ export class ShareBoardComponent implements OnInit {
         e => {
           console.log(e);
         }
-      ) 
+      )
     }
   }
 
@@ -197,28 +200,60 @@ export class ShareBoardComponent implements OnInit {
 
   formatter = (x: { name: string }) => x.name;
 
-  unsplash(){
+  page: number = 1;
+  unsplash() {
     this.loading = true;
     this.photos = [];
     //http://localhost/app/tradingapp/public/Unsplash?p=1
-    this.http.get<any>(environment.api+"Unsplash",{
-      headers : this.configService.headers(),
-      params : {
-        p:1,
-        searchPhotos : this.searchPhotos,
+    this.http.get<any>(environment.api + "Unsplash", {
+      headers: this.configService.headers(),
+      params: {
+        p: this.page,
+        searchPhotos: this.searchPhotos,
       }
     }).subscribe(
-      data=>{
+      data => {
         this.loading = false;
-        console.log(data); 
+        console.log(data);
         this.photos = data['photos']['results'];
-        this.photosTotal =  data['photos']['total'];
-       
+        this.photosTotal = data['photos']['total'];
+
       },
-      error=>{
+      error => {
         console.log(error);
       }
     )
   }
- 
+
+  fnPrev() {
+    this.page -= 1;
+    this.unsplash();  
+  }
+
+  fnNext() {
+    this.page += 1;
+    this.unsplash(); 
+  }
+
+  updatePhoto(url  : string){
+    this.item.image = url;
+    this.showSearchPhoto = false;
+
+    const body = { 
+      image: url,
+      id : this.item.id,
+    }
+    
+    this.http.post<any>(environment.api + "journal/updatePhoto", body, {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log(data); 
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
+
 }
