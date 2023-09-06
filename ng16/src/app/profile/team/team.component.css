@@ -1,0 +1,19 @@
+.leftNav div{
+    margin: 1.5rem auto;
+    font-family: var(--font-manrope);
+}
+.leftNav a{ 
+    font-family: var(--font-manrope);
+     
+}
+
+.leftNav div a:hover{
+    color: #0f0;
+}
+.leftNav .active a{
+    color: #0f0;
+}
+
+.fullScreenHeight{
+    min-height: 100vh;
+}

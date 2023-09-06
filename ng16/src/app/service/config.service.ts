@@ -18,6 +18,15 @@ export class ConfigService {
     }
   }
 
+  setGlobalToken(key : string, value: string): Observable<boolean> {
+    try {
+      localStorage.setItem(key, value);
+      return of(true); // Mengembalikan Observable yang mengirimkan nilai boolean true
+    } catch (error) {
+      return of(false); // Mengembalikan Observable yang mengirimkan nilai boolean false jika terjadi kesalahan
+    }
+  }
+
 
   account() {
     const jwtObj = this.getToken().split("."); 

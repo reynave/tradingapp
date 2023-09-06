@@ -12,14 +12,14 @@ import { BookComponent } from './book/book.component';
 import { TemplateTableComponent } from './template/template-table/template-table.component';
 import { TableComponent } from './board/table/table.component';
 import { ChartjsComponent } from './board/chartjs/chartjs.component';
+import { InvitedComponent } from './login/invited/invited.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
  
   { path: "login", component: LoginComponent, data: { active: "" },  canActivate:[]  }, 
-  { path: "relogin", component: ReloginComponent, data: { active: "" },  canActivate:[]  }, 
-
-  { path: "invited", component: ReloginComponent, data: { active: "" },  canActivate:[]  }, 
+  { path: "relogin", component: ReloginComponent, data: { active: "" },  canActivate:[]  },  
+  { path: "invited", component: InvitedComponent, data: { active: "" },  canActivate:[]  }, 
 
 
 
@@ -29,16 +29,17 @@ const routes: Routes = [
   { path: "board/table/:id/:journalTableViewId", component: TableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   { path: "board/chart/:id/:journalTableViewId", component: ChartjsComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
 
-  { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivate:[authGuard] },
-
-
+ 
   // TEMPLATE FOR "DEVELOPMENT" UX UI DESIGN
   { path: "template/table", component: TemplateTableComponent, data: { active: "template" },  canActivate:[authGuard]  }, 
   
   // VERSI LAMA, AKAN TIDAK DIPAKAH UNTUK KENANGAN SAJA
   { path: "backtest", component: BacktestComponent, data: { active: "backtest" },  canActivate:[authGuard]  }, 
-  { path: "backtest/:id", component: BacktestDetailComponent, data: { active: "backtest" },  canActivate:[authGuard]  }, 
- 
+  { path: "backtest/:id", component: BacktestDetailComponent, data: { active: "backtest" },  canActivate:[authGuard]  },
+  
+  { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivate:[authGuard] },
+  { path: 'workspace', loadChildren: () => import('./workspace/workspace.module').then(m => m.WorkspaceModule), canActivate:[authGuard] },
+  
   { path: "**", component: NotFoundComponent, data: { active: "404" },  canActivate:[]  }, 
   
 ];

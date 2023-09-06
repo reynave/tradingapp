@@ -1,1 +1,139 @@
-<p>team works!</p>
+<div class="container-fluid ">
+    <div class="row">
+        <div class="col-2 bg-light fullScreenHeight ">
+
+            <div class="mt-4 ">
+                <a class="navbar-brand" [routerLink]="[ '/home' ]">
+                    <img src="./assets/img/mirrel.png" height="30"> <sub>Profile</sub>
+                </a>
+            </div>
+
+            <div class="leftNav">
+                <div class="active">
+                    <a [routerLink]="[ '/profile/team' ]" class="d-block"> <span class="mx-1"> <i
+                                class="bi bi-people"></i>
+                        </span>
+                        Managements
+                    </a>
+                </div>
+                <div>
+                    <a href="">
+                        <span class="mx-1"> <i class="bi bi-trash3"></i> </span>
+                        Trash
+                    </a>
+                </div>
+                <div>
+                    <span class="mx-1"> <i class="bi bi-archive"></i> </span>
+                    Archived
+                </div>
+                <div>
+                    <span class="mx-1"> <i class="bi bi-key"></i> </span>
+                    Security & Password
+                </div>
+                <div>
+                    <span class="mx-1"> <i class="bi bi-globe-americas"></i> </span>
+                    Language and region
+                </div>
+                <div>
+                    <span class="mx-1"> <i class="bi bi-clock-history"></i> </span>
+                    Session history
+                </div>
+                <div class="border-top"></div>
+
+                <div>
+                    <a [routerLink]="[ '/home' ]" class="d-block">
+                        <span class="mx-1"> <i class="bi bi-back"></i></span>
+                        Back To Home
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-10 bg-white fullScreenHeight">
+            <div class="m-4">
+                <div class="mb-4">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>
+                                Managements
+                            </h4>
+                        </div>
+
+                        <div class="col-4">
+                            <input type="text" class="form-control " placeholder="search by name">
+                        </div>
+
+                        <div class="col-2">
+                            <button type="button" class="btn btn-primary">Invite Member</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="content-md">
+                    <div class="mb-4">
+                        <div class="row">
+                            <div class="col text-center border-end">
+                                <h1>5</h1>Members
+                            </div>
+                            <div class="col text-center">
+                                <h1>0</h1>Pending invites
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table  ">
+                        <thead>
+                            <tr>
+                                <td>#</td>
+                                <td>Name</td>
+                                <td>username</td>
+                                <td>Last Activity</td>
+                                <td>Join Date</td>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let x of account_team; let i = index;">
+                                <td>
+                                    <div class="py-2"> {{i+1}}</div>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <div>
+                                            <img [src]="x.picture" width="35" class="rounded-circle">
+                                        </div>
+                                        <div class="align-self-center mx-2 lh-sm">
+                                            <div>
+                                                <a [routerLink]="[ '/profile', ]" [queryParams]="{id:x.id}"
+                                                    class=" text-primary">{{x.name | titlecase}}</a>
+                                            </div>
+                                            <div>
+                                                <small>{{x.email}}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="py-2">
+                                        {{x.username}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="py-2">
+                                        {{x.input_date | date:'medium'}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="py-2">
+                                        {{x.input_date | date:'medium'}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

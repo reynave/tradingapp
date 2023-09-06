@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
   --font-manrope: 'Manrope', sans-serif;
-  --font-poppins: 'Poppins', sans-serif;
+  --font-poppins: 'Poppins', sans-serif; 
   --bg-body-1: #D7EAEA;
   --bg-gray: #f4f4f4;
 
@@ -251,6 +251,15 @@ input:focus {
 }
 .divHover:hover{
   background-color: var(--bg-gray);
+}
+
+.content-md{
+  width: 1024px;
+  margin: 0 auto;
+}
+
+.content-md-m-0{
+  width: 1024px; 
 }
 
 .order-6 {
