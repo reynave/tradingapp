@@ -20,6 +20,9 @@ export class WidgetTeamsComponent implements OnInit {
   filterTeams: DataTeam[] = [];
   keyword: string = '';
   teams: any = [];
+  loading : boolean = true;
+  env : any = environment;
+  inviteLink : string = "";
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
@@ -36,7 +39,9 @@ export class WidgetTeamsComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
+        this.inviteLink = environment.inviteLink+data['inviteLink']
         this.teams = data['teams'];
+        this.loading = false;
         this.filterTeams = this.teams;
       },
       error => {
@@ -62,4 +67,12 @@ export class WidgetTeamsComponent implements OnInit {
   open(content: any) {
 		this.modalService.open(content);
 	}
+
+  isCopy : boolean = false;
+  justCopy(){
+    this.isCopy = true;
+    setTimeout(()=>{
+      this.isCopy = false;
+    },4000);
+  }
 }

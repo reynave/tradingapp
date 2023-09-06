@@ -1,4 +1,4 @@
-<div class="bg-white rounded p-3">
+<div class="">
     <div class="mb-3">
         <h5><i class="bi bi-people me-2"></i> Collaborating</h5>
         <div>
@@ -20,21 +20,42 @@
                 Invite New Team</button>
         </div>
     </div>
-    <div class="row pointer py-2 divHover" *ngFor="let x of filterTeams">
-
-        <div class="col-12">
-            <div class="d-flex pointer">
-                <div>
-                    <img [src]="x.picture" width="35" class="rounded-circle me-2">
-                </div>
-                <div class="lh-sm">
-                    <div>{{x.name}}</div>
+    <div class="scrollArea py-1 pe-3">
+        <div class="row pointer py-2 divHover" *ngFor="let x of filterTeams">
+            <div class="col-12">
+                <div class="d-flex pointer">
                     <div>
-                        <small>{{x.email}}</small>
+                        <img [src]="x.picture" width="35" class="rounded-circle me-2">
+                    </div>
+                    <div class="lh-sm">
+                        <div>{{x.name}}</div>
+                        <div>
+                            <small>{{x.email}}</small>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div *ngIf="filterTeams.length < 1 && loading == false">
+            <div class="pointer py-2">
+                <div class="mb-2">
+                   <strong> Name not found</strong>
+                   <p>Invite Your Friends, with your link</p>
+                </div>
+                <div class="mb-2">
+                    <input type="text" class="form-control form-control-sm" [value]="inviteLink" readonly>
+                </div>
+                <div class="d-grid">
+                    <button type="button" class="btn  btn-secondary" [cdkCopyToClipboard]="inviteLink" (click)="justCopy();">
+                        <i class="bi bi-clipboard{{isCopy == true ? '-check-fill' : '' }} me-2"></i> Copy link
+                    </button>
+                </div>
+    
+            </div>
+        </div>
+
+       
     </div>
 </div>
 

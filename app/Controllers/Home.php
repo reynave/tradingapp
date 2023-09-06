@@ -11,6 +11,7 @@ class Home extends BaseController
             "time" => time(),
             "server" => date("Y-m-d H:i:s"),
             "mysql" =>(int) model("Core")->select('unix_timestamp(NOW())',"book","1"), 
+            "FCPATH" => FCPATH,
         ];
 
         return $this->response->setJSON($data);

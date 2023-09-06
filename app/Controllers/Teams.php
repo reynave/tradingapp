@@ -16,7 +16,8 @@ class Teams extends BaseController
   
         $data = array(
             "error" => false, 
-            "teams" => $teams
+            "teams" => $teams,
+            "inviteLink" => model("Core")->select("inviteLink","account","id='".model("Core")->accountId()."'"),
         );
         return $this->response->setJSON($data); 
     }

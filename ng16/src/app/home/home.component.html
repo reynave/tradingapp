@@ -8,36 +8,35 @@
             <div class="col-lg-2 col-md-3 col-12">
                 <div class="bg-white rounded minHeight">
                     <div class="p-3">
-                        <h5><i class="bi bi-folder me-2"></i> My Book</h5>
-                        <div>
-                            Books for your journey
-                        </div>
+
+                        <h5> Books Collection</h5>
+
                     </div>
                     <div class="p-2 mx-2 divHover pointer" *ngFor="let x of books">
                         <div class="row g-1 ">
                             <div class="col-12">
                                 <div (click)="goToBook(x);">
-                                   <strong> {{x.name}}</strong>
+                                    <i class="bi bi-folder me-2"></i> {{x.name}}
                                 </div>
-                            </div>
-                           
+                            </div> 
                         </div>
-                    </div> 
-                    
-                    <div class="p-2 mx-2 divHover pointer" [routerLink]="[ '/book' ]">  
+                    </div>
+
+                    <div class="p-2 mx-2 divHover pointer" [routerLink]="[ '/book' ]">
                         <div class="row g-1 ">
                             <div class="col-12">
                                 <i class="bi bi-share me-2"></i> Share to Me
-                            </div> 
+                            </div>
                         </div>
-                    </div>
-                    <div class="p-2 mx-2 divHover pointer" (click)="open(contentNewBook)">  
+                    </div> 
+
+                    <div class="p-2 mx-2 divHover pointer" (click)="open(contentNewBook)">
                         <div class="row g-1 ">
                             <div class="col-12">
                                 <i class="bi bi-folder-plus me-2"></i> New Book
-                            </div> 
+                            </div>
                         </div>
-                    </div>
+                    </div> 
 
                     <ng-template #contentNewBook let-modal>
 
@@ -46,8 +45,8 @@
                                 <div class="col-6"> </div>
                                 <div class="col-6 text-end"> <button type="button" class="btn-close" aria-label="Close"
                                         (click)="modal.dismiss('Cross click')"></button> </div>
-                            </div> 
-                    
+                            </div>
+
                             <form (ngSubmit)="onSubmitNewBook()" #heroForm="ngForm">
                                 <div class="mb-4 text-center">
                                     <img src="./assets/icon/icons8-book-100.png">
@@ -58,7 +57,7 @@
                                 <div class="mb-4">
                                     <input type="text" class="form-control form-control-lg" id="bookname" required
                                         [(ngModel)]="newBook.name" name="bookname" #bookname="ngModel">
-                    
+
                                     <div [hidden]="bookname.valid || bookname.pristine" class="text-danger mt-1">
                                         Name is required
                                     </div>
@@ -66,34 +65,34 @@
                                 <div class="text-end">
                                     <button type="button" class="btn btn-outline-dark px-3 mx-2"
                                         (click)="modal.close('Save click')">Cancel</button>
-                                    <button type="submit" class="btn btn-dark px-3" [disabled]="!heroForm.form.valid">Save</button>
+                                    <button type="submit" class="btn btn-dark px-3"
+                                        [disabled]="!heroForm.form.valid">Save</button>
                                 </div>
                             </form>
-                    
+
                         </div>
-                    
+
                     </ng-template>
-                    
+
 
 
                 </div>
             </div>
- 
+
             <div class="col-lg-7 col-md-6 col-12">
                 <div class="bg-white rounded p-3 minHeight">
                     <div class="mb-3">
-                        <h5><i class="bi bi-star-fill me-2 text-warning"></i> Favorit Boards</h5>
                         <div>
-                            Quickly access your Favorit boards
+                            <i class="bi bi-star-fill me-2 text-warning"></i> Quickly access your Favorit boards
                         </div>
                     </div>
 
                     <div class="row g-3">
 
-                        <div class="col-md-6  col-lg-4 col-6 pointer" *ngFor="let x of journals" (click)="goToJournal(x);">
+                        <div class="col-md-6  col-lg-4 col-6 pointer" *ngFor="let x of journals"
+                            (click)="goToJournal(x);">
                             <div class="border p-2 bg-white rounded homeBoards">
-                                <img [src]="x.image" width="100%"
-                                    class="rounded">
+                                <img [src]="x.image" width="100%" class="rounded">
                                 <div class="py-2">
                                     <div class="py-1">
                                         <b><i class="bi bi-folder me-1" *ngIf="x.owner == '1'"></i>
@@ -110,7 +109,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12"> 
+                        <div class="col-12">
                             {{time}}
                             {{time | date}}
                             <br>
@@ -134,9 +133,11 @@
                 </div>
 
             </div>
-  
+
             <div class="col-md-3 col-12">
-                <app-widget-teams></app-widget-teams> 
+                <div class="bg-white rounded p-3 minHeight">
+                    <app-widget-teams></app-widget-teams>
+                </div>
             </div>
 
         </div>

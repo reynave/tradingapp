@@ -19,20 +19,20 @@ const routes: Routes = [
   { path: "login", component: LoginComponent, data: { active: "" },  canActivate:[]  }, 
   { path: "relogin", component: ReloginComponent, data: { active: "" },  canActivate:[]  }, 
 
+  { path: "invited", component: ReloginComponent, data: { active: "" },  canActivate:[]  }, 
+
+
 
   { path: "home", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
-
-  
   { path: "book", component: BookComponent, data: { active: "book", name :'shareToMe' },  canActivate:[authGuard]  }, 
   { path: "book/:id", component: BookComponent, data: { active: "book" },  canActivate:[authGuard]  },
-
   { path: "board/table/:id/:journalTableViewId", component: TableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   { path: "board/chart/:id/:journalTableViewId", component: ChartjsComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
 
   { path: 'profile', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivate:[authGuard] },
 
 
-  // TEMPLATE FOR DEV UX UI DESIGN
+  // TEMPLATE FOR "DEVELOPMENT" UX UI DESIGN
   { path: "template/table", component: TemplateTableComponent, data: { active: "template" },  canActivate:[authGuard]  }, 
   
   // VERSI LAMA, AKAN TIDAK DIPAKAH UNTUK KENANGAN SAJA

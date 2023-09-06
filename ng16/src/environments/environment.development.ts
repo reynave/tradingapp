@@ -1,8 +1,11 @@
+var root = "http://localhost/app/mirrel.com/public/";
+
 export const environment = {
     production: false,
     api : "http://localhost/app/tradingapp/public/",
     ver : "1.0",
-    shareLink :"http://localhost/app/tradingapp/public/share/",
+    website : root,
+    shareLink : root+"shared/",
     inviteLink : "http://localhost/app/tradingapp/public/invited/",
-    signin : "http://localhost/app/tradingapp/login/signin.html",
+    signin : root+"signin",
 };

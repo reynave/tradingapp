@@ -1,0 +1,26 @@
+{
+    "version":"1.0.1",
+    "field" :  [
+        {
+            "f":1,
+            "name": "number A",
+            "iType" : "number"
+        },
+        {
+            "f":2,
+            "name": "number B",
+            "iType" : "number"
+        },
+        {
+            "f":3,
+            "name": "formula1",
+            "iType" : "formula", 
+            "eval" : "$f1 * $f2"
+        },
+        {
+            "f":4,
+            "name": "text 1",
+            "iType" : "text"
+        }
+    ]
+}
