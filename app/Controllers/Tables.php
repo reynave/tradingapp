@@ -27,7 +27,7 @@ class Tables extends BaseController
             $b = "SELECT * FROM color   ORDER BY id ASC ";
             $backgroundColorOption = $this->db->query($b)->getResultArray();
 
-            $accountId =  model("Core")->accountId();
+            $accountId = model("Core")->accountId();
             $q1 = "SELECT  ja.id as journal_accessID, ja.bookId, p.name AS 'permission', p.fontIcon, 
             a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin, a.picture
             FROM journal_access AS ja
@@ -36,15 +36,15 @@ class Tables extends BaseController
             JOIN account AS a ON a.id = j.accountId
             WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and j.id = '$id'
             ORDER BY ja.sorting ASC, ja.input_date ASC";
-    
+
             $items = $this->db->query($q1)->getResultArray();
-  
+
             $data = array(
                 "error" => false,
                 "id" => $id,
                 //"item" => $this->db->query("SELECT * from journal where id = '$id' ")->getResultArray()[0],
-                 "item" =>  $items[0],
-                
+                "item" => $items[0],
+
                 "permission" => $this->db->query("SELECT * from permission")->getResultArray(),
                 "backgroundColorOption" => $backgroundColorOption,
             );
@@ -66,11 +66,11 @@ class Tables extends BaseController
             WHERE journalId = '$id' and presence = 1
             ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
- 
+
             $accountId = model("Core")->accountId();
             $d = "SELECT * 
             FROM journal_access
-            WHERE accountId = '$accountId' and journalId = '".$data['request']['id']."' AND presence = 1";
+            WHERE accountId = '$accountId' and journalId = '" . $data['request']['id'] . "' AND presence = 1";
             $journal_access = $this->db->query($d)->getResultArray()[0];
 
             $data = array(
@@ -134,14 +134,30 @@ class Tables extends BaseController
                 LEFT join account AS a ON a.id = ja.accountId
                 WHERE ja.journalId = '$id' AND ja.presence = 0
                 ORDER BY a.name asc;";
+
+                $users = $this->db->query($users)->getResultArray();
+                $i = 0;
+                foreach ($users as $row) {
+                    $users[$i]['picture'] = model("Core")->isUrlValid($users[$i]['picture']) ? $users[$i]['picture'] : base_url() . 'uploads/picture/' . $users[$i]['picture'];
+                    $i++;
+                }
+
+                $usersDelete = $this->db->query($usersDelete)->getResultArray();
+                $i = 0;
+                foreach ($usersDelete as $row) {
+                    $usersDelete[$i]['picture'] = model("Core")->isUrlValid($usersDelete[$i]['picture']) ? $usersDelete[$i]['picture'] : base_url() . 'uploads/picture/' . $usersDelete[$i]['picture'];
                 
+                    $i++;
+                }
+
+
                 $temp = array(
                     "field" => $rec,
                     "option" => $this->db->query($option)->getResultArray(),
                     "optionDelete" => $this->db->query($optionDelete)->getResultArray(),
 
-                    "users" => $this->db->query($users)->getResultArray(),
-                    "usersDelete" => $this->db->query($usersDelete)->getResultArray(),
+                    "users" =>  $users,
+                    "usersDelete" =>  $usersDelete ,
 
                 );
                 array_push($select, $temp);

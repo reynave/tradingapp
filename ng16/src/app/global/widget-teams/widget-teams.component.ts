@@ -34,7 +34,7 @@ export class WidgetTeamsComponent implements OnInit {
   }
 
   httpGet() {
-    this.http.get<any>(environment.api + "teams/index", {
+    this.http.get<any>(environment.api + "team/widget", {
       headers: this.configService.headers()
     }).subscribe(
       data => {

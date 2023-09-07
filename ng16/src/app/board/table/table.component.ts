@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
-import { FunctionsService } from 'src/app/service/functions.service'; 
+import { FunctionsService } from 'src/app/service/functions.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Title } from '@angular/platform-browser';
@@ -24,6 +24,36 @@ export class NewCustomField {
     public iType: string,
   ) { }
 }
+
+interface DetailInterface {
+  archives: string;
+  checkbox: any;
+  f1: any;
+  f2: any;
+  f3: any;
+  f4: any;
+  f5: any;
+  f6: any;
+  f7: any;
+  f8: any;
+  f9: any;
+  f10: any;
+  f11: any;
+  f12: any;
+  f13: any;
+  f14: any;
+  f15: any;
+  f16: any;
+  f17: any;
+  f18: any;
+  f19: any;
+  f20: any;
+  historyArchives: any;
+  id: string;
+  ilock: string;
+  journalId: string;
+}
+
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -32,8 +62,8 @@ export class NewCustomField {
 })
 export class TableComponent implements OnInit {
   @ViewChild('canvasRight') canvasRight: any;
-  @ViewChild('contentEditSelect') contentEditSelect: any; 
- 
+  @ViewChild('contentEditSelect') contentEditSelect: any;
+
   fields: any = [];
 
   newCustomField = new NewCustomField("", "text");
@@ -42,7 +72,7 @@ export class TableComponent implements OnInit {
 
   waiting: boolean = false;
   loading: boolean = false;
-  detail: any = [];
+  detail: DetailInterface[] = [];
   myTimeout: any;
   select: any = [];
   httpNote: string = "";
@@ -51,7 +81,7 @@ export class TableComponent implements OnInit {
   customField: any = [];
   customFieldForm: any = [];
 
- 
+  resizableStatus: boolean = false;
   tools: boolean = false;
   detailImageUrl: string = "";
   journalDetailId: string = "";
@@ -160,6 +190,7 @@ export class TableComponent implements OnInit {
                 data => {
                   //self.httpGet();
                   console.log(data);
+                  self.sortByOrder(order);
                 },
                 e => {
                   console.log(e);
@@ -168,28 +199,42 @@ export class TableComponent implements OnInit {
             }
           });
         });
-        this.calculationFooter();
-        // if (this.customField.length > 0) { 
-        // setTimeout(() => {
-        //  console.log("timeout run");
-        //  this.jqueryResizable();
-        // }, 1000);
-        //  }
+        this.calculationFooter(); 
       },
       e => {
         console.log(e);
       }
     )
   }
+  sortByOrder(order:any) {
+   // const order = ['59', '54', '72', '23', '24', '108', '55', '19', '73', '22', '60'];
 
-  resizableStatus: boolean = false;
+    // Buat fungsi untuk membandingkan dua elemen berdasarkan urutan 'order'
+    function compareByOrder(a: DetailInterface, b: DetailInterface) {
+      const aIndex = order.indexOf(a.id);
+      const bIndex = order.indexOf(b.id);
+
+      // Jika salah satu elemen tidak ada dalam 'order', letakkan di akhir
+      if (aIndex === -1) return 1;
+      if (bIndex === -1) return -1;
+
+      // Urutkan berdasarkan urutan dalam 'order'
+      return aIndex - bIndex;
+    }
+
+    // Urutkan 'this.detail' menggunakan fungsi perbandingan
+    this.detail.sort(compareByOrder);
+  }
+   
+
+
 
   jqueryResizable() {
     let self = this;
     if (this.resizableStatus == true) {
-      this.resizableStatus =false;
+      this.resizableStatus = false;
       $(".resizable").resizable("destroy");
-    } else { 
+    } else {
       this.resizableStatus = true;
       $(function () {
         $(".resizable").resizable({
@@ -203,7 +248,7 @@ export class TableComponent implements OnInit {
               itemId: $(this).attr("id"),
               itemIndex: itemIndex,
             }
-            
+
             self.customField[itemIndex]['width'] = ui.size.width;
           },
           stop: function (event: any, ui: any) {
@@ -213,7 +258,7 @@ export class TableComponent implements OnInit {
               ui: ui.size,
               itemId: $(this).attr("id"),
               itemIndex: itemIndex,
-            } 
+            }
             // self.customField[itemIndex]['width'] = ui.size.width; 
             console.log(body);
             self.http.post<any>(environment.api + "CustomField/fieldResizable", body, {
@@ -325,8 +370,11 @@ export class TableComponent implements OnInit {
       });
     }
     else {
+      //let fx = "f" + newItem.customField.f;
+      let fx = "f" + newItem.customField.f as keyof DetailInterface;
+      this.detail[newItem.index][fx] = newItem.value;
 
-      this.detail[newItem.index]["f" + newItem.customField.f] = newItem.value;
+
       if (this.waiting == false) {
         this.waiting = true;
         this.myTimeout = setTimeout(() => {
@@ -342,7 +390,7 @@ export class TableComponent implements OnInit {
             data => {
               console.log(data);
               this.loading = false;
-              this.reloadRow(data['detail'][0]);
+              this.reloadColumn(data['detail'][0]);
               console.log("onSubmit Done");
             },
             e => {
@@ -477,8 +525,8 @@ export class TableComponent implements OnInit {
 
   }
 
-  reloadRow(data: any) {
-    console.log("reloadRow ", data);
+  reloadColumn(data: any) {
+    console.log("reloadColumn Disabel", data);
     let objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == data.id));
     this.detail[objIndex] = data;
     this.calculationFooter();
@@ -490,8 +538,10 @@ export class TableComponent implements OnInit {
 
   reloadDelRow(data: any) {
     data.forEach((el: any) => {
-      let objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el));
-      this.detail.move(objIndex, 0);
+     let objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el));
+    // this.detail.move(objIndex, 0);
+     this.detail.splice(objIndex, 0);
+    
     });
 
   }

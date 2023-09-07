@@ -1,0 +1,30 @@
+ 
+<div class="modal-body">
+    <div class="row mb-3">
+         <div class="col-8 offset-2 text-center">
+            <h4>Collaborating</h4>
+         </div>
+        <div class="col-2 align-self-center text-end">
+            <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()"></button>
+        </div>
+    </div>
+    <div class="mb-2">
+        <div class="text-center"> 
+            <img src="./assets/img/vector/4782264.jpg" class="w-75">
+            <p>Invite Your Friends, with your link</p>
+        </div>
+       
+     </div>
+     <div class="mb-2">
+         <input type="text" class="form-control form-control-lg" [value]="inviteLink" readonly>
+     </div>
+     <div class="d-grid">
+         <button type="button" class="btn btn-secondary" [cdkCopyToClipboard]="inviteLink" (click)="justCopy();">
+             <i class="bi bi-clipboard{{isCopy == true ? '-check-fill' : '' }} me-2"></i> Copy link
+         </button>
+     </div>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="dismiss()">Close</button>
+</div>

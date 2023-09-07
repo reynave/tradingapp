@@ -83,7 +83,8 @@ class Login extends BaseController
                     "input_date" => date("Y-m-d H:i:s"),
                 ]);
             }
-            $user['account'] = $this->db->query("SELECT id, email, name FROM account WHERE id = '" . $id . "' ")->getResultArray()[0];
+            $user['account'] = $this->db->query("SELECT id, email, name, picture, inviteLink
+            FROM account WHERE id = '" . $id . "' ")->getResultArray()[0];
                  
             $payload = $user;
             $jwt = JWT::encode($payload, $key, 'HS256');

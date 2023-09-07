@@ -29,6 +29,7 @@ import { BoardTitleComponent } from './global/board-title/board-title.component'
 import { ShareBoardComponent } from './template/share-board/share-board.component';
 import { WidgetTeamsComponent } from './global/widget-teams/widget-teams.component';
 import { InvitedComponent } from './login/invited/invited.component';
+import { WidgetInviteComponent } from './global/widget-invite/widget-invite.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { InvitedComponent } from './login/invited/invited.component';
     BoardTitleComponent,
     ShareBoardComponent,
     WidgetTeamsComponent,
-    InvitedComponent
+    InvitedComponent,
+    WidgetInviteComponent
   ],
   imports: [
     BrowserModule,

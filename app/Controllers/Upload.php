@@ -13,7 +13,7 @@ class Upload extends BaseController
     {
         $data = array(
             "error" => false,
-            "request" =>  $this->request->getVar(),
+            "request" => $this->request->getVar(),
         );
         return $this->response->setJSON($data);
     }
@@ -21,15 +21,15 @@ class Upload extends BaseController
     {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
-        $data  = [
+        $data = [
             "error" => true,
             "post" => $post,
         ];
         if ($data) {
             $img = model("Core")->select("img", "widget", "id=" . $data['post']['id']);
 
-            $img = explode("/",$img);
-            $img = end($img); 
+            $img = explode("/", $img);
+            $img = end($img);
             if (file_exists('./uploads/' . $data['post']['table'] . '/' . $img)) {
                 unlink('./uploads/' . $data['post']['table'] . '/' . $img);
             }
@@ -37,14 +37,14 @@ class Upload extends BaseController
                 unlink('./uploads/thumbs/' . $img);
             }
             $this->db->table($data['post']['table'])->update([
-                "img"    => "",
+                "img" => "",
                 "update_date" => date("Y-m-d H:i:s"),
             ], "id = '" . $data['post']['id'] . "' ");
 
-            $data  = [
+            $data = [
                 "error" => false,
                 "post" => $post,
-                "img" =>  $img,
+                "img" => $img,
             ];
         }
         return $this->response->setJSON($data);
@@ -94,7 +94,7 @@ class Upload extends BaseController
 
                 /**
                  * Call : http://localhost/website/cms7/public/thumb.app
-                 *  */ 
+                 *  */
                 // $image = \Config\Services::image();
 
                 // $path = './uploads/'.$data['post']['table'].'/'.$file->getName();
@@ -106,19 +106,83 @@ class Upload extends BaseController
                 //         ->fit($w, $h, 'center')
                 //         ->save($pathSave);
                 // }
- 
-                $this->db->table('journal_detail_images')->insert([ 
-                    "img"               => base_url() . 'uploads/' . $file->getName(),
-                    "journalDetailId"  => $data['post']['journalDetailId'],
-                    "input_date"        => date("Y-m-d H:i:s"),
-                    "update_date"       => date("Y-m-d H:i:s"), 
+
+                $this->db->table('journal_detail_images')->insert([
+                    "img" => base_url() . 'uploads/' . $file->getName(),
+                    "journalDetailId" => $data['post']['journalDetailId'],
+                    "input_date" => date("Y-m-d H:i:s"),
+                    "update_date" => date("Y-m-d H:i:s"),
                 ]);
             } else {
                 $data = [
-                    'errors' =>  'The file has already been moved.',
+                    'errors' => 'The file has already been moved.',
                     "post" => $this->request->getVar(),
                 ];
             }
+        }
+
+        return $this->response->setJSON($data);
+    }
+
+    function profilePicture()
+    {
+        $data = array(
+            "error" => true,
+            "post" => $this->request->getVar(),
+        );
+        $accountId = model("Core")->select("accountId", "account_login", "jti = '" . $data['post']['jti'] . "' ");
+        if ($data['post']['jti'] && $accountId) {
+
+            $validateImage = $this->validate([
+                'file' => [
+                    'uploaded[userfile]',
+                    'is_image[userfile]',
+                    'mime_in[userfile,image/jpg,image/jpeg,image/png]',
+                    'max_size[userfile,200]',
+                    'max_dims[userfile,100,100]',
+                ],
+            ]);
+
+
+            $data = [
+                'errors' => $this->validator->getErrors(),
+                "post" => $this->request->getVar(),
+            ];
+
+            if ($validateImage) {
+                $curImage = model("Core")->select("picture", "account", "id = '" . $accountId . "' ");
+                if (file_exists('./uploads/picture/' . $curImage)) {
+                    unlink('./uploads/picture/' . $curImage);
+                }
+
+
+                $file = $this->request->getFile('userfile');
+
+                if (!$file->hasMoved()) { 
+                    $newName = $file->getRandomName();
+                    $file->move('./uploads/picture/', $newName);
+                    
+                    $this->db->table('account')->update([
+                        "picture" => $file->getName(),
+                        "update_date" => date("Y-m-d H:i:s"),
+                    ], " id = '$accountId' ");
+                    $data = [
+                        'error' => false,
+                        'note' => 'upload',
+                        "name" => $file->getName(),
+                        "filepath" => $file,
+                        "post" => $this->request->getVar(), 
+                    ];
+                } else {
+                    $data = [
+                        'error' => true,
+                        'note' => 'The file has already been moved.',
+                        "post" => $this->request->getVar(),
+    
+                    ];
+                }
+            }
+          
         }
 
         return $this->response->setJSON($data);

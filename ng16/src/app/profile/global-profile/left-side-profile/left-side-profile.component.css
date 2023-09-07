@@ -1,0 +1,17 @@
+.leftNav div{
+    margin: 1.4rem auto;
+    font-family: var(--font-manrope);
+}
+.leftNav a{ 
+    font-family: var(--font-manrope);
+     
+}
+
+.leftNav div a:hover{
+    color: #952323;
+}
+.leftNav .active a{
+    color: #952323;
+    font-weight: 500;
+    font-family: var(--font-manrope);
+}

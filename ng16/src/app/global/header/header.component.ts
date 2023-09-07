@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit, OnChanges {
   newBook = new NewBook('');
   currentRate : number = 6;
   myRating = new MyRating("",this.currentRate);
- 
+  picture : string = "";
   constructor(
     private titleService: Title,
     private http: HttpClient,
@@ -47,6 +47,7 @@ export class HeaderComponent implements OnInit, OnChanges {
   ngOnInit(): void { 
     //console.log(this.configService.account())
     this.account = this.configService.account();
+    this.picture = environment.api+'uploads/picture/'+this.configService.account()['account']['picture'];
     //console.log(this.configService.jti())
     //console.log(this.activatedRoute);
     this.titleService.setTitle("Mirrel.com");

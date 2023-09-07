@@ -1,11 +1,18 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
+import { environment } from 'src/environments/environment';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FunctionsService {
 
-  constructor() { }
+  constructor(
+    private http: HttpClient,
+    private configService : ConfigService
+  ) { }
 
   getHourDifference(
     openDate: { year: number; month: number; day: number | undefined; }, 
@@ -36,5 +43,16 @@ export class FunctionsService {
 
   hourToDays(val : number){
     return "hourToDays (SOON)";
+  }
+
+  uploadImage(image: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('userfile', image);
+    formData.append('jti', this.configService.jti()); 
+
+    const headers = new HttpHeaders();
+    headers.append('Content-Type', 'multipart/form-data');
+
+    return this.http.post(environment.api+"upload/profilePicture", formData, { headers });
   }
 }

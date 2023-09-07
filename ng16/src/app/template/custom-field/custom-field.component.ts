@@ -52,11 +52,12 @@ export class CustomFieldComponent implements OnInit {
     let data = "";
     let pic = "";
     let value = "";
+
     let objIndex = this.childItem.select.users.findIndex(((obj: { accountId: string; }) => obj.accountId == accountId));
     if (objIndex > -1) {
       pic = this.childItem.select.users[objIndex]['picture'];
       value = this.childItem.select.users[objIndex]['value'];
-      return '<img src="' + pic + '" class="rounded-circle border me-1" height="25" alt="'+value+'" title="'+value+'">';
+      return '<img src="' + pic + '" class="rounded-circle border me-1" height="25" alt="' + value + '" title="' + value + '">';
     }
     else {
       if (accountId !== "") {
@@ -69,6 +70,7 @@ export class CustomFieldComponent implements OnInit {
       }
       return data;
     }
+
   }
 
   emitToParent(newValue: string) {

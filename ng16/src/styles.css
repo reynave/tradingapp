@@ -159,6 +159,9 @@ a {
 }
 
 
+.fullScreenHeight{
+  min-height: 100vh;
+}
 
 .table-sorting-area {
   position: absolute;
@@ -254,12 +257,20 @@ input:focus {
 }
 
 .content-md{
-  width: 1024px;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+.content-xs{
+  max-width: 512px;
   margin: 0 auto;
 }
 
 .content-md-m-0{
-  width: 1024px; 
+  max-width: 1024px; 
+}
+
+.content-xs-m-0{
+  max-width: 512px; 
 }
 
 .order-6 {

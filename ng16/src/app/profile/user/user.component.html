@@ -1,0 +1,165 @@
+<div class="container-fluid ">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 col-4 bg-light fullScreenHeight ">
+
+            <app-left-side-profile></app-left-side-profile>
+        </div>
+        <div class="col-md-9 col-lg-10 col-8 bg-white fullScreenHeight">
+
+            <div class="m-4">
+                <div class="mb-4">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>User</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <div class="d-flex">
+                            <div class="me-4">
+                                <img [src]="user.picture" width="96" class="rounded-circle">
+                            </div>
+                            <div class="align-self-center">
+                                <div *ngIf="!lock">
+                                    <label for="files" class="text-primary">Change Picture</label>
+                                    <!-- <button (click)="uploadImage()">Change Picture</button> -->
+                                    <div>
+                                        <small>Size 96x96 pixel, max 200kb</small>
+                                    </div>
+                                </div>
+                                <div *ngIf="lock">
+                                    <h4 class="lh-1 mb-0 pb-0">{{profile.username}}</h4>
+                                </div>
+
+                                <div>
+                                    <small>{{env.website+profile.username}}</small>
+                                </div>
+
+                                <div class="text-danger">
+                                    {{errors}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3 align-self-center text-end">
+                        <button type="button" class="btn btn-primary">{{user.plans}}</button>
+                    </div>
+
+                    <div class="col-12">
+                        <input type="file" id="files" style="visibility:hidden;" (change)="onFileSelected($event)"
+                            accept="image/*"> 
+                    </div>
+                </div>
+
+                <div class="content-md"> 
+                    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+                        <li [ngbNavItem]="1">
+                            <button ngbNavLink>Profile</button>
+                            <ng-template ngbNavContent>
+                                <div class="border border-top-0 p-3">
+
+                                    <form (ngSubmit)="onSubmitProfile()" #heroForm="ngForm">
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <div class="mb-3">
+                                                    <label class="mb-1">Username*</label>
+                                                    <span [hidden]="username.valid || username.pristine"
+                                                        class="text-danger"><em>is
+                                                            required</em></span>
+                                                    <input type="text" class="form-control"
+                                                        [(ngModel)]="profile.username" name="username" [disabled]="lock"
+                                                        #username="ngModel" required>
+
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="mb-1">Full Name*</label>
+                                                    <span [hidden]="fullname.valid || fullname.pristine"
+                                                        class="text-danger"><em>is
+                                                            required</em></span>
+                                                    <input type="text" class="form-control" [(ngModel)]="profile.name"
+                                                        name="fullname" [disabled]="lock" #fullname="ngModel" required>
+
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="mb-1">Email <i class="bi bi-lock"></i></label>
+                                                    <input type="text" disabled class="form-control"
+                                                        [value]="user.email">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+
+                                                <div class=" mb-3">
+                                                    <label class="mb-1">Party</label>
+                                                    <select class="form-control" [(ngModel)]="profile.party"
+                                                        name="party" [disabled]="lock" #party="ngModel">
+                                                        <option [value]="'single'">Single</option>
+                                                        <option [value]="'team'">Team</option>
+
+                                                    </select>
+                                                </div>
+                                                <div class=" mb-3">
+                                                    <label class="mb-1">About Me</label>
+                                                    <textarea class="form-control" maxlength="200" rows="5"
+                                                        [disabled]="lock" [(ngModel)]="profile.description"
+                                                        name="description" #description="ngModel"></textarea>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row" *ngIf="!lock">
+                                            <div class="col-12 text-end">
+                                                <span class="mx-4">
+                                                    {{saved == true ? "Saved":""}}
+                                                </span>
+                                                <button type="submit" class="btn btn-success"
+                                                    [disabled]="!heroForm.form.valid">Save
+                                                    Change</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </ng-template>
+                        </li>
+                        <li [ngbNavItem]="2">
+                            <button ngbNavLink>Journal Access</button>
+                            <ng-template ngbNavContent>
+                                <div class="border border-top-0 p-3">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Journal Name</th>
+                                            <th class="text-center">owner</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let x of journals; let i = index">
+                                            <td>{{i+1}}</td>
+                                            <td>
+                                                <div>{{x.name}}</div>
+                                                <small>{{x.book}}</small>
+                                            </td>
+                                            <td class="text-center">{{x.owner}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </ng-template>
+                        </li>
+                        
+                    </ul> 
+                    <div [ngbNavOutlet]="nav" class=""></div> 
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>

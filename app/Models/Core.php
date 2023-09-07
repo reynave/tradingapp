@@ -589,4 +589,10 @@ class Core extends Model
        
 
     }
+
+
+    function isUrlValid($url) {
+        // Menggunakan fungsi strpos untuk mencari "http://" atau "https://"
+        return (strpos($url, "http://") === 0 || strpos($url, "https://") === 0);
+    }
 }

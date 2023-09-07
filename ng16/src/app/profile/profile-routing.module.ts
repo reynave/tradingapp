@@ -1,11 +1,16 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { MyProfileComponent } from './my-profile/my-profile.component';
+import { RouterModule, Routes } from '@angular/router'; 
 import { TeamComponent } from './team/team.component';
+import { UserComponent } from './user/user.component';
+import { LanguageRegionComponent } from './language-region/language-region.component';
+import { SessionComponent } from './session/session.component';
 
 const routes: Routes = [
-  {  path: '',  component: MyProfileComponent  },
-  {  path: 'team',  component: TeamComponent  }
+  {  path: '',  component: TeamComponent,data: { active: "team" }  },
+  {  path: 'team',  component: TeamComponent, data: { active: "team" }  },
+  {  path: 'user/:id',  component:  UserComponent, data: { active: "user" }},
+  {  path: 'langreg',  component:  LanguageRegionComponent, data: { active: "langreg" }},
+  {  path: 'session',  component:  SessionComponent, data: { active: "langreg" }},
   
 ];
 

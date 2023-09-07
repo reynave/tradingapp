@@ -117,7 +117,12 @@ class Journal extends BaseController
         JOIN account AS a ON a.id = ja.accountId
         WHERE ja.presence = 1 and ja.journalId = '" . $this->request->getVar()['journalId'] . "'
         ORDER BY  ja.owner DESC, ja.input_date  ASC ";
-        $items = $this->db->query($q1)->getResultArray();
+        $journal_access = $this->db->query($q1)->getResultArray();
+        $i = 0;
+        foreach($journal_access as $row){
+            $journal_access[$i]['picture'] = model("Core")->isUrlValid($journal_access[$i]['picture']) ? $journal_access[$i]['picture'] : base_url().'uploads/picture/'.$journal_access[$i]['picture'];
+            $i++;
+        }
 
         $accountId = model("Core")->accountId();
         $q2 = "SELECT a.id, a.name, a.picture, a.email, t.accountId
@@ -126,11 +131,15 @@ class Journal extends BaseController
         WHERE t.presence = 1 and  t.accountId = '$accountId' AND a.id != '$accountId' ";
         $teams = $this->db->query($q2)->getResultArray();
 
-        
+        $i = 0;
+        foreach($teams as $row){
+            $teams[$i]['picture'] = model("Core")->isUrlValid($teams[$i]['picture']) ? $teams[$i]['picture'] : base_url().'uploads/picture/'.$teams[$i]['picture'];
+            $i++;
+        }
         $data = array(
             "error" => false,
             "q1" => $q1,
-            "journal_access" => $items,
+            "journal_access" => $journal_access,
             "teams" => $teams,
 
         );
