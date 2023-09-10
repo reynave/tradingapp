@@ -9,7 +9,6 @@ import { Title } from '@angular/platform-browser';
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
 declare var $: any;
 
-
 export class NewSelect {
   constructor(
     public value: string,
@@ -18,6 +17,7 @@ export class NewSelect {
     public color: string,
   ) { }
 }
+
 export class NewCustomField {
   constructor(
     public name: string,
@@ -95,6 +95,7 @@ export class TableComponent implements OnInit {
   customFieldKey: any = [];
   users: any = [];
   journalAccess: any = [];
+  api: string = environment.api;
   constructor(
     private titleService: Title,
     private http: HttpClient,
@@ -109,20 +110,20 @@ export class TableComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
-
     this.httpHeader();
     this.httpGet(true);
     this.httpJournalSelect();
-
   }
 
   reload(newItem: any) {
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
-
     this.startUpTable = false;
     console.log(newItem);
-    this.journalTableViewId = newItem['id'];
+    if (newItem['id']) {
+      this.journalTableViewId = newItem['id'];
+    }
+
     this.httpHeader();
     this.httpGet(true);
     this.httpJournalSelect();
@@ -146,7 +147,6 @@ export class TableComponent implements OnInit {
       }
     )
   }
-
 
   httpGet(recalulate: boolean = false) {
     this.http.get<any>(environment.api + "Tables/detail", {
@@ -199,15 +199,16 @@ export class TableComponent implements OnInit {
             }
           });
         });
-        this.calculationFooter(); 
+        this.calculationFooter();
       },
       e => {
         console.log(e);
       }
     )
   }
-  sortByOrder(order:any) {
-   // const order = ['59', '54', '72', '23', '24', '108', '55', '19', '73', '22', '60'];
+
+  sortByOrder(order: any) {
+    // const order = ['59', '54', '72', '23', '24', '108', '55', '19', '73', '22', '60'];
 
     // Buat fungsi untuk membandingkan dua elemen berdasarkan urutan 'order'
     function compareByOrder(a: DetailInterface, b: DetailInterface) {
@@ -225,8 +226,6 @@ export class TableComponent implements OnInit {
     // Urutkan 'this.detail' menggunakan fungsi perbandingan
     this.detail.sort(compareByOrder);
   }
-   
-
 
 
   jqueryResizable() {
@@ -538,27 +537,58 @@ export class TableComponent implements OnInit {
 
   reloadDelRow(data: any) {
     data.forEach((el: any) => {
-     let objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el));
-    // this.detail.move(objIndex, 0);
-     this.detail.splice(objIndex, 0);
-    
+      let objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el));
+      // this.detail.move(objIndex, 0);
+      this.detail.splice(objIndex, 0);
+
     });
 
   }
 
+  requestToken() {
+    this.loading = true;
+    const body = {
+      journalId: this.id,
+      journalTableViewId: this.journalTableViewId
+    }
+    this.http.post<any>(environment.api + "tables/requestToken", body, {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log(data);
+        if(data['error'] == false && data['token'] != ''){
+          console.log("masuk");
+          this.loading = false;
+          location.href = environment.api + 'tables/exportCSV/?t='+data['token'];
+        }
+      },
+      e => {
+        console.log(e);
+        this.loading = false;
+      }
+    )
+  }
+
+  /**
+   * SELECT POPUP / OPEN EDIT POPUP
+   */
   httpJournalSelect() {
     this.http.get<any>(environment.api + "Tables/journal_select?id=" + this.id, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
-        // console.log("httpJournalSelect",data);
-        //this.customField = data['customField'];
+
+        console.log("httpJournalSelect", data);
+        // this.customField = data['customField'];
+        console.log(this.detail, this.select);
+        console.log(this.detailObject);
         this.select = data['select'];
-        if (this.detailObject.length !== 0) {
-          let objIndex = this.select.findIndex(((obj: { field: any; }) => obj.field == this.detailObject.select.field));
-          this.detailObject.select = this.select[objIndex];
-          console.log(this.detailObject.select, this.select);
-        }
+        // if (this.detailObject.length !== 0) {
+        //   let objIndex = this.select[0].findIndex(((obj: { field: any; }) => obj.field == this.detailObject.select.field));
+        // this.detailObject.select = this.select[objIndex];
+        // console.log(this.detailObject.select, this.select);
+
+        // }
 
       },
       e => {
@@ -589,6 +619,7 @@ export class TableComponent implements OnInit {
       data => {
         console.log(data);
         this.httpJournalSelect();
+        // this.httpGet(true);
       },
       e => {
         console.log(e);
@@ -603,6 +634,7 @@ export class TableComponent implements OnInit {
       data => {
         this.detailObject.select.option = data['option'];
         this.httpJournalSelect();
+        // this.httpGet(true);
         this.newSelect.value = "";
       },
       e => {
@@ -610,6 +642,12 @@ export class TableComponent implements OnInit {
       }
     )
   }
+  /**
+   * END :: SELECT POPUP / OPEN EDIT POPUP
+   */
+
+
+
 
   fnHide(n: number, index: number, item: any) {
     console.log(n, index);
@@ -705,6 +743,9 @@ export class TableComponent implements OnInit {
         this.resizableStatus = false;
         if (data == 'httpGet') {
           this.httpGet();
+        }
+        else if (data == 'reload') {
+          this.reload([]);
         }
         else if (data == 'httpCustomField') {
           this.httpCustomField();

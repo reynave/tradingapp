@@ -211,7 +211,7 @@ class Core extends Model
 
         return $data;
     }
-
+ 
     function journalChart($id = "", $journalTableViewId = "", $where = "")
     {
 

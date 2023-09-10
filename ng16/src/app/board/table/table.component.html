@@ -71,7 +71,7 @@
                             <div class="d-flex">
                               
                                 <div class="me-2">
-                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New  Task</button>
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New Task</button>
                                 </div>
                               
 
@@ -121,7 +121,9 @@
                                 </div>
 
                                 <div class="me-2">
-                                    <button type="button" (click)="jqueryResizable()" class="btn btn-sm btn-{{resizableStatus ? 'dark':'light' }}"><i class="bi bi-aspect-ratio"></i> Resizable {{resizableStatus ? 'ON':'OFF'}}</button>
+                                    <button type="button" (click)="jqueryResizable()" class="btn btn-sm btn-{{resizableStatus ? 'dark':'light' }}">
+                                        <i class="bi bi-aspect-ratio"></i> Resizable {{resizableStatus ? 'ON':'OFF'}}
+                                    </button>
                                 </div>
                                 
                                 <div class="me-2" *ngIf="journalAccess.owner == '1' "> 
@@ -129,6 +131,15 @@
                                         (click)="openComponent('CustomFieldFormComponent')"
                                         (newItemEvent)="onChild($event)" ngbTooltip="Custom Field"><i  class="bi bi-gear"></i>
                                     </a>
+                                </div>
+
+                                <div class="me-2"> 
+                                    <a  class="btn btn-sm btn-light"  (click)="requestToken();" target="_blank">
+                                        <i class="bi bi-cloud-download"></i> Export CSV
+                                    </a>
+                                </div>
+                                <div class="me-2" *ngIf="loading"> 
+                                    <img src="./assets/gif/sm-loading.gif" width="20">
                                 </div>
                             </div>
                         </div>
@@ -195,8 +206,7 @@
                                     <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index"
                                         [hidden]="n.hide=='1'">
                                         <div class="orders" [ngStyle]="{'width': n.width+'px'}">
-                                            <app-custom-field [item]="objItem(n,x,i)"
-                                                (newItemEvent)="onChild($event)"></app-custom-field>
+                                            <app-custom-field [item]="objItem(n,x,i)" (newItemEvent)="onChild($event)"></app-custom-field>
                                         </div>
                                     </div>
                                 </div>

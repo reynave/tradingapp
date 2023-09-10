@@ -17,13 +17,15 @@
             Trash
         </a>
     </div>
-    <div>
+    <!-- <div>
         <span class="mx-1"> <i class="bi bi-archive"></i> </span>
         Archived
-    </div>
-    <div>
-        <span class="mx-1"> <i class="bi bi-key"></i> </span>
-        Security & Password
+    </div> -->
+    <div> 
+        <a [routerLink]="[ '/profile/security' ]" class="d-block">
+            <span class="mx-1"> <i class="bi bi-key"></i> </span>
+            Security & Password
+        </a>
     </div>
     <div>
         <a [routerLink]="[ '/profile/langreg' ]" class="d-block">

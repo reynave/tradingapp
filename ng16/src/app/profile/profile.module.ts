@@ -9,6 +9,7 @@ import { UserComponent } from './user/user.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LanguageRegionComponent } from './language-region/language-region.component';
 import { SessionComponent } from './session/session.component';
+import { SecurityComponent } from './security/security.component';
  
 
 @NgModule({
@@ -17,7 +18,8 @@ import { SessionComponent } from './session/session.component';
     LeftSideProfileComponent,
     UserComponent,
     LanguageRegionComponent,
-    SessionComponent, 
+    SessionComponent,
+    SecurityComponent, 
   ],
   imports: [
     CommonModule,

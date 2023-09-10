@@ -146,7 +146,7 @@ class Tables extends BaseController
                 $i = 0;
                 foreach ($usersDelete as $row) {
                     $usersDelete[$i]['picture'] = model("Core")->isUrlValid($usersDelete[$i]['picture']) ? $usersDelete[$i]['picture'] : base_url() . 'uploads/picture/' . $usersDelete[$i]['picture'];
-                
+
                     $i++;
                 }
 
@@ -156,8 +156,8 @@ class Tables extends BaseController
                     "option" => $this->db->query($option)->getResultArray(),
                     "optionDelete" => $this->db->query($optionDelete)->getResultArray(),
 
-                    "users" =>  $users,
-                    "usersDelete" =>  $usersDelete ,
+                    "users" => $users,
+                    "usersDelete" => $usersDelete,
 
                 );
                 array_push($select, $temp);
@@ -185,6 +185,92 @@ class Tables extends BaseController
         }
         return $this->response->setJSON($data);
     }
+
+
+    function requestToken()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            $journalId = $post['journalId'];
+            $journalTableViewId = $post['journalTableViewId'];
+            $token = uniqid();
+            $this->db->table("journal_token")->insert([
+                "token" => $token,
+                "journalId" => $journalId,
+                "journalTableViewId" => $journalTableViewId,
+                "presence" => 1,
+                "input_date"=> date("Y-m-d H:i:s"),
+                "accountId" => model("Core")->accountId(),
+            ]);
+
+            $data = array(
+                "error" => false,
+                "token" => $token,
+            );
+        }
+        return $this->response->setJSON($data);
+       
+    }
+    function exportCSV()
+    {
+        
+        $post = $this->request->getVar();
+        $token = $post['t'];
+        $data = [
+            "error" => true, 
+            "post" =>  $post, 
+        ];
+
+   
+        if ( (int)model("Core")->select("presence","journal_token","token = '$token' ") === 1) { 
+
+            $journalId = model("Core")->select("journalId","journal_token","token = '$token'");
+            $journalTableViewId = model("Core")->select("journalTableViewId","journal_token","token = '$token'");
+
+
+            $viewName = model("Core")->select("name", "journal_table_view", "journalId = '$journalId' AND  id= '$journalTableViewId' AND presence = 1 ");
+            $view = model("Core")->select("name", "journal", "id = '$journalId' AND presence = 1 ");
+
+            $journalTable = model("Shared")->journalTable($journalId, $journalTableViewId, "");
+            $header = $journalTable['header'];
+
+            $data = array(array_merge([$header], $journalTable['detail']))[0];
+
+            $csvFileName = $view . '-' . $viewName . '.csv';
+
+            $this->db->table("journal_token")->update([
+                "presence" => 0,
+                "update_date"=> date("Y-m-d H:i:s"),
+                "accountId" => model("Core")->accountId(),
+            ], " token = '$token' ");
+
+            // Header untuk menentukan jenis konten
+            $this->response->setHeader('Content-Type', 'text/csv');
+            $this->response->setHeader('Content-Disposition', 'attachment; filename="' . $csvFileName . '"');
+
+            // Membuka output ke file CSV
+            $output = fopen('php://output', 'w');
+
+            // Menulis data ke file CSV
+            foreach ($data as $row) {
+                fputcsv($output, $row);
+            }
+
+            // Tutup file CSV
+            fclose($output);
+
+            // Kembalikan respons
+            return $this->response->setBody('');
+        } 
+        return $this->response->setJSON($data);
+        
+    }
+
     function httpDataFormula()
     {
         $data = array(

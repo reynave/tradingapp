@@ -1,0 +1,85 @@
+<div class="container-fluid ">
+    <div class="row">
+        <div class="col-md-3 col-lg-2 col-4 bg-light fullScreenHeight "> 
+            <app-left-side-profile></app-left-side-profile>
+        </div>
+        <div class="col-md-9 col-lg-10 col-8 bg-white fullScreenHeight">
+            <div class="m-4">
+                <div class="mb-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4> Security and Password </h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>Username</td>
+                                    <td>
+                                        <div class="form-control bg-light" >{{username}}</div>
+                                        <div class="m-1">
+                                             <a [routerLink]="[ '/profile/user/', accountId ]"><small>Change username</small></a>
+                                        </div>
+                                    </td>
+                                    <Td></Td>
+                                </tr>
+                                <tr *ngIf="hasPassword">
+                                    <td>Current Password </td>
+                                    <td> 
+                                        <input [type]="password[0]" class="form-control" [(ngModel)]="inputOldPass">
+                                    </td>
+                                    <td>
+                                        <span (click)="showPassword(0);">
+                                            <i class="bi bi-eye{{ password[0] == 'password' ? '-slash' : ''}}-fill"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>New Password </td>
+                                    <td> <input [type]="password[1]" class="form-control"  [(ngModel)]="inputPass1"> </td>
+                                    <td>
+                                        <span (click)="showPassword(1);">
+                                            <i class="bi bi-eye{{ password[1] == 'password' ? '-slash' : ''}}-fill"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Confirm Password </td>
+                                    <td> <input [type]="password[2]" class="form-control" [(ngModel)]="inputPass2"> </td>
+                                    <td>
+                                        <span (click)="showPassword(2);">
+                                            <i class="bi bi-eye{{ password[2] == 'password' ? '-slash' : ''}}-fill"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <Tr>
+                                    <td></td>
+                                    <td class="text-end">
+                                        <button type="button" (click)="changePassword();" class="btn btn-primary">Changes Password</button>
+                                    </td>
+                                    <td></td> 
+                                </Tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="alert alert-warning mb-3" *ngIf="note != '' ">
+                            {{note}}
+                        </div>
+                    </div>
+                </div>
+
+
+                 
+
+
+            </div>
+
+        </div>
+    </div>
+</div>

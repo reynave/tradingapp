@@ -117,7 +117,7 @@ export class CustomFieldFormComponent implements OnInit {
           let objIndex = this.customFieldForm.findIndex(((obj: { id: any; }) => obj.id == x.id));
           this.customFieldForm.splice(objIndex, 1);
           // this.httpGet();
-          this.emitToParent('httpGet');
+          this.emitToParent('reload');
         },
         e => {
           console.log(e);

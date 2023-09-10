@@ -29,6 +29,7 @@ export class HeaderComponent implements OnInit, OnChanges {
   @Output() sendToParent = new EventEmitter<any>();
   @Input() item: any = [];
   account : any = [];
+  bookmark : string = environment.website;
   items: any = [];
   id : string = "";
   newBook = new NewBook('');
@@ -45,13 +46,13 @@ export class HeaderComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void { 
-    //console.log(this.configService.account())
+    console.log(this.configService.account())
     this.account = this.configService.account();
     this.picture = environment.api+'uploads/picture/'+this.configService.account()['account']['picture'];
     //console.log(this.configService.jti())
     //console.log(this.activatedRoute);
     this.titleService.setTitle("Mirrel.com");
-
+    this.bookmark  = environment.website+this.configService.account()['account']['username']+"#bookmark";
     this.checkJwtToken();
     this.httpGet();
     this.getId();

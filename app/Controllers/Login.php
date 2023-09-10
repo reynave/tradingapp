@@ -83,7 +83,7 @@ class Login extends BaseController
                     "input_date" => date("Y-m-d H:i:s"),
                 ]);
             }
-            $user['account'] = $this->db->query("SELECT id, email, name, picture, inviteLink
+            $user['account'] = $this->db->query("SELECT id, email, name, picture, inviteLink, username
             FROM account WHERE id = '" . $id . "' ")->getResultArray()[0];
                  
             $payload = $user;

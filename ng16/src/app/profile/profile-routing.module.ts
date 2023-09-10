@@ -4,6 +4,7 @@ import { TeamComponent } from './team/team.component';
 import { UserComponent } from './user/user.component';
 import { LanguageRegionComponent } from './language-region/language-region.component';
 import { SessionComponent } from './session/session.component';
+import { SecurityComponent } from './security/security.component';
 
 const routes: Routes = [
   {  path: '',  component: TeamComponent,data: { active: "team" }  },
@@ -11,6 +12,7 @@ const routes: Routes = [
   {  path: 'user/:id',  component:  UserComponent, data: { active: "user" }},
   {  path: 'langreg',  component:  LanguageRegionComponent, data: { active: "langreg" }},
   {  path: 'session',  component:  SessionComponent, data: { active: "langreg" }},
+  {  path: 'security',  component:  SecurityComponent, data: { active: "security" }},
   
 ];
 
