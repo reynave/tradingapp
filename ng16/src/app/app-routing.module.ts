@@ -13,6 +13,7 @@ import { TemplateTableComponent } from './template/template-table/template-table
 import { TableComponent } from './board/table/table.component';
 import { ChartjsComponent } from './board/chartjs/chartjs.component';
 import { InvitedComponent } from './login/invited/invited.component';
+import { TablePrintableComponent } from './board/table-printable/table-printable.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -27,8 +28,10 @@ const routes: Routes = [
   { path: "book", component: BookComponent, data: { active: "book", name :'shareToMe' },  canActivate:[authGuard]  }, 
   { path: "book/:id", component: BookComponent, data: { active: "book" },  canActivate:[authGuard]  },
   { path: "board/table/:id/:journalTableViewId", component: TableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
+  { path: "board/tablePrintable/:id/:journalTableViewId", component: TablePrintableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   { path: "board/chart/:id/:journalTableViewId", component: ChartjsComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
 
+ 
  
   // TEMPLATE FOR "DEVELOPMENT" UX UI DESIGN
   { path: "template/table", component: TemplateTableComponent, data: { active: "template" },  canActivate:[authGuard]  }, 

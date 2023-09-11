@@ -30,6 +30,7 @@ import { ShareBoardComponent } from './template/share-board/share-board.componen
 import { WidgetTeamsComponent } from './global/widget-teams/widget-teams.component';
 import { InvitedComponent } from './login/invited/invited.component';
 import { WidgetInviteComponent } from './global/widget-invite/widget-invite.component';
+import { TablePrintableComponent } from './board/table-printable/table-printable.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { WidgetInviteComponent } from './global/widget-invite/widget-invite.comp
     ShareBoardComponent,
     WidgetTeamsComponent,
     InvitedComponent,
-    WidgetInviteComponent
+    WidgetInviteComponent,
+    TablePrintableComponent
   ],
   imports: [
     BrowserModule,

@@ -45,8 +45,7 @@ export class HeaderComponent implements OnInit, OnChanges {
     private activatedRoute: ActivatedRoute 
   ) { }
 
-  ngOnInit(): void { 
-    console.log(this.configService.account())
+  ngOnInit(): void {  
     this.account = this.configService.account();
     this.picture = environment.api+'uploads/picture/'+this.configService.account()['account']['picture'];
     //console.log(this.configService.jti())

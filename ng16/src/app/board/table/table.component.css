@@ -4,3 +4,7 @@
     left: -9px;
     z-index: 999;
 }
+.bg-lock{
+    background-color: #F0F0F0;
+    opacity: 0.7;
+}

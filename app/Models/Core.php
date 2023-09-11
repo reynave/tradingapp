@@ -133,7 +133,7 @@ class Core extends Model
 
     }
 
-    function journalTable($id = "", $journalTableViewId = "", $where = "")
+    function journalTable($id = "", $journalTableViewId = "", $where = "",  $order = 0, $limit = 10000)
     {
 
         $c = "SELECT *, CONCAT('f',f) AS 'key', '' as showEvalDev , '' as 'total'
@@ -168,7 +168,7 @@ class Core extends Model
         $q = "SELECT id, ilock, journalId, archives,  archives as 'historyArchives', false AS 'checkbox' $customField 
         FROM journal_detail 
         where journalId = '$id' $where
-        AND presence = 1 order by sorting ASC";
+        AND presence = 1 order by sorting ASC limit $order, $limit";
         $detail = $this->db->query($q)->getResultArray();
 
         $evaluateFormula = function ($data, $formula) {
@@ -189,29 +189,16 @@ class Core extends Model
             }
             $index++;
         }
-        //  $index = 0;
-        // foreach ($detail as $rec) {
-        //     $data = [];
-        //     foreach ($journal_custom_field as $field) {
-        //         if ($field['iType'] == 'formula') {
-        //             foreach (array_keys($rec) as $key) {
-        //                 $data[$key] = (int) $rec[$key];
-        //             }
-        //             $detail[$index][$field['key']] = "formula!";
-        //         }
-        //     }
-        //     $index++;
-        // }
+         
         $data = array(
             "customFieldKey" => $customFieldNo,
             "journal_custom_field" => $journal_custom_field,
             "detail" => $detail,
-            "archives" => (int) self::select("count(id)", "journal_detail", "presence = 1 and archives = 1 and journalId = '$id' "),
+            "archives" => (int) self::select("count(id)", "journal_detail", "presence = 1 and archives = 1 and journalId = '$id' "), 
         );
 
         return $data;
-    }
- 
+    } 
     function journalChart($id = "", $journalTableViewId = "", $where = "")
     {
 

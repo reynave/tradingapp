@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-10">
+            <p>{{name}}</p>
+        </div>
+        <div class="col-2 text-end viewOnly">
+            <button type="button" class="btn btn-light btn-sm" (click)="fnPrint()"><i class="bi bi-printer"></i> Print</button>
+        </div>
+        <div class="col-12">
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr *ngFor="let x of tableHeader">
+                        <th *ngFor="let i of x">
+                            {{i}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let x of table">
+                        <td *ngFor="let i of x">{{i }}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>

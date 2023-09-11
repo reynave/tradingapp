@@ -42,25 +42,26 @@
                     <small>Archives</small>
                 </a>
             </div>
-            
+
         </div>
     </div>
 </div>
 
 <div class="container-fluid body-margin-top">
-   
+
     <div class="row g-2">
- 
- 
-        <div class="col-lg-12 col-12">
+
+        <div class="col-12">
             <div class="bg-white rounded" style="border-left: 5px solid rgb(114, 194, 254);">
 
                 <div class="px-3 py-2">
+
                     <div class="row g-0">
                         <div class="col-12">
                             <app-board-title></app-board-title>
-                        </div> 
+                        </div>
                     </div>
+
 
                     <div class="row mb-2">
                         <div class="col-12 ">
@@ -69,21 +70,17 @@
 
                         <div class="col-11">
                             <div class="d-flex">
-                              
-                                <div class="me-2">
-                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New Task</button>
-                                </div>
-                              
 
                                 <div class="me-2">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Search">
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New  Task</button>
                                 </div>
+
 
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm btn-light"><i
-                                            class="bi bi-sliders"></i></button>
+                                    <input type="text" class="form-control form-control-sm" [disabled]="!startUpTable"
+                                    [placeholder]=" startUpTable ? 'Search' : 'loading'" [(ngModel)]="keyword" (ngModelChange)="onSearchChange()">
                                 </div>
-
+ 
                                 <div class="me-2">
                                     <div ngbDropdown class="d-inline-block" container="body">
                                         <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide"
@@ -117,28 +114,38 @@
 
                                 <div class="me-2" [hidden]="archives < 1">
                                     <button type="button" class="btn btn-sm btn-light"
-                                        (click)="actionTask('unarchives');"> {{archives}} <i  class="bi bi-archive"></i></button>
+                                        (click)="actionTask('unarchives');"> {{archives}} <i
+                                            class="bi bi-archive"></i></button>
                                 </div>
 
                                 <div class="me-2">
-                                    <button type="button" (click)="jqueryResizable()" class="btn btn-sm btn-{{resizableStatus ? 'dark':'light' }}">
+                                    <button type="button" (click)="jqueryResizable()"
+                                        class="btn btn-sm btn-{{resizableStatus ? 'dark':'light' }}">
                                         <i class="bi bi-aspect-ratio"></i> Resizable {{resizableStatus ? 'ON':'OFF'}}
                                     </button>
                                 </div>
-                                
-                                <div class="me-2" *ngIf="journalAccess.owner == '1' "> 
+
+                                <div class="me-2" *ngIf="journalAccess.owner == '1' ">
                                     <a href="javascript:;" class="btn btn-sm btn-light" placement="top-right"
                                         (click)="openComponent('CustomFieldFormComponent')"
-                                        (newItemEvent)="onChild($event)" ngbTooltip="Custom Field"><i  class="bi bi-gear"></i>
+                                        (newItemEvent)="onChild($event)" ngbTooltip="Custom Field"><i
+                                            class="bi bi-gear"></i>
                                     </a>
                                 </div>
 
-                                <div class="me-2"> 
-                                    <a  class="btn btn-sm btn-light"  (click)="requestToken();" target="_blank">
+                                <div class="me-2 ">
+                                    <a class="btn btn-sm btn-light" (click)="requestToken();" target="_blank">
                                         <i class="bi bi-cloud-download"></i> Export CSV
                                     </a>
                                 </div>
-                                <div class="me-2" *ngIf="loading"> 
+                                <div class="me-2">
+                                    <a class="btn btn-sm btn-light"
+                                        [routerLink]="[ '/board/tablePrintable/', id, journalTableViewId ]"
+                                        target="_blank">
+                                        <i class="bi bi-printer"></i> Printable
+                                    </a>
+                                </div>
+                                <div class="me-2" *ngIf="loading">
                                     <img src="./assets/gif/sm-loading.gif" width="20">
                                 </div>
                             </div>
@@ -164,9 +171,10 @@
                                     </div>
                                 </div>
 
-                                <div class="order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
-                                    <div class="p-1 text-center orders resizable " 
-                                    [ngStyle]="{'width': n.width+'px'}" data-id="{{n.id}}" data-tabindex="{{a}}"  >
+                                <div class="order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index"
+                                    [hidden]="n.hide=='1'">
+                                    <div class="p-1 text-center orders resizable " [ngStyle]="{'width': n.width+'px'}"
+                                        data-id="{{n.id}}" data-tabindex="{{a}}">
                                         <b>{{n.name}}</b>
                                         <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top"
                                             ngbTooltip="{{evalDescription(n.eval,customField)}}" container="body">
@@ -181,34 +189,46 @@
                         </div>
 
                         <div class="sortable">
-                            <span *ngFor="let x of detail; let i = index" [hidden]="x.archives == '1'">
+                            <span *ngFor="let row of detail; let i = index" [hidden]="row.archives == '1'">
                                 <div class="d-flex tables-body-td ">
                                     <div class="floating-div bg-white border-start table-body-td-first">
-                                        <div class="py-1 px-3 position-relative orders-left-fixed">
+                                        <div class="py-1 px-3 position-relative orders-left-fixed" >
                                             <div class="table-sorting-area">
-                                                <div class="py-1 handle" data-id="{{x.id}}" *ngIf="x.ilock == '0'">
+                                                <!-- <div class="py-1 handle" data-id="{{row.id}}"
+                                                    *ngIf="row.ilock == '0'">
                                                     <i class="bi bi-list "></i>
-                                                </div>
-                                                <div class="py-1 " *ngIf="x.ilock == '1'">
+                                                </div> -->
+                                                <!-- <div class="py-1 handle" *ngIf="row.ilock == '1'">
                                                     <i class="bi bi-lock-fill"></i>
+                                                </div> -->
+
+                                                <div class="py-1 handle" data-id="{{row.id}}">
+                                                   
+                                                    <span *ngIf="row.ilock != '1'">  <i class="bi bi-list "></i> </span>
+                                                    <span *ngIf="row.ilock == '1'"> <i class="bi bi-lock-fill"></i></span>
                                                 </div>
                                             </div>
 
-                                            <span *ngIf="x.checkbox===true" (click)="x.checkbox=false;fnTools();">
+                                            <span *ngIf="row.checkbox===true"
+                                                (click)="row.checkbox=false;fnTools();">
                                                 <i class="bi bi-check-square-fill text-primary"></i>
                                             </span>
-                                            <span *ngIf="x.checkbox!=true" (click)="x.checkbox=true;fnTools();">
+                                            <span *ngIf="row.checkbox!=true" 
+                                                (click)="row.checkbox=true;fnTools();">
                                                 <i class="bi bi-square"></i>
                                             </span>
                                         </div>
                                     </div>
 
+                                
                                     <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index"
                                         [hidden]="n.hide=='1'">
-                                        <div class="orders" [ngStyle]="{'width': n.width+'px'}">
-                                            <app-custom-field [item]="objItem(n,x,i)" (newItemEvent)="onChild($event)"></app-custom-field>
+                                        <div class="orders" [ngClass]="{'bg-lock': row.ilock == '1' ? true : false}" [ngStyle]="{'width': n.width+'px'}" > 
+                                           
+                                             <app-custom-field [item]="objItem(n,row,i)"  (newItemEvent)="onChild($event)"></app-custom-field>  
                                         </div>
                                     </div>
+
                                 </div>
                             </span>
                         </div>

@@ -1,31 +1,39 @@
 <app-header></app-header>
 
+
+
+
 <div class="container-fluid body-margin-top">
+
     <div class="row g-2">
+
         <div class="col-12">
-            <div class="bg-white rounded mb-2 pb-4 px-2" style="border-left: 5px solid #a3e2e2">
+            <div class="bg-white rounded" style="border-left: 5px solid #8adf86">
+
                 <div class="px-3 py-2">
+
                     <div class="row g-0">
-                        <div class="col-11">
+                        <div class="col-12">
                             <app-board-title></app-board-title>
                         </div>
-                        <div class="col-1 align-self-center text-end">
-                            <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
-                            (click)="openComponent('CustomFieldFormComponent')"
-                            (newItemEvent)="onChild($event)" ngbTooltip="Tooltip on top"><i
-                                class="bi bi-gear"></i></a>
-                        </div>
                     </div>
+                  
                     <div class="row mb-2">
                         <div class="col-12 ">
                             <app-board-view (newItemEvent)="reload($event)"></app-board-view>
                         </div>
-
+                        <div class="col-12">
+                            <div class="d-flex">
+                                <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
+                                (click)="openComponent('CustomFieldFormComponent')" (newItemEvent)="onChild($event)"
+                                ngbTooltip="Tooltip on top"><i class="bi bi-gear"></i></a>
+                            </div>
+                        </div>
                     </div>
- 
 
-                    <div class="row" >
-                        <div class="col-md-9 col-12 order-2 order-md-1"> 
+
+                    <div class="row">
+                        <div class="col-md-9 col-12 order-2 order-md-1">
 
                             <div class="mx-lg-5" *ngIf="journalChart['chartjsTypeId'] == 0">
                                 <div class="row">
@@ -35,19 +43,20 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-2 col-md-4 col-6 mb-3 chartIcon" *ngFor="let x of typeOfChart" (click)="journalChart.chartjsTypeId=x.id"> 
+                                    <div class="col-lg-2 col-md-4 col-6 mb-3 chartIcon" *ngFor="let x of typeOfChart"
+                                        (click)="journalChart.chartjsTypeId=x.id">
                                         <img [src]="x.image" width="100%" class="p-1 border rounded ">
-                                        <div class="px-2"> 
-                                            <small>{{x.label}}</small> 
+                                        <div class="px-2">
+                                            <small>{{x.label}}</small>
                                         </div>
                                     </div>
-                              </div>
+                                </div>
                             </div>
 
-                            <div class="tables-body">
+                            <div class="chartjs-body mx-4">
                                 <canvas id="canvas">{{chart}}</canvas>
                             </div>
-                         
+
                         </div>
                         <div class="col-md-3 col-12 order-1 order-md-2">
                             <div class="border border-2  p-3">
@@ -61,12 +70,14 @@
                                     </select>
                                 </div>
                                 <div class="mb-2" *ngIf="journalChart.chartjsTypeId != 0 ">
-                                    <label class="mb-1">Label (X Axis) <div class="text-warning" *ngIf="journalChart.xAxis == '' ">Please select Label X Axis</div></label>
-                                    <select class="form-control " (change)="updateChartJs()" [ngClass]="{'border-warning': journalChart.xAxis == '' ? true : false }"
+                                    <label class="mb-1">Label (X Axis) <div class="text-warning"
+                                            *ngIf="journalChart.xAxis == '' ">Please select Label X Axis</div></label>
+                                    <select class="form-control " (change)="updateChartJs()"
+                                        [ngClass]="{'border-warning': journalChart.xAxis == '' ? true : false }"
                                         [(ngModel)]="journalChart.xAxis">
                                         <option [hidden]="journalChart.xAxis != '' ">- Select -</option>
                                         <option *ngFor="let n of x" [value]="n.key" [hidden]="n.presence == '0'">
-                                            {{n.name}} [{{n.iType}}] 
+                                            {{n.name}} [{{n.iType}}]
                                         </option>
                                     </select>
                                 </div>
@@ -91,7 +102,7 @@
                                                     class="bi bi-check-square-fill"></i>
                                                 <i *ngIf="n.checkbox != true"
                                                     (click)="n.checkbox = true;updateChartJs()"
-                                                    class="bi bi-square"></i> 
+                                                    class="bi bi-square"></i>
                                             </div>
 
                                         </div>
@@ -103,8 +114,9 @@
                                     <div class="form-control scrollarea">
                                         <div class="row g-1 mb-1 " [ngClass]="{'border-top': (i > 0) ? true : false}"
                                             *ngFor="let n of y; let i = index">
-                                            <div class="col-10" [ngClass]="{'text-decoration-line-through': n.presence == '0'}">
-                                                {{n.name}}  
+                                            <div class="col-10"
+                                                [ngClass]="{'text-decoration-line-through': n.presence == '0'}">
+                                                {{n.name}}
                                                 <small *ngIf="n.iType == 'number'"><i class="bi bi-123"></i></small>
                                                 <span *ngIf="n.iType == 'formula'"><img
                                                         src="./assets/icon/formula-30.png" class="icon"></span>
@@ -113,7 +125,7 @@
                                                 <i *ngIf="n.check == true" (click)="n.check = false;updateChartJs()"
                                                     class="bi bi-check-square-fill"></i>
                                                 <i *ngIf="n.check != true" (click)="n.check = true;updateChartJs()"
-                                                    class="bi bi-square"></i> 
+                                                    class="bi bi-square"></i>
                                             </div>
 
                                         </div>
@@ -124,15 +136,7 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="row">
-                        
-                        <div class="col-12">
-                            <div *ngFor="let i of typeOfChart">
-                                {{i | json}}
-                            </div>
-                        </div>
-                    </div>
+ 
                 </div>
             </div>
         </div>
@@ -140,5 +144,4 @@
     </div>
 
 </div>
-
-{{journalChart | json}}
+ 

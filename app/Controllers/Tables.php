@@ -38,13 +38,11 @@ class Tables extends BaseController
             ORDER BY ja.sorting ASC, ja.input_date ASC";
 
             $items = $this->db->query($q1)->getResultArray();
-
+            $items[0]['picture'] =  base_url().'uploads/picture/'.$items[0]['picture'];
             $data = array(
                 "error" => false,
-                "id" => $id,
-                //"item" => $this->db->query("SELECT * from journal where id = '$id' ")->getResultArray()[0],
-                "item" => $items[0],
-
+                "id" => $id, 
+                "item" => $items[0], 
                 "permission" => $this->db->query("SELECT * from permission")->getResultArray(),
                 "backgroundColorOption" => $backgroundColorOption,
             );
@@ -155,7 +153,7 @@ class Tables extends BaseController
                     "field" => $rec,
                     "option" => $this->db->query($option)->getResultArray(),
                     "optionDelete" => $this->db->query($optionDelete)->getResultArray(),
-
+                    
                     "users" => $users,
                     "usersDelete" => $usersDelete,
 
@@ -167,16 +165,24 @@ class Tables extends BaseController
             $backgroundColorOption = $this->db->query($b)->getResultArray();
 
             $journalTable = model("Core")->journalTable($id, $journalTableViewId);
+            $tableViewOnly = model("TableViewOnly")->journalTable($id, $journalTableViewId, "");
 
+            for($i = 0; $i < count($journalTable['detail']); $i++){
+                $journalTable['detail'][$i]['searchable'] = $tableViewOnly['detail'][$i];
+            }
+            
             $data = array(
                 "error" => false,
                 "id" => $id,
                 "backgroundColorOption" => $backgroundColorOption,
-                "select" => $select,
-
+                "select" => $select, 
                 "customFieldKey" => $journalTable['customFieldKey'],
                 "customField" => $journalTable['journal_custom_field'],
                 "detail" => $journalTable['detail'],
+               // "cell" => $tableViewOnly['cell'],
+               // "value" => $tableViewOnly['detail'],
+               // "q" => $tableViewOnly['q'],
+                
                 "archives" => $journalTable['archives'],
 
             );

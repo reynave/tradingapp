@@ -1,8 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
   --font-manrope: 'Manrope', sans-serif;
-  --font-poppins: 'Poppins', sans-serif; 
-  --bg-body-1: #D7EAEA;
+  --font-poppins: 'Poppins', sans-serif;  
+  --bg-body-1: rgb(225, 240, 252);
+  
   --bg-gray: #f4f4f4;
 
   --color-white: #fff;
@@ -112,15 +113,21 @@ a {
 .icon {
   height: 1rem;
 }
-
+ 
 .tables-body {
   overflow-y: scroll;
   overflow-x: auto;
   white-space: nowrap;
   max-width: 1900px;
-  height: calc(100vh - (var(--body-margin-top)) - 130px);
+  height: calc(100vh - (var(--body-margin-top)) - 145px);
 }
-
+.chartjs-body {
+  overflow-y: scroll;
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 1900px;
+  height: calc(100vh - (var(--body-margin-top)) - 160px);
+}
 .tables-body .ui-sortable-placeholder {
   display: block;
   height: 40px;
@@ -226,7 +233,7 @@ input:focus {
 
 .popup-floating-top {
   position: fixed;
-  top: 1rem;
+  top: 0px;
   width: 100%;
   z-index: 9999;
   text-align: center;

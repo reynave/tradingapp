@@ -1,12 +1,12 @@
-import { Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Title } from '@angular/platform-browser';
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
+import { DetailInterface } from './table-interface';
 declare var $: any;
 
 export class NewSelect {
@@ -25,34 +25,6 @@ export class NewCustomField {
   ) { }
 }
 
-interface DetailInterface {
-  archives: string;
-  checkbox: any;
-  f1: any;
-  f2: any;
-  f3: any;
-  f4: any;
-  f5: any;
-  f6: any;
-  f7: any;
-  f8: any;
-  f9: any;
-  f10: any;
-  f11: any;
-  f12: any;
-  f13: any;
-  f14: any;
-  f15: any;
-  f16: any;
-  f17: any;
-  f18: any;
-  f19: any;
-  f20: any;
-  historyArchives: any;
-  id: string;
-  ilock: string;
-  journalId: string;
-}
 
 @Component({
   selector: 'app-table',
@@ -60,7 +32,7 @@ interface DetailInterface {
   styleUrls: ['./table.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, AfterViewInit  {
   @ViewChild('canvasRight') canvasRight: any;
   @ViewChild('contentEditSelect') contentEditSelect: any;
 
@@ -73,6 +45,7 @@ export class TableComponent implements OnInit {
   waiting: boolean = false;
   loading: boolean = false;
   detail: DetailInterface[] = [];
+  detailOrigin :  DetailInterface[] = [];
   myTimeout: any;
   select: any = [];
   httpNote: string = "";
@@ -95,9 +68,9 @@ export class TableComponent implements OnInit {
   customFieldKey: any = [];
   users: any = [];
   journalAccess: any = [];
-  api: string = environment.api;
+  api: string = environment.api; 
   constructor(
-    private titleService: Title,
+
     private http: HttpClient,
     public functionsService: FunctionsService,
     private configService: ConfigService,
@@ -137,7 +110,7 @@ export class TableComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        console.log("httpHeader", data);
+        // console.log("httpHeader", data);
         this.customFieldForm = data['customField'];
         this.journalAccess = data['journal_access'];
 
@@ -163,9 +136,12 @@ export class TableComponent implements OnInit {
         this.customField = data['customField'];
         this.customFieldKey = data['customFieldKey'];
         this.detail = data['detail'];
+        this.detailOrigin = data['detail'];
+        
         this.select = data['select'];
-        this.users = data['select'];
-        this.startUpTable = true;
+        this.users = data['select']; 
+        
+       
         let self = this;
         $(function () {
           $(".sortable").sortable({
@@ -207,9 +183,28 @@ export class TableComponent implements OnInit {
     )
   }
 
+  keyword: string = '';
+  onSearchChange() {
+    if (!this.keyword || this.keyword.trim() === '') {
+      this.detail = this.detailOrigin;
+    } else {
+      this.detail = this.detailOrigin.filter((item: {  searchable: string; }) => {
+        const matchItem = item.searchable.toLowerCase().includes(this.keyword.toLowerCase());  
+        return matchItem;
+      });
+    }
+  }
+  ngAfterViewInit() {
+    setTimeout(() => {
+      console.log("ngAfterViewInit");
+      this.startUpTable = true;
+    }, 1000); // Tunggu 1 detik (misalnya)
+  }
+
+
   sortByOrder(order: any) {
     // const order = ['59', '54', '72', '23', '24', '108', '55', '19', '73', '22', '60'];
-
+    
     // Buat fungsi untuk membandingkan dua elemen berdasarkan urutan 'order'
     function compareByOrder(a: DetailInterface, b: DetailInterface) {
       const aIndex = order.indexOf(a.id);
@@ -225,6 +220,7 @@ export class TableComponent implements OnInit {
 
     // Urutkan 'this.detail' menggunakan fungsi perbandingan
     this.detail.sort(compareByOrder);
+    
   }
 
 
@@ -556,10 +552,10 @@ export class TableComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data);
-        if(data['error'] == false && data['token'] != ''){
+        if (data['error'] == false && data['token'] != '') {
           console.log("masuk");
           this.loading = false;
-          location.href = environment.api + 'tables/exportCSV/?t='+data['token'];
+          location.href = environment.api + 'tables/exportCSV/?t=' + data['token'];
         }
       },
       e => {
@@ -578,10 +574,10 @@ export class TableComponent implements OnInit {
     }).subscribe(
       data => {
 
-        console.log("httpJournalSelect", data);
+        //console.log("httpJournalSelect", data);
         // this.customField = data['customField'];
-        console.log(this.detail, this.select);
-        console.log(this.detailObject);
+        //console.log(this.detail, this.select);
+        //console.log(this.detailObject);
         this.select = data['select'];
         // if (this.detailObject.length !== 0) {
         //   let objIndex = this.select[0].findIndex(((obj: { field: any; }) => obj.field == this.detailObject.select.field));
@@ -645,10 +641,24 @@ export class TableComponent implements OnInit {
   /**
    * END :: SELECT POPUP / OPEN EDIT POPUP
    */
+ 
 
+  // fnEdiable(row: number, column: number) { 
+  //   let i = 0;
+  //   for( i = 0; i < this.cell.length; i++ ){
+  //     let n = 0;
+  //     for(n = 0 ; n < this.cell[0].length ; n++){
+  //       this.cell[i][n] = 0;
+  //     }
+  //   }
+  //   this.cell[row][column] = 1;
+    
+  // }
 
-
-
+  // fnCell(row: number, column: number) {
+  //   return this.cell[row][column];
+  // }
+ 
   fnHide(n: number, index: number, item: any) {
     console.log(n, index);
     this.customField[index]['hide'] = n == 1 ? 0 : 1;

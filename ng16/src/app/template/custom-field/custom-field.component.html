@@ -1,5 +1,5 @@
 <div *ngIf="item['itype']=='text' || item['itype']=='number' ">
-    <div class="d-flex">
+    <div class="d-flex" >
         <div style="width: 100%;">
             <input [type]="item['itype']" class="p-1 {{'text-'+childItem['customField']['textAlign']}}" maxlength="250"
                 [(ngModel)]="childItem['value']" #customFieldText (keyup.enter)="customFieldText.blur()"
