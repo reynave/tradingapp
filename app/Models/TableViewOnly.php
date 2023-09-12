@@ -106,7 +106,7 @@ class TableViewOnly extends Model
         foreach ($detail as $rec) {
             $data = [];
             $culumn = [];
-           $temp = "";
+            $temp = "";
             foreach ($journal_custom_field as $field) {
              
                 $val = [ 

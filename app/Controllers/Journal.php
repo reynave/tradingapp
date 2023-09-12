@@ -178,7 +178,7 @@ class Journal extends BaseController
             $this->db->table("journal_table_view")->insert([
                 "journalId" => $journalId,
                 "board" => 'table',
-                "name" => 'New Table',
+                "name" => 'Master Table',
                 "ilock" => 1,
                 "presence" => 1,
                 "update_date" => date("Y-m-d H:i:s"),

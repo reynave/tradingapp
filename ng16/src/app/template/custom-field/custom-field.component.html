@@ -64,16 +64,16 @@
 
 <div *ngIf="item['itype']=='note' ">
     <div class="p-1 text-center">
-        <a href="javascript:;" (click)="emitToParent(childItem)">
-            <small><i class="bi bi-chat"></i> <span *ngIf="item['ilock']!==true">Add</span> Notes</small>
+        <a href="javascript:;" (click)="emitToParent(childItem)" >
+            <small><i class="bi bi-chat"></i> <span *ngIf="item['ilock']!==true"></span> Notes</small>
         </a>
     </div>
 </div>
 
-<div *ngIf=" item['itype']=='image'">
+<div *ngIf="item['itype']=='image'">
     <div class="p-1 text-center">
-        <a href="javascript:;">
-            Images
+        <a href="javascript:;" (click)="emitToParent(childItem)" >
+            <small> <i class="bi bi-images"></i> Images</small>
         </a>
     </div>
 </div>

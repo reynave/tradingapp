@@ -28,11 +28,11 @@ export class CustomFieldComponent implements OnInit {
   }
 
   fnChildItemSelectOption(id: string) {
-    let data = "";
+    let data = "Select ";
 
     let objIndex = this.childItem.select.option.findIndex(((obj: { id: string; }) => obj.id == id));
     if (objIndex > -1) {
-      return this.childItem.select.option[objIndex]['value'];
+      data =  this.childItem.select.option[objIndex]['value'];
     }
     else {
       if (id !== "") {
@@ -44,8 +44,9 @@ export class CustomFieldComponent implements OnInit {
         }
 
       }
-      return data;
+     
     }
+    return data;
   }
 
   fnChildItemSelectOptionUser(accountId: string) {

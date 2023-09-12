@@ -129,8 +129,8 @@
                                 <div class="me-2" *ngIf="journalAccess.owner == '1' ">
                                     <a href="javascript:;" class="btn btn-sm btn-light" placement="top-right"
                                         (click)="openComponent('CustomFieldFormComponent')"
-                                        (newItemEvent)="onChild($event)" ngbTooltip="Custom Field"><i
-                                            class="bi bi-gear"></i>
+                                        (newItemEvent)="onChild($event)" ngbTooltip="Custom Field">
+                                        <i class="bi bi-ui-checks"></i> Custom Fields
                                     </a>
                                 </div>
 
@@ -226,7 +226,7 @@
                                         [hidden]="n.hide=='1'">
                                         <div class="orders" [ngClass]="{'bg-lock': row.ilock == '1' ? true : false}" [ngStyle]="{'width': n.width+'px'}" > 
                                            
-                                             <app-custom-field [item]="objItem(n,row,i)"  (newItemEvent)="onChild($event)"></app-custom-field>  
+                                           <app-custom-field [item]="objItem(n,row,i)"  (newItemEvent)="onChild($event)"></app-custom-field> 
                                         </div>
                                     </div>
 
@@ -262,38 +262,7 @@
 </div>
 
 
-<ng-template #canvasRight let-offcanvas>
-    <div class="offcanvas-header">
-        <div class="offcanvas-title" id="offcanvas-basic-title">Notes</div>
-        <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
-    </div>
-    <div class="offcanvas-body">
-
-        <div class="mb-3">
-
-            <!-- {{detailObject | json}} -->
-            <editor apiKey="cc5hqwaiqsocbfakkn5qpug7r9bx5zioxppbw9h6w4gd0286" [init]="{
-                height: 500,
-                menubar: false, 
-                branding: false,
-                plugins: [
-                'advlist autolink lists link image charmap print preview anchor', 
-                'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount'
-                ],
-                toolbar:
-                'formatselect | bold italic backcolor | \
-                alignleft aligncenter alignright alignjustify | \
-                bullist numlist outdent indent | removeformat'
-            }" [(ngModel)]="detailObject.value"></editor>
-        </div>
-
-        <div class="text-end">
-            <button type="button" class="btn btn-outline-dark" (click)="offcanvas.close('Save click')">Save</button>
-        </div>
-    </div>
-</ng-template>
-
+ 
 <ng-template #contentEditSelect let-modal>
     <div class="modal-header">
         <div class="modal-title" id="modal-basic-title">Editable Select Option </div>
@@ -368,9 +337,8 @@
                 </div>
 
             </div>
-        </div>
-
-        {{newSelect | json}}
+        </div> 
+        
     </div>
 
 </ng-template>

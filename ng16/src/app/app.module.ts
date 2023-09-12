@@ -31,6 +31,8 @@ import { WidgetTeamsComponent } from './global/widget-teams/widget-teams.compone
 import { InvitedComponent } from './login/invited/invited.component';
 import { WidgetInviteComponent } from './global/widget-invite/widget-invite.component';
 import { TablePrintableComponent } from './board/table-printable/table-printable.component';
+import { OffCanvasNotesComponent } from './board/table/off-canvas-notes/off-canvas-notes.component';
+import { OffCanvasImagesComponent } from './board/table/off-canvas-images/off-canvas-images.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import { TablePrintableComponent } from './board/table-printable/table-printable
     WidgetTeamsComponent,
     InvitedComponent,
     WidgetInviteComponent,
-    TablePrintableComponent
+    TablePrintableComponent,
+    OffCanvasNotesComponent,
+    OffCanvasImagesComponent
   ],
   imports: [
     BrowserModule,

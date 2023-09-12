@@ -52,7 +52,7 @@ export class CustomFieldFormComponent implements OnInit {
             data => {
               console.log(data);
               // self.httpGet();
-              self.emitToParent('httpGet');
+              self.emitToParent('httpDetail');
             },
             e => {
               console.log(e);
@@ -78,7 +78,7 @@ export class CustomFieldFormComponent implements OnInit {
           alert(data['note']);
         }
         this.customFieldForm = data['items'];
-        this.emitToParent('httpGet');
+        this.emitToParent('httpDetail');
       },
       e => {
         console.log(e);
@@ -182,7 +182,7 @@ export class CustomFieldFormComponent implements OnInit {
       data => {
         console.log(data);   
         this.customFieldForm[index]['eval'] = field['evalDev'];
-        this.emitToParent('httpGet');
+        this.emitToParent('httpDetail');
       },
       e => {
         console.log(e);

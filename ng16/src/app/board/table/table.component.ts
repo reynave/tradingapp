@@ -1,12 +1,14 @@
-import { AfterViewInit, Component, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
 import { DetailInterface } from './table-interface';
+import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component';
+import { OffCanvasImagesComponent } from './off-canvas-images/off-canvas-images.component';
 declare var $: any;
 
 export class NewSelect {
@@ -32,8 +34,7 @@ export class NewCustomField {
   styleUrls: ['./table.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TableComponent implements OnInit, AfterViewInit {
-  @ViewChild('canvasRight') canvasRight: any;
+export class TableComponent implements OnInit, AfterViewInit { 
   @ViewChild('contentEditSelect') contentEditSelect: any;
   prod = environment.production;
   fields: any = [];
@@ -69,14 +70,12 @@ export class TableComponent implements OnInit, AfterViewInit {
   users: any = [];
   journalAccess: any = [];
   api: string = environment.api;
-  constructor(
-
+  constructor( 
     private http: HttpClient,
     public functionsService: FunctionsService,
     private configService: ConfigService,
     private modalService: NgbModal,
-    private ativatedRoute: ActivatedRoute,
-    private router: Router,
+    private ativatedRoute: ActivatedRoute, 
     private offcanvasService: NgbOffcanvas,
   ) { }
 
@@ -98,10 +97,9 @@ export class TableComponent implements OnInit, AfterViewInit {
     console.log(newItem);
     if (newItem['id']) {
       this.journalTableViewId = newItem['id'];
-    }
-
+    } 
     this.httpHeader();
-     this.httpDetail(true);
+    this.httpDetail(true);
    // this.httpJournalSelect();
   }
 
@@ -329,8 +327,16 @@ export class TableComponent implements OnInit, AfterViewInit {
     //    console.log("return from child ", newItem);
 
     if (newItem['itype'] == 'note') {
-      this.detailObject = newItem;
-      this.openCanvasRight();
+      this.detailObject = newItem; 
+      const offcanvasRef = this.offcanvasService.open(OffCanvasNotesComponent,{ position: 'end', panelClass: 'details-panel', });
+      offcanvasRef.componentInstance.name = 'World';
+  
+    }
+    else  if (newItem['itype'] == 'image') {
+      this.detailObject = newItem; 
+      const offcanvasRef = this.offcanvasService.open(OffCanvasImagesComponent,{ position: 'end', panelClass: 'details-panel', });
+      offcanvasRef.componentInstance.name = 'World';
+  
     }
     else if (newItem['itype'] == 'editSelect') {
       this.detailObject = newItem;
@@ -692,16 +698,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     )
   }
 
-  openCanvasRight() {
-    this.offcanvasService.open(this.canvasRight, { position: 'end', panelClass: 'details-panel', }).result.then(
-      (result) => {
-        console.log("load data");
-      },
-      (reason) => {
-
-      },
-    );
-  }
+ 
 
   objItem(customField: any, detail: any, index: number) {
 
