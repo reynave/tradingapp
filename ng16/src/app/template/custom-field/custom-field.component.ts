@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from 'src/app/service/config.service';
 import { environment } from 'src/environments/environment';
@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-custom-field',
   templateUrl: './custom-field.component.html',
-  styleUrls: ['./custom-field.component.css']
+  styleUrls: ['./custom-field.component.css'], 
 })
 export class CustomFieldComponent implements OnInit {
   @Input() item: any = [];
@@ -52,12 +52,12 @@ export class CustomFieldComponent implements OnInit {
     let data = "";
     let pic = "";
     let value = "";
-
+    // console.log(this.childItem.select.users);
     let objIndex = this.childItem.select.users.findIndex(((obj: { accountId: string; }) => obj.accountId == accountId));
     if (objIndex > -1) {
       pic = this.childItem.select.users[objIndex]['picture'];
       value = this.childItem.select.users[objIndex]['value'];
-      return '<img src="' + pic + '" class="rounded-circle border me-1" height="25" alt="' + value + '" title="' + value + '">';
+      data =  '<img src="' + pic + '" class="rounded-circle border me-1" height="25" alt="' + value + '" title="' + value + '">';
     }
     else {
       if (accountId !== "") {
@@ -67,14 +67,17 @@ export class CustomFieldComponent implements OnInit {
           data = this.childItem.select.usersDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
           //   data = objIndexHistory;
         }
+      }else{
+        data = '<img src="./assets/icon/user-50.png" height="25">';
       }
-      return data;
+   
     }
-
+    return data;
   }
 
   emitToParent(newValue: string) {
-    this.newItemEvent.emit(this.childItem);
+//    console.log('emitToParent',this.childItem);
+     this.newItemEvent.emit(this.childItem);
   }
   emitModalEditSelect() {
     this.childItem.itype = "editSelect";

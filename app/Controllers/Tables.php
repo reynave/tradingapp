@@ -171,6 +171,9 @@ class Tables extends BaseController
                 $journalTable['detail'][$i]['searchable'] = $tableViewOnly['detail'][$i];
             }
             
+           // $journal_select = model("Core")->journal_select($id);
+
+
             $data = array(
                 "error" => false,
                 "id" => $id,
@@ -179,10 +182,12 @@ class Tables extends BaseController
                 "customFieldKey" => $journalTable['customFieldKey'],
                 "customField" => $journalTable['journal_custom_field'],
                 "detail" => $journalTable['detail'],
-               // "cell" => $tableViewOnly['cell'],
-               // "value" => $tableViewOnly['detail'],
-               // "q" => $tableViewOnly['q'],
+               
                 
+             //   "customFieldNo" => $journal_select['customFieldNo'],
+             //   "select2" => $journal_select['select'],
+             //   "customField2" => $journal_select['customField'],
+                 
                 "archives" => $journalTable['archives'],
 
             );
@@ -600,6 +605,7 @@ class Tables extends BaseController
                 "customField" => $journal_custom_field,
             );
         }
+        
         return $this->response->setJSON($data);
     }
     function table()

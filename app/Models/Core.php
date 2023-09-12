@@ -133,7 +133,7 @@ class Core extends Model
 
     }
 
-    function journalTable($id = "", $journalTableViewId = "", $where = "",  $order = 0, $limit = 10000)
+    function journalTable($id = "", $journalTableViewId = "", $where = "", $order = 0, $limit = 10000)
     {
 
         $c = "SELECT *, CONCAT('f',f) AS 'key', '' as showEvalDev , '' as 'total'
@@ -189,16 +189,16 @@ class Core extends Model
             }
             $index++;
         }
-         
+
         $data = array(
             "customFieldKey" => $customFieldNo,
             "journal_custom_field" => $journal_custom_field,
             "detail" => $detail,
-            "archives" => (int) self::select("count(id)", "journal_detail", "presence = 1 and archives = 1 and journalId = '$id' "), 
+            "archives" => (int) self::select("count(id)", "journal_detail", "presence = 1 and archives = 1 and journalId = '$id' "),
         );
 
         return $data;
-    } 
+    }
     function journalChart($id = "", $journalTableViewId = "", $where = "")
     {
 
@@ -493,92 +493,141 @@ class Core extends Model
     }
 
 
+    /**
+     * SELECT
+     */
+    function journal_select($id = '')
+    {
+ 
+        $c = "SELECT * FROM journal_custom_field
+             WHERE journalId = '$id'  and presence = 1 
+             ORDER BY sorting ASC ";
+        $journal_custom_field = $this->db->query($c)->getResultArray();
+
+        $customField = "";
+        $customFieldNo = [];
+        foreach ($journal_custom_field as $r) {
+            $customField .= ", f" . $r['f'];
+            array_push($customFieldNo, "f" . $r['f']);
+        }
+
+        $select = [];
+        foreach ($customFieldNo as $rec) {
+            $option = "SELECT *
+                FROM journal_select 
+                where journalId = '$id' and field = '$rec' and presence = 1 order by sorting ASC, id DESC";
+
+            $optionDelete = "SELECT *
+                FROM journal_select 
+                where journalId = '$id' and field = '$rec' and presence = 0 order by sorting ASC, id DESC";
+
+            $temp = array(
+                "field" => $rec,
+                "option" => $this->db->query($option)->getResultArray(),
+                "optionDelete" => $this->db->query($optionDelete)->getResultArray(),
+
+                "q" => $option,
+            );
+            array_push($select, $temp);
+        }
+
+        $data = array(
+            "error" => false,
+            "customFieldNo" => $customFieldNo,
+            "select" => $select,
+            "customField" => $journal_custom_field,
+        );
+        return $data;
+    }
+
+
     // SOFT DELETE
     function delete_Journal_detail($journalId)
     {
         $this->db->table("journal")->update([
             "presence" => 0,
             "update_by" => self::accountId(),
-            "update_date" => date("Y-m-d H:i:s"), 
+            "update_date" => date("Y-m-d H:i:s"),
         ], " id = '$journalId' ");
 
         $this->db->table("journal_detail")->update([
             "presence" => 0,
             "update_by" => self::accountId(),
-            "update_date" => date("Y-m-d H:i:s"), 
+            "update_date" => date("Y-m-d H:i:s"),
         ], " journalId = '$journalId' ");
-  
-        $journalDetailId =  model("Core")->select("id","journal_detail"," journalId = '$journalId' ");
+
+        $journalDetailId = model("Core")->select("id", "journal_detail", " journalId = '$journalId' ");
         $this->db->table("journal_detail_images")->update([
             "presence" => 0,
             "update_by" => self::accountId(),
-            "update_date" => date("Y-m-d H:i:s"), 
+            "update_date" => date("Y-m-d H:i:s"),
         ], " journalDetailId = $journalDetailId ");
-         
+
         $this->db->table("journal_select")->update([
             "presence" => 0,
             "update_by" => self::accountId(),
-            "update_date" => date("Y-m-d H:i:s"), 
+            "update_date" => date("Y-m-d H:i:s"),
         ], " journalId = '$journalId' ");
 
         $this->db->table("journal_table_view")->update([
             "presence" => 0,
             "update_by" => self::accountId(),
-            "update_date" => date("Y-m-d H:i:s"), 
+            "update_date" => date("Y-m-d H:i:s"),
         ], " journalId = '$journalId' ");
 
 
         $q1 = "SELECT id  FROM journal_table_view WHERE journalId = '$journalId' ";
-        $journal_table_view = $this->db->query( $q1 )->getResultArray();
+        $journal_table_view = $this->db->query($q1)->getResultArray();
 
-        foreach($journal_table_view  as $row){
+        foreach ($journal_table_view as $row) {
             $this->db->table("journal_table_view_show")->update([
                 "presence" => 0,
-            ], " journalTableViewId =  ".$row['id']);
+            ], " journalTableViewId =  " . $row['id']);
 
             $this->db->table("journal_chart_xaxis")->update([
                 "presence" => 0,
                 "update_by" => self::accountId(),
-                "update_date" => date("Y-m-d H:i:s"), 
-            ], " journalTableViewId =  ".$row['id']);
+                "update_date" => date("Y-m-d H:i:s"),
+            ], " journalTableViewId =  " . $row['id']);
 
             $this->db->table("journal_chart_yaxis")->update([
                 "presence" => 0,
                 "update_by" => self::accountId(),
-                "update_date" => date("Y-m-d H:i:s"), 
-            ], " journalTableViewId =  ".$row['id']);
+                "update_date" => date("Y-m-d H:i:s"),
+            ], " journalTableViewId =  " . $row['id']);
 
             $this->db->table("journal_chart_where_select")->update([
                 "presence" => 0,
                 "update_by" => self::accountId(),
-                "update_date" => date("Y-m-d H:i:s"), 
-            ], " journalTableViewId =  ".$row['id']);
+                "update_date" => date("Y-m-d H:i:s"),
+            ], " journalTableViewId =  " . $row['id']);
 
             $this->db->table("journal_chart_where")->update([
                 "presence" => 0,
                 "update_by" => self::accountId(),
-                "update_date" => date("Y-m-d H:i:s"), 
-            ], " journalTableViewId =  ".$row['id']);
+                "update_date" => date("Y-m-d H:i:s"),
+            ], " journalTableViewId =  " . $row['id']);
 
             $this->db->table("journal_chart_type")->update([
                 "presence" => 0,
                 "update_by" => self::accountId(),
-                "update_date" => date("Y-m-d H:i:s"), 
-            ], " journalTableViewId =  ".$row['id']);
+                "update_date" => date("Y-m-d H:i:s"),
+            ], " journalTableViewId =  " . $row['id']);
 
         }
 
         $this->db->table("journal_custom_field")->update([
             "presence" => 0,
             "update_by" => self::accountId(),
-            "update_date" => date("Y-m-d H:i:s"), 
+            "update_date" => date("Y-m-d H:i:s"),
         ], " journalId = '$journalId' ");
-       
+
 
     }
 
 
-    function isUrlValid($url) {
+    function isUrlValid($url)
+    {
         // Menggunakan fungsi strpos untuk mencari "http://" atau "https://"
         return (strpos($url, "http://") === 0 || strpos($url, "https://") === 0);
     }

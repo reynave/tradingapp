@@ -1,4 +1,5 @@
 export interface DetailInterface {
+    findIndex(arg0: (obj: { id: any; }) => boolean): unknown;
     archives: string;
     checkbox: any;
     f1: any;

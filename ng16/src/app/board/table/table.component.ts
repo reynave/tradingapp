@@ -32,10 +32,10 @@ export class NewCustomField {
   styleUrls: ['./table.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TableComponent implements OnInit, AfterViewInit  {
+export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild('canvasRight') canvasRight: any;
   @ViewChild('contentEditSelect') contentEditSelect: any;
-
+  prod = environment.production;
   fields: any = [];
 
   newCustomField = new NewCustomField("", "text");
@@ -45,7 +45,7 @@ export class TableComponent implements OnInit, AfterViewInit  {
   waiting: boolean = false;
   loading: boolean = false;
   detail: DetailInterface[] = [];
-  detailOrigin :  DetailInterface[] = [];
+  detailOrigin: DetailInterface[] = [];
   myTimeout: any;
   select: any = [];
   httpNote: string = "";
@@ -68,7 +68,7 @@ export class TableComponent implements OnInit, AfterViewInit  {
   customFieldKey: any = [];
   users: any = [];
   journalAccess: any = [];
-  api: string = environment.api; 
+  api: string = environment.api;
   constructor(
 
     private http: HttpClient,
@@ -84,8 +84,11 @@ export class TableComponent implements OnInit, AfterViewInit  {
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
     this.httpHeader();
-    this.httpGet(true);
-    this.httpJournalSelect();
+
+    //this.httpJournalSelect();
+    // setTimeout(() =>{
+    this.httpDetail(true);
+    // },1000);
   }
 
   reload(newItem: any) {
@@ -98,8 +101,8 @@ export class TableComponent implements OnInit, AfterViewInit  {
     }
 
     this.httpHeader();
-    this.httpGet(true);
-    this.httpJournalSelect();
+     this.httpDetail(true);
+   // this.httpJournalSelect();
   }
 
   httpHeader() {
@@ -121,7 +124,7 @@ export class TableComponent implements OnInit, AfterViewInit  {
     )
   }
 
-  httpGet(recalulate: boolean = false) {
+  httpDetail(recalulate: boolean = false) {
     this.http.get<any>(environment.api + "Tables/detail", {
       headers: this.configService.headers(),
       params: {
@@ -130,18 +133,18 @@ export class TableComponent implements OnInit, AfterViewInit  {
       }
     }).subscribe(
       data => {
-        console.log('httpGet', data);
+        console.log('httpDetail', data);
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
         this.customFieldKey = data['customFieldKey'];
         this.detail = data['detail'];
         this.detailOrigin = data['detail'];
-        
+
         this.select = data['select'];
-        this.users = data['select']; 
-        
-       
+        this.users = data['select'];
+
+
         let self = this;
         $(function () {
           $(".sortable").sortable({
@@ -164,7 +167,7 @@ export class TableComponent implements OnInit, AfterViewInit  {
                 headers: self.configService.headers(),
               }).subscribe(
                 data => {
-                  //self.httpGet();
+                  //self.httpDetail();
                   console.log(data);
                   self.sortByOrder(order);
                 },
@@ -176,6 +179,7 @@ export class TableComponent implements OnInit, AfterViewInit  {
           });
         });
         this.calculationFooter();
+        this.startUpTable = true;
       },
       e => {
         console.log(e);
@@ -183,28 +187,33 @@ export class TableComponent implements OnInit, AfterViewInit  {
     )
   }
 
+  getChange(){
+    console.log(this.detail);
+  }
+
   keyword: string = '';
+   
   onSearchChange() {
-    if (!this.keyword || this.keyword.trim() === '') {
+   
+    if (!this.keyword ) {
       this.detail = this.detailOrigin;
+     
     } else {
-      this.detail = this.detailOrigin.filter((item: {  searchable: string; }) => {
-        const matchItem = item.searchable.toLowerCase().includes(this.keyword.toLowerCase());  
+      this.detail = this.detailOrigin.filter((item: { searchable: string; }) => {
+        const matchItem = item.searchable.toLowerCase().includes(this.keyword.toLowerCase());
         return matchItem;
       });
     }
+    this.calculationFooter();
   }
   ngAfterViewInit() {
-    setTimeout(() => {
-      console.log("ngAfterViewInit");
-      this.startUpTable = true;
-    }, 1000); // Tunggu 1 detik (misalnya)
+    console.log("ngAfterViewInit");
   }
 
 
   sortByOrder(order: any) {
     // const order = ['59', '54', '72', '23', '24', '108', '55', '19', '73', '22', '60'];
-    
+
     // Buat fungsi untuk membandingkan dua elemen berdasarkan urutan 'order'
     function compareByOrder(a: DetailInterface, b: DetailInterface) {
       const aIndex = order.indexOf(a.id);
@@ -220,7 +229,7 @@ export class TableComponent implements OnInit, AfterViewInit  {
 
     // Urutkan 'this.detail' menggunakan fungsi perbandingan
     this.detail.sort(compareByOrder);
-    
+
   }
 
 
@@ -254,7 +263,7 @@ export class TableComponent implements OnInit, AfterViewInit  {
               itemId: $(this).attr("id"),
               itemIndex: itemIndex,
             }
-            // self.customField[itemIndex]['width'] = ui.size.width; 
+            // self.customField[itemIndex]['width'] = ui.size.width;
             console.log(body);
             self.http.post<any>(environment.api + "CustomField/fieldResizable", body, {
               headers: self.configService.headers(),
@@ -274,7 +283,7 @@ export class TableComponent implements OnInit, AfterViewInit  {
 
   calculationFooter() {
     let i = 0;
-
+    console.log('calculationFooter : detailOrigin | detail ', this.detailOrigin, this.detail);
     this.customField.forEach((el: any) => {
       let value = 0;
       this.detail.forEach((item: any) => {
@@ -288,16 +297,13 @@ export class TableComponent implements OnInit, AfterViewInit  {
         key: el['key'],
         iType: el['iType'],
         total: parseFloat(value.toFixed(2))
-
-
       }
       if (el['iType'] == 'number' || el['iType'] == 'formula') {
         this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2)));
       }
       // this.tableFooter.push(total);
       i++;
-    });
-    // console.log(this.detail);
+    }); 
   }
 
   httpCustomField() {
@@ -319,8 +325,8 @@ export class TableComponent implements OnInit, AfterViewInit  {
 
   onChild(newItem: any) {
     //console.log(this.detail[newItem.index]);
-    console.log("Saving...", this.waiting);
-    console.log("return from child ", newItem);
+    // console.log("Saving...", this.waiting);
+    //    console.log("return from child ", newItem);
 
     if (newItem['itype'] == 'note') {
       this.detailObject = newItem;
@@ -353,8 +359,8 @@ export class TableComponent implements OnInit, AfterViewInit  {
             }).subscribe(
               data => {
                 // self.customField = data['customField'];
-                // self.select = data['select']; 
-                self.httpJournalSelect();
+                // self.select = data['select'];
+                self.httpDetail(true);
               },
               e => {
                 console.log(e);
@@ -365,36 +371,63 @@ export class TableComponent implements OnInit, AfterViewInit  {
       });
     }
     else {
-      //let fx = "f" + newItem.customField.f;
+      console.log(newItem);
       let fx = "f" + newItem.customField.f as keyof DetailInterface;
-      this.detail[newItem.index][fx] = newItem.value;
+      /// this.detail[newItem.index][fx] = newItem.value;
 
+      console.log(fx, this.detailOrigin[newItem.index]);
 
-      if (this.waiting == false) {
-        this.waiting = true;
-        this.myTimeout = setTimeout(() => {
-          this.waiting = false;
-          this.loading = true;
-          const body = {
-            id: this.id,
-            newItem: newItem,
-          }
-          this.http.post<any>(environment.api + 'CustomField/updateData', body,
-            { headers: this.configService.headers() }
-          ).subscribe(
-            data => {
-              console.log(data);
-              this.loading = false;
-              this.reloadColumn(data['detail'][0]);
-              console.log("onSubmit Done");
-            },
-            e => {
-              console.log(e);
-            },
-          );
-
-        }, 500);
+      // if (this.waiting == false) {
+      //   this.waiting = true;
+      //   this.myTimeout = setTimeout(() => {
+      //     this.waiting = false;
+      //     this.loading = true;
+      const body = {
+        id: this.id,
+        newItem: newItem,
       }
+      this.http.post<any>(environment.api + 'CustomField/updateData', body,
+        { headers: this.configService.headers() }
+      ).subscribe(
+        data => {
+         // console.log('CustomField/updateData:', data);
+          let i = 0;  
+          this.detail.forEach(() => {
+          //  objIndex = this.detail[i].findIndex(((obj: { id: any; }) => obj.id == data['detail'][0].id));
+        //    console.log(i,  this.detail[i]['id'] == data['detail'][0].id );
+            if(  this.detail[i]['id'] == data['detail'][0].id ){
+              this.detail[i] = data['detail'][0];
+             // console.log(i, this.detail[i], data['detail'][0] );
+            }
+            if( this.detailOrigin[i]['id'] == data['detail'][0].id ){
+              this.detailOrigin[i] = data['detail'][0];
+            }
+           i++;
+          });
+        //  let objIndex = this.customFieldForm.findIndex(((obj: { id: any; }) => obj.id == x.id));
+
+
+       //   let index = 0;
+        //  this.detail[index] = data['detail'][0];
+
+
+
+          
+          this.calculationFooter()
+          // this.loading = false;
+          // this.reloadColumn(data['detail'][0]);
+          // console.log("onSubmit Done");
+        },
+        e => {
+          console.log(e);
+        },
+      );
+
+      //   }, 500);
+      // }
+
+
+
     }
   }
 
@@ -455,7 +488,7 @@ export class TableComponent implements OnInit, AfterViewInit  {
         data => {
           console.log(data);
           this.tools = false;
-          this.httpGet();
+          this.httpDetail();
         },
         e => {
           console.log(e);
@@ -568,30 +601,9 @@ export class TableComponent implements OnInit, AfterViewInit  {
   /**
    * SELECT POPUP / OPEN EDIT POPUP
    */
-  httpJournalSelect() {
-    this.http.get<any>(environment.api + "Tables/journal_select?id=" + this.id, {
-      headers: this.configService.headers(),
-    }).subscribe(
-      data => {
-
-        //console.log("httpJournalSelect", data);
-        // this.customField = data['customField'];
-        //console.log(this.detail, this.select);
-        //console.log(this.detailObject);
-        this.select = data['select'];
-        // if (this.detailObject.length !== 0) {
-        //   let objIndex = this.select[0].findIndex(((obj: { field: any; }) => obj.field == this.detailObject.select.field));
-        // this.detailObject.select = this.select[objIndex];
-        // console.log(this.detailObject.select, this.select);
-
-        // }
-
-      },
-      e => {
-        console.log(e);
-      }
-    )
-  }
+  //httpJournalSelect() {
+  //  this.httpDetail(true);
+  //}
 
   onUpdateSelect(data: any) {
     console.log(data);
@@ -614,8 +626,8 @@ export class TableComponent implements OnInit, AfterViewInit  {
     }).subscribe(
       data => {
         console.log(data);
-        this.httpJournalSelect();
-        // this.httpGet(true);
+       // this.httpJournalSelect();
+         this.httpDetail(true);
       },
       e => {
         console.log(e);
@@ -629,8 +641,8 @@ export class TableComponent implements OnInit, AfterViewInit  {
     }).subscribe(
       data => {
         this.detailObject.select.option = data['option'];
-        this.httpJournalSelect();
-        // this.httpGet(true);
+        //this.httpJournalSelect();
+         this.httpDetail(true);
         this.newSelect.value = "";
       },
       e => {
@@ -641,9 +653,9 @@ export class TableComponent implements OnInit, AfterViewInit  {
   /**
    * END :: SELECT POPUP / OPEN EDIT POPUP
    */
- 
 
-  // fnEdiable(row: number, column: number) { 
+
+  // fnEdiable(row: number, column: number) {
   //   let i = 0;
   //   for( i = 0; i < this.cell.length; i++ ){
   //     let n = 0;
@@ -652,13 +664,13 @@ export class TableComponent implements OnInit, AfterViewInit  {
   //     }
   //   }
   //   this.cell[row][column] = 1;
-    
+
   // }
 
   // fnCell(row: number, column: number) {
   //   return this.cell[row][column];
   // }
- 
+
   fnHide(n: number, index: number, item: any) {
     console.log(n, index);
     this.customField[index]['hide'] = n == 1 ? 0 : 1;
@@ -751,8 +763,8 @@ export class TableComponent implements OnInit, AfterViewInit  {
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log(data);
         this.resizableStatus = false;
-        if (data == 'httpGet') {
-          this.httpGet();
+        if (data == 'httpDetail') {
+          this.httpDetail();
         }
         else if (data == 'reload') {
           this.reload([]);
@@ -766,10 +778,10 @@ export class TableComponent implements OnInit, AfterViewInit  {
   }
 
   // fnDetailTotal(customField: any) {
-  //   let objIndex = this.tableFooter.findIndex(((obj: { key: any; }) => obj.key == customField.key)); 
+  //   let objIndex = this.tableFooter.findIndex(((obj: { key: any; }) => obj.key == customField.key));
   //   let value = customField.name;
   //   if(customField.iType == 'number' || customField.iType == 'formula'){
-  //      value = new Intl.NumberFormat('en-US').format(this.tableFooter[objIndex]['total']); 
+  //      value = new Intl.NumberFormat('en-US').format(this.tableFooter[objIndex]['total']);
   //   }
   //   return value ;
   // }
