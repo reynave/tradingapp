@@ -320,7 +320,9 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     )
   }
-
+  close(){
+    this.modalService.dismissAll();
+  }
   onChild(newItem: any) {
     //console.log(this.detail[newItem.index]);
     // console.log("Saving...", this.waiting);

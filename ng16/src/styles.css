@@ -113,7 +113,9 @@ a {
 .icon {
   height: 1rem;
 }
- 
+.sticky-bottom { 
+  z-index: 10 !important;
+}
 .tables-body {
   overflow-y: scroll;
   overflow-x: auto;

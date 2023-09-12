@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from 'src/app/service/config.service';
 import { environment } from 'src/environments/environment';
+import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-custom-field',

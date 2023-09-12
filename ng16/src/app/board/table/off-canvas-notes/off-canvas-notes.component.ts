@@ -22,7 +22,7 @@ export class OffCanvasNotesComponent implements OnInit {
   }
 
   close(){
-    this.activeOffcanvas.dismiss();
+    this.activeOffcanvas.close();
   }
 
   sendMessage() {

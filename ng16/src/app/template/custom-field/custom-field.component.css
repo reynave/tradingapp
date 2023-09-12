@@ -3,7 +3,7 @@
     display: inline-block;
     position: relative;
 }
-
+.datepicker{z-index:9999 !important}
 /* position the unit to the right of the wrapper */
 .customFieldArea::after {
     position: absolute;
@@ -11,7 +11,10 @@
     right: 0em;
     transition: all .05s ease-in-out;
 }
-
+.form-control:focus {
+    border-color: none;
+    box-shadow: none;
+}
 .customFieldArea:hover::after,
 .customFieldArea:focus-within::after {
     right: 0em;

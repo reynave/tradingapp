@@ -12,6 +12,6 @@ export class OffCanvasImagesComponent {
   ){}
 
   close(){
-    this.activeOffcanvas.dismiss();
+    this.activeOffcanvas.close();
   }
 }
