@@ -15,7 +15,7 @@ export class CustomFieldComponent implements OnInit {
   @Output() dateSelect = new EventEmitter<NgbDateStruct>();
   // @Input() itemSelect :any = [];
   @Output() newItemEvent = new EventEmitter<string>();
-
+  copyClipboard: boolean = false;
   env: any = environment;
   childItem: any;
   constructor(
@@ -136,7 +136,7 @@ export class CustomFieldComponent implements OnInit {
     return str.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  copyClipboard: boolean = false;
+
   copyInputMessage(inputElement: any) {
     inputElement.select();
     this.copyClipboard = true;
