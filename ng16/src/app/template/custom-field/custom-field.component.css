@@ -1,3 +1,9 @@
+input{
+    background: none;
+}
+input:focus{
+    background:none !important;
+}
 /* set the unit abbreviation for each unit class */
 .customFieldArea {
     display: inline-block;

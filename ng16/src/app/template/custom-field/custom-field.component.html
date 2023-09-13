@@ -13,17 +13,17 @@
 
 </div>
 
-<div *ngIf=" item['itype']=='date' || item['itype']=='time'">
-   
+<div *ngIf="item['itype']=='date'">
+  
     <div class="d-flex">
         <div>
-            <input class="form-control form-control-sm"
-            name="dp"  readonly
-            ngbDatepicker 
-            #d="ngbDatepicker"
-        />
+            <input type="text" class="p-1" name="dp" readonly [(ngModel)]="childItem['value']"
+                [placeholder]="formatDate(childItem['value'])" (ngModelChange)="emitToParent(childItem);" ngbDatepicker
+                #d="ngbDatepicker" /> 
+            <!-- {{childItem['value'] }}  |  {{childItem['value'].length > 6 ? true : false}} -->
+
         </div>
-        <div>
+        <div *ngIf="item['ilock']!=true">
             <button class="btn btn-sm bi bi-calendar3" (click)="d.toggle()" type="button"></button>
         </div>
         <!-- <div> {{item['index'] }}</div> -->
@@ -33,6 +33,27 @@
                 (keyup.enter)="customFieldText.blur()" (change)="emitToParent(childItem);"
                 [ngClass]="{'text-gray': item['itype'] == 'date' && !childItem['value']}">  
         </div> -->
+    </div>
+
+</div>
+
+
+<div *ngIf="item['itype']=='time'">
+    <div class="mx-2 " >  
+        <div class="d-flex justify-content-center"> 
+            <!-- <div style="width: 3rem;">
+                <input type="number"  class="p-1 text-center"  >
+            </div>
+            <div>:</div>
+            <div style="width: 3rem;">
+                <input type="number" class="p-1 text-center">
+            </div> -->
+
+            <input type="text" class="p-1 {{'text-'+childItem['customField']['textAlign']}}" maxlength="250"
+            [(ngModel)]="childItem['value']" #customFieldText [disabled]="item['ilock']===true"
+            (keyup.enter)="customFieldText.blur()" (change)="emitToParent(childItem);" placeholder="HH:MM"
+            [ngClass]="{'text-gray': item['itype'] == 'date' && !childItem['value']}">
+        </div>
     </div>
 
 </div>

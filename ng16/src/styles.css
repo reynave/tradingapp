@@ -163,7 +163,7 @@ a {
   left: 0px;
   top: 0px;
   z-index: 99;
-  width: 50px;
+  min-width: 80px;
   text-align: center;
 }
 

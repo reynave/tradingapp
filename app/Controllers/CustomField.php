@@ -65,13 +65,19 @@ class CustomField extends BaseController
             "post" => $post,
         ];
         if ($post) {
+            $value = $post['newItem']['value'];
+            if ($post['newItem']['itype'] == 'date') {
+                $value = $value['year'] . '-' . $value['month'] . '-' . $value['day'];
+            } else if ($post['newItem']['itype'] == 'time') {
+                $value = self::validateAndConvertTime($value);
+            }
+
 
             $this->db->table("journal_detail")->update([
-                "f" . $post['newItem']['customField']['f'] => $post['newItem']['value'],
+                "f" . $post['newItem']['customField']['f'] => $value,
                 "update_by" => model("Core")->accountId(),
                 "update_date" => date("Y-m-d H:i:s"),
             ], "id = '" . $post['newItem']['id'] . "' ");
-  
             $data = [
                 "error" => false,
                 "post" => $post,
@@ -81,6 +87,38 @@ class CustomField extends BaseController
 
         return $this->response->setJSON($data);
     }
+
+    function validateAndConvertTime($timeString)
+    {
+        if (strpos($timeString, ':') !== false) {
+
+
+            // Pecah string waktu menjadi jam dan menit
+            list($hour, $minute) = explode(':', $timeString);
+
+            // Validasi format jam dan menit
+            if (is_numeric($hour) && is_numeric($minute)) {
+                // Mengubah jam yang lebih dari 24 menjadi 24
+                $hour = ($hour >= 0 && $hour < 24) ? $hour : 24;
+
+                // Mengubah menit yang lebih dari 60 menjadi 00
+                $minute = ($minute >= 0 && $minute < 60) ? $minute : 0;
+
+                // Mengonversi jam dan menit ke dalam format dengan dua digit
+                $formattedHour = str_pad($hour, 2, '0', STR_PAD_LEFT);
+                $formattedMinute = str_pad($minute, 2, '0', STR_PAD_LEFT);
+
+                // Menggabungkan jam dan menit dalam format yang sesuai
+                $formattedTime = $formattedHour . ':' . $formattedMinute;
+                return $formattedTime;
+            } else {
+                // Mengembalikan null jika format tidak valid
+                return null;
+            }
+
+        }else return null;
+    }
+
 
     function insertSelect()
     {
@@ -321,7 +359,7 @@ class CustomField extends BaseController
         if ($post) {
             $this->db->table("journal_custom_field")->update([
                 "presence" => 0,
-            ],"id = '".$post['id']."'" );
+            ], "id = '" . $post['id'] . "'");
             $data = array(
                 "error" => false,
                 "post" => $post,
@@ -335,10 +373,10 @@ class CustomField extends BaseController
         $newId = $post['newItem']['id'];
         $journalId = model("Core")->select("journalId", "journal_detail", "id = '$newId' ");
 
-        $journalTable = model("Core")->journalTable($journalId, ''," AND  id = '$newId'  ");
+        $journalTable = model("Core")->journalTable($journalId, '', " AND  id = '$newId'  ");
         $tableViewOnly = model("TableViewOnly")->journalTable($journalId, '', " AND  id = '$newId'  ");
-        
-        for($i = 0; $i < count($journalTable['detail']); $i++){
+
+        for ($i = 0; $i < count($journalTable['detail']); $i++) {
             $journalTable['detail'][$i]['searchable'] = $tableViewOnly['detail'][$i];
         }
         return $journalTable['detail'];
@@ -358,7 +396,7 @@ class CustomField extends BaseController
                 "error" => false,
                 "evalDev" => $post['field']['evalDev'],
                 "resultData" => model("Core")->journalTableFormula($post['id'], $post['journalTableViewId'], $post['field']['evalDev'], 'f' . $post['field']['f']),
-                
+
             ];
         }
         return $this->response->setJSON($data);
@@ -374,8 +412,8 @@ class CustomField extends BaseController
         if ($post) {
             $this->db->table("journal_custom_field")->update([
                 "eval" => $post['field']['evalDev'],
-                "evalDev" => $post['field']['evalDev'], 
-            ]," id = ".$post['field']['id']);
+                "evalDev" => $post['field']['evalDev'],
+            ], " id = " . $post['field']['id']);
             $data = [
                 "post" => $post,
                 "error" => false,

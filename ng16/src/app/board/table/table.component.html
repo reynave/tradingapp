@@ -169,9 +169,14 @@
                                         <i class="bi bi-check-square-fill text-primary" *ngIf="isCheckBoxAll"
                                             (click)="checkBoxAll(false)"></i>
                                         <i class="bi bi-square" *ngIf="!isCheckBoxAll" (click)="checkBoxAll(true)"></i>
-                                    </div>
-                                </div>
 
+                                        <span class="px-1 text-end  d-inline-block" style="min-width: 30px;">
+                                            #
+                                        </span>
+                                    </div>
+                                  
+                                </div>
+                               
                                 <div class="order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index"
                                     [hidden]="n.hide=='1'">
                                     <div class="p-1 text-center orders resizable " [ngStyle]="{'width': n.width+'px'}"
@@ -182,7 +187,7 @@
                                             <button class="btn btn-sm btn-light py-0">
                                                 <img src="./assets/icon/formula-30.png" height="20px">
                                             </button>
-                                        </span>
+                                        </span> 
                                     </div>
                                 </div>
 
@@ -194,20 +199,11 @@
                                 <div class="d-flex tables-body-td ">
                                     <div class="floating-div bg-white border-start table-body-td-first">
                                         <div class="py-1 px-3 position-relative orders-left-fixed" >
-                                            <div class="table-sorting-area">
-                                                <!-- <div class="py-1 handle" data-id="{{row.id}}"
-                                                    *ngIf="row.ilock == '0'">
-                                                    <i class="bi bi-list "></i>
-                                                </div> -->
-                                                <!-- <div class="py-1 handle" *ngIf="row.ilock == '1'">
-                                                    <i class="bi bi-lock-fill"></i>
-                                                </div> -->
-
-                                                <div class="py-1 handle" data-id="{{row.id}}">
-                                                   
+                                            <div class="table-sorting-area"> 
+                                                <div class="py-1 handle" data-id="{{row.id}}"> 
                                                     <span *ngIf="row.ilock != '1'">  <i class="bi bi-list "></i> </span>
                                                     <span *ngIf="row.ilock == '1'"> <i class="bi bi-lock-fill"></i></span>
-                                                </div>
+                                                </div>  
                                             </div>
 
                                             <span *ngIf="row.checkbox===true"
@@ -218,7 +214,11 @@
                                                 (click)="row.checkbox=true;fnTools();">
                                                 <i class="bi bi-square"></i>
                                             </span>
+                                            <span class="px-1 text-end  d-inline-block" style="min-width: 30px;">
+                                                {{i+1}}
+                                            </span>
                                         </div>
+                                       
                                     </div>
 
                                 
@@ -241,16 +241,16 @@
                                         <i class="bi bi-file-spreadsheet text-white"></i>
                                     </div>
                                 </div>
-                                <div class=" order-{{n.sorting}} bg-light border-bottom "
-                                    *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
+                                <div class=" order-{{n.sorting}} bg-light border-bottom "  *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
                                     <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
                                         <!-- {{fnDetailTotal(n) }} -->
-                                        {{n.total}}
+                                        {{n.total}} 
                                     </div>
                                 </div>
                             </div>
 
                         </div>
+                       
 
                     </div>
                 </div>
@@ -259,8 +259,7 @@
         </div>
 
     </div>
-</div> 
-
+</div>  
  
 <ng-template #contentEditSelect let-modal>
     <div class="modal-header">

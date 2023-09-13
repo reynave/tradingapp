@@ -135,7 +135,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
-        this.customFieldKey = data['customFieldKey'];
+        //this.customFieldKey = data['customFieldKey'];
         this.detail = data['detail'];
         this.detailOrigin = data['detail'];
 
@@ -284,22 +284,27 @@ export class TableComponent implements OnInit, AfterViewInit {
     console.log('calculationFooter : detailOrigin | detail ', this.detailOrigin, this.detail);
     this.customField.forEach((el: any) => {
       let value = 0;
+      let select  = "";
       this.detail.forEach((item: any) => {
         if (el['iType'] == 'number' || el['iType'] == 'formula') {
           if (item[el['key']] != "") {
             value += parseFloat(item[el['key']]);
           }
         }
-      });
-      const total = {
-        key: el['key'],
-        iType: el['iType'],
-        total: parseFloat(value.toFixed(2))
-      }
+        if (el['iType'] == 'select') {
+          select = "SOON";
+        }
+         
+      }); 
+
+
       if (el['iType'] == 'number' || el['iType'] == 'formula') {
         this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2)));
       }
-      // this.tableFooter.push(total);
+      if (el['iType'] == 'select' ) {
+        this.customField[i]['total'] = "SOON";
+      }
+     
       i++;
     }); 
   }
@@ -379,26 +384,21 @@ export class TableComponent implements OnInit, AfterViewInit {
       });
     }
     else {
-      console.log(newItem);
-      let fx = "f" + newItem.customField.f as keyof DetailInterface;
-      /// this.detail[newItem.index][fx] = newItem.value;
-
+     
+      let fx = "f" + newItem.customField.f as keyof DetailInterface; 
       console.log(fx, this.detailOrigin[newItem.index]);
-
-      // if (this.waiting == false) {
-      //   this.waiting = true;
-      //   this.myTimeout = setTimeout(() => {
-      //     this.waiting = false;
-      //     this.loading = true;
+ 
       const body = {
         id: this.id,
         newItem: newItem,
+        fx : fx,
       }
+      console.log('onChild',body);
       this.http.post<any>(environment.api + 'CustomField/updateData', body,
         { headers: this.configService.headers() }
       ).subscribe(
         data => {
-         // console.log('CustomField/updateData:', data);
+          
           let i = 0;  
           this.detail.forEach(() => {
           //  objIndex = this.detail[i].findIndex(((obj: { id: any; }) => obj.id == data['detail'][0].id));
@@ -411,31 +411,15 @@ export class TableComponent implements OnInit, AfterViewInit {
               this.detailOrigin[i] = data['detail'][0];
             }
            i++;
-          });
-        //  let objIndex = this.customFieldForm.findIndex(((obj: { id: any; }) => obj.id == x.id));
-
-
-       //   let index = 0;
-        //  this.detail[index] = data['detail'][0];
-
-
-
-          
+          }); 
           this.calculationFooter()
-          // this.loading = false;
-          // this.reloadColumn(data['detail'][0]);
-          // console.log("onSubmit Done");
+        
         },
         e => {
           console.log(e);
         },
       );
-
-      //   }, 500);
-      // }
-
-
-
+ 
     }
   }
 

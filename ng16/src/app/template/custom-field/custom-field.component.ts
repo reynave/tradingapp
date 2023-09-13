@@ -8,7 +8,7 @@ import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstra
 @Component({
   selector: 'app-custom-field',
   templateUrl: './custom-field.component.html',
-  styleUrls: ['./custom-field.component.css'], 
+  styleUrls: ['./custom-field.component.css'],
 })
 export class CustomFieldComponent implements OnInit {
   @Input() item: any = [];
@@ -33,7 +33,7 @@ export class CustomFieldComponent implements OnInit {
 
     let objIndex = this.childItem.select.option.findIndex(((obj: { id: string; }) => obj.id == id));
     if (objIndex > -1) {
-      data =  this.childItem.select.option[objIndex]['value'];
+      data = this.childItem.select.option[objIndex]['value'];
     }
     else {
       if (id !== "") {
@@ -45,7 +45,7 @@ export class CustomFieldComponent implements OnInit {
         }
 
       }
-     
+
     }
     return data;
   }
@@ -59,7 +59,7 @@ export class CustomFieldComponent implements OnInit {
     if (objIndex > -1) {
       pic = this.childItem.select.users[objIndex]['picture'];
       value = this.childItem.select.users[objIndex]['value'];
-      data =  '<img src="' + pic + '" class="rounded-circle border me-1" height="25" alt="' + value + '" title="' + value + '">';
+      data = '<img src="' + pic + '" class="rounded-circle border me-1" height="25" alt="' + value + '" title="' + value + '">';
     }
     else {
       if (accountId !== "") {
@@ -69,17 +69,17 @@ export class CustomFieldComponent implements OnInit {
           data = this.childItem.select.usersDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
           //   data = objIndexHistory;
         }
-      }else{
+      } else {
         data = '<img src="./assets/icon/user-50.png" height="25">';
       }
-   
+
     }
     return data;
   }
 
   emitToParent(newValue: string) {
-//    console.log('emitToParent',this.childItem);
-     this.newItemEvent.emit(this.childItem);
+    //    console.log('emitToParent',this.childItem);
+    this.newItemEvent.emit(this.childItem);
   }
   emitModalEditSelect() {
     this.childItem.itype = "editSelect";
@@ -146,5 +146,44 @@ export class CustomFieldComponent implements OnInit {
     setTimeout(() => {
       this.copyClipboard = false;
     }, 10000);
+  }
+  formatHour(variable: any){
+    
+  }
+  formatDate(variable: any) {
+    if (typeof variable === 'string') {
+      var dateParts = variable.split('-');
+      var year = dateParts[0];
+      var month = dateParts[1];
+      var day = dateParts[2];
+
+      // Memastikan bulan memiliki dua digit
+      if (month.length === 1) {
+        month = '0' + month;
+      }
+      if (day.length === 1) {
+        day = '0' + day;
+      }
+
+
+      // Menggabungkan kembali tahun, bulan, dan hari dalam format yang diinginkan
+      var formattedDate = year + '-' + month + '-' + day;
+      return formattedDate; 
+    } else if (Array.isArray(variable)) {
+      return 'Array';
+    } else {
+      return 'Not String or Array';
+    }
+  }
+
+
+
+  dateFormat(val: any) {
+    console.log(val);
+    return val;
+  }
+
+  log($e: any) {
+    console.log($e);
   }
 }
