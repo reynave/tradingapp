@@ -110,11 +110,11 @@ class Tables extends BaseController
 
             $select = [];
             foreach ($customFieldNo as $rec) {
-                $option = "SELECT *
+                $option = "SELECT *, 0 as 'total'
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 1 order by sorting ASC, id DESC";
 
-                $optionDelete = "SELECT *
+                $optionDelete = "SELECT *, 0 as 'total'
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 0 order by sorting ASC, id DESC";
 

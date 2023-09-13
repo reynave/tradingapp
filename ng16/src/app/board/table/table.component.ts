@@ -281,10 +281,21 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   calculationFooter() {
     let i = 0;
+    let select : any =  [];
     console.log('calculationFooter : detailOrigin | detail ', this.detailOrigin, this.detail);
+    for(let x = 0 ; x < this.select.length ; x++){
+      let data = {
+        fn : this.select[x].field,
+        option : this.select[x].option
+      }
+      select.push(data);
+    }
+    const index = select[2].option.findIndex((el: { id: any; }) => el.id === '49');
+    console.log(index);
+
     this.customField.forEach((el: any) => {
       let value = 0;
-      let select  = "";
+
       this.detail.forEach((item: any) => {
         if (el['iType'] == 'number' || el['iType'] == 'formula') {
           if (item[el['key']] != "") {
@@ -292,7 +303,14 @@ export class TableComponent implements OnInit, AfterViewInit {
           }
         }
         if (el['iType'] == 'select') {
-          select = "SOON";
+          const fnIndex = select.findIndex((rec: { fn: any; }) => rec.fn === el['key'] );
+          console.log('fnIndex : '+fnIndex);
+          const OptIndex = select[fnIndex].option.findIndex((rec: { id: any; }) => rec.id === item[el['key']] );
+          console.log('index option: '+OptIndex);
+          if(OptIndex > -1){
+            select[fnIndex].option[OptIndex]['total'] = parseInt(select[fnIndex].option[OptIndex]['total'])+ 1;
+          }
+         
         }
          
       }); 
@@ -307,6 +325,7 @@ export class TableComponent implements OnInit, AfterViewInit {
      
       i++;
     }); 
+    console.log("select calculation", select);
   }
 
   httpCustomField() {
