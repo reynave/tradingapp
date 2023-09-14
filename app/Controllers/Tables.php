@@ -179,7 +179,7 @@ class Tables extends BaseController
                 "id" => $id,
                 "backgroundColorOption" => $backgroundColorOption,
                 "select" => $select, 
-                "customFieldKey" => $journalTable['customFieldKey'],
+                //"customFieldKey" => $journalTable['customFieldKey'],
                 "customField" => $journalTable['journal_custom_field'],
                 "detail" => $journalTable['detail'],
                

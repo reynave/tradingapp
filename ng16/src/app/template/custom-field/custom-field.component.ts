@@ -151,7 +151,10 @@ export class CustomFieldComponent implements OnInit {
     
   }
   formatDate(variable: any) {
-    if (typeof variable === 'string') {
+    if(variable == ''){
+      return '';
+    }
+    else if (typeof variable === 'string') {
       var dateParts = variable.split('-');
       var year = dateParts[0];
       var month = dateParts[1];
@@ -169,9 +172,11 @@ export class CustomFieldComponent implements OnInit {
       // Menggabungkan kembali tahun, bulan, dan hari dalam format yang diinginkan
       var formattedDate = year + '-' + month + '-' + day;
       return formattedDate; 
-    } else if (Array.isArray(variable)) {
+    } 
+    else if (Array.isArray(variable)) {
       return 'Array';
-    } else {
+    } 
+    else {
       return 'Not String or Array';
     }
   }
