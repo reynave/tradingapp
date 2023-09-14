@@ -76,5 +76,24 @@ class Home extends BaseController
     function user($username) {
         echo 'masuk '.$username;
     }
+
+    function eval() {
+        echo "ok"."\n";
+
+        $evaluateFormula = function ($data, $formula) {
+            extract($data);
+            $result = @eval("return $formula;"); 
+            return ($result !== false) ? $result : null;
+        };
+
+        $data = array("a" => 42, "b" => 12, "c" => 5); 
+        $result = $evaluateFormula($data, '$data["a"] + $data["d"]'); 
+
+        if ($result !== null) {
+            echo "Hasil: " . $result . "\n";
+        } else {
+            echo "Error: Formula tidak valid.\n";
+        }
    
+    } 
 }

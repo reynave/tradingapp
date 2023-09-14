@@ -173,7 +173,10 @@ class Core extends Model
 
         $evaluateFormula = function ($data, $formula) {
             extract($data);
-            return eval("return $formula;");
+            $formula = preg_replace("/(SELECT|INSERT|UPDATE|DELETE|ALTER|DROP)/i", "", $formula);
+            
+            $result = @eval("return $formula;"); 
+            return ($result !== false) ? $result : null;
         };
 
         $index = 0;
