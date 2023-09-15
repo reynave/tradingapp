@@ -858,6 +858,9 @@ export class TableComponent implements OnInit, AfterViewInit {
 
       });
     }
+    if (componentName == 'openArchived') {
+
+    }
   }
 
   // fnDetailTotal(customField: any) {

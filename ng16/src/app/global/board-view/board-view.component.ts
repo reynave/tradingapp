@@ -49,6 +49,7 @@ export class BoardViewComponent implements OnInit {
 
         if (data['action'] === 'reloadTableVIew') {
           $('.divHiden').hide();
+          console.log('carouselx ', $('.carouselx'));
           $('.carouselx').slick('unslick');
           this.httpGet();
         }
@@ -75,42 +76,45 @@ export class BoardViewComponent implements OnInit {
       }
     }).subscribe(
       data => {
-
+        console.log('httpGet carouselx ', $('.carouselx'));
         this.items = data['items'];
         this.journalAccess = data['journal_access'];
         localStorage.setItem(this.id, JSON.stringify(data['items']));
-
-        $(document).ready(function () {
-          $('.divHiden').show();
-          $('.carouselx').slick({
-            slidesToShow: 9,
-            slidesToScroll: 3,
-            variableWidth: true,
-            centerMode: false,
-            infinite: false,
-            responsive: [
-              {
-                breakpoint: 768,
-                settings: {
-                  slidesToShow: 3
-                }
-              },
-              {
-                breakpoint: 480,
-                settings: {
-                  slidesToShow: 1
-                }
-              }
-            ]
-          });
-
-        });
-
+        this.fnIniSlick();
+     
       },
       e => {
         console.log(e);
       }
     )
+  }
+
+  fnIniSlick(){
+
+    $(document).ready(function () {
+      $('.divHiden').show();
+      $('.carouselx').slick({
+        slidesToShow: 9,
+        slidesToScroll: 3,
+        variableWidth: true,
+        centerMode: false,
+        infinite: false,
+        responsive: [
+          {
+            breakpoint: 768,
+            settings: {
+              slidesToShow: 3
+            }
+          },
+          {
+            breakpoint: 480,
+            settings: {
+              slidesToShow: 1
+            }
+          }
+        ]
+      }); 
+    });
   }
 
   goToView(x: any) {

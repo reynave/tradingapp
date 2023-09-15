@@ -1,0 +1,45 @@
+{
+    "version":"1.0.1",
+    "field" :  [
+        {
+            "f":1,
+            "name": "Order date",
+            "iType" : "date"
+        },
+        {
+            "f":2,
+            "name": "Order Time",
+            "iType" : "time"
+        },
+        {
+            "f":3,
+            "name": "Market",
+            "iType" : "select"
+        },
+        {
+            "f":4,
+            "name": "Stop Lost",
+            "iType" : "number",
+            "suffix" : "pip" 
+        },
+        {
+            "f":5,
+            "name": "Risk Rasio",
+            "iType" : "number"
+        },
+        {
+            "f":6,
+            "name": "Take Profit",
+            "iType" : "formula",
+            "eval" : "$f4 * $f5",
+            "suffix" : "pip" 
+        },
+        {
+            "f":7,
+            "name": "Percent",
+            "iType" : "formula",
+            "eval" : "$f5",
+            "suffix" : "$" 
+        }
+    ]
+}

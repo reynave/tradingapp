@@ -3,7 +3,7 @@
         <div *ngFor="let x of items; let i = index" class="minWidth "> 
             <a class="btn btn-sm ps-0 {{i> 0 ? 'pe-4':''}} mx-2 " [ngClass]="{'btn-active': x.id == journalTableViewId}" (click)="goToView(x);">
                 <i *ngIf="x.ilock == '1'" class="bi bi-house"></i>
-                {{x.name}}
+                {{x.name}}  <span *ngIf="x.share == '0' "><i class="bi bi-eye-slash-fill"></i></span>
             </a>
             <div class="minWidth_menu"> 
                 <div class="btn-group pe-2" ngbDropdown container="body" role="group" [hidden]="x.ilock == '1'"
@@ -25,10 +25,8 @@
                                         <span [ngClass]="{'text-gray': x.share == '0'}">Share</span>
                                     </div>
                                     <div class="col-2">
-                                        <span *ngIf="x.share == '1'" (click)="x.share = '0'"><i
-                                                class="bi bi-check-square"></i></span>
-                                        <span *ngIf="x.share != '1'" (click)="x.share = '1'"><i
-                                                class="bi bi-square"></i></span>
+                                        <span *ngIf="x.share == '1'" (click)="x.share = '0'"><i class="bi bi-check-square"></i></span>
+                                        <span *ngIf="x.share != '1'" (click)="x.share = '1'"><i class="bi bi-square"></i></span>
                                     </div>
                                 </div>
                             </div>

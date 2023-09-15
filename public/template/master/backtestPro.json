@@ -3,11 +3,16 @@
     "field" :  [
         {
             "f":1,
-            "name": "number A",
-            "iType" : "number"
+            "name": "Order date",
+            "iType" : "date"
         },
         {
             "f":2,
+            "name": "Order Time",
+            "iType" : "time"
+        },
+        {
+            "f":3,
             "name": "number B",
             "iType" : "number"
         },
