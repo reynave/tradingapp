@@ -33,6 +33,13 @@ import { WidgetInviteComponent } from './global/widget-invite/widget-invite.comp
 import { TablePrintableComponent } from './board/table-printable/table-printable.component';
 import { OffCanvasNotesComponent } from './board/table/off-canvas-notes/off-canvas-notes.component';
 import { OffCanvasImagesComponent } from './board/table/off-canvas-images/off-canvas-images.component';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
+
+const config: SocketIoConfig = { 
+  url: environment.socket_url, 
+  options: { transports: ['websocket'] } 
+};
 
 @NgModule({
   declarations: [
@@ -70,7 +77,8 @@ import { OffCanvasImagesComponent } from './board/table/off-canvas-images/off-ca
     GoogleChartsModule,
     EditorModule,
     NgbDatepickerModule,
-    ClipboardModule 
+    ClipboardModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [],
   bootstrap: [AppComponent]

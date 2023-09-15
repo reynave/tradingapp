@@ -9,6 +9,7 @@ import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/cus
 import { DetailInterface } from './table-interface';
 import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component';
 import { OffCanvasImagesComponent } from './off-canvas-images/off-canvas-images.component';
+import { SocketService } from 'src/app/service/socket.service';
 declare var $: any;
 
 export class NewSelect {
@@ -34,7 +35,7 @@ export class NewCustomField {
   styleUrls: ['./table.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TableComponent implements OnInit, AfterViewInit { 
+export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild('contentEditSelect') contentEditSelect: any;
   prod = environment.production;
   fields: any = [];
@@ -65,42 +66,105 @@ export class TableComponent implements OnInit, AfterViewInit {
   newSelect = new NewSelect("", "", "", "#393737");
   backgroundColorOption: any = [];
   archives: number = 0;
-  //tableFooter: any = [];
+  keyword: string = '';
   customFieldKey: any = [];
   users: any = [];
   journalAccess: any = [];
   api: string = environment.api;
-  constructor( 
+  constructor(
     private http: HttpClient,
     public functionsService: FunctionsService,
     private configService: ConfigService,
     private modalService: NgbModal,
-    private ativatedRoute: ActivatedRoute, 
+    private ativatedRoute: ActivatedRoute,
     private offcanvasService: NgbOffcanvas,
+    private socketService: SocketService
   ) { }
 
+  private _docSub: any;
   ngOnInit(): void {
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
     this.httpHeader();
-
-    //this.httpJournalSelect();
-    // setTimeout(() =>{
     this.httpDetail(true);
-    // },1000);
+    this._docSub = this.socketService.getMessage().subscribe(
+      (data: { [x: string]: any; }) => {
+        console.log(data);
+
+        if (data['action'] === 'updateRow') {
+          const index = this.detail.findIndex((rec: { id: string; }) => rec.id === data['msg']['id']);
+          this.detail[index] = data['msg'];
+          this.calculationFooter()
+        }
+
+        if (data['action'] === 'delete') {
+          data['msg'].forEach((el: { [x: string]: string; }) => {
+            var objIndex = this.detail.findIndex(((obj: { id: string; }) => obj.id == el['id']));
+            this.detail.splice(objIndex, 1);
+          });
+          this.calculationFooter()
+        }
+
+        if (data['action'] === 'duplicate') {
+          this.httpDetail();
+        }
+        if (data['action'] == 'lock') {
+          data['msg'].forEach((el: { [x: string]: any; }) => {
+            var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
+            this.detail[objIndex]['ilock'] = "1";
+          });
+        }
+
+        if (data['action'] == 'unlock') {
+          data['msg'].forEach((el: { [x: string]: any; }) => {
+            var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
+            this.detail[objIndex]['ilock'] = "0";
+          });
+        }
+
+        if (data['action'] == 'archives') {
+          data['msg'].forEach((el: { [x: string]: any; }) => {
+            var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
+            this.detail[objIndex]['archives'] = "1";
+            this.archives++;
+          });
+          this.calculationFooter()
+        }
+
+        if (data['action'] == 'sorting') {
+          this.sortByOrder(data['msg']);
+        }
+
+        if (data['action'] == 'jqueryResizable') { 
+          let itemIndex = data['msg']['itemIndex']
+          this.customField[itemIndex]['width'] = data['msg']['width'];
+        }
+ 
+        if (data['action'] == 'reload') { 
+          this.reload([]); 
+        }
+
+      }
+    );
+  }
+  ngOnDestroy() {
+    this._docSub.unsubscribe();
   }
 
   reload(newItem: any) {
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
     this.startUpTable = false;
-    console.log(newItem);
     if (newItem['id']) {
       this.journalTableViewId = newItem['id'];
-    } 
+    }
+    // const msg = {
+    //   sender: localStorage.getItem("address.mirrel.com"), 
+    //   action: "RELOAD",
+    // }
+    // this.socketService.sendMessage(msg);
     this.httpHeader();
     this.httpDetail(true);
-   // this.httpJournalSelect();
   }
 
   httpHeader() {
@@ -165,9 +229,14 @@ export class TableComponent implements OnInit, AfterViewInit {
                 headers: self.configService.headers(),
               }).subscribe(
                 data => {
-                  //self.httpDetail();
-                  console.log(data);
-                  self.sortByOrder(order);
+                  //self.sortByOrder(order);
+                  const msg = {
+                    sender: localStorage.getItem("address.mirrel.com"),
+                    msg: order,
+                    action: 'sorting',
+                  }
+                  self.socketService.sendMessage(msg);
+
                 },
                 e => {
                   console.log(e);
@@ -185,17 +254,16 @@ export class TableComponent implements OnInit, AfterViewInit {
     )
   }
 
-  getChange(){
+  getChange() {
     console.log(this.detail);
   }
 
-  keyword: string = '';
-   
+
   onSearchChange() {
-   
-    if (!this.keyword ) {
+
+    if (!this.keyword) {
       this.detail = this.detailOrigin;
-     
+
     } else {
       this.detail = this.detailOrigin.filter((item: { searchable: string; }) => {
         const matchItem = item.searchable.toLowerCase().includes(this.keyword.toLowerCase());
@@ -204,6 +272,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
     this.calculationFooter();
   }
+
   ngAfterViewInit() {
     console.log("ngAfterViewInit");
   }
@@ -261,6 +330,19 @@ export class TableComponent implements OnInit, AfterViewInit {
               itemId: $(this).attr("id"),
               itemIndex: itemIndex,
             }
+
+            const msg = {
+              sender: localStorage.getItem("address.mirrel.com"),
+              msg: {
+                width: ui.size.width,
+                itemId: $(this).attr("id"),
+                itemIndex: itemIndex,
+              },
+              action: 'jqueryResizable',
+            }
+            self.socketService.sendMessage(msg);
+
+
             // self.customField[itemIndex]['width'] = ui.size.width;
             console.log(body);
             self.http.post<any>(environment.api + "CustomField/fieldResizable", body, {
@@ -281,17 +363,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   calculationFooter() {
     let i = 0;
-    let select : any =  [];
-    console.log('calculationFooter : detailOrigin | detail ', this.detailOrigin, this.detail);
-    for(let x = 0 ; x < this.select.length ; x++){
-      let data = {
-        fn : this.select[x].field,
-        option : this.select[x].option
-      }
-      select.push(data);
-    }
-    const index = select[2].option.findIndex((el: { id: any; }) => el.id === '49');
-    console.log(index);
+    let select: any = [];
 
     this.customField.forEach((el: any) => {
       let value = 0;
@@ -303,29 +375,26 @@ export class TableComponent implements OnInit, AfterViewInit {
           }
         }
         if (el['iType'] == 'select') {
-          const fnIndex = select.findIndex((rec: { fn: any; }) => rec.fn === el['key'] );
-          console.log('fnIndex : '+fnIndex);
-          const OptIndex = select[fnIndex].option.findIndex((rec: { id: any; }) => rec.id === item[el['key']] );
-          console.log('index option: '+OptIndex);
-          if(OptIndex > -1){
-            select[fnIndex].option[OptIndex]['total'] = parseInt(select[fnIndex].option[OptIndex]['total'])+ 1;
-          }
-         
+          // const fnIndex = select.findIndex((rec: { fn: any; }) => rec.fn === el['key'] ); 
+          // const OptIndex = select[fnIndex].option.findIndex((rec: { id: any; }) => rec.id === item[el['key']] );
+          // if(OptIndex > -1){
+          //   select[fnIndex].option[OptIndex]['total'] = parseInt(select[fnIndex].option[OptIndex]['total'])+ 1;
+          // }
+
         }
-         
-      }); 
+
+      });
 
 
       if (el['iType'] == 'number' || el['iType'] == 'formula') {
         this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2)));
       }
-      if (el['iType'] == 'select' ) {
+      if (el['iType'] == 'select') {
         this.customField[i]['total'] = "SOON";
       }
-     
       i++;
-    }); 
-    console.log("select calculation", select);
+    });
+    console.log("calculation DONE");
   }
 
   httpCustomField() {
@@ -344,25 +413,24 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     )
   }
-  close(){
+
+  close() {
     this.modalService.dismissAll();
   }
+
   onChild(newItem: any) {
-    //console.log(this.detail[newItem.index]);
-    // console.log("Saving...", this.waiting);
-    //    console.log("return from child ", newItem);
 
     if (newItem['itype'] == 'note') {
-      this.detailObject = newItem; 
-      const offcanvasRef = this.offcanvasService.open(OffCanvasNotesComponent,{ position: 'end', panelClass: 'details-panel', });
+      this.detailObject = newItem;
+      const offcanvasRef = this.offcanvasService.open(OffCanvasNotesComponent, { position: 'end', panelClass: 'details-panel', });
       offcanvasRef.componentInstance.name = 'World';
-  
+
     }
-    else  if (newItem['itype'] == 'image') {
-      this.detailObject = newItem; 
-      const offcanvasRef = this.offcanvasService.open(OffCanvasImagesComponent,{ position: 'end', panelClass: 'details-panel', });
+    else if (newItem['itype'] == 'image') {
+      this.detailObject = newItem;
+      const offcanvasRef = this.offcanvasService.open(OffCanvasImagesComponent, { position: 'end', panelClass: 'details-panel', });
       offcanvasRef.componentInstance.name = 'World';
-  
+
     }
     else if (newItem['itype'] == 'editSelect') {
       this.detailObject = newItem;
@@ -403,42 +471,46 @@ export class TableComponent implements OnInit, AfterViewInit {
       });
     }
     else {
-     
-      let fx = "f" + newItem.customField.f as keyof DetailInterface; 
+
+      let fx = "f" + newItem.customField.f as keyof DetailInterface;
       console.log(fx, this.detailOrigin[newItem.index]);
- 
+
       const body = {
         id: this.id,
         newItem: newItem,
-        fx : fx,
+        fx: fx,
       }
-      console.log('onChild',body);
+      console.log('onChild', body);
+
+
       this.http.post<any>(environment.api + 'CustomField/updateData', body,
         { headers: this.configService.headers() }
       ).subscribe(
         data => {
-          
-          let i = 0;  
-          this.detail.forEach(() => {
-          //  objIndex = this.detail[i].findIndex(((obj: { id: any; }) => obj.id == data['detail'][0].id));
-        //    console.log(i,  this.detail[i]['id'] == data['detail'][0].id );
-            if(  this.detail[i]['id'] == data['detail'][0].id ){
-              this.detail[i] = data['detail'][0];
-             // console.log(i, this.detail[i], data['detail'][0] );
-            }
-            if( this.detailOrigin[i]['id'] == data['detail'][0].id ){
-              this.detailOrigin[i] = data['detail'][0];
-            }
-           i++;
-          }); 
-          this.calculationFooter()
-        
+          console.log("CustomField/updateData ", data);
+          // let i = 0;
+          // this.detail.forEach(() => {
+          //   if (this.detail[i]['id'] == data['detail'][0].id) {
+          //     this.detail[i] = data['detail'][0];
+          //   }
+          //   if (this.detailOrigin[i]['id'] == data['detail'][0].id) {
+          //     this.detailOrigin[i] = data['detail'][0];
+          //   }
+          //   i++;
+          // });  
+          const msg = {
+            sender: localStorage.getItem("address.mirrel.com"),
+            msg: data['detail'][0],
+            action: 'updateRow',
+          }
+          this.socketService.sendMessage(msg);
+
         },
         e => {
           console.log(e);
         },
       );
- 
+
     }
   }
 
@@ -469,22 +541,27 @@ export class TableComponent implements OnInit, AfterViewInit {
         detail.push(temp);
       }
     }
+
+
+    const msg = {
+      sender: localStorage.getItem("address.mirrel.com"),
+      msg: detail,
+      action: action,
+    }
+    this.socketService.sendMessage(msg);
+
     const body = {
       detail: detail,
     }
-
+    this.loading = true;
     if (action == 'delete') {
       this.tools = false;
-      detail.forEach(el => {
-        var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
-        this.detail.splice(objIndex, 1);
-      });
       this.http.post<any>(environment.api + "Tables/deleteTask", body, {
         headers: this.configService.headers(),
       }).subscribe(
         data => {
           console.log(data);
-
+          this.loading = false;
         },
         e => {
           console.log(e);
@@ -493,13 +570,13 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
 
     if (action == 'duplicate') {
+      this.tools = false;
       this.http.post<any>(environment.api + "Tables/duplicateTask", body, {
         headers: this.configService.headers(),
       }).subscribe(
         data => {
           console.log(data);
-          this.tools = false;
-          this.httpDetail();
+          this.loading = false;
         },
         e => {
           console.log(e);
@@ -517,6 +594,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       }).subscribe(
         data => {
           console.log(data);
+          this.loading = false;
           this.checkBoxAll(false);
         },
         e => {
@@ -535,6 +613,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       }).subscribe(
         data => {
           console.log(data);
+          this.loading = false;
           this.checkBoxAll(false);
         },
         e => {
@@ -554,6 +633,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       }).subscribe(
         data => {
           console.log(data);
+          this.loading = false;
           this.checkBoxAll(false);
         },
         e => {
@@ -561,6 +641,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         }
       )
     }
+
 
   }
 
@@ -637,8 +718,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     }).subscribe(
       data => {
         console.log(data);
-       // this.httpJournalSelect();
-         this.httpDetail(true);
+        // this.httpJournalSelect();
+        this.httpDetail(true);
       },
       e => {
         console.log(e);
@@ -653,7 +734,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       data => {
         this.detailObject.select.option = data['option'];
         //this.httpJournalSelect();
-         this.httpDetail(true);
+        this.httpDetail(true);
         this.newSelect.value = "";
       },
       e => {
@@ -703,7 +784,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     )
   }
 
- 
+
 
   objItem(customField: any, detail: any, index: number) {
 

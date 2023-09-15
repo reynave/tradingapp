@@ -1,12 +1,13 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
-import { FunctionsService } from 'src/app/service/functions.service'; 
-import { ActivatedRoute, Router } from '@angular/router'; 
-import { Title } from '@angular/platform-browser';  
+import { FunctionsService } from 'src/app/service/functions.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { ShareBoardComponent } from 'src/app/template/share-board/share-board.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap'; 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SocketService } from 'src/app/service/socket.service';
 
 export class Model {
   constructor(
@@ -17,7 +18,7 @@ export class Model {
     public backgroundColor: string,
 
   ) { }
-} 
+}
 
 @Component({
   selector: 'app-board-title',
@@ -25,53 +26,62 @@ export class Model {
   styleUrls: ['./board-title.component.css']
 })
 export class BoardTitleComponent implements OnInit {
-   
+
   items: any = [];
   journal: any = [];
-  item = new Model("", 0, "", "", ""); 
+  item = new Model("", 0, "", "", "");
   id: string = "";
-  journalTableViewId: string = ""; 
+  journalTableViewId: string = "";
   waiting: boolean = false;
-  loading: boolean = false; 
-  myTimeout: any;   
-  permission: any = []; 
+  loading: boolean = false;
+  permission: any = [];
   backgroundColorOption: any = [];
-  
+  private _docSub: any;
   constructor(
     private titleService: Title,
     private http: HttpClient,
     public functionsService: FunctionsService,
-    private configService: ConfigService, 
-    private ativatedRoute: ActivatedRoute, 
-    private modalService: NgbModal
+    private configService: ConfigService,
+    private ativatedRoute: ActivatedRoute,
+    private modalService: NgbModal,
+    private socketService: SocketService
   ) { }
-  
-  ngOnInit()  {
+
+  ngOnInit() {
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
-   
+
     this.httpHeader();
+    this._docSub = this.socketService.getMessage().subscribe(
+      (data: { [x: string]: any; }) => {
+        console.log(data);
+
+        if (data['action'] === 'journalTitle') {
+          this.httpHeader();
+        }
+
+      }
+    );
   }
 
   httpHeader() {
-    this.loading=true;
+    this.loading = true;
     this.http.get<any>(environment.api + "Tables/boardTitle", {
       headers: this.configService.headers(),
       params: {
-        id : this.id
+        id: this.id
       }
     }).subscribe(
       data => {
-     
-        this.journal = data['item']; 
+        this.journal = data['item'];
         this.titleService.setTitle(data['item']['name']);
         this.item.name = data['item']['name'];
         this.item.permissionId = data['item']['permissionId'];
-        this.permission = data['permission']; 
+        this.permission = data['permission'];
         this.item.borderColor = data['item']['borderColor'];
         this.item.backgroundColor = data['item']['backgroundColor'];
         this.item.url = environment.api + '?share=' + data['item']['url'];
-        this.loading=false;
+        this.loading = false;
       },
       e => {
         console.log(e);
@@ -80,7 +90,7 @@ export class BoardTitleComponent implements OnInit {
   }
 
   onSubmit() {
-    clearTimeout(this.myTimeout);
+
     this.loading = true;
     const body = {
       id: this.id,
@@ -92,41 +102,49 @@ export class BoardTitleComponent implements OnInit {
     ).subscribe(
       data => {
         console.log("onSubmit Done");
-        this.httpHeader();
+
+        const msg = {
+          action: 'journalTitle',
+        }
+        this.socketService.sendMessage(msg);
       },
       e => {
         console.log(e);
       },
     );
   }
- 
+
   fnPermission(id: number) {
     let data = [];
     if (this.permission.length > 0) {
       let objIndex = this.permission.findIndex(((obj: { id: number; }) => obj.id == id));
       this.permission[objIndex]['name'];
       data = this.permission[objIndex];
-    } 
+    }
     return data;
   }
- 
-  public onChild(obj: any) { 
-    console.log('obj child : ', obj); 
+
+  public onChild(obj: any) {
+    console.log('obj child : ', obj);
   }
 
-  openComponent(componentName: string, item:any) {
+  openComponent(componentName: string, item: any) {
     if (componentName == 'ShareBoardComponent') {
       const modalRef = this.modalService.open(ShareBoardComponent, { size: 'lg' });
-      modalRef.componentInstance.item =  this.journal;
+      modalRef.componentInstance.item = this.journal;
       modalRef.componentInstance.permission = this.permission;
-  
+
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log(data);
-        this.httpHeader();
+        //  this.httpHeader();
+        const msg = {
+          action: 'journalTitle',
+        }
+        this.socketService.sendMessage(msg);
       });
     }
   }
- 
+
 
 
 }

@@ -77,7 +77,9 @@ a{
 .pointer {
   cursor: pointer;
 }
-
+.minHeight{ 
+  height: calc(100vh - 50px);
+}
 .bg-blur {
   transition: opacity 150ms ease-out 0s;
   background: rgba(255, 255, 255, 0.1);

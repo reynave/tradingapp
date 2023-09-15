@@ -74,8 +74,7 @@
                                 <div class="me-2">
                                     <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New  Task</button>
                                 </div>
-
-
+ 
                                 <div class="me-2">
                                     <input type="text" class="form-control form-control-sm" [disabled]="!startUpTable"
                                     [placeholder]=" startUpTable ? 'Search' : 'loading'" [(ngModel)]="keyword"  
@@ -113,12 +112,6 @@
 
                                 </div>
 
-                                <div class="me-2" [hidden]="archives < 1">
-                                    <button type="button" class="btn btn-sm btn-light"
-                                        (click)="actionTask('unarchives');"> {{archives}} <i
-                                            class="bi bi-archive"></i></button>
-                                </div>
-
                                 <div class="me-2">
                                     <button type="button" (click)="jqueryResizable()"
                                         class="btn btn-sm btn-{{resizableStatus ? 'dark':'light' }}">
@@ -145,6 +138,11 @@
                                         target="_blank">
                                         <i class="bi bi-printer"></i> Printable
                                     </a>
+                                </div>
+                                <div class="me-2" [hidden]="archives < 1">
+                                    <button type="button" class="btn btn-sm btn-light"
+                                        (click)="actionTask('unarchives');"> {{archives}} <i
+                                            class="bi bi-archive"></i></button>
                                 </div>
                                 <div class="me-2" *ngIf="loading">
                                     <img src="./assets/gif/sm-loading.gif" width="20">
