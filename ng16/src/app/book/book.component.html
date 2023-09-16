@@ -6,19 +6,21 @@
         <div class="row g-1">
             <!-- <div class="col-lg-1 col-12">広告のために</div> -->
             <div class="col-lg-12 col-12">
-                <div class="bg-white p-3 rounded shadow-md border minHeight">
-                    <div class="d-flex">
-                        <div class="p-2 w-100">
-                            <h4 (click)="onFocus(book)" *ngIf="editable.title == false">{{book.name}}</h4>
-                            <input type="text" id="bookTitle" [(ngModel)]="book.name" #inputField
-                                *ngIf="editable.title == true" (change)="fnEditableChange();" placeholder="Book Title"
-                                class="form-control form-control-lg" (blur)="onBlur();">
-                        </div>
-                        <div class="p-2 flex-shrink-1">
-                            <button type="button" class="btn btn-sm  btn-danger" (click)="delete()"><i
-                                    class="bi bi-trash"></i></button>
-                        </div>
+
+                <div class="d-flex">
+                    <div class="p-2 w-100">
+                        <h4 (click)="onFocus(book)" *ngIf="editable.title == false">{{book.name}}</h4>
+                        <input type="text" id="bookTitle" [(ngModel)]="book.name" #inputField
+                            *ngIf="editable.title == true" (change)="fnEditableChange();" placeholder="Book Title"
+                            class="form-control form-control-lg" (blur)="onBlur();">
                     </div>
+                    <div class="p-2 flex-shrink-1">
+                        <button type="button" class="btn btn-sm  btn-danger" (click)="delete()"><i
+                                class="bi bi-trash"></i></button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-3 rounded shadow-md border">
 
                     <div class="row">
                         <div class="col-12 text-end align-self-center">
@@ -49,8 +51,8 @@
                                             <td class="text-center" *ngIf="book.id != 0">
                                                 <span [hidden]="x.presence == '4'">
                                                     <span *ngIf="x.checkbox === true"
-                                                        (click)="x.checkbox = '';fnTools();" class="text-primary"> <i
-                                                            class="bi bi-check-square-fill "></i> </span>
+                                                        (click)="x.checkbox = '';fnTools();" class="text-primary">
+                                                        <i class="bi bi-check-square-fill "></i> </span>
                                                     <span *ngIf="x.checkbox != true"
                                                         (click)="x.checkbox = true;fnTools();"> <i
                                                             class="bi bi-square"></i> </span>
@@ -102,7 +104,8 @@
                                                                 <span *ngIf="book.id === 0" class="me-1">
                                                                     <!-- SHARE -->
                                                                     <span *ngIf="x.bookId == n.id"> <i
-                                                                            class="bi bi-check-square-fill"></i> </span>
+                                                                            class="bi bi-check-square-fill"></i>
+                                                                    </span>
                                                                     <span *ngIf="x.bookId != n.id"> <i
                                                                             class="bi bi-square"></i>
                                                                     </span>
@@ -111,7 +114,8 @@
                                                                 <span *ngIf="book.id !== 0" class="me-1">
 
                                                                     <span *ngIf="book.id == n.id "> <i
-                                                                            class="bi bi-check-square-fill"></i> </span>
+                                                                            class="bi bi-check-square-fill"></i>
+                                                                    </span>
                                                                     <span *ngIf="book.id != n.id"> <i
                                                                             class="bi bi-square"></i>
                                                                     </span>

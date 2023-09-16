@@ -14,34 +14,34 @@ class Journal extends BaseController
         $permission = "SELECT * FROM permission  ORDER BY id ASC";
         $permission = $this->db->query($permission)->getResultArray();
 
-      
+
         $itemJoin = [];
         $book = [];
         $items = [];
-       
+
         $itemFields = "ja.id as journal_accessID, ja.bookId, p.name AS 'permission', p.fontIcon, 
         a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin, ja.star";
-      
+
         if ($id == 'undefined' || !$id) {
-            
+
             $q1 = "SELECT  $itemFields
             FROM journal_access AS ja
             LEFT JOIN journal AS j ON j.id = ja.journalId
             LEFT JOIN permission AS p ON p.id = j.permissionId
             JOIN account AS a ON a.id = j.accountId
             WHERE ja.accountId = '$accountId' AND ja.owner = 0;";
-    
+
             $items = $this->db->query($q1)->getResultArray();
-            $book = array( 
+            $book = array(
                 "id" => 0,
                 "name" => "Share to Me",
                 "iLock" => 1,
             );
         } else {
-            $bookId = model("Core")->select("id","book","id='$id' and presence = 1 ");
-            if($bookId ){
+            $bookId = model("Core")->select("id", "book", "id='$id' and presence = 1 ");
+            if ($bookId) {
 
-           
+
                 $q1 = "SELECT  $itemFields
                 FROM journal_access AS ja
                 LEFT JOIN journal AS j ON j.id = ja.journalId
@@ -49,13 +49,13 @@ class Journal extends BaseController
                 JOIN account AS a ON a.id = j.accountId
                 WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$bookId' 
                 ORDER BY ja.sorting ASC, ja.input_date ASC";
-        
-                $items = $this->db->query($q1)->getResultArray(); 
-                $book = "SELECT * FROM book WHERE presence = 1 and accountId  = '$accountId' and id = '$id'"; 
-                $book = $this->db->query($book)->getResultArray()[0]; 
-            }else{
-                $items = [];  
-                $book = false; 
+
+                $items = $this->db->query($q1)->getResultArray();
+                $book = "SELECT * FROM book WHERE presence = 1 and accountId  = '$accountId' and id = '$id'";
+                $book = $this->db->query($book)->getResultArray()[0];
+            } else {
+                $items = [];
+                $book = false;
             }
         }
         foreach ($items as $rec) {
@@ -63,10 +63,10 @@ class Journal extends BaseController
                 "viewId" => model("Core")->select("id", "journal_table_view", "ilock = 1 and journalId = '" . $rec['id'] . "' order by id ASC "),
             ]));
         }
-       
+
         $bookSelect = "SELECT  * from book where presence  = 1 and  accountId = '$accountId' order by sorting ASC, name ASC";
         $bookSelect = $this->db->query($bookSelect)->getResultArray();
-        
+
 
         $templatejson = "SELECT  * FROM template WHERE presence  = 1  order by id ASC, name ASC";
         $templatejson = $this->db->query($templatejson)->getResultArray();
@@ -79,7 +79,7 @@ class Journal extends BaseController
             "bookSelect" => $bookSelect,
             "permission" => $permission,
             "header" => model("Core")->header(),
-            "templatejson" => $templatejson,  
+            "templatejson" => $templatejson,
         );
         return $this->response->setJSON($data);
     }
@@ -119,8 +119,8 @@ class Journal extends BaseController
         ORDER BY  ja.owner DESC, ja.input_date  ASC ";
         $journal_access = $this->db->query($q1)->getResultArray();
         $i = 0;
-        foreach($journal_access as $row){
-            $journal_access[$i]['picture'] = model("Core")->isUrlValid($journal_access[$i]['picture']) ? $journal_access[$i]['picture'] : base_url().'uploads/picture/'.$journal_access[$i]['picture'];
+        foreach ($journal_access as $row) {
+            $journal_access[$i]['picture'] = model("Core")->isUrlValid($journal_access[$i]['picture']) ? $journal_access[$i]['picture'] : base_url() . 'uploads/picture/' . $journal_access[$i]['picture'];
             $i++;
         }
 
@@ -132,8 +132,8 @@ class Journal extends BaseController
         $teams = $this->db->query($q2)->getResultArray();
 
         $i = 0;
-        foreach($teams as $row){
-            $teams[$i]['picture'] = model("Core")->isUrlValid($teams[$i]['picture']) ? $teams[$i]['picture'] : base_url().'uploads/picture/'.$teams[$i]['picture'];
+        foreach ($teams as $row) {
+            $teams[$i]['picture'] = model("Core")->isUrlValid($teams[$i]['picture']) ? $teams[$i]['picture'] : base_url() . 'uploads/picture/' . $teams[$i]['picture'];
             $i++;
         }
         $data = array(
@@ -213,28 +213,42 @@ class Journal extends BaseController
                 "input_by" => model("Core")->accountId(),
             ]);
 
-            if ($post['model']['template'] != "")
-                $path = './template/master/' . $post['model']['template'] . '.json';
-            $jsonString = file_get_contents($path);
-            $jsonData = json_decode($jsonString, true);
-            $i = 0;
-            foreach ($jsonData['field'] as $rec) {
-                $i++;
-                $this->db->table("journal_custom_field")->insert([
-                    "journalId" => $journalId,
-                    "f" => $rec['f'],
-                    "name" => $rec['name'],
-                    "iType" => $rec['iType'],
-                    "width" => 150,
-                    "eval" => $rec['iType'] == 'formula' ? $rec['eval'] : "",
-                    "sorting" => $i,
-                    "input_date" => date("Y-m-d H:i:s")
-                ]);
+            if ($post['model']['template'] != "") {
+                $path = './template/master/' . $post['model']['template'] . '.json'; 
+                $jsonString = file_get_contents($path);
+                $jsonData = json_decode($jsonString, true);
+                $i = 0;
+                foreach ($jsonData['field'] as $rec) {
+                    $i++;
+                    $this->db->table("journal_custom_field")->insert([
+                        "journalId" => $journalId,
+                        "f" => $rec['f'],
+                        "name" => $rec['name'],
+                        "iType" => $rec['iType'],
+                        "suffix" => isset($rec['suffix']) ? $rec['suffix'] : "",
+                        "width" => 150,
+                        "eval" => $rec['iType'] == 'formula' ? $rec['eval'] : "",
+                        "sorting" => $i,
+                        "input_date" => date("Y-m-d H:i:s")
+                    ]);
+                    if (!empty($rec['journal_select'])) {
+                        $n = 0;
+                        foreach ($rec['journal_select'] as $a) { 
+                            $this->db->table("journal_select")->insert([
+                                "journalId" => $journalId,
+                                "field" => 'f'.$rec['f'],
+                                "value" => $a['value'],  
+                                "color" => $a['color'], 
+                                "sorting" => $n,
+                                "input_date" => date("Y-m-d H:i:s")
+                            ]);
+                            $n++;
+                        }
+                    }
+ 
+                }
             }
-            $this->db->table("journal_detail")->insert([
-                "journalId" => $journalId,
-                "input_date" => date("Y-m-d H:i:s")
-            ]);
+           
 
             $this->db->transComplete();
             if ($this->db->transStatus() === false) {
@@ -244,7 +258,7 @@ class Journal extends BaseController
             }
 
             $data = array(
-                "error" => false,
+              //  "error" => false,
                 "transStatus" => $this->db->transStatus(),
             );
 
@@ -501,7 +515,8 @@ class Journal extends BaseController
         return $this->response->setJSON($data);
     }
 
-    function updateStar() {
+    function updateStar()
+    {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
         $data = [
@@ -510,10 +525,10 @@ class Journal extends BaseController
         ];
         if ($post) {
             $this->db->table("journal_access")->update([
-                "star"=> $post['journal']['star'],
+                "star" => $post['journal']['star'],
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
-            ]," id = '".$post['journal']['journal_accessID']."'");
+            ], " id = '" . $post['journal']['journal_accessID'] . "'");
 
             $data = [
                 "error" => false,
@@ -532,7 +547,8 @@ class Journal extends BaseController
         return $this->response->setJSON($jsonData);
     }
 
-    function updatePhoto() {
+    function updatePhoto()
+    {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
         $data = [
@@ -541,10 +557,10 @@ class Journal extends BaseController
         ];
         if ($post) {
             $this->db->table("journal")->update([
-                "image"=> $post['image'],
+                "image" => $post['image'],
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
-            ]," id = '".$post['id']."'");
+            ], " id = '" . $post['id'] . "'");
 
             $data = [
                 "error" => false,

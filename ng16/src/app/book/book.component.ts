@@ -270,7 +270,7 @@ export class BookComponent implements OnInit {
   
   openComponent(componentName: string, item:any) {
     if (componentName == 'ShareBoardComponent') {
-      const modalRef = this.modalService.open(ShareBoardComponent, { size: 'md' });
+      const modalRef = this.modalService.open(ShareBoardComponent, { size: 'lg' });
       modalRef.componentInstance.item = item;
       modalRef.componentInstance.permission = this.permission;
   

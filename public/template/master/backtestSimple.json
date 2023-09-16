@@ -1,45 +1,115 @@
 {
-    "version":"1.0.1",
+    "version":"1.0.2",
     "field" :  [
-        {
-            "f":1,
+        { 
+            "f" : 1,
             "name": "Order date",
             "iType" : "date"
         },
-        {
-            "f":2,
+        { 
+            "f" : 2,
             "name": "Order Time",
             "iType" : "time"
         },
-        {
-            "f":3,
+        { 
+            "f" : 3,
             "name": "Market",
-            "iType" : "select"
+            "iType" : "select",
+            "journal_select" : [
+                { 
+                    "value" : "EURUSD",
+                    "color" : "#35A29F"
+                },
+                { 
+                    "value" : "NZDUSD",
+                    "color" : "#26577C"
+                },
+                { 
+                    "value" : "GPBUSD",
+                    "color" : "#9D44C0"
+                },
+                { 
+                    "value" : "USDJPY",
+                    "color" : "#A2678A"
+                },
+                { 
+                    "value" : "XAUUSD",
+                    "color" : "#EBE76C"
+                }
+            ]
+        },
+        { 
+            "f" : 4,
+            "name": "Open Order",
+            "iType" : "select",
+            "journal_select" : [
+                { 
+                    "value" : "BUY LIMIT",
+                    "color" : "#8ECDDD"
+                },
+                { 
+                    "value" : "BUY STOP",
+                    "color" : "#AED2FF"
+                },
+                { 
+                    "value" : "SELL LIMIT",
+                    "color" : "#35A29F"
+                },
+                { 
+                    "value" : "SELL STOP",
+                    "color" : "#8DDFCB"
+                }
+            ]
         },
         {
-            "f":4,
+            "f" : 5,
             "name": "Stop Lost",
             "iType" : "number",
             "suffix" : "pip" 
         },
-        {
-            "f":5,
+        { 
+            "f" : 6,
             "name": "Risk Rasio",
             "iType" : "number"
         },
         {
-            "f":6,
+            "f" : 7,
             "name": "Take Profit",
             "iType" : "formula",
-            "eval" : "$f4 * $f5",
+            "eval" : "($f6 * $f5).' pip'",
             "suffix" : "pip" 
         },
-        {
-            "f":7,
-            "name": "Percent",
+        { 
+            "f" : 8,
+            "name": "Trade 10K USD",
             "iType" : "formula",
-            "eval" : "$f5",
+            "eval" : "($f6 / 100) * 10000",
             "suffix" : "$" 
+        },
+        { 
+            "f" :9,
+            "name": "Close Date",
+            "iType" : "date"
+        },
+        { 
+            "f" :10,
+            "name": "Close Time",
+            "iType" : "time"
+        },
+        { 
+            "f" :11,
+            "name": "Trader Person",
+            "iType" : "user"
+        },
+        { 
+            "f" :12,
+            "name": "Photo",
+            "iType" : "image"
+        },
+        { 
+            "f" :13,
+            "name": "node",
+            "iType" : "note"
         }
     ]
 }
