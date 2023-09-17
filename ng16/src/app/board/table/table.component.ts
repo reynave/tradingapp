@@ -3,14 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
 import { DetailInterface } from './table-interface';
 import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component';
 import { OffCanvasImagesComponent } from './off-canvas-images/off-canvas-images.component';
 import { SocketService } from 'src/app/service/socket.service';
-import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component'; 
+import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component';
 declare var $: any;
 
 export class NewSelect {
@@ -79,7 +79,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private ativatedRoute: ActivatedRoute,
     private offcanvasService: NgbOffcanvas,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private router: Router
   ) { }
 
   private _docSub: any;
@@ -162,7 +163,7 @@ export class TableComponent implements OnInit, AfterViewInit {
             this.httpDetail();
           }
           if (data['action'] == 'tableReloadAddRow') {
-              this.reloadAddRow(data['data']);
+            this.reloadAddRow(data['data']);
           }
         }
 
@@ -451,22 +452,27 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     }
     else if (newItem['itype'] == 'image') {
+      this.router.navigate([], {
+        queryParams: {
+          id: new Date(),
+        },
+        queryParamsHandling: 'merge',
+      })
       this.detailObject = newItem;
-     const offcanvasRef = this.offcanvasService.open(OffCanvasImagesComponent, { position: 'end', panelClass: 'details-panel', });
-     //const offcanvasRef = this.offcanvasService.open(TemplateTableComponent, { position: 'end', panelClass: 'details-panel', });
-   
-    offcanvasRef.componentInstance.name = 'World';
+      const offcanvasRef = this.offcanvasService.open(OffCanvasImagesComponent, { position: 'end', panelClass: 'details-panel', });
+      offcanvasRef.componentInstance.name = 'World';
+
 
     }
     else if (newItem['itype'] == 'editSelect') {
       this.detailObject = newItem;
-      
+
       this.newSelect.field = this.detailObject.select.field;
       this.newSelect.journalId = this.detailObject.customField.journalId;
 
       const modalRef = this.modalService.open(TabletEditSelectComponent, { size: 'md' });
-      modalRef.componentInstance.field =  this.detailObject.select.field; 
-      modalRef.componentInstance.journalId = this.id; 
+      modalRef.componentInstance.field = this.detailObject.select.field;
+      modalRef.componentInstance.journalId = this.id;
     }
     else {
 
@@ -486,16 +492,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       ).subscribe(
         data => {
           console.log("CustomField/updateData ", data);
-          // let i = 0;
-          // this.detail.forEach(() => {
-          //   if (this.detail[i]['id'] == data['detail'][0].id) {
-          //     this.detail[i] = data['detail'][0];
-          //   }
-          //   if (this.detailOrigin[i]['id'] == data['detail'][0].id) {
-          //     this.detailOrigin[i] = data['detail'][0];
-          //   }
-          //   i++;
-          // });  
+
           const msg = {
             sender: localStorage.getItem("address.mirrel.com"),
             msg: data['detail'][0],
@@ -523,12 +520,12 @@ export class TableComponent implements OnInit, AfterViewInit {
     }).subscribe(
       data => {
         console.log(data);
-       // this.reloadAddRow(data['detail'][0]);
+        // this.reloadAddRow(data['detail'][0]);
         const msg = {
-          data : data['detail'][0],
-          action : 'tableReloadAddRow',
-          journalId : this.id,
-          chat : this.configService.account()["account"]['name']+" add task",
+          data: data['detail'][0],
+          action: 'tableReloadAddRow',
+          journalId: this.id,
+          chat: this.configService.account()["account"]['name'] + " add task",
         }
         this.socketService.sendMessage(msg);
       },
@@ -698,7 +695,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     )
   }
 
-  
+
 
 
   fnHide(n: number, index: number, item: any) {
