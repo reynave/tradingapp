@@ -6,6 +6,21 @@ use CodeIgniter\Model;
 
 class CustomField extends BaseController
 {
+    function index(){
+        $id = $this->request->getVar()['id'];
+        $q1 = "SELECT *  FROM journal_custom_field
+        WHERE  journalId = '$id' AND presence = 1 
+        ORDER BY sorting ASC, input_date ASC";
+        $items = $this->db->query($q1)->getResultArray();
+  
+        $data = array(
+            "error" => false,
+            "items" => $items,   
+            "get" => $this->request->getVar(),
+        );
+        return $this->response->setJSON($data);
+    }
+
     function sortable()
     {
         $json = file_get_contents('php://input');
@@ -118,8 +133,7 @@ class CustomField extends BaseController
 
         }else return null;
     }
-
-
+ 
     function insertSelect()
     {
         $json = file_get_contents('php://input');

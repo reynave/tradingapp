@@ -45,7 +45,7 @@ export class BoardViewComponent implements OnInit {
     this.httpGet();
     this._docSub = this.socketService.getMessage().subscribe(
       (data: { [x: string]: any; }) => {
-        console.log(data);
+       // console.log(data);
 
         if (data['action'] === 'reloadTableVIew') {
           $('.divHiden').hide();
@@ -76,7 +76,7 @@ export class BoardViewComponent implements OnInit {
       }
     }).subscribe(
       data => {
-        console.log('httpGet carouselx ', $('.carouselx'));
+   //     console.log('httpGet carouselx ', $('.carouselx'));
         this.items = data['items'];
         this.journalAccess = data['journal_access'];
         localStorage.setItem(this.id, JSON.stringify(data['items']));
@@ -118,7 +118,7 @@ export class BoardViewComponent implements OnInit {
   }
 
   goToView(x: any) {
-    console.log(x);
+   // console.log(x);
     this.journalTableViewId = x.id;
     this.router.navigate(['board', x.board, x.journalId, x.id]).then(
       () => {

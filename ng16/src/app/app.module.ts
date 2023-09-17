@@ -35,6 +35,7 @@ import { OffCanvasNotesComponent } from './board/table/off-canvas-notes/off-canv
 import { OffCanvasImagesComponent } from './board/table/off-canvas-images/off-canvas-images.component';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
+import { TabletEditSelectComponent } from './board/table/tablet-edit-select/tablet-edit-select.component';
 
 const config: SocketIoConfig = { 
   url: environment.socket_url, 
@@ -66,7 +67,8 @@ const config: SocketIoConfig = {
     WidgetInviteComponent,
     TablePrintableComponent,
     OffCanvasNotesComponent,
-    OffCanvasImagesComponent
+    OffCanvasImagesComponent,
+    TabletEditSelectComponent
   ],
   imports: [
     BrowserModule,

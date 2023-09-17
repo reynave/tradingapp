@@ -97,10 +97,10 @@ export class CustomFieldComponent implements OnInit {
   }
 
   emitSelectToParent(newValue: string) {
-    console.log(newValue);
+   // console.log(newValue);
     this.childItem.value = newValue;
     this.childItem.itype = "select";
-    console.log(this.childItem);
+   // console.log(this.childItem);
     //this.childItem.newItem.value = newValue;
     this.newItemEvent.emit(this.childItem);
   }
@@ -133,7 +133,7 @@ export class CustomFieldComponent implements OnInit {
 
 
   isNumber(str: string) {
-    return str.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    return str ? str.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") : '';
   }
 
 

@@ -54,7 +54,7 @@ export class BoardTitleComponent implements OnInit {
     this.httpHeader();
     this._docSub = this.socketService.getMessage().subscribe(
       (data: { [x: string]: any; }) => {
-        console.log(data);
+     //   console.log(data);
 
         if (data['action'] === 'journalTitle') {
           this.httpHeader();

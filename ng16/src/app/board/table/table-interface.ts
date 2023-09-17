@@ -22,6 +22,17 @@ export interface DetailInterface {
     f18: any;
     f19: any;
     f20: any;
+    f31: any;
+    f32: any;
+    f33: any;
+    f34: any;
+    f35: any;
+    f36: any;
+    f37: any;
+    f38: any;
+    f39: any;
+    f40: any;
+    
     historyArchives: any;
     id: string;
     ilock: string;

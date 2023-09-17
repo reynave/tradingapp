@@ -10,6 +10,7 @@ import { DetailInterface } from './table-interface';
 import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component';
 import { OffCanvasImagesComponent } from './off-canvas-images/off-canvas-images.component';
 import { SocketService } from 'src/app/service/socket.service';
+import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component';
 declare var $: any;
 
 export class NewSelect {
@@ -90,58 +91,76 @@ export class TableComponent implements OnInit, AfterViewInit {
     this._docSub = this.socketService.getMessage().subscribe(
       (data: { [x: string]: any; }) => {
         console.log(data);
+        if (data['journalId'] == this.id) {
+          if (data['action'] === 'TableDetailUpdateRow') {
+            const index = this.detail.findIndex((rec: { id: string; }) => rec.id === data['msg']['id']);
+            this.detail[index] = data['msg'];
+            this.calculationFooter()
+          }
 
-        if (data['action'] === 'updateRow') {
-          const index = this.detail.findIndex((rec: { id: string; }) => rec.id === data['msg']['id']);
-          this.detail[index] = data['msg'];
-          this.calculationFooter()
-        }
+          if (data['action'] === 'delete') {
+            data['msg'].forEach((el: { [x: string]: string; }) => {
+              var objIndex = this.detail.findIndex(((obj: { id: string; }) => obj.id == el['id']));
+              this.detail.splice(objIndex, 1);
+            });
+            this.calculationFooter()
+          }
 
-        if (data['action'] === 'delete') {
-          data['msg'].forEach((el: { [x: string]: string; }) => {
-            var objIndex = this.detail.findIndex(((obj: { id: string; }) => obj.id == el['id']));
-            this.detail.splice(objIndex, 1);
-          });
-          this.calculationFooter()
-        }
+          if (data['action'] === 'duplicate') {
+            this.httpDetail();
+          }
+          if (data['action'] == 'lock') {
+            data['msg'].forEach((el: { [x: string]: any; }) => {
+              var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
+              this.detail[objIndex]['ilock'] = "1";
+            });
+          }
 
-        if (data['action'] === 'duplicate') {
-          this.httpDetail();
-        }
-        if (data['action'] == 'lock') {
-          data['msg'].forEach((el: { [x: string]: any; }) => {
-            var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
-            this.detail[objIndex]['ilock'] = "1";
-          });
-        }
+          if (data['action'] == 'unlock') {
+            data['msg'].forEach((el: { [x: string]: any; }) => {
+              var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
+              this.detail[objIndex]['ilock'] = "0";
+            });
+          }
 
-        if (data['action'] == 'unlock') {
-          data['msg'].forEach((el: { [x: string]: any; }) => {
-            var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
-            this.detail[objIndex]['ilock'] = "0";
-          });
-        }
+          if (data['action'] == 'archives') {
+            data['msg'].forEach((el: { [x: string]: any; }) => {
+              var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
+              this.detail[objIndex]['archives'] = "1";
+              this.archives++;
+            });
+            this.calculationFooter()
+          }
 
-        if (data['action'] == 'archives') {
-          data['msg'].forEach((el: { [x: string]: any; }) => {
-            var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
-            this.detail[objIndex]['archives'] = "1";
-            this.archives++;
-          });
-          this.calculationFooter()
-        }
+          if (data['action'] == 'sortableDetail') {
+            this.sortByOrder(data['msg']);
+          }
 
-        if (data['action'] == 'sorting') {
-          this.sortByOrder(data['msg']);
-        }
+          if (data['action'] == 'jqueryResizable') {
+            let itemIndex = data['msg']['itemIndex']
+            this.customField[itemIndex]['width'] = data['msg']['width'];
+          }
 
-        if (data['action'] == 'jqueryResizable') { 
-          let itemIndex = data['msg']['itemIndex']
-          this.customField[itemIndex]['width'] = data['msg']['width'];
-        }
- 
-        if (data['action'] == 'reload') { 
-          this.reload([]); 
+          if (data['action'] == 'httpCustomField') {
+            this.httpCustomField();
+          }
+
+          if (data['action'] == 'tableDetailFnHide') {
+            let index = data['index'];
+            let n = data['n'];
+            console.log('tableDetailFnHide', n, index);
+            if (this.journalTableViewId == data['journalTableViewId']) {
+              this.customField[index]['hide'] = n == 1 ? 0 : 1;
+            }
+
+          }
+
+          if (data['action'] == 'reload') {
+            this.reload([]);
+          }
+          if (data['action'] == 'httpDetail') {
+            this.httpDetail();
+          }
         }
 
       }
@@ -154,7 +173,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   reload(newItem: any) {
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
-    this.startUpTable = false;
+    // this.startUpTable = false;
     if (newItem['id']) {
       this.journalTableViewId = newItem['id'];
     }
@@ -164,7 +183,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     // }
     // this.socketService.sendMessage(msg);
     this.httpHeader();
-    this.httpDetail(true);
+    this.httpDetail();
   }
 
   httpHeader() {
@@ -186,7 +205,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     )
   }
 
-  httpDetail(recalulate: boolean = false) {
+  httpDetail(startUpTable: boolean = false) {
     this.http.get<any>(environment.api + "Tables/detail", {
       headers: this.configService.headers(),
       params: {
@@ -195,7 +214,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     }).subscribe(
       data => {
-        console.log('httpDetail', data);
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
@@ -219,7 +237,7 @@ export class TableComponent implements OnInit, AfterViewInit {
                 const itemId = $(element).attr("id");
                 order.push(itemId);
               });
-              console.log(order);
+              //   console.log(order);
               const body = {
                 order: order,
                 journalId: self.id,
@@ -233,7 +251,8 @@ export class TableComponent implements OnInit, AfterViewInit {
                   const msg = {
                     sender: localStorage.getItem("address.mirrel.com"),
                     msg: order,
-                    action: 'sorting',
+                    action: 'sortableDetail',
+                    journalId: self.id,
                   }
                   self.socketService.sendMessage(msg);
 
@@ -247,6 +266,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         });
         this.calculationFooter();
         this.startUpTable = true;
+
       },
       e => {
         console.log(e);
@@ -339,6 +359,7 @@ export class TableComponent implements OnInit, AfterViewInit {
                 itemIndex: itemIndex,
               },
               action: 'jqueryResizable',
+              journalId: self.id,
             }
             self.socketService.sendMessage(msg);
 
@@ -394,7 +415,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
       i++;
     });
-    console.log("calculation DONE");
+    // console.log("calculation DONE");
   }
 
   httpCustomField() {
@@ -437,38 +458,44 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.newSelect.field = this.detailObject.select.field;
       this.newSelect.journalId = this.detailObject.customField.journalId;
 
-      this.modalService.open(this.contentEditSelect, { centered: true });
-      let self = this;
-      $(function () {
-        $(".sortableSelect").sortable({
-          handle: ".handleSelect",
-          placeholder: "ui-state-highlight",
-          update: function (event: any, ui: any) {
-            const order: any[] = [];
-            $(".sortableSelect .handleSelect").each((index: number, element: any) => {
-              const itemId = $(element).attr("id");
-              order.push(itemId);
-            });
-            console.log(order);
-            const body = {
-              order: order,
-              journalId: self.id,
-            }
-            self.http.post<any>(environment.api + "CustomField/updateSortableSelect", body, {
-              headers: self.configService.headers(),
-            }).subscribe(
-              data => {
-                // self.customField = data['customField'];
-                // self.select = data['select'];
-                self.httpDetail(true);
-              },
-              e => {
-                console.log(e);
-              }
-            )
-          }
-        });
-      });
+
+      const modalRef = this.modalService.open(TabletEditSelectComponent, { size: 'md' });
+      modalRef.componentInstance.id = this.id; 
+      
+      // modalRef.componentInstance.fn = this.id;
+  
+      // this.modalService.open(this.contentEditSelect, { centered: true });
+      // let self = this;
+      // $(function () {
+      //   $(".sortableSelect").sortable({
+      //     handle: ".handleSelect",
+      //     placeholder: "ui-state-highlight",
+      //     update: function (event: any, ui: any) {
+      //       const order: any[] = [];
+      //       $(".sortableSelect .handleSelect").each((index: number, element: any) => {
+      //         const itemId = $(element).attr("id");
+      //         order.push(itemId);
+      //       });
+      //       console.log(order);
+      //       const body = {
+      //         order: order,
+      //         journalId: self.id,
+      //       }
+      //       self.http.post<any>(environment.api + "CustomField/updateSortableSelect", body, {
+      //         headers: self.configService.headers(),
+      //       }).subscribe(
+      //         data => {
+      //           // self.customField = data['customField'];
+      //           // self.select = data['select'];
+      //           self.httpDetail();
+      //         },
+      //         e => {
+      //           console.log(e);
+      //         }
+      //       )
+      //     }
+      //   });
+      // });
     }
     else {
 
@@ -501,7 +528,9 @@ export class TableComponent implements OnInit, AfterViewInit {
           const msg = {
             sender: localStorage.getItem("address.mirrel.com"),
             msg: data['detail'][0],
-            action: 'updateRow',
+            journalId: this.id,
+            action: 'TableDetailUpdateRow',
+            chat: this.configService.account()['account']['name'] + ' update column',
           }
           this.socketService.sendMessage(msg);
 
@@ -547,6 +576,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       sender: localStorage.getItem("address.mirrel.com"),
       msg: detail,
       action: action,
+      journalId: this.id,
     }
     this.socketService.sendMessage(msg);
 
@@ -693,10 +723,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   /**
    * SELECT POPUP / OPEN EDIT POPUP
    */
-  //httpJournalSelect() {
-  //  this.httpDetail(true);
-  //}
-
   onUpdateSelect(data: any) {
     console.log(data);
     this.http.post<any>(environment.api + "CustomField/updateSelect", data, {
@@ -719,7 +745,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       data => {
         console.log(data);
         // this.httpJournalSelect();
-        this.httpDetail(true);
+        this.httpDetail();
       },
       e => {
         console.log(e);
@@ -734,7 +760,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       data => {
         this.detailObject.select.option = data['option'];
         //this.httpJournalSelect();
-        this.httpDetail(true);
+        this.httpDetail();
         this.newSelect.value = "";
       },
       e => {
@@ -747,31 +773,27 @@ export class TableComponent implements OnInit, AfterViewInit {
    */
 
 
-  // fnEdiable(row: number, column: number) {
-  //   let i = 0;
-  //   for( i = 0; i < this.cell.length; i++ ){
-  //     let n = 0;
-  //     for(n = 0 ; n < this.cell[0].length ; n++){
-  //       this.cell[i][n] = 0;
-  //     }
-  //   }
-  //   this.cell[row][column] = 1;
-
-  // }
-
-  // fnCell(row: number, column: number) {
-  //   return this.cell[row][column];
-  // }
-
   fnHide(n: number, index: number, item: any) {
     console.log(n, index);
     this.customField[index]['hide'] = n == 1 ? 0 : 1;
+
+
     const data = {
+      action: 'tableDetailFnHide',
       item: item,
       hide: this.customField[index]['hide'],
       id: this.id,
+
       journalTableViewId: this.journalTableViewId,
+      address: localStorage.getItem("address.mirrel.com"),  // for  socket only
+      chat: this.configService.account()['account']['name'] + ' update hidden column',  // for  socket only
+      index: index, // for  socket only
+      n: n,  // for  socket only
+      journalId: this.id,  // for  socket only
     }
+
+    this.socketService.sendMessage(data);
+
     this.http.post<any>(environment.api + "Tables/fnHide", data, {
       headers: this.configService.headers(),
     }).subscribe(
@@ -783,8 +805,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     )
   }
-
-
 
   objItem(customField: any, detail: any, index: number) {
 
@@ -839,25 +859,33 @@ export class TableComponent implements OnInit, AfterViewInit {
   openComponent(componentName: string) {
     if (componentName == 'CustomFieldFormComponent') {
       const modalRef = this.modalService.open(CustomFieldFormComponent, { fullscreen: true });
-      modalRef.componentInstance.customFieldForm = this.customFieldForm;
+      //    modalRef.componentInstance.customFieldForm = this.customFieldForm;
       modalRef.componentInstance.id = this.id;
       modalRef.componentInstance.journalTableViewId = this.journalTableViewId;
 
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
-        console.log(data);
+        console.log('CustomFieldFormComponent', data);
         this.resizableStatus = false;
-        if (data == 'httpDetail') {
-          this.httpDetail();
+        const body = {
+          action: data,
+          journalId: this.id,
+          chat: this.configService.account()['account']['name'] + " was update header",
         }
-        else if (data == 'reload') {
-          this.reload([]);
-        }
-        else if (data == 'httpCustomField') {
-          this.httpCustomField();
-        }
+        this.socketService.sendMessage(body);
+
+        // if (data == 'httpDetail') {
+        //   this.httpDetail();
+        // }
+        // else if (data == 'reload') {
+        //   this.reload([]);
+        // }
+        // else if (data == 'httpCustomField') {
+        //   this.httpCustomField();
+        // }
 
       });
     }
+
     if (componentName == 'openArchived') {
 
     }

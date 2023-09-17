@@ -18,11 +18,11 @@ export class NewCustomField {
   styleUrls: ['./custom-field-form.component.css']
 })
 export class CustomFieldFormComponent implements OnInit {
-  @Input() customFieldForm: any;
+  // @Input() customFieldForm: any;
   @Input() id: any;
-  @Input() journalTableViewId: any; 
+  @Input() journalTableViewId: any;
   @Output() newItemEvent = new EventEmitter<string>();
-
+  customFieldForm: any = [];
   newCustomField = new NewCustomField("", "text");
 
   constructor(
@@ -32,36 +32,61 @@ export class CustomFieldFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.customFieldForm);
-    let self = this;
-    $(function () { 
-      $(".sortable").sortable({
-        handle: ".handle",
-        placeholder: "ui-state-highlight",
-        update: function (event: any, ui: any) {
-          const order: any[] = [];
-          $(".sortable .handle").each((index: number, element: any) => {
-            const itemId = $(element).attr("id");
-            order.push(itemId);
-          });
-
-          console.log(order);
-          self.http.post<any>(environment.api + "CustomField/sortable", order, {
-            headers: self.configService.headers(),
-          }).subscribe(
-            data => {
-              console.log(data);
-              // self.httpGet();
-              self.emitToParent('httpDetail');
-            },
-            e => {
-              console.log(e);
-            }
-          )
-        }
-      });
-    });
+    console.log(this.id);
+    this.httpGet();
   }
+  httpGet() {
+
+    this.http.get<any>(environment.api + "CustomField/index", {
+      headers: this.configService.headers(),
+      params: {
+        id: this.id,
+      }
+    }).subscribe(
+      data => {
+        console.log('CustomField/index ',data);
+        
+        this.customFieldForm = data['items'];
+        let self = this;
+        $(function () {
+ 
+         // $( ".selector" ).sortable( "destroy" );
+          $(".journalCustomFieldSorting").sortable({
+            handle: ".handle",
+            placeholder: "ui-state-highlight",
+            update: function (event: any, ui: any) {
+              const order: any[] = [];
+              $(".journalCustomFieldSorting .handle").each((index: number, element: any) => {
+                const itemId = $(element).attr("id");
+                order.push(itemId);
+              });
+
+              console.log('order', order);
+              self.http.post<any>(environment.api + "CustomField/sortable", order, {
+                headers: self.configService.headers(),
+              }).subscribe(
+                data => {
+                  console.log('CustomField/sortable',data);
+                  // self.httpGet();
+                 self.emitToParent('reload');
+                 console.log("self.emitToParent('reload')")
+                },
+                e => {
+                  console.log(e);
+                }
+              )
+            }
+          });
+       
+        });
+      },
+      error => {
+        console.log(error);
+      }
+    )
+
+  }
+
   addCustomField() {
     const body = {
       id: this.id,
@@ -77,7 +102,8 @@ export class CustomFieldFormComponent implements OnInit {
         if (data['error'] === true) {
           alert(data['note']);
         }
-        this.customFieldForm = data['items'];
+        $( ".selector" ).sortable( "destroy" );
+        this.httpGet();
         this.emitToParent('httpDetail');
       },
       e => {
@@ -149,18 +175,18 @@ export class CustomFieldFormComponent implements OnInit {
     }
   }
 
-  evalDevCheck(field: any, index : number) {
+  evalDevCheck(field: any, index: number) {
     const body = {
       field: field,
-      id : this.id,
-      journalTableViewId : this.journalTableViewId,
-    } 
+      id: this.id,
+      journalTableViewId: this.journalTableViewId,
+    }
     this.http.post<any>(environment.api + 'CustomField/evalDevCheck', body,
       { headers: this.configService.headers() }
     ).subscribe(
       data => {
-        console.log(data);  
-        this.updateEval(field ,index);
+        console.log(data);
+        this.updateEval(field, index);
         this.customFieldForm[index].showEvalDev = false;
       },
       e => {
@@ -171,16 +197,16 @@ export class CustomFieldFormComponent implements OnInit {
 
   }
 
-  updateEval(field: any, index : number) {
+  updateEval(field: any, index: number) {
     console.log(field);
     const body = {
       field: field
-    } 
+    }
     this.http.post<any>(environment.api + 'CustomField/updateEval', body,
       { headers: this.configService.headers() }
     ).subscribe(
       data => {
-        console.log(data);   
+        console.log(data);
         this.customFieldForm[index]['eval'] = field['evalDev'];
         this.emitToParent('httpDetail');
       },
