@@ -161,6 +161,9 @@ export class TableComponent implements OnInit, AfterViewInit {
           if (data['action'] == 'httpDetail') {
             this.httpDetail();
           }
+          if (data['action'] == 'tableReloadAddRow') {
+              this.reloadAddRow(data['data']);
+          }
         }
 
       }
@@ -455,12 +458,14 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
     else if (newItem['itype'] == 'editSelect') {
       this.detailObject = newItem;
+      
       this.newSelect.field = this.detailObject.select.field;
       this.newSelect.journalId = this.detailObject.customField.journalId;
 
 
       const modalRef = this.modalService.open(TabletEditSelectComponent, { size: 'md' });
-      modalRef.componentInstance.id = this.id; 
+      modalRef.componentInstance.field =  this.detailObject.select.field; 
+      modalRef.componentInstance.journalId = this.id; 
       
       // modalRef.componentInstance.fn = this.id;
   
@@ -552,7 +557,14 @@ export class TableComponent implements OnInit, AfterViewInit {
     }).subscribe(
       data => {
         console.log(data);
-        this.reloadAddRow(data['detail'][0]);
+       // this.reloadAddRow(data['detail'][0]);
+        const msg = {
+          data : data['detail'][0],
+          action : 'tableReloadAddRow',
+          journalId : this.id,
+          chat : this.configService.account()["account"]['name']+" add task",
+        }
+        this.socketService.sendMessage(msg);
       },
       e => {
         console.log(e);
@@ -720,57 +732,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     )
   }
 
-  /**
-   * SELECT POPUP / OPEN EDIT POPUP
-   */
-  onUpdateSelect(data: any) {
-    console.log(data);
-    this.http.post<any>(environment.api + "CustomField/updateSelect", data, {
-      headers: this.configService.headers(),
-    }).subscribe(
-      data => {
-        console.log(data);
-      },
-      e => {
-        console.log(e);
-      }
-    )
-  }
-
-  onDeleteSelect(data: any) {
-    console.log(data);
-    this.http.post<any>(environment.api + "CustomField/deleteSelect", data, {
-      headers: this.configService.headers(),
-    }).subscribe(
-      data => {
-        console.log(data);
-        // this.httpJournalSelect();
-        this.httpDetail();
-      },
-      e => {
-        console.log(e);
-      }
-    )
-  }
-
-  addInsertSelect() {
-    this.http.post<any>(environment.api + "CustomField/insertSelect", this.newSelect, {
-      headers: this.configService.headers(),
-    }).subscribe(
-      data => {
-        this.detailObject.select.option = data['option'];
-        //this.httpJournalSelect();
-        this.httpDetail();
-        this.newSelect.value = "";
-      },
-      e => {
-        console.log(e);
-      }
-    )
-  }
-  /**
-   * END :: SELECT POPUP / OPEN EDIT POPUP
-   */
+  
 
 
   fnHide(n: number, index: number, item: any) {

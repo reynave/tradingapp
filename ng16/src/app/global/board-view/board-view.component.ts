@@ -45,20 +45,20 @@ export class BoardViewComponent implements OnInit {
     this.httpGet();
     this._docSub = this.socketService.getMessage().subscribe(
       (data: { [x: string]: any; }) => {
-       // console.log(data);
-
-        if (data['action'] === 'reloadTableVIew') {
-          $('.divHiden').hide();
-          console.log('carouselx ', $('.carouselx'));
-          $('.carouselx').slick('unslick');
-          this.httpGet();
-        }
-        if (data['action'] === 'reloadTableVIewDelete') {
-          $('.divHiden').hide();
-          $('.carouselx').slick('unslick');
-          this.httpGet();
-          if (data['id'] == data['journalTableViewId']) {
-            this.goToView(data['data']);
+        if (data['journalId'] == this.id) { 
+          if (data['action'] === 'reloadTableVIew') {
+            $('.divHiden').hide();
+            console.log('carouselx ', $('.carouselx'));
+            $('.carouselx').slick('unslick');
+            this.httpGet();
+          }
+          if (data['action'] === 'reloadTableVIewDelete') {
+            $('.divHiden').hide();
+            $('.carouselx').slick('unslick');
+            this.httpGet();
+            if (data['id'] == data['journalTableViewId']) {
+              this.goToView(data['data']);
+            }
           }
         }
       }
@@ -76,12 +76,12 @@ export class BoardViewComponent implements OnInit {
       }
     }).subscribe(
       data => {
-   //     console.log('httpGet carouselx ', $('.carouselx'));
+        //     console.log('httpGet carouselx ', $('.carouselx'));
         this.items = data['items'];
         this.journalAccess = data['journal_access'];
         localStorage.setItem(this.id, JSON.stringify(data['items']));
         this.fnIniSlick();
-     
+
       },
       e => {
         console.log(e);
@@ -89,7 +89,7 @@ export class BoardViewComponent implements OnInit {
     )
   }
 
-  fnIniSlick(){
+  fnIniSlick() {
 
     $(document).ready(function () {
       $('.divHiden').show();
@@ -113,12 +113,12 @@ export class BoardViewComponent implements OnInit {
             }
           }
         ]
-      }); 
+      });
     });
   }
 
   goToView(x: any) {
-   // console.log(x);
+    // console.log(x);
     this.journalTableViewId = x.id;
     this.router.navigate(['board', x.board, x.journalId, x.id]).then(
       () => {
@@ -140,7 +140,8 @@ export class BoardViewComponent implements OnInit {
     }).subscribe(
       data => {
         const msg = {
-          action: 'reloadTableVIew'
+          action: 'reloadTableVIew',
+          journalId : this.id,
         }
         this.socketService.sendMessage(msg);
         //  $('.carouselx').slick('unslick');
@@ -166,7 +167,8 @@ export class BoardViewComponent implements OnInit {
         //  $('.carouselx').slick('unslick');
         //  this.httpGet();
         const msg = {
-          action: 'reloadTableVIew'
+          action: 'reloadTableVIew',
+          journalId : this.id,
         }
         this.socketService.sendMessage(msg);
       },
@@ -194,7 +196,8 @@ export class BoardViewComponent implements OnInit {
           action: 'reloadTableVIewDelete',
           id: x.id,
           journalTableViewId: this.journalTableViewId,
-          data : data
+          data: data,
+          journalId : this.id,
         }
         this.socketService.sendMessage(msg);
         this.modalService.dismissAll();

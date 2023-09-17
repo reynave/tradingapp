@@ -54,10 +54,10 @@ export class BoardTitleComponent implements OnInit {
     this.httpHeader();
     this._docSub = this.socketService.getMessage().subscribe(
       (data: { [x: string]: any; }) => {
-     //   console.log(data);
-
-        if (data['action'] === 'journalTitle') {
-          this.httpHeader();
+        if (data['journalId'] == this.id) { 
+          if (data['action'] === 'journalTitle') {
+            this.httpHeader();
+          }
         }
 
       }
@@ -105,6 +105,7 @@ export class BoardTitleComponent implements OnInit {
 
         const msg = {
           action: 'journalTitle',
+          journalId: this.id,
         }
         this.socketService.sendMessage(msg);
       },

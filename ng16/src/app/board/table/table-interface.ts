@@ -39,3 +39,7 @@ export interface DetailInterface {
     journalId: string;
     searchable : string;
 }
+
+export interface BackgroundColorOption{
+    color: string;
+}

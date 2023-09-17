@@ -1,1 +1,74 @@
-<p>tablet-edit-select works!</p>
+<div class="modal-header">
+    <div class="modal-title" id="modal-basic-title">Editable Select Option </div>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+<div class="modal-body pb-5">
+
+
+    <div class="row g-2 mb-2">
+        <div class="sortableSelect">
+            <div class="row g-1 py-2" *ngFor="let item of journal_select">
+                <div class="col-8">
+                    <input type="text" class="form-control" [(ngModel)]="item.value" (change)="onUpdateSelect(item);"
+                        #selectValue (keyup.enter)="selectValue.blur()">
+                </div>
+                <div class="col-4">
+                    <div class="d-flex">
+                        <div class="mx-1">
+                            <div ngbDropdown class="d-inline-block" #myDrop="ngbDropdown">
+                                <a class="btn btn-light" id="dropdownBasic1" ngbDropdownToggle>
+                                    <i class="bi bi-square-fill " [ngStyle]="{'color': item.color }"></i>
+                                </a>
+                                <div ngbDropdownMenu>
+                                    <div style="width: 214px;">
+                                        <a class="m-1 btn p-0" *ngFor="let i of backgroundColorOption"
+                                            (click)="item.color=i.color;onUpdateSelect(item);myDrop.close()">
+                                            <i class="bi bi-square-fill fs-4" [ngStyle]="{'color': i.color }"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mx-1"><a href="javascript:;" class="btn btn-light" (click)="onDeleteSelect(item)"><i class="bi bi-trash"></i></a></div>
+                        <div class="mx-1"><a href="javascript:;" class="btn handleSelect" data-id="{{item.id}}"><i class="bi bi-list"></i></a></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-2">
+        <div class="col-8">
+            <input type="text" class="form-control" [(ngModel)]="newSelect.value" id="newSelectVal" name="newSelectVal"
+                #newSelectVal="ngModel" required (keyup.enter)="addInsertSelect()">
+            <div [hidden]="newSelectVal.valid || newSelectVal.pristine" class="text-danger">
+                Option name is required
+            </div>
+        </div>
+        <div class="col-2">
+            <div ngbDropdown class="d-inline-block" #myDrop="ngbDropdown">
+                <a class="btn btn-light" id="dropdownBasic1" ngbDropdownToggle>
+                    <i class="bi bi-square-fill " [ngStyle]="{'color':newSelect.color }"></i>
+                </a>
+                <div ngbDropdownMenu>
+                    <div style="width: 214px;">
+                        <a class="m-1 btn p-0" *ngFor="let i of backgroundColorOption"
+                            (click)="newSelect.color=i.color;myDrop.close()">
+                            <i class="bi bi-square-fill fs-4" [ngStyle]="{'color': i.color }"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="d-grid">
+                <button type="button" [disabled]="!newSelect.value" (click)="addInsertSelect();"
+                    class="btn btn-light"><i class="bi bi-plus-lg"></i> Add </button>
+            </div>
+        </div>
+
+        {{newSelect | json}}
+    </div>
+
+</div>
