@@ -1,126 +1,18 @@
-<app-header></app-header>
-
-<div class="popup-floating-top">
-    <div class="border bg-white popup-floating-top-content">
-        popup-floating-top
-    </div>
-</div>
-
-<div class="wrapper body-margin-top">
-    <div class="wrapper-child " style="width: 30%; ">
-        <div class="border bg-white">asdf</div>
-    </div>
-    <div class="wrapper-child " style="width: 70%;">
-        <div class="border bg-white">asdf</div>
-    </div>
-</div>
-
-
 <div class="container-fluid body-margin-top">
     <div class="row g-1">
 
         <div class="col-lg-12 col-12">
-            <div class="mt-1">
-                <div class="border bg-white rounded ">
-                    <div class="text-end">
-                        <button type="button" (click)="leftSide=false" class="btn btn-light"><i
-                                class="bi bi-arrow-bar-left"></i></button>
-                    </div>
-                    <div class="mb-4">
-                        <img src="https://learn.microsoft.com/en-us/power-bi/visuals/media/power-bi-line-charts/power-bi-line.png"
-                            width="100%">
-                    </div>
-                    <div class="p-3">
-
-                        <div class="mb-2">
-                            <h4>Summary</h4>
-                        </div>
-                        <div class="mb-2">
-                            Total Trades
-                        </div>
-                    </div>
+            <div>
+                <h2>Paste Gambar ke Halaman dan Konversi ke Base64</h2>
+                
+                <input #imageInput style="position: absolute; left: -1000px;" type="text">
+                
+                <div *ngIf="clipboardImage">
+                  <h3>Gambar yang Di-Paste:</h3>
+                  <img [src]="clipboardImage" alt="Pasted Image">
                 </div>
-            </div>
+              </div>
         </div>
-        sayama@panasonicgobelawards.com
-        7E70wJcWstqFl&e#
 
-        superadmin123@panasonicgobelawards.com
-        6vArTISni@kWZ#5B
     </div>
 </div>
-
-
-<ng-template #content let-offcanvas>
-    <div class="offcanvas-header">
-        <div class="offcanvas-title" id="offcanvas-basic-title">Notes</div>
-        <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
-    </div>
-    <div class="offcanvas-body">
-
-        <div class="mb-3">
-            <textarea class="form-control"></textarea>
-        </div>
-
-        <div class="text-end">
-            <button type="button" class="btn btn-outline-dark" (click)="offcanvas.close('Save click')">Save</button>
-        </div>
-    </div>
-</ng-template>
-
-
-<ng-template #contentCustomField let-modal>
-    <div class="modal-header">
-        <div class="modal-title">Custom Fields</div>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-
-        <div class="container sortable">
-            <div class="row g-2">
-                <div class="col-2 border-bottom">
-                    <div class="ms-2">
-                        <strong>TYPE OF FIELD</strong>
-                    </div>
-                </div>
-                <div class="col-8 border-bottom">
-                    <div class="ms-3">
-                        <strong>FIELDS</strong>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-2" *ngFor="let x of fields">
-                <div class="col-2 border-bottom py-2">
-                    <select class="form-control ">
-                        <option>Text</option>
-                        <option>Number</option>
-                        <option>Percent</option>
-                        <option>Date</option>
-                        <option>Time</option>
-                        <option>Date & Time</option>
-                        <option>Select Option</option>
-                        <option>Notes</option>
-                        <option>Galleries</option>
-                        <option>Url</option>
-
-                    </select>
-
-                </div>
-                <div class="col-8 border-bottom py-2">
-                    <div class="d-flex flex-row">
-                        <div class="px-2 resizable">
-                            <input type="text" value="{{x.name}}" class="form-control">
-                        </div>
-
-                        <div class="px-2"><i class="bi bi-lock"></i></div>
-                        <div class="px-2 handle" data-id="{{x.id}}"><i class="bi bi-list"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-    </div>
-
-</ng-template>

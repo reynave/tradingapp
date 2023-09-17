@@ -1,13 +1,24 @@
 <div class="offcanvas-header">
-    <strong class="offcanvas-title" id="offcanvas-basic-title">Images</strong>
-    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+  <strong class="offcanvas-title" id="offcanvas-basic-title">Images</strong>
+  <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
 </div>
 
 <div class="offcanvas-body">
-    <img src="https://picsum.photos/500/300" width="100%">
-    <img src="https://picsum.photos/500/300" width="100%">
-    <img src="https://picsum.photos/500/300" width="100%">
-    <img src="https://picsum.photos/500/300" width="100%">
-    <img src="https://picsum.photos/500/300" width="100%">
+  <!-- <div contenteditable="true">
+
+    </div> -->
+
+  <div>
+    <h2>Paste Gambar ke Halaman dan Konversi ke Base64</h2>
+
+    <input  #imageInput  type="hidden">
+
+    <div *ngIf="clipboardImage">
+      <h3>Gambar yang Di-Paste:</h3>
+      <img [src]="clipboardImage" alt="Pasted Image" width="100%">
+    </div>
+  </div>
+
+
 
 </div>

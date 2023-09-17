@@ -10,7 +10,7 @@ import { DetailInterface } from './table-interface';
 import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component';
 import { OffCanvasImagesComponent } from './off-canvas-images/off-canvas-images.component';
 import { SocketService } from 'src/app/service/socket.service';
-import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component';
+import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component'; 
 declare var $: any;
 
 export class NewSelect {
@@ -452,8 +452,10 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
     else if (newItem['itype'] == 'image') {
       this.detailObject = newItem;
-      const offcanvasRef = this.offcanvasService.open(OffCanvasImagesComponent, { position: 'end', panelClass: 'details-panel', });
-      offcanvasRef.componentInstance.name = 'World';
+     const offcanvasRef = this.offcanvasService.open(OffCanvasImagesComponent, { position: 'end', panelClass: 'details-panel', });
+     //const offcanvasRef = this.offcanvasService.open(TemplateTableComponent, { position: 'end', panelClass: 'details-panel', });
+   
+    offcanvasRef.componentInstance.name = 'World';
 
     }
     else if (newItem['itype'] == 'editSelect') {
@@ -462,45 +464,9 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.newSelect.field = this.detailObject.select.field;
       this.newSelect.journalId = this.detailObject.customField.journalId;
 
-
       const modalRef = this.modalService.open(TabletEditSelectComponent, { size: 'md' });
       modalRef.componentInstance.field =  this.detailObject.select.field; 
       modalRef.componentInstance.journalId = this.id; 
-      
-      // modalRef.componentInstance.fn = this.id;
-  
-      // this.modalService.open(this.contentEditSelect, { centered: true });
-      // let self = this;
-      // $(function () {
-      //   $(".sortableSelect").sortable({
-      //     handle: ".handleSelect",
-      //     placeholder: "ui-state-highlight",
-      //     update: function (event: any, ui: any) {
-      //       const order: any[] = [];
-      //       $(".sortableSelect .handleSelect").each((index: number, element: any) => {
-      //         const itemId = $(element).attr("id");
-      //         order.push(itemId);
-      //       });
-      //       console.log(order);
-      //       const body = {
-      //         order: order,
-      //         journalId: self.id,
-      //       }
-      //       self.http.post<any>(environment.api + "CustomField/updateSortableSelect", body, {
-      //         headers: self.configService.headers(),
-      //       }).subscribe(
-      //         data => {
-      //           // self.customField = data['customField'];
-      //           // self.select = data['select'];
-      //           self.httpDetail();
-      //         },
-      //         e => {
-      //           console.log(e);
-      //         }
-      //       )
-      //     }
-      //   });
-      // });
     }
     else {
 

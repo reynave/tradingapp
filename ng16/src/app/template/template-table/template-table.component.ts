@@ -1,105 +1,40 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { NgbOffcanvas, NgbModal, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
-declare var $: any;
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-template-table',
   templateUrl: './template-table.component.html',
-  styleUrls: ['./template-table.component.css'],
-  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./template-table.component.css'], 
 })
-export class TemplateTableComponent implements OnInit{
-  leftSide : boolean = true;
-  panels = ['First', 'Second', 'Third'];
-  fields: any = [];
-  items: any = [];
+export class TemplateTableComponent{
+  clipboardImage: string = '';
+  @ViewChild('imageInput', { static: false }) imageInput: ElementRef | any;
 
-  currentItem : any = {
-    id : 1,
-    value : "Sayama AI",
-    itype : "text",
-  };
-
-  constructor(
-    private offcanvasService: NgbOffcanvas, 
-    private modalService: NgbModal, 
-    private calendar: NgbCalendar
-  ) { }
-
-  onChild(newItem: any) {
-     console.log(newItem)
-  }
-  ngOnInit(): void {
-  
-    // for (let i = 0; i < 100; i++) {
-    //   this.items.push({
-    //     id: i + 1,
-    //     name: "test "+i,
-    //     itype: ( i % 5 == 0) ? 'select':'text',
-    //     value : "value "+i, 
-    //   });
-    // }
-    // for (let i = 0; i < 15; i++) {
-    //   this.fields.push({
-    //     id: i + 1,
-    //     name: "Name_"+(i*7),
-    //   });
-     
-    // }
-    console.log(this.items); 
+  constructor() {
+    document.addEventListener('paste', this.handlePaste.bind(this));
   }
 
-  focusSelect(){
-    console.log("date");
-  } 
+  handlePaste(event: ClipboardEvent) {
+    const items = event.clipboardData?.items;
 
-  openCanvas(content: any) {
-    this.offcanvasService.open(content, { position: 'end', panelClass: 'details-panel', }).result.then(
-      (result) => {
-        console.log("load data");
-      },
-      (reason) => {
-				 
-			},
-    );
-  }
+    if (items) {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
 
+        if (item.type.indexOf('image') !== -1) {
+          const blob = item.getAsFile();
 
-  openModalFullscreen(content: any) {
-    this.modalService.open(content, { fullscreen: true }).result.then(
-			(result) => { 
-       
-			},
-			(reason) => {
-			 
-			},
-		);
+          if (blob) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              this.clipboardImage = e.target?.result as string;
+              console.log('Gambar di-Paste:', this.clipboardImage);
+            };
 
-    $(function () {
-      $( ".resizable" ).resizable({ 
-        maxHeight: 33,
-        minHeight: 33,
-      });
-      $(".sortable").sortable({
-        handle: ".handle",
-        placeholder: "ui-state-highlight",
-        update: function (event: any, ui: any) {
-          const order: any[] = [];
-          $(".sortable .handle").each((index: number, element: any) => {
-            const itemId = $(element).attr("id");
-            order.push(itemId);
-          });
-
-          console.log(order);
-
+            reader.readAsDataURL(blob);
+          }
         }
-      });
-    });
+      }
+    }
   }
-
-  update(){
-    console.log("update");
-  }
-
   
 }
