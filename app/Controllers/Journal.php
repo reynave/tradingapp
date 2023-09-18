@@ -164,6 +164,7 @@ class Journal extends BaseController
                 "permissionId" => $post['model']['permissionId'],
                 "url" => uniqid(),
                 "templateCode" => $post['model']['template'],
+                "image" => base_url()."uploads/share/books.jpg",
                 // "borderColor" => "#3AA6B9",
                 // "backgroundColor" => "#C1ECE4",
                 "accountId" => model("Core")->accountId(),

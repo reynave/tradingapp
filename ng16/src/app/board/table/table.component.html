@@ -72,15 +72,16 @@
                             <div class="d-flex">
 
                                 <div class="me-2">
-                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New  Task</button>
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New
+                                        Task</button>
                                 </div>
- 
+
                                 <div class="me-2">
                                     <input type="text" class="form-control form-control-sm" [disabled]="!startUpTable"
-                                    [placeholder]=" startUpTable ? 'Search' : 'loading'" [(ngModel)]="keyword"  
-                                    (ngModelChange)="onSearchChange()">    
+                                        [placeholder]=" startUpTable ? 'Search' : 'loading'" [(ngModel)]="keyword"
+                                        (ngModelChange)="onSearchChange()">
                                 </div>
- 
+
                                 <div class="me-2">
                                     <div ngbDropdown class="d-inline-block" container="body">
                                         <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide"
@@ -140,7 +141,7 @@
                                     </a>
                                 </div>
                                 <div class="me-2" [hidden]="archives < 1">
-                                    <button type="button" class="btn btn-sm btn-light" > {{archives}} <i
+                                    <button type="button" class="btn btn-sm btn-light"> {{archives}} <i
                                             class="bi bi-archive"></i></button>
                                 </div>
                                 <div class="me-2" *ngIf="loading">
@@ -171,20 +172,20 @@
                                             #
                                         </span>
                                     </div>
-                                  
+
                                 </div>
-                               
+
                                 <div class="order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index"
                                     [hidden]="n.hide=='1'">
                                     <div class="p-1 text-center orders resizable " [ngStyle]="{'width': n.width+'px'}"
                                         data-id="{{n.id}}" data-tabindex="{{a}}">
-                                        <b>{{n.name}}  </b> <code *ngIf="!prod"> f{{n.f}}</code>
+                                        <b>{{n.name}} </b> <code *ngIf="!prod"> f{{n.f}}</code>
                                         <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top"
                                             ngbTooltip="{{evalDescription(n.eval,customField)}}" container="body">
                                             <button class="btn btn-sm btn-light py-0">
                                                 <img src="./assets/icon/formula-30.png" height="20px">
                                             </button>
-                                        </span> 
+                                        </span>
                                     </div>
                                 </div>
 
@@ -195,35 +196,36 @@
                             <span *ngFor="let row of detail; let i = index" [hidden]="row.archives == '1'">
                                 <div class="d-flex tables-body-td ">
                                     <div class="floating-div bg-white border-start table-body-td-first">
-                                        <div class="py-1 px-3 position-relative orders-left-fixed" >
-                                            <div class="table-sorting-area"> 
-                                                <div class="py-1 handle" data-id="{{row.id}}"> 
-                                                    <span *ngIf="row.ilock != '1'">  <i class="bi bi-list "></i> </span>
-                                                    <span *ngIf="row.ilock == '1'"> <i class="bi bi-lock-fill"></i></span>
-                                                </div>  
+                                        <div class="py-1 px-3 position-relative orders-left-fixed">
+                                            <div class="table-sorting-area">
+                                                <div class="py-1 handle" data-id="{{row.id}}">
+                                                    <span *ngIf="row.ilock != '1'"> <i class="bi bi-list "></i> </span>
+                                                    <span *ngIf="row.ilock == '1'"> <i
+                                                            class="bi bi-lock-fill"></i></span>
+                                                </div>
                                             </div>
 
-                                            <span *ngIf="row.checkbox===true"
-                                                (click)="row.checkbox=false;fnTools();">
+                                            <span *ngIf="row.checkbox===true" (click)="row.checkbox=false;fnTools();">
                                                 <i class="bi bi-check-square-fill text-primary"></i>
                                             </span>
-                                            <span *ngIf="row.checkbox!=true" 
-                                                (click)="row.checkbox=true;fnTools();">
+                                            <span *ngIf="row.checkbox!=true" (click)="row.checkbox=true;fnTools();">
                                                 <i class="bi bi-square"></i>
                                             </span>
                                             <span class="px-1 text-end  d-inline-block" style="min-width: 30px;">
                                                 {{i+1}}
                                             </span>
                                         </div>
-                                       
+
                                     </div>
 
-                                
+
                                     <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index"
                                         [hidden]="n.hide=='1'">
-                                        <div class="orders" [ngClass]="{'bg-lock': row.ilock == '1' ? true : false}" [ngStyle]="{'width': n.width+'px'}" > 
-                                           
-                                           <app-custom-field [item]="objItem(n,row,i)"  (newItemEvent)="onChild($event)"></app-custom-field> 
+                                        <div class="orders" [ngClass]="{'bg-lock': row.ilock == '1' ? true : false}"
+                                            [ngStyle]="{'width': n.width+'px'}">
+
+                                            <app-custom-field [item]="objItem(n,row,i)"
+                                                (newItemEvent)="onChild($event)"></app-custom-field>
                                         </div>
                                     </div>
 
@@ -238,16 +240,17 @@
                                         <i class="bi bi-file-spreadsheet text-white"></i>
                                     </div>
                                 </div>
-                                <div class=" order-{{n.sorting}} bg-light border-bottom "  *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
+                                <div class=" order-{{n.sorting}} bg-light border-bottom "
+                                    *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
                                     <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
                                         <!-- {{fnDetailTotal(n) }} -->
-                                        {{n.total}} 
+                                        {{n.total}}
                                     </div>
                                 </div>
                             </div>
 
                         </div>
-                       
+
 
                     </div>
                 </div>
@@ -256,4 +259,106 @@
         </div>
 
     </div>
-</div>  
+</div>
+
+
+<ng-template #canvasImages let-offcanvas>
+
+    <div class="container-fluid my-1">
+        <div class="row">
+            <div class="col-10">
+                <strong class="offcanvas-title" id="offcanvas-basic-title">Images #{{imagesIndex}}</strong>
+            </div>
+            <div class="col-2 text-end">
+                <button type="button" class="btn-close" aria-label="Close" (click)="closeImages()"></button>
+            </div>
+        </div>
+
+    </div>
+    <div class="offcanvas-body">
+        <div class="mb-2">
+
+            <div class="p-4 border-dot text-center rounded" *ngIf="!clipboardImage && !url">
+                <small>Paste the Image clipboard into this area </small>
+                <div><small>or</small></div>
+                <input type="text" [(ngModel)]="url" name="url" class="form-control form-control-sm"
+                    placeholder="Save external source images address">
+            </div>
+            <input #imageInput type="hidden">
+            
+            <div class="text-center my-5" *ngIf="imagesLoading">
+                <img src="./assets/gif/loading-board.gif" width="40%">
+            </div>
+
+            <div *ngIf="clipboardImage">
+
+                <div class="row g-1">
+                    <div class="col-12 mb-2">
+                        <img [src]="clipboardImage" alt="Pasted Image" width="100%">
+                    </div>
+                    <div class="col-12 mb-1">
+                        <input type="text" class="form-control" [(ngModel)]="caption" placeholder="Caption (optional)"
+                            (keyup.enter)="onImagesPost();">
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="button" class="btn btn-success" (click)="onImagesPost();"><i
+                                class="bi bi-send"></i></button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div *ngIf="url">
+
+                <div class="row g-1">
+                    <div class="col-12 mb-2">
+                        <img [src]="url" width="100%">
+
+                        <div class="my-1">
+                            <input type="text" readonly class="form-control form-control-sm" [value]="url">
+                        </div> 
+                    </div>
+
+                    <div class="col-1 align-self-center">
+                        <i class="bi bi-link-45deg"></i>
+                    </div>
+                    <div class="col-11 mb-1">
+                        <input type="text" class="form-control" [(ngModel)]="caption" placeholder="Caption (optional)"
+                            (keyup.enter)="onImagesSaveUrl();">
+                    </div>
+
+                    <div class="col-9 align-self-center">
+                        <small>This is using external images</small>
+                    </div>
+                    <div class="col-3 text-end">
+                        <button type="button" class="btn btn-success" (click)="onImagesSaveUrl();"><i
+                                class="bi bi-send"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="canvasImagesMaxHeight  px-2" *ngIf="!clipboardImage && !url">
+
+            <div class="row g-1">
+                <div class="col-6 mb-2" *ngFor="let x of images">
+                    <div> 
+                        <a [href]="x.path+x.fileName" target="_blank" [rel]="x.caption">
+                            <img [src]="x.path+x.fileName" width="100%" class="rounded" placement="top"
+                                [alt]="x.caption" ngbTooltip="{{x.caption}}">
+                        </a>
+                    </div>
+                    <div class="row">
+                        <div class="col-7"><small>{{x.source}}</small></div>
+                        <div class="col-5 text-end">
+                            <button type="button" (click)="onImagesRemove(x)" class="btn btn-sm btn-danger py-0"><small>Remove</small></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</ng-template>

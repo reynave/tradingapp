@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
@@ -38,7 +38,10 @@ export class NewCustomField {
 })
 export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild('contentEditSelect') contentEditSelect: any;
+  @ViewChild('canvasImages') canvasImages: any;
+
   prod = environment.production;
+  
   fields: any = [];
 
   newCustomField = new NewCustomField("", "text");
@@ -72,6 +75,9 @@ export class TableComponent implements OnInit, AfterViewInit {
   users: any = [];
   journalAccess: any = [];
   api: string = environment.api;
+  images : any = [];
+  imagesLoading : boolean = false;
+  imagesIndex : number  = 0;
   constructor(
     private http: HttpClient,
     public functionsService: FunctionsService,
@@ -81,7 +87,10 @@ export class TableComponent implements OnInit, AfterViewInit {
     private offcanvasService: NgbOffcanvas,
     private socketService: SocketService,
     private router: Router
-  ) { }
+  ) {
+
+    document.addEventListener('paste', this.handlePaste.bind(this));
+  }
 
   private _docSub: any;
   ngOnInit(): void {
@@ -172,6 +181,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
   ngOnDestroy() {
     this._docSub.unsubscribe();
+    document.removeEventListener('paste', this.handlePaste);
+
   }
 
   reload(newItem: any) {
@@ -443,6 +454,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.modalService.dismissAll();
   }
 
+  imageQueryParams : any =  [];
   onChild(newItem: any) {
 
     if (newItem['itype'] == 'note') {
@@ -451,16 +463,28 @@ export class TableComponent implements OnInit, AfterViewInit {
       offcanvasRef.componentInstance.name = 'World';
 
     }
+
     else if (newItem['itype'] == 'image') {
+      this.clipboardImage = "";
+      this.url = "";
+      this.detailObject = newItem;
+      this.imagesLoading = true;
+      this.imagesIndex = newItem['index'] + 1;
+      this.imageQueryParams = {
+        id: this.detailObject.id,
+        fn: this.detailObject.customField.f,
+      }
       this.router.navigate([], {
-        queryParams: {
-          id: new Date(),
-        },
+        queryParams: this.imageQueryParams,
         queryParamsHandling: 'merge',
       })
-      this.detailObject = newItem;
-      const offcanvasRef = this.offcanvasService.open(OffCanvasImagesComponent, { position: 'end', panelClass: 'details-panel', });
-      offcanvasRef.componentInstance.name = 'World';
+
+      console.log(newItem); 
+      this.offcanvasService.open(this.canvasImages, { position: 'end' }).result.then(
+        (result) => {  this.images = []; this.imageQueryParams = [] },
+        (reason) => {  this.images = [];this.imageQueryParams = []  },
+      );
+      this.httpImages();
 
 
     }
@@ -473,6 +497,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       const modalRef = this.modalService.open(TabletEditSelectComponent, { size: 'md' });
       modalRef.componentInstance.field = this.detailObject.select.field;
       modalRef.componentInstance.journalId = this.id;
+
     }
     else {
 
@@ -695,9 +720,6 @@ export class TableComponent implements OnInit, AfterViewInit {
     )
   }
 
-
-
-
   fnHide(n: number, index: number, item: any) {
     console.log(n, index);
     this.customField[index]['hide'] = n == 1 ? 0 : 1;
@@ -797,17 +819,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           chat: this.configService.account()['account']['name'] + " was update header",
         }
         this.socketService.sendMessage(body);
-
-        // if (data == 'httpDetail') {
-        //   this.httpDetail();
-        // }
-        // else if (data == 'reload') {
-        //   this.reload([]);
-        // }
-        // else if (data == 'httpCustomField') {
-        //   this.httpCustomField();
-        // }
-
+  
       });
     }
 
@@ -815,16 +827,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     }
   }
-
-  // fnDetailTotal(customField: any) {
-  //   let objIndex = this.tableFooter.findIndex(((obj: { key: any; }) => obj.key == customField.key));
-  //   let value = customField.name;
-  //   if(customField.iType == 'number' || customField.iType == 'formula'){
-  //      value = new Intl.NumberFormat('en-US').format(this.tableFooter[objIndex]['total']);
-  //   }
-  //   return value ;
-  // }
-
+ 
   evalDescription(evals: string, obj: any) {
     //console.log(obj);
     let formula = evals;
@@ -834,5 +837,133 @@ export class TableComponent implements OnInit, AfterViewInit {
     });
     return formula;
   }
+ 
 
+  clipboardImage: string = '';
+  @ViewChild('imageInput', { static: false }) imageInput: ElementRef | any;
+  caption: string = "";
+  url: string = "";
+
+  closeImages() { 
+    if (this.clipboardImage || this.url) {
+      this.clipboardImage = "";
+      this.url = "";
+    } else {
+      this.offcanvasService.dismiss();
+    }
+  }
+
+  handlePaste(event: ClipboardEvent) {
+    const items = event.clipboardData?.items;
+    console.log(event, items);
+
+    if (items) {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.type.indexOf('image') !== -1) {
+          const blob = item.getAsFile();
+          if (blob) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              this.clipboardImage = e.target?.result as string;
+              console.log('Gambar di-Paste:', this.clipboardImage);
+              this.url = "";
+
+            };
+
+            reader.readAsDataURL(blob);
+          }
+        } else {
+          console.log('null paste');
+        }
+      }
+    }
+  }
+  
+  onImagesPost() {
+    const body = {
+      clipboardImage: this.clipboardImage, 
+      caption : this.caption,
+      journalId : this.id,
+      id : this.imageQueryParams.id,
+      fn : this.imageQueryParams.fn,
+      url : this.url,  
+    }
+
+    this.clipboardImage = "";
+    this.caption = "";
+
+    this.http.post<any>(environment.api + "Upload64/base64ToJpg", body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.httpImages();
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
+
+  onImagesSaveUrl() {
+    const body = { 
+      caption : this.caption,
+      id : this.imageQueryParams.id,
+      fn : this.imageQueryParams.fn,
+      url : this.url,  
+    }
+
+    this.clipboardImage = "";
+    this.caption = "";
+    this.url = "";
+
+    this.http.post<any>(environment.api + "Images/onImagesSaveUrl", body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.httpImages();
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
+
+  httpImages(){
+    this.http.get<any>(environment.api + "images/boardTable", {
+      headers: this.configService.headers(),
+      params: {
+        id: this.imageQueryParams.id,
+        fn: this.imageQueryParams.fn,
+      }
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.images = data['items'];
+        this.imagesLoading  = false;
+      },
+      error => {
+        console.log(error);
+      }
+    ); 
+   
+  }
+  onImagesRemove(x:any){
+    const body = {
+      item : x,
+    }
+    this.http.post<any>(environment.api + "images/onImagesRemove",body, {
+      headers: this.configService.headers(), 
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.httpImages();
+      },
+      error => {
+        console.log(error);
+      }
+    ); 
+  }
 }

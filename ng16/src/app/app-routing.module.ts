@@ -14,6 +14,7 @@ import { TableComponent } from './board/table/table.component';
 import { ChartjsComponent } from './board/chartjs/chartjs.component';
 import { InvitedComponent } from './login/invited/invited.component';
 import { TablePrintableComponent } from './board/table-printable/table-printable.component'; 
+import { OffCanvasImagesComponent } from './board/table/off-canvas-images/off-canvas-images.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -22,8 +23,7 @@ const routes: Routes = [
   { path: "relogin", component: ReloginComponent, data: { active: "" },  canActivate:[]  },  
   { path: "invited", component: InvitedComponent, data: { active: "" },  canActivate:[]  }, 
 
-
-
+   
   { path: "home", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
   { path: "book", component: BookComponent, data: { active: "book", name :'shareToMe' },  canActivate:[authGuard]  }, 
   { path: "book/:id", component: BookComponent, data: { active: "book" },  canActivate:[authGuard]  },

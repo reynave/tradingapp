@@ -80,12 +80,19 @@ a{
 .minHeight{ 
   height: calc(100vh - 50px);
 }
+.canvasImagesMaxHeight{
+  height: 75vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 .bg-blur {
   transition: opacity 150ms ease-out 0s;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(4px);
 }
-
+.border-dot{
+  border: 1px dashed var(--color-gray);
+}
 .body-margin-top {
   margin-top: var(--body-margin-top);
 }

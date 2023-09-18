@@ -42,7 +42,7 @@
             <div style="width: 3rem;">
                 <input type="number" class="p-1 text-center">
             </div> -->
-
+ 
             <input type="text" class="p-1 {{'text-'+childItem['customField']['textAlign']}}" maxlength="250"
             [(ngModel)]="childItem['value']" #customFieldText [disabled]="item['ilock']===true"
             (keyup.enter)="customFieldText.blur()" (change)="emitToParent(childItem);" placeholder="HH:MM"
