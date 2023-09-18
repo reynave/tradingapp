@@ -108,7 +108,7 @@
         },
         { 
             "f" :13,
-            "name": "node",
+            "name": "note",
             "iType" : "note"
         }
     ]
