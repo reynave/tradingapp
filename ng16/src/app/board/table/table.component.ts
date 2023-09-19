@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, HostListener  } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, HostListener, ChangeDetectorRef  } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
@@ -89,7 +89,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     private ativatedRoute: ActivatedRoute,
     private offcanvasService: NgbOffcanvas,
     private socketService: SocketService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
 
     document.addEventListener('paste', this.handlePaste.bind(this));
@@ -115,7 +116,8 @@ export class TableComponent implements OnInit, AfterViewInit {
           if (data['action'] === 'delete') {
             data['msg'].forEach((el: { [x: string]: string; }) => {
               var objIndex = this.detail.findIndex(((obj: { id: string; }) => obj.id == el['id']));
-              this.detail.splice(objIndex, 1);
+             // this.detail.splice(objIndex, 1);   
+              this.detail = this.detail.filter((x) => x != this.detail[objIndex]);
             });
             this.calculationFooter()
           }
@@ -176,7 +178,9 @@ export class TableComponent implements OnInit, AfterViewInit {
             this.httpDetail();
           }
           if (data['action'] == 'tableReloadAddRow') {
-            this.reloadAddRow(data['data']);
+            console.log("add arrow",data['data']); 
+            this.detail = [...this.detail,data['data']];
+            //this.reloadAddRow(data['data']);
           }
         }
 
@@ -709,7 +713,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.calculationFooter();
   }
 
-  reloadAddRow(data: any) {
+  reloadAddRow(data: any) { 
     this.detail.push(data);
   }
 

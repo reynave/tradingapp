@@ -16,7 +16,7 @@
 }
 
 /* virtual-scroll.component.css */
-.example-viewport {
+.virtual-viewport {
     height: 50vh;
     border: 1px solid #ccc;
   }

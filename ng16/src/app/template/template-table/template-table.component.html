@@ -2,9 +2,18 @@
     <div class="row g-1">
       <div class="col-12">
         <h1>cdk-virtual-scroll-viewport</h1>
-        <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
-          <div *cdkVirtualFor="let item of items" class="example-item">
-            {{ item }}
+        <div class="header">
+          <div class="sticky-top">Header Kolom (scroll X)</div>
+        </div>
+        
+        <cdk-virtual-scroll-viewport itemSize="30" class="virtual-viewport">
+          <div class="row" *cdkVirtualFor="let row of rows; let i = index">
+            <div class="sticky-left">Header Baris (scroll Y)</div>
+            <div class="cell" *ngFor="let cell of row.split(','); let j = index">{{ cell }}
+              <div class="delete-button" (click)="removeRow(i)">Hapus</div>
+
+            </div>
+           
           </div>
         </cdk-virtual-scroll-viewport>
       </div>

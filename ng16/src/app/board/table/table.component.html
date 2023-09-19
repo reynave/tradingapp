@@ -196,7 +196,7 @@
                             </div>
 
                             <div class="sortable">
-                                <span *cdkVirtualFor="let row of detail; let i = index" [hidden]="row.archives == '1'">
+                                <span *cdkVirtualFor="let row of detail; let i = index; " [hidden]="row.archives == '1'">
                                     <div class="d-flex tables-body-td ">
                                         <div class="floating-div bg-white border-start table-body-td-first">
                                             <div class="py-1 px-3 position-relative orders-left-fixed">
@@ -346,13 +346,13 @@
 
 
 
-        <div class="canvasImagesMaxHeight  px-2" *ngIf="!clipboardImage && !url">
+        <div class="canvasImagesMaxHeight  px-1" *ngIf="!clipboardImage && !url">
 
             <div class="row g-1">
                 <div class="col-6 mb-2" *ngFor="let x of images">
                     <div>
                         <a [href]="x.path+x.fileName" target="_blank" [rel]="x.caption">
-                            <img [src]="x.path+x.fileName" width="100%" class="rounded" placement="top"
+                            <img [src]="x.path+x.fileName" width="100%" class="shadow-sm rounded border" placement="top"
                                 [alt]="x.caption" ngbTooltip="{{x.caption}}">
                         </a>
                     </div>
