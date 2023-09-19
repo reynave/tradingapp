@@ -158,45 +158,44 @@
                 </div>
 
                 <div class="ps-3 pt-0">
-
+                    
                     <div class="" *ngIf="startUpTable">
-                        <cdk-virtual-scroll-viewport itemSize="30" class="tables-body "  #scrollViewport > 
-                       
-                        <div  class="sticky-top border-bottom" [style.top]="inverseOfTranslation">
-                            <div class="d-flex tables-header-td bg-white">
+                        <cdk-virtual-scroll-viewport itemSize="30" class="tables-body " #scrollViewport>
 
-                                <div class="floating-div bg-white  border-start">
-                                    <div class="py-1 px-3">
-                                        <i class="bi bi-check-square-fill text-primary" *ngIf="isCheckBoxAll"
-                                            (click)="checkBoxAll(false)"></i>
-                                        <i class="bi bi-square" *ngIf="!isCheckBoxAll" (click)="checkBoxAll(true)"></i>
+                            <div class="sticky-top border-bottom" [style.top]="inverseOfTranslation">
+                                <div class="d-flex tables-header-td bg-white">
 
-                                        <span class="px-1 text-end  d-inline-block" style="min-width: 30px;">
-                                            #
-                                        </span>
+                                    <div class="floating-div bg-white  border-start">
+                                        <div class="py-1 px-3">
+                                            <i class="bi bi-check-square-fill text-primary" *ngIf="isCheckBoxAll"
+                                                (click)="checkBoxAll(false)"></i>
+                                            <i class="bi bi-square" *ngIf="!isCheckBoxAll"
+                                                (click)="checkBoxAll(true)"></i>
+                                            <span class="px-1 text-end  d-inline-block" style="min-width: 30px;"> #
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="order-{{n.sorting}} bg-white "
+                                        *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
+                                        <div class="p-1 text-center orders resizable "
+                                            [ngStyle]="{'width': n.width+'px'}" data-id="{{n.id}}"
+                                            data-tabindex="{{a}}">
+                                            <b>{{n.name}} </b>
+                                            <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top"
+                                                ngbTooltip="{{evalDescription(n.eval,customField)}}" container="body">
+                                                <button class="btn btn-sm btn-light py-0">
+                                                    <img src="./assets/icon/formula-30.png" height="20px">
+                                                </button>
+                                            </span>
+                                        </div>
                                     </div>
 
                                 </div>
-
-                                <div class="order-{{n.sorting}} bg-white " *ngFor="let n of customField;  let a = index"
-                                    [hidden]="n.hide=='1'">
-                                    <div class="p-1 text-center orders resizable " [ngStyle]="{'width': n.width+'px'}"
-                                        data-id="{{n.id}}" data-tabindex="{{a}}">
-                                        <b>{{n.name}} </b>
-                                        <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top"
-                                            ngbTooltip="{{evalDescription(n.eval,customField)}}" container="body">
-                                            <button class="btn btn-sm btn-light py-0">
-                                                <img src="./assets/icon/formula-30.png" height="20px">
-                                            </button>
-                                        </span>
-                                    </div>
-                                </div>
-
                             </div>
-                        </div>
-                             
-                            <div class="sortable">
 
+                            <div class="sortable">
                                 <span *cdkVirtualFor="let row of detail; let i = index" [hidden]="row.archives == '1'">
                                     <div class="d-flex tables-body-td ">
                                         <div class="floating-div bg-white border-start table-body-td-first">
@@ -237,10 +236,9 @@
 
                                     </div>
                                 </span>
-
                             </div>
 
-                            <div class="sticky-bottom ">
+                            <div class="sticky-bottom " [style.bottom]="inverseOfTranslationBottom">
                                 <div class="d-flex tables-header-td  ">
                                     <div class="floating-div  text-light  border-end ">
                                         <div class="py-1 px-3">

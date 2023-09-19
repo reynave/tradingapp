@@ -13,12 +13,3 @@
     height: 50vh;
     border: 1px solid #ccc;
   }
-
-.a{
-    position: relative;
-}
-.a .c{
-    position: sticky;
-    top: 0px;
-    left: 0px;
-}

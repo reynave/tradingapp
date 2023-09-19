@@ -192,6 +192,17 @@ export class TableComponent implements OnInit, AfterViewInit {
     let offset = this.viewPort["_renderedContentOffset"];
     return `-${offset}px`;
   }
+ 
+  public get inverseOfTranslationBottom(): string {
+    if (!this.viewPort || !this.viewPort["_renderedContentOffset"]) { 
+      return "-0px";
+    }
+    let offset = this.viewPort["_renderedContentOffset"];
+    
+    return `${offset}px`;
+  }
+ 
+  
   
   ngOnDestroy() {
     this._docSub.unsubscribe();
