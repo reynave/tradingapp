@@ -15,3 +15,13 @@
     }
 }
 
+/* virtual-scroll.component.css */
+.example-viewport {
+    height: 50vh;
+    border: 1px solid #ccc;
+  }
+  
+  .example-item {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }

@@ -1,10 +1,17 @@
 <div class="container-fluid body-margin-top">
     <div class="row g-1">
-
+      <div class="col-12">
+        <h1>cdk-virtual-scroll-viewport</h1>
+        <cdk-virtual-scroll-viewport itemSize="50" class="example-viewport">
+          <div *cdkVirtualFor="let item of items" class="example-item">
+            {{ item }}
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+       
         <div class="col-lg-12 col-12">
             <div>
-                <h2>Paste Gambar ke Halaman dan Konversi ke Base64</h2>
-                
+                <h2>Paste Gambar ke Halaman dan Konversi ke Base64</h2> 
                 <input #imageInput style="position: absolute; left: -1000px;" type="text">
                 
                 <div *ngIf="clipboardImage">

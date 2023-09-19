@@ -36,7 +36,7 @@ import { OffCanvasImagesComponent } from './board/table/off-canvas-images/off-ca
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
 import { TabletEditSelectComponent } from './board/table/tablet-edit-select/tablet-edit-select.component';
-
+import { ScrollingModule } from '@angular/cdk/scrolling';
 const config: SocketIoConfig = { 
   url: environment.socket_url, 
   options: { transports: ['websocket'] } 
@@ -80,7 +80,8 @@ const config: SocketIoConfig = {
     EditorModule,
     NgbDatepickerModule,
     ClipboardModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    ScrollingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

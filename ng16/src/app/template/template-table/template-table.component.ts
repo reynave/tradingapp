@@ -8,7 +8,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 export class TemplateTableComponent{
   clipboardImage: string = '';
   @ViewChild('imageInput', { static: false }) imageInput: ElementRef | any;
-
+  items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
   constructor() {
     document.addEventListener('paste', this.handlePaste.bind(this));
   }

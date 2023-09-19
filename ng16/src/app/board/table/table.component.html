@@ -158,8 +158,11 @@
                 </div>
 
                 <div class="ps-3 pt-0">
-                    <div class="tables-body " *ngIf="startUpTable">
-                        <div class="sticky-top border-bottom">
+
+                    <div class="" *ngIf="startUpTable">
+                        <cdk-virtual-scroll-viewport itemSize="30" class="tables-body "  #scrollViewport > 
+                       
+                        <div  class="sticky-top border-bottom" [style.top]="inverseOfTranslation">
                             <div class="d-flex tables-header-td bg-white">
 
                                 <div class="floating-div bg-white  border-start">
@@ -179,7 +182,7 @@
                                     [hidden]="n.hide=='1'">
                                     <div class="p-1 text-center orders resizable " [ngStyle]="{'width': n.width+'px'}"
                                         data-id="{{n.id}}" data-tabindex="{{a}}">
-                                        <b>{{n.name}} </b> <code *ngIf="!prod"> f{{n.f}}</code>
+                                        <b>{{n.name}} </b>
                                         <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top"
                                             ngbTooltip="{{evalDescription(n.eval,customField)}}" container="body">
                                             <button class="btn btn-sm btn-light py-0">
@@ -191,68 +194,73 @@
 
                             </div>
                         </div>
+                             
+                            <div class="sortable">
 
-                        <div class="sortable">
-                            <span *ngFor="let row of detail; let i = index" [hidden]="row.archives == '1'">
-                                <div class="d-flex tables-body-td ">
-                                    <div class="floating-div bg-white border-start table-body-td-first">
-                                        <div class="py-1 px-3 position-relative orders-left-fixed">
-                                            <div class="table-sorting-area">
-                                                <div class="py-1 handle" data-id="{{row.id}}">
-                                                    <span *ngIf="row.ilock != '1'"> <i class="bi bi-list "></i> </span>
-                                                    <span *ngIf="row.ilock == '1'"> <i
-                                                            class="bi bi-lock-fill"></i></span>
+                                <span *cdkVirtualFor="let row of detail; let i = index" [hidden]="row.archives == '1'">
+                                    <div class="d-flex tables-body-td ">
+                                        <div class="floating-div bg-white border-start table-body-td-first">
+                                            <div class="py-1 px-3 position-relative orders-left-fixed">
+                                                <div class="table-sorting-area">
+                                                    <div class="py-1 handle" data-id="{{row.id}}">
+                                                        <span *ngIf="row.ilock != '1'"> <i class="bi bi-list "></i>
+                                                        </span>
+                                                        <span *ngIf="row.ilock == '1'"> <i
+                                                                class="bi bi-lock-fill"></i></span>
+                                                    </div>
                                                 </div>
+
+                                                <span *ngIf="row.checkbox===true"
+                                                    (click)="row.checkbox=false;fnTools();">
+                                                    <i class="bi bi-check-square-fill text-primary"></i>
+                                                </span>
+                                                <span *ngIf="row.checkbox!=true" (click)="row.checkbox=true;fnTools();">
+                                                    <i class="bi bi-square"></i>
+                                                </span>
+                                                <span class="px-1 text-end  d-inline-block" style="min-width: 30px;">
+                                                    {{i+1}}
+                                                </span>
                                             </div>
 
-                                            <span *ngIf="row.checkbox===true" (click)="row.checkbox=false;fnTools();">
-                                                <i class="bi bi-check-square-fill text-primary"></i>
-                                            </span>
-                                            <span *ngIf="row.checkbox!=true" (click)="row.checkbox=true;fnTools();">
-                                                <i class="bi bi-square"></i>
-                                            </span>
-                                            <span class="px-1 text-end  d-inline-block" style="min-width: 30px;">
-                                                {{i+1}}
-                                            </span>
+                                        </div>
+
+
+                                        <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index"
+                                            [hidden]="n.hide=='1'">
+                                            <div class="orders" [ngClass]="{'bg-lock': row.ilock == '1' ? true : false}"
+                                                [ngStyle]="{'width': n.width+'px'}">
+
+                                                <app-custom-field [item]="objItem(n,row,i)"
+                                                    (newItemEvent)="onChild($event)"></app-custom-field>
+                                            </div>
                                         </div>
 
                                     </div>
+                                </span>
 
-
-                                    <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index"
-                                        [hidden]="n.hide=='1'">
-                                        <div class="orders" [ngClass]="{'bg-lock': row.ilock == '1' ? true : false}"
-                                            [ngStyle]="{'width': n.width+'px'}">
-
-                                            <app-custom-field [item]="objItem(n,row,i)"
-                                                (newItemEvent)="onChild($event)"></app-custom-field>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </span>
-                        </div>
-
-                        <div class="sticky-bottom ">
-                            <div class="d-flex tables-header-td  ">
-                                <div class="floating-div  text-light  border-end ">
-                                    <div class="py-1 px-3">
-                                        <i class="bi bi-file-spreadsheet text-white"></i>
-                                    </div>
-                                </div>
-                                <div class=" order-{{n.sorting}} bg-light border-bottom "
-                                    *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
-                                    <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
-                                        <!-- {{fnDetailTotal(n) }} -->
-                                        {{n.total}}
-                                    </div>
-                                </div>
                             </div>
 
-                        </div>
+                            <div class="sticky-bottom ">
+                                <div class="d-flex tables-header-td  ">
+                                    <div class="floating-div  text-light  border-end ">
+                                        <div class="py-1 px-3">
+                                            <i class="bi bi-file-spreadsheet text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div class=" order-{{n.sorting}} bg-light border-bottom "
+                                        *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
+                                        <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
+                                            <!-- {{fnDetailTotal(n) }} -->
+                                            {{n.total}}
+                                        </div>
+                                    </div>
+                                </div>
 
+                            </div>
+                        </cdk-virtual-scroll-viewport>
 
                     </div>
+
                 </div>
             </div>
 
@@ -285,7 +293,7 @@
                     placeholder="Save external source images address">
             </div>
             <input #imageInput type="hidden">
-            
+
             <div class="text-center my-5" *ngIf="imagesLoading">
                 <img src="./assets/gif/loading-board.gif" width="40%">
             </div>
@@ -316,7 +324,7 @@
 
                         <div class="my-1">
                             <input type="text" readonly class="form-control form-control-sm" [value]="url">
-                        </div> 
+                        </div>
                     </div>
 
                     <div class="col-1 align-self-center">
@@ -344,7 +352,7 @@
 
             <div class="row g-1">
                 <div class="col-6 mb-2" *ngFor="let x of images">
-                    <div> 
+                    <div>
                         <a [href]="x.path+x.fileName" target="_blank" [rel]="x.caption">
                             <img [src]="x.path+x.fileName" width="100%" class="rounded" placement="top"
                                 [alt]="x.caption" ngbTooltip="{{x.caption}}">
@@ -353,7 +361,8 @@
                     <div class="row">
                         <div class="col-7"><small>{{x.source}}</small></div>
                         <div class="col-5 text-end">
-                            <button type="button" (click)="onImagesRemove(x)" class="btn btn-sm btn-danger py-0"><small>Remove</small></button>
+                            <button type="button" (click)="onImagesRemove(x)"
+                                class="btn btn-sm btn-danger py-0"><small>Remove</small></button>
                         </div>
                     </div>
                 </div>

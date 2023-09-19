@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, HostListener  } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
@@ -11,6 +11,7 @@ import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.com
 import { OffCanvasImagesComponent } from './off-canvas-images/off-canvas-images.component';
 import { SocketService } from 'src/app/service/socket.service';
 import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 declare var $: any;
 
 export class NewSelect {
@@ -38,10 +39,12 @@ export class NewCustomField {
 })
 export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild('contentEditSelect') contentEditSelect: any;
-  @ViewChild('canvasImages') canvasImages: any;
-
+  @ViewChild('canvasImages') canvasImages: any; 
+   
+  @ViewChild('viewport') viewportRef!: ElementRef;
+  @ViewChild(CdkVirtualScrollViewport, {static: false}) viewPort: CdkVirtualScrollViewport | undefined;
   prod = environment.production;
-  
+  scrollX = 0;
   fields: any = [];
 
   newCustomField = new NewCustomField("", "text");
@@ -94,6 +97,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   private _docSub: any;
   ngOnInit(): void {
+  
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
     this.httpHeader();
@@ -179,11 +183,22 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  
+  
+  public get inverseOfTranslation(): string {
+    if (!this.viewPort || !this.viewPort["_renderedContentOffset"]) { 
+      return "-0px";
+    }
+    let offset = this.viewPort["_renderedContentOffset"];
+    return `-${offset}px`;
+  }
+  
   ngOnDestroy() {
     this._docSub.unsubscribe();
     document.removeEventListener('paste', this.handlePaste);
 
   }
+
 
   reload(newItem: any) {
     this.id = this.ativatedRoute.snapshot.params['id'];
@@ -281,14 +296,15 @@ export class TableComponent implements OnInit, AfterViewInit {
         });
         this.calculationFooter();
         this.startUpTable = true;
-
+       
+        
       },
       e => {
         console.log(e);
       }
     )
   }
-
+   
   getChange() {
     console.log(this.detail);
   }
