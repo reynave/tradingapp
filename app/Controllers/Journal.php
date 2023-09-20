@@ -19,8 +19,13 @@ class Journal extends BaseController
         $book = [];
         $items = [];
 
-        $itemFields = "ja.id as journal_accessID, ja.bookId, p.name AS 'permission', p.fontIcon, 
-        a.name AS 'ownBy',j.*, ja.owner,  '' AS checkbox , ja.presence, ja.admin, ja.star";
+        $itemFields = " ja.id as journal_accessID, 
+        ja.bookId, 
+        p.name AS 'permission', 
+        p.fontIcon, 
+        a.name AS 'ownBy',
+        j.*, 
+        ja.owner,  '' AS checkbox , ja.presence, ja.admin, ja.star";
 
         if ($id == 'undefined' || !$id) {
 
@@ -71,15 +76,23 @@ class Journal extends BaseController
         $templatejson = "SELECT  * FROM template WHERE presence  = 1  order by id ASC, name ASC";
         $templatejson = $this->db->query($templatejson)->getResultArray();
 
+        $items = [];
+        foreach($itemJoin as $rec){
+            array_push( $items, array_merge($rec,[
+                "rows" => model("Core")->select("count(id)","journal_detail","journalId = '".$rec['id']."' and presence = 1"),
+                "template" => model("Core")->select("name","template","code = '".$rec['templateCode']."' and presence = 1"),
+            ]));
+        }
 
         $data = array(
             "error" => false,
-            "items" => $itemJoin,
+            "items" => $items,
             "book" => $book,
             "bookSelect" => $bookSelect,
             "permission" => $permission,
             "header" => model("Core")->header(),
             "templatejson" => $templatejson,
+            "q" => $q1 ,
         );
         return $this->response->setJSON($data);
     }

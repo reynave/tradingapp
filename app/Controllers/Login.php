@@ -27,7 +27,7 @@ class Login extends BaseController
         );
         return $this->response->setJSON($data);
     }
- 
+
     function auth0()
     {
 
@@ -37,47 +37,47 @@ class Login extends BaseController
         if (isset($_POST['data'])) {
             $jwt = explode(".", $_POST['data']);
 
-            $user = json_decode(base64_decode($jwt[1]),true);
+            $user = json_decode(base64_decode($jwt[1]), true);
 
-            $key = $_ENV['SECRETKEY']; 
+            $key = $_ENV['SECRETKEY'];
             $user['exp'] = strtotime("+ 30 day");
-            
+
             $id = false;
-         
-            $email = $user['email']; 
-            if($user['iss'] == 'https://accounts.google.com'){ 
-                $id = model('Core')->select("id", "account", "email='$email' and googleSub = '".$user['sub']."' and presence = 1 and status = 1 ");
+
+            $email = $user['email'];
+            if ($user['iss'] == 'https://accounts.google.com') {
+                $id = model('Core')->select("id", "account", "email='$email' and googleSub = '" . $user['sub'] . "' and presence = 1 and status = 1 ");
             }
- 
+
             if ($id) {
-              
+
                 $this->db->table("account_login")->insert([
                     "accountId" => $id,
                     "jti" => $user['jti'],
-                    "expDate" => date("Y-m-d H:i:s",$user['exp']),
-                    "iss" => $user['iss'], 
+                    "expDate" => date("Y-m-d H:i:s", $user['exp']),
+                    "iss" => $user['iss'],
                     "ip" => $this->request->getIPAddress(),
                     "getUserAgent" => $this->request->getUserAgent(),
                     "input_date" => date("Y-m-d H:i:s"),
                 ]);
-              
-                
+
+
             } else {
-                $id = date("ymd").".".model("Core")->number('account');
+                $id = date("ymd") . "." . model("Core")->number('account');
                 $this->db->table("account")->insert([
                     "id" => $id,
                     "googleSub" => $user['sub'],
-                    "email" => $user['email'], 
-                    "name" => $user['name'], 
-                    "picture" => $user['picture'], 
+                    "email" => $user['email'],
+                    "name" => $user['name'],
+                    "picture" => $user['picture'],
                     "input_date" => date("Y-m-d H:i:s"),
                 ]);
 
                 $this->db->table("account_login")->insert([
                     "accountId" => $id,
                     "jti" => $user['jti'],
-                    "expDate" => date("Y-m-d H:i:s",$user['exp']),
-                    "iss" => $user->iss, 
+                    "expDate" => date("Y-m-d H:i:s", $user['exp']),
+                    "iss" => $user->iss,
                     "ip" => $this->request->getIPAddress(),
                     "getUserAgent" => $this->request->getUserAgent(),
                     "input_date" => date("Y-m-d H:i:s"),
@@ -85,52 +85,54 @@ class Login extends BaseController
             }
             $user['account'] = $this->db->query("SELECT id, email, name, picture, inviteLink, username
             FROM account WHERE id = '" . $id . "' ")->getResultArray()[0];
-                 
+
             $payload = $user;
             $jwt = JWT::encode($payload, $key, 'HS256');
 
-            $accountTokenId =  uniqid();
+            $accountTokenId = uniqid();
             $this->db->table("account_token")->insert([
                 "id" => $accountTokenId,
                 "accountId" => $id,
                 "token" => $jwt,
             ]);
- 
-            $data = [
-                "error" => false, 
-                "token" => $jwt,
-                "user" => $user,
-                "accountTokenId" =>  $accountTokenId,
-            ];
 
-        }
-        return $this->response->setJSON($data);
-    }
-
-    function checkTokenAsLogin() {
-        $getVar =  $this->request->getVar();
-        $data = [
-            "error" => true,
-            "getVar" => $getVar, 
-            "token" => "",
-        ];
-        if($getVar['id'] && model("Core")->select("id","account_token", " id = '".$getVar['id']."' ")){
             $data = [
                 "error" => false,
-                "getVar" => $getVar, 
-                "token" => model("Core")->select("token","account_token", " id = '".$getVar['id']."' "),
+                "token" => $jwt,
+                "user" => $user,
+                "accountTokenId" => $accountTokenId,
             ];
-        }
 
-        
+        }
         return $this->response->setJSON($data);
     }
 
-    function clearOneShotToken() {
+    function checkTokenAsLogin()
+    {
+        $getVar = $this->request->getVar();
+        $data = [
+            "error" => true,
+            "getVar" => $getVar,
+            "token" => "",
+        ];
+        if ($getVar['id'] && model("Core")->select("id", "account_token", " id = '" . $getVar['id'] . "' ")) {
+            $data = [
+                "error" => false,
+                "getVar" => $getVar,
+                "token" => model("Core")->select("token", "account_token", " id = '" . $getVar['id'] . "' "),
+            ];
+        }
+
+
+        return $this->response->setJSON($data);
+    }
+
+    function clearOneShotToken()
+    {
         $json = file_get_contents('php://input');
         $post = json_decode($json, true);
         $data = [
-            "error" => true, 
+            "error" => true,
             "note" => ""
         ];
         if ($post) {
@@ -138,7 +140,7 @@ class Login extends BaseController
                 "id" => $post['id'],
             ]);
             $data = [
-                "error" => false, 
+                "error" => false,
                 "note" => ""
             ];
         }
@@ -146,26 +148,27 @@ class Login extends BaseController
     }
 
 
-    function signInManual()
+    function signIn()
     {
 
-        $json = file_get_contents('php://input');
-        $post = json_decode($json, true);
-        $data = [
+        // $json = file_get_contents('php://input');
+        // $post = json_decode($json, true);
+        $data = array( 
             "error" => true,
-            "post" => $post,
-            "note" => ""
-        ];
-        if ($post && filter_var($post['email'], FILTER_VALIDATE_EMAIL)) {
-
-            $email = $post['email'];
-            $pass = $post['pass'];
+            "post" => "Wrong password or email",
+        );
+        if ($this->request->isAJAX() && $this->request->getMethod(true) === 'POST') {
+            $email = $this->request->getPost('email');
+            $pass = $this->request->getPost('password');
+             
             $id = model('Core')->select("id", "account", "email='$email' and password = '$pass' and presence = 1 and status = 1 ");
             if ($id) {
 
-                $key = $_ENV['SECRETKEY'];
+                $key = $_ENV['SECRETKEY']; 
                 $payload = [
-                    "account" => $this->db->query("SELECT id, email, name FROM account WHERE id = '" . $id . "' ")->getResultArray()[0],
+                    "account" => $this->db->query("SELECT id, email, name, picture, inviteLink, username
+                    FROM account WHERE id = '" . $id . "' ")->getResultArray()[0],
+                    'iss' => 'https://www.mirrel.com',
                     'iat' => time() . microtime(),
                     'nbf' => strtotime(date("Y-m-d H:i:s")),
                 ];
@@ -174,19 +177,26 @@ class Login extends BaseController
                 $this->db->table("account_login")->insert([
                     "accountId" => $id,
                     "ip" => $this->request->getIPAddress(),
+                    'iss' => 'https://www.mirrel.com',
                     "getUserAgent" => $this->request->getUserAgent(),
                     "input_date" => date("Y-m-d H:i:s"),
+                    'expDate' => date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s'). ' +30 days')),
+                    'jti' =>  md5(uniqid().' '),
                 ]);
-
+                $accountTokenId = uniqid();
+                $this->db->table("account_token")->insert([
+                    "id" => $accountTokenId,
+                    "accountId" => $id,
+                    "token" => $jwt,
+                ]);
                 $data = array(
                     "error" => false,
-                    "token" => $jwt,
-                    "post" => $post,
-                    "payload" => $payload,
+                    "accountTokenId" => $accountTokenId,
+                    "post" => "Login success, redirect to App",
                 );
             } else {
                 $data = array(
-                    "post" => $post,
+                    "post" => $this->request->getPost(),
                     "error" => true,
                     "post" => "Wrong password or email",
                 );

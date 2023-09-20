@@ -40,6 +40,7 @@
                                             <th width="30px" *ngIf="book.id != 0"></th>
                                             <th width="40px"></th>
                                             <th>Title</th>
+                                            <th  class="text-center">Records</th>
                                             <th>Template</th>
                                             <th>Update Date</th>
                                             <th>Owner</th>
@@ -72,13 +73,14 @@
                                                 <a class="text-primary"
                                                     [routerLink]="[ '/board/table/', x.id, x.viewId ]"><b>{{x.name}}</b></a>
                                             </td>
-
+                                            <td class="text-center">
+                                                <div>
+                                                    <div class="bg-warning">{{x.rows | number}}</div>
+                                                </div>
+                                            </td>
                                             <td>
-                                                <span class="badge bg-info"
-                                                    *ngIf="x.presence == '1'">{{x.templateCode}}</span>
-                                                <span class="badge bg-light text-warning"
-                                                    *ngIf="x.presence == '4'">Trash
-                                                    Bin</span>
+                                                <span class="badge bg-info"   *ngIf="x.presence == '1'">{{x.template}}</span>
+                                                <span class="badge bg-light text-warning"  *ngIf="x.presence == '4'">Trash  Bin</span>
                                             </td>
 
                                             <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
