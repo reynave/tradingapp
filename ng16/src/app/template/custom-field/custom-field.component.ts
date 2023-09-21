@@ -1,9 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from 'src/app/service/config.service';
-import { environment } from 'src/environments/environment';
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from 'src/environments/environment'; 
 
 @Component({
   selector: 'app-custom-field',
@@ -21,11 +20,13 @@ export class CustomFieldComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
-  ) { }
+    private cdRef: ChangeDetectorRef
+  ) {  }
 
 
   ngOnInit(): void {
     this.childItem = { ...this.item };
+    this.cdRef.markForCheck();
   }
 
   fnChildItemSelectOption(id: string) {

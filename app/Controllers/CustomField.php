@@ -103,6 +103,53 @@ class CustomField extends BaseController
         return $this->response->setJSON($data);
     }
 
+    function updateRow()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+           $value = $post['row']['f'.$post['fx']];
+
+            // $row = $post['newItem']['value'];
+            if ($post['column']['iType'] == 'date') {
+                $value = $value['year'] . '-' . $value['month'] . '-' . $value['day'];
+            } else if ($post['column']['iType'] == 'time') {
+                $value = self::validateAndConvertTime($value);
+            }
+           
+
+            $this->db->table("journal_detail")->update([
+                "f" . $post['fx'] => $value,
+                "update_by" => model("Core")->accountId(),
+                "update_date" => date("Y-m-d H:i:s"),
+            ], "id = '" . $post['row']['id'] . "' ");
+
+            $newId = $post['row']['id'];
+            $journalId = model("Core")->select("journalId", "journal_detail", "id = '$newId' ");
+
+            $journalTable = model("Core")->journalTable($journalId, '', " AND  id = '$newId'  ");
+            $tableViewOnly = model("TableViewOnly")->journalTable($journalId, '', " AND  id = '$newId'  ");
+
+            for ($i = 0; $i < count($journalTable['detail']); $i++) {
+                $journalTable['detail'][$i]['searchable'] = $tableViewOnly['detail'][$i];
+            }
+            $detail =  $journalTable['detail'];
+
+            $data = [
+                "error" => false,
+                "post" => $post, 
+                "value" => $post['row']['f'.$post['fx']],
+                "row" =>   $detail[0],
+            ];
+        }
+
+        return $this->response->setJSON($data);
+    }
+
     function validateAndConvertTime($timeString)
     {
         if (strpos($timeString, ':') !== false) {

@@ -81,7 +81,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   images: any = [];
   imagesLoading: boolean = false;
   imagesIndex: number = 0;
-  imageQueryParams: any = [];
   constructor(
     private http: HttpClient,
     public functionsService: FunctionsService,
@@ -91,6 +90,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     private offcanvasService: NgbOffcanvas,
     private socketService: SocketService,
     private router: Router,
+    private ngZone: NgZone
   ) {
 
     document.addEventListener('paste', this.handlePaste.bind(this));
@@ -110,23 +110,23 @@ export class TableComponent implements OnInit, AfterViewInit {
           if (data['action'] === 'TableDetailUpdateRow') {
 
             const index = this.detail.findIndex((rec: { id: string; }) => rec.id === data['msg']['id']);
-            if (index !== -1) {
-              for (let i = 0; i < 16; i++) {
-                // console.log("f"+i, this.detail[index]['f'+i]);
-                if (this.detail[index]['f' + i] !== undefined) {
-                  this.detail[index]['f' + i] = data['msg']['f' + i];
-                }
-
-              }
-
-              ///    this.detail = this.detail.filter((x) => x != this.detail[index]);
-            }
-            console.log(data['msg']);
+            console.log(index);
+             
+            // if (index !== -1) {
+            //    this.detail[index] = [data['msg'], ...this.detail]; // Membuat objek array baru
+            //   // this.detail[index] = data['msg']; // Mengganti elemen pada indeks yang ditemukan
+           
+            //  // this.detail = [...this.detail, data['msg']];
+            //  ///    this.detail = this.detail.filter((x) => x != this.detail[index]);
+            // }
+           // this.detail[0] = [ ...data['msg']]; // Membuat objek array baru
+           this.detail[index] = data['msg'];
+            console.log( this.detail[index] , data['msg']);
 
             this.calculationFooter();
 
 
-            //  this.httpDetail();
+          //  this.httpDetail();
           }
 
           if (data['action'] === 'delete' || data['action'] == 'archives') {
@@ -157,6 +157,15 @@ export class TableComponent implements OnInit, AfterViewInit {
               this.detail[objIndex]['ilock'] = "0";
             });
           }
+
+          // if (data['action'] == 'archives') {
+          //   data['msg'].forEach((el: { [x: string]: any; }) => {
+          //     var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
+          //     this.detail[objIndex]['archives'] = "1";
+          //     this.archives++;
+          //   });
+          //   this.calculationFooter()
+          // }
 
           if (data['action'] == 'sortableDetail') {
             this.sortByOrder(data['msg']);
@@ -193,7 +202,6 @@ export class TableComponent implements OnInit, AfterViewInit {
           }
         }
         console.log(this.detail);
-
       }
     );
   }
@@ -269,7 +277,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     }).subscribe(
       data => {
-        console.log('httpDetail', data);
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
@@ -343,7 +350,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     } else {
       this.detail = this.detailOrigin.filter((item: { searchable: string; }) => {
-        const matchItem = item.searchable.toLowerCase().includes(this.keyword.toLowerCase()); 
+        const matchItem = item.searchable.toLowerCase().includes(this.keyword.toLowerCase());
         return matchItem;
       });
     }
@@ -351,7 +358,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-     
+    console.log("ngAfterViewInit");
   }
 
 
@@ -496,7 +503,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.modalService.dismissAll();
   }
 
-  
+  imageQueryParams: any = [];
   onChild(newItem: any) {
 
     if (newItem['itype'] == 'note') {
@@ -577,59 +584,6 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     }
   }
-  updateRow(row: any, fx: string, column : any) {
-    console.log(row);
-
-    const body = {
-      id: this.id,
-      row: row,
-      fx: fx,
-      column : column,
-    }
-    console.log('updateRow', body); 
-    this.http.post<any>(environment.api + 'CustomField/updateRow', body,
-      { headers: this.configService.headers() }
-    ).subscribe(
-      data => {
-        console.log("CustomField/updateRow ", data);
-
-        const msg = {
-          sender: localStorage.getItem("address.mirrel.com"),
-          msg: data['row'],
-          journalId: this.id,
-          action: 'TableDetailUpdateRow',
-          chat: this.configService.account()['account']['name'] + ' update column',
-        }
-        this.socketService.sendMessage(msg);
-
-      },
-      e => {
-        console.log(e);
-      },
-    );
-  }
-
-  offCanvasImages(row: any, fx: string, index : number){
-    this.clipboardImage = "";
-    this.url = "";
-    this.detailObject = row;
-    this.imagesLoading = true;
-    this.imagesIndex = index + 1;
-    this.imageQueryParams = {
-      id: row['id'],
-      fn: fx,
-    }
-    this.router.navigate([], {
-      queryParams: this.imageQueryParams,
-      queryParamsHandling: 'merge',
-    }) 
-    this.offcanvasService.open(this.canvasImages, { position: 'end' }).result.then(
-      (result) => { this.images = []; this.imageQueryParams = [] },
-      (reason) => { this.images = []; this.imageQueryParams = [] },
-    );
-    this.httpImages();
-  }
-
 
   addTask() {
     const body = {

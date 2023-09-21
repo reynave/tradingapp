@@ -13,3 +13,50 @@
     height: 50vh;
     border: 1px solid #ccc;
   }
+
+
+  input{
+    background: none;
+}
+input:focus{
+    background:none !important;
+}
+/* set the unit abbreviation for each unit class */
+.customFieldArea {
+    display: inline-block;
+    position: relative;
+}
+.datepicker{z-index:9999 !important}
+/* position the unit to the right of the wrapper */
+.customFieldArea::after {
+    position: absolute;
+    top: 2px;
+    right: 0em;
+    transition: all .05s ease-in-out;
+}
+.form-control:focus {
+    border-color: none;
+    box-shadow: none;
+}
+.customFieldArea:hover::after,
+.customFieldArea:focus-within::after {
+    right: 0em;
+}
+
+/* handle Firefox (arrows always shown) */
+@supports (-moz-appearance:none) {
+    .customFieldArea::after {
+        right: 0em;
+    }
+}
+
+.percent::after {
+    content: '%';
+}
+
+.cut-text {  
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -55,4 +55,35 @@ export class FunctionsService {
 
     return this.http.post(environment.api+"upload/profilePicture", formData, { headers });
   }
+
+  isNumber(str: string) {
+    return str ? str.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") : '';
+  }
+  formatDate(variable: any) {
+    if(variable == ''){
+      return '';
+    }
+    else if (typeof variable === 'string') {
+      var dateParts = variable.split('-');
+      var year = dateParts[0];
+      var month = dateParts[1];
+      var day = dateParts[2]; 
+      // Memastikan bulan memiliki dua digit
+      if (month.length === 1) {
+        month = '0' + month;
+      }
+      if (day.length === 1) {
+        day = '0' + day;
+      } 
+      // Menggabungkan kembali tahun, bulan, dan hari dalam format yang diinginkan
+      var formattedDate = year + '-' + month + '-' + day;
+      return formattedDate; 
+    } 
+    else if (Array.isArray(variable)) {
+      return 'Array';
+    } 
+    else {
+      return 'Not String or Array';
+    }
+  }
 }

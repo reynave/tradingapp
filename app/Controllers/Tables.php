@@ -84,7 +84,6 @@ class Tables extends BaseController
 
     function detail()
     {
-
         $data = array(
             "error" => true,
             "request" => $this->request->getVar(),

@@ -140,10 +140,6 @@
                                         <i class="bi bi-printer"></i> Printable
                                     </a>
                                 </div>
-                                <div class="me-2">
-                                    <button type="button" class="btn btn-sm border"> Total {{detail.length
-                                        |number}}</button>
-                                </div>
                                 <div class="me-2" [hidden]="archives < 1">
                                     <button type="button" class="btn btn-sm btn-light"> {{archives}} <i
                                             class="bi bi-archive"></i></button>
@@ -151,8 +147,6 @@
                                 <div class="me-2" *ngIf="loading">
                                     <img src="./assets/gif/sm-loading.gif" width="20">
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -164,11 +158,11 @@
                 </div>
 
                 <div class="ps-3 pt-0">
-
+                    
                     <div class="" *ngIf="startUpTable">
                         <cdk-virtual-scroll-viewport itemSize="30" class="tables-body " #scrollViewport>
 
-                            <div class="sticky-top border-bottom" [style.top]=" detail.length > 20 ?  inverseOfTranslation : '0px'">
+                            <div class="sticky-top border-bottom" [style.top]="inverseOfTranslation">
                                 <div class="d-flex tables-header-td bg-white">
 
                                     <div class="floating-div bg-white  border-start">
@@ -188,7 +182,7 @@
                                         <div class="p-1 text-center orders resizable "
                                             [ngStyle]="{'width': n.width+'px'}" data-id="{{n.id}}"
                                             data-tabindex="{{a}}">
-                                            <b>{{n.name}} </b> <code>f{{n.f}}</code>
+                                            <b>{{n.name}} </b>
                                             <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top"
                                                 ngbTooltip="{{evalDescription(n.eval,customField)}}" container="body">
                                                 <button class="btn btn-sm btn-light py-0">
@@ -202,7 +196,7 @@
                             </div>
 
                             <div class="sortable">
-                                <span *cdkVirtualFor="let row of detail; let i = index; ">
+                                <span *cdkVirtualFor="let row of detail; let i = index; " [hidden]="row.archives == '1'">
                                     <div class="d-flex tables-body-td ">
                                         <div class="floating-div bg-white border-start table-body-td-first">
                                             <div class="py-1 px-3 position-relative orders-left-fixed">
@@ -226,92 +220,17 @@
                                                     {{i+1}}
                                                 </span>
                                             </div>
+
                                         </div>
 
 
-                                        <div class="order-{{column.sorting}}"
-                                            *ngFor="let column of customField;  let a = index"
-                                            [hidden]="column.hide=='1'">
+                                        <div class="order-{{n.sorting}}" *ngFor="let n of customField;  let a = index"
+                                            [hidden]="n.hide=='1'">
                                             <div class="orders" [ngClass]="{'bg-lock': row.ilock == '1' ? true : false}"
-                                                [ngStyle]="{'width': column.width+'px'}">
+                                                [ngStyle]="{'width': n.width+'px'}">
 
-                                                <!-- <app-custom-field [item]="objItem(n,row,i)"
-                                                    (newItemEvent)="onChild($event)"></app-custom-field>   -->
-
-                                                <!-- START >>custom-field  -->
-                                                <div *ngIf="column['iType']=='text' || column['iType']=='number' ">
-                                                    <div class="d-flex">
-
-
-                                                        <div style="width: 100%;">
-                                                            <input [type]="column['iType']"
-                                                                [(ngModel)]="row['f'+column['f']]" #customFieldText
-                                                                class="p-1 {{'text-'+column['textAlign']}}"
-                                                                maxlength="250" [disabled]="row['ilock']=='1'"
-                                                                (keyup.enter)="customFieldText.blur()"
-                                                                (change)="updateRow(row,column['f'],column);">
-                                                        </div>
-                                                        <div class="mx-1 py-1" *ngIf="column['suffix']">
-                                                            <small>{{column['suffix']}}</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div *ngIf="column['iType']=='formula'">
-                                                    <div class="p-1 {{'text-'+column['textAlign']}} ">
-                                                        <small><b>{{functionsService.isNumber(row['f'+column['f']])
-                                                                }}</b></small>
-                                                    </div>
-                                                </div>
-
-                                                <div *ngIf="column['iType']=='date'">
-                                                    <div class="d-flex">
-                                                        <div>
-                                                            <input type="text" class="p-1 text-center" name="dp"
-                                                                readonly [(ngModel)]="row['f'+column['f']]"
-                                                                [placeholder]="functionsService.formatDate(row['f'+column['f']])"
-                                                                container="body"
-                                                                (ngModelChange)="updateRow(row,column['f'],column);"
-                                                                ngbDatepicker #d="ngbDatepicker" />
-
-                                                        </div>
-                                                        <div>
-                                                            <span *ngIf="row['ilock']!='1'"> <button
-                                                                    class="btn btn-sm bi bi-calendar3"
-                                                                    (click)="d.toggle()" type="button"></button></span>
-
-                                                            <span *ngIf="row['ilock']=='1'">
-                                                                <button class="btn btn-sm bi bi-calendar-x"
-                                                                    type="button"></button>
-                                                            </span>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div *ngIf="column['iType']=='time'">
-                                                    <div class="mx-2">
-                                                        <div class="d-flex justify-content-center">
-                                                            <input type="text" class="p-1 text-center" maxlength="250"
-                                                                [(ngModel)]="row['f'+column['f']]" #customFieldText
-                                                                [disabled]="row['ilock']=='1'"
-                                                                (keyup.enter)="customFieldText.blur()"
-                                                                (change)="updateRow(row,column['f'],column);"
-                                                                placeholder="HH:MM">
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div *ngIf="column['iType']=='image'">
-                                                    <div class="p-1 text-center">
-                                                        <a href="javascript:;"
-                                                            (click)="offCanvasImages(row,column['f'],i);">
-                                                            <small> <i class="bi bi-images"></i> Images</small>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <!-- END >> custom-field  -->
-
+                                                <app-custom-field [item]="objItem(n,row,i)"
+                                                    (newItemEvent)="onChild($event)"></app-custom-field>
                                             </div>
                                         </div>
 

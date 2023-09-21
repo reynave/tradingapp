@@ -18,7 +18,7 @@
     <div class="d-flex">
         <div>
              <input type="text" class="p-1" name="dp" readonly [(ngModel)]="childItem['value']"
-                [placeholder]="formatDate(childItem['value'])" (ngModelChange)="emitToParent(childItem);" ngbDatepicker
+                [placeholder]="formatDate(childItem['value'])" container="body" (ngModelChange)="emitToParent(childItem);" ngbDatepicker
                 #d="ngbDatepicker" /> 
              <!-- {{childItem['value'] }}  |  {{childItem['value'].length > 6 ? true : false}}   -->
 

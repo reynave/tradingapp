@@ -1,0 +1,61 @@
+<div class="container-fluid my-1">
+  <div class="row">
+    <div class="col-10">
+      <strong class="offcanvas-title" id="offcanvas-basic-title">Images #1</strong>
+    </div>
+    <div class="col-2 text-end">
+      <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+    </div>
+  </div>
+
+</div>
+<div class="offcanvas-body ">
+  <!-- <div contenteditable="true">
+
+    </div> -->
+
+  <div class="mb-2">
+
+    <div class="p-4 border-dot text-center rounded" *ngIf="!clipboardImage && !url">
+      <small>Paste the Image clipboard into this area </small>
+      <div><small>or</small></div>
+      <input type="text" [(ngModel)]="url" name="url" class="form-control form-control-sm"
+        placeholder="Paste external images address here">
+    </div>
+    <input #imageInput type="hidden">
+    <div *ngIf="clipboardImage">
+     
+      <div class="row g-1">
+        <div class="col-12 mb-2">
+          <img [src]="clipboardImage" alt="Pasted Image" width="100%"> 
+        </div>
+        <div class="col-12 mb-1">
+          <input type="text" class="form-control" 
+          [(ngModel)]="caption" placeholder="Caption (optional)" (keyup.enter)="onImagesPost();">
+        </div>
+        <div class="col-12 text-end">
+          <button type="button" class="btn btn-success" (click)="onImagesPost();"><i class="bi bi-send"></i></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div>
+    <img [src]="url" width="100%">
+  </div>
+
+  <div class="canvasMaxHeight  px-2" *ngIf="!clipboardImage && !url">
+
+    <div class="row g-1">
+      <div class="col-6" *ngFor="let x of items">
+        <a [href]="x.path+x.fileName" target="_blank" rel="noopener noreferrer">
+          <img [src]="x.path+x.fileName" width="100%" class="rounded">
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
