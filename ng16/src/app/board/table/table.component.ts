@@ -369,7 +369,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
 
     // Urutkan 'this.detail' menggunakan fungsi perbandingan
-    
+
     this.detail = [...this.detail.sort(compareByOrder)];
   }
 
@@ -623,39 +623,46 @@ export class TableComponent implements OnInit, AfterViewInit {
     } else {
       if (index > -1) {
         let optionIndex = this.select[index].option.findIndex(((obj: { id: string; }) => obj.id == id));
-        data = this.select[index].option[optionIndex];
-      }
-      else {
-        let objIndexHistory = this.select[index].optionDelete.findIndex(((obj: { id: string; }) => obj.id == id))
-        if (objIndexHistory > -1) {
-          //   data = this.select[index].optionDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
-          data = this.select[index].optionDelete[objIndexHistory]; 
+        if (optionIndex > -1) {
+          data = this.select[index].option[optionIndex];
+        }else {
+
+          let objIndexHistory = this.select[index].optionDelete.findIndex(((obj: { id: string; }) => obj.id == id))
+          if (objIndexHistory > -1) {
+           // let history = this.select[index].optionDelete[objIndexHistory];
+           // history =  this.select[index].optionDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
+            data = {
+              value : '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small> REMOVED',
+              color : "none"
+            }; 
+          }
         }
       }
-    } 
+      
+    }
     return data;
   }
 
-  selectDropdown(fn: string){ 
+  selectDropdown(fn: string) {
     let index = this.select.findIndex(((obj: { field: string; }) => obj.field == 'f' + fn));
     return this.select[index].option;
   }
 
-  fnSelectDropdown(id : string, fx:string, column : any, row:any){
+  fnSelectDropdown(id: string, fx: string, column: any, row: any) {
     var row = row;
-    row['f'+fx] = id;
+    row['f' + fx] = id;
     const body = {
       id: this.id,
       column: column,
-      row : row,
+      row: row,
       fx: fx,
-    } 
-    console.log(body); 
+    }
+    console.log(body);
     this.http.post<any>(environment.api + 'CustomField/updateRow', body,
       { headers: this.configService.headers() }
     ).subscribe(
       data => {
-        console.log("fnSelectDropdown ", data); 
+        console.log("fnSelectDropdown ", data);
         const msg = {
           sender: localStorage.getItem("address.mirrel.com"),
           msg: data['row'],
@@ -672,10 +679,10 @@ export class TableComponent implements OnInit, AfterViewInit {
     );
   }
 
-  modalEditSelect(fx : string){  
+  modalEditSelect(fx: string) {
     const modalRef = this.modalService.open(TabletEditSelectComponent, { size: 'md' });
-    modalRef.componentInstance.field = 'f'+fx;
-    modalRef.componentInstance.journalId = this.id; 
+    modalRef.componentInstance.field = 'f' + fx;
+    modalRef.componentInstance.journalId = this.id;
   }
 
 
@@ -688,6 +695,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.imageQueryParams = {
       id: row['id'],
       fn: fx,
+      iLock : this.detail[index]['ilock'],
     }
     this.router.navigate([], {
       queryParams: this.imageQueryParams,
