@@ -241,7 +241,7 @@
 
                                                 <!-- START >>custom-field  -->
                                                 <div *ngIf="column['iType']=='text' || column['iType']=='number' ">
-                                                    <div class="d-flex"> 
+                                                    <div class="d-flex">
                                                         <div style="width: 100%;">
                                                             <input [type]="column['iType']"
                                                                 [(ngModel)]="row['f'+column['f']]" #customFieldText
@@ -311,43 +311,87 @@
                                                 </div>
 
                                                 <div *ngIf="column['iType']=='select'">
-                                                   
+
                                                     <div *ngIf="row['ilock']=='1'">
-                                                        
+
                                                         <div class="select p-1 text-center "
                                                             [ngClass]="{'text-white': selectOption( row['f'+column['f']], column['f'] )['color'] != 'auto' }"
                                                             [ngStyle]="{'background': selectOption( row['f'+column['f']], column['f'] )['color'] }"
                                                             [innerHTML]="selectOption( row['f'+column['f']], column['f'] )['value']">
-                                                        </div>   
-                                                    </div> 
-                                                    <div *ngIf="row['ilock']!='1'">  
-                                                        <div ngbDropdown container="body" >
-                                                            <div id="dropdownForm2" class="select p-1 text-center " ngbDropdownToggle
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="row['ilock']!='1'">
+                                                        <div ngbDropdown container="body">
+                                                            <div id="dropdownForm2" class="select p-1 text-center "
+                                                                ngbDropdownToggle
                                                                 [ngClass]="{'text-white': selectOption( row['f'+column['f']], column['f'] )['color'] != null }"
                                                                 [ngStyle]="{'background': selectOption( row['f'+column['f']], column['f'] )['color'] }"
-                                                                [innerHTML]="selectOption( row['f'+column['f']], column['f'] )['value']"> 
+                                                                [innerHTML]="selectOption( row['f'+column['f']], column['f'] )['value']">
                                                             </div>
                                                             <div ngbDropdownMenu aria-labelledby="dropdownForm2">
                                                                 <div style="width: 230px;" class="px-4 py-2 d-grid">
                                                                     <div class="mb-3">
-                                                                        <input type="text" class="form-control form-control-sm" placeholder="Search Option">
+                                                                        <input type="text"
+                                                                            class="form-control form-control-sm"
+                                                                            placeholder="Search Option">
                                                                     </div>
-                                                                     <div class=" d-grid mb-4" style="overflow-y: auto; max-height: 300px;">
-                                                                        <button class="btn mb-1 text-center text-white" [ngStyle]="{'background': x.color}"
-                                                                         ngbDropdownItem *ngFor="let x of selectDropdown( column['f'])" 
-                                                                           (click)="fnSelectDropdown(x.id, column['f'], column, row);" >{{x.value}}</button>
+                                                                    <div class=" d-grid mb-4"
+                                                                        style="overflow-y: auto; max-height: 300px;">
+                                                                        <button class="btn mb-1 text-center text-white"
+                                                                            [ngStyle]="{'background': x.color}"
+                                                                            ngbDropdownItem
+                                                                            *ngFor="let x of selectDropdown( column['f'])"
+                                                                            (click)="fnSelectDropdown(x.id, column['f'], column, row);">{{x.value}}</button>
                                                                     </div>
-                                                                     
-                                                                    <button type="button" class="btn btn-outline-light border text-black mb-1 text-center"
-                                                                    (click)="modalEditSelect(column['f']);"  ngbDropdownItem><i class="bi bi-pencil"></i> Edit
-                                                                        Select</button> 
+
+                                                                    <button type="button"
+                                                                        class="btn btn-outline-light border text-black mb-1 text-center"
+                                                                        (click)="modalEditSelect(column['f']);"
+                                                                        ngbDropdownItem><i class="bi bi-pencil"></i>
+                                                                        Edit
+                                                                        Select</button>
                                                                 </div>
-                                                    
+
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div> 
+                                                </div>
+                                                <div *ngIf="column['iType']=='url'">
+                                                    <div class="d-flex ">
+                                                        <div class="w-100"> 
+                                                            <small class="cut-text  pt-1 px-1" style="width: inherit;"
+                                                                [hidden]="!row['f'+column['f']]">
+                                                                <a [href]="row['f'+column['f']]"
+                                                                    target="_blank">{{row['f'+column['f']]}}</a>
+                                                            </small>  
+                                                        </div>
 
+                                                        <div class="flex-shrink-1">
+                                                            <div *ngIf="row['ilock']!='1'" >
+                                                                <div ngbDropdown container="body">
+                                                                    <div id="dropdownForm3" ngbDropdownToggle>
+                                                                        <i class="bi bi-pencil-square"></i>
+                                                                    </div>
+                                                                    <div ngbDropdownMenu
+                                                                        aria-labelledby="dropdownForm3">
+                                                                        <div style="width: 300px;" class="p-2 d-grid">
+                                                                            <div class="mb-3">
+                                                                                <input type="text"
+                                                                                    class="form-control form-control-sm"
+                                                                                    [(ngModel)]="row['f'+column['f']]"
+                                                                                    placeholder="https://yoururl.here">
+                                                                            </div>
+                                                                            <button type="button"
+                                                                                class="btn btn-outline-light border text-black mb-1 text-center"
+                                                                                (click)="updateRow(row,column['f'],column);"
+                                                                                ngbDropdownItem> Save</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <!-- END >> custom-field  -->
 
                                             </div>
@@ -402,7 +446,7 @@
     </div>
     <div class="offcanvas-body">
         <div class="mb-2" *ngIf="imageQueryParams['iLock'] == '0'">
-           
+
             <div class="p-4 border-dot text-center rounded" *ngIf="!clipboardImage && !url">
                 <small>Paste the Image clipboard into this area </small>
                 <div><small>or</small></div>
@@ -462,7 +506,7 @@
                 </div>
             </div>
         </div>
- 
+
 
         <div class="canvasImagesMaxHeight  px-1" *ngIf="!clipboardImage && !url">
 
