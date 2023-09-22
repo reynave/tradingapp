@@ -168,7 +168,8 @@
                     <div class="" *ngIf="startUpTable">
                         <cdk-virtual-scroll-viewport itemSize="30" class="tables-body " #scrollViewport>
 
-                            <div class="sticky-top border-bottom" [style.top]=" detail.length > 20 ?  inverseOfTranslation : '0px'">
+                            <div class="sticky-top border-bottom"
+                                [style.top]=" detail.length > 20 ?  inverseOfTranslation : '0px'">
                                 <div class="d-flex tables-header-td bg-white">
 
                                     <div class="floating-div bg-white  border-start">
@@ -240,9 +241,7 @@
 
                                                 <!-- START >>custom-field  -->
                                                 <div *ngIf="column['iType']=='text' || column['iType']=='number' ">
-                                                    <div class="d-flex">
-
-
+                                                    <div class="d-flex"> 
                                                         <div style="width: 100%;">
                                                             <input [type]="column['iType']"
                                                                 [(ngModel)]="row['f'+column['f']]" #customFieldText
@@ -310,6 +309,45 @@
                                                         </a>
                                                     </div>
                                                 </div>
+
+                                                <div *ngIf="column['iType']=='select'">
+                                                   
+                                                    <div *ngIf="row['ilock']=='1'">
+                                                        
+                                                        <div class="select p-1 text-center "
+                                                            [ngClass]="{'text-white': selectOption( row['f'+column['f']], column['f'] )['color'] != 'auto' }"
+                                                            [ngStyle]="{'background': selectOption( row['f'+column['f']], column['f'] )['color'] }"
+                                                            [innerHTML]="selectOption( row['f'+column['f']], column['f'] )['value']">
+                                                        </div>   
+                                                    </div> 
+                                                    <div *ngIf="row['ilock']!='1'">  
+                                                        <div ngbDropdown container="body" >
+                                                            <div id="dropdownForm2" class="select p-1 text-center " ngbDropdownToggle
+                                                                [ngClass]="{'text-white': selectOption( row['f'+column['f']], column['f'] )['color'] != null }"
+                                                                [ngStyle]="{'background': selectOption( row['f'+column['f']], column['f'] )['color'] }"
+                                                                [innerHTML]="selectOption( row['f'+column['f']], column['f'] )['value']"> 
+                                                            </div>
+                                                            <div ngbDropdownMenu aria-labelledby="dropdownForm2">
+                                                                <div style="width: 200px;" class="p-2 d-grid">
+                                                                    <div class="mb-3">
+                                                                        <input type="text" class="form-control form-control-sm" placeholder="Search Option">
+                                                                    </div>
+                                                                     <div class=" d-grid mb-4" style="overflow-y: auto; max-height: 300px;">
+                                                                        <button class="btn mb-1 text-center text-white" [ngStyle]="{'background': x.color}"
+                                                                         ngbDropdownItem *ngFor="let x of selectDropdown( column['f'])" 
+                                                                           (click)="fnSelectDropdown(x.id, column['f'], column, row);" >{{x.value}}</button>
+                                                                    </div>
+                                                                     
+                                                                    <button type="button" class="btn btn-outline-light border text-black mb-1 text-center"
+                                                                    (click)="modalEditSelect(column['f']);"  ngbDropdownItem><i class="bi bi-pencil"></i> Edit
+                                                                        Select</button> 
+                                                                </div>
+                                                    
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+
                                                 <!-- END >> custom-field  -->
 
                                             </div>

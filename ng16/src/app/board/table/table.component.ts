@@ -337,27 +337,24 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 
   onSearchChange() {
-
     if (!this.keyword) {
       this.detail = this.detailOrigin;
 
     } else {
       this.detail = this.detailOrigin.filter((item: { searchable: string; }) => {
-        const matchItem = item.searchable.toLowerCase().includes(this.keyword.toLowerCase()); 
+        const matchItem = item.searchable.toLowerCase().includes(this.keyword.toLowerCase());
         return matchItem;
       });
     }
     this.calculationFooter();
   }
-
   ngAfterViewInit() {
-     
+
   }
 
 
   sortByOrder(order: any) {
-    // const order = ['59', '54', '72', '23', '24', '108', '55', '19', '73', '22', '60'];
-
+    // const order = ['59', '54', '72', '23', '24', '108', '55', '19', '73', '22', '60']; 
     // Buat fungsi untuk membandingkan dua elemen berdasarkan urutan 'order'
     function compareByOrder(a: DetailInterface, b: DetailInterface) {
       const aIndex = order.indexOf(a.id);
@@ -372,8 +369,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
 
     // Urutkan 'this.detail' menggunakan fungsi perbandingan
-    this.detail.sort(compareByOrder);
-
+    
+    this.detail = [...this.detail.sort(compareByOrder)];
   }
 
 
@@ -496,7 +493,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.modalService.dismissAll();
   }
 
-  
+
   onChild(newItem: any) {
 
     if (newItem['itype'] == 'note') {
@@ -577,16 +574,16 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     }
   }
-  updateRow(row: any, fx: string, column : any) {
+  updateRow(row: any, fx: string, column: any) {
     console.log(row);
 
     const body = {
       id: this.id,
       row: row,
       fx: fx,
-      column : column,
+      column: column,
     }
-    console.log('updateRow', body); 
+    console.log('updateRow', body);
     this.http.post<any>(environment.api + 'CustomField/updateRow', body,
       { headers: this.configService.headers() }
     ).subscribe(
@@ -609,7 +606,80 @@ export class TableComponent implements OnInit, AfterViewInit {
     );
   }
 
-  offCanvasImages(row: any, fx: string, index : number){
+  background(id: string) {
+    let objIndex = this.backgroundColorOption.findIndex(((obj: { id: string; }) => obj.id == id));
+    if (objIndex > -1) {
+      return this.backgroundColorOption[objIndex]['color'];
+    } else {
+      return 'auto';
+    }
+  }
+  selectOption(id: string, fn: string) {
+    //let data = "id : " + id + ", F : " + fn;
+    var data: any = [];
+    let index = this.select.findIndex(((obj: { field: string; }) => obj.field == 'f' + fn));
+    if (id == '') {
+      data = [];
+    } else {
+      if (index > -1) {
+        let optionIndex = this.select[index].option.findIndex(((obj: { id: string; }) => obj.id == id));
+        data = this.select[index].option[optionIndex];
+      }
+      else {
+        let objIndexHistory = this.select[index].optionDelete.findIndex(((obj: { id: string; }) => obj.id == id))
+        if (objIndexHistory > -1) {
+          //   data = this.select[index].optionDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
+          data = this.select[index].optionDelete[objIndexHistory]; 
+        }
+      }
+    } 
+    return data;
+  }
+
+  selectDropdown(fn: string){ 
+    let index = this.select.findIndex(((obj: { field: string; }) => obj.field == 'f' + fn));
+    return this.select[index].option;
+  }
+
+  fnSelectDropdown(id : string, fx:string, column : any, row:any){
+    var row = row;
+    row['f'+fx] = id;
+    const body = {
+      id: this.id,
+      column: column,
+      row : row,
+      fx: fx,
+    } 
+    console.log(body); 
+    this.http.post<any>(environment.api + 'CustomField/updateRow', body,
+      { headers: this.configService.headers() }
+    ).subscribe(
+      data => {
+        console.log("fnSelectDropdown ", data); 
+        const msg = {
+          sender: localStorage.getItem("address.mirrel.com"),
+          msg: data['row'],
+          journalId: this.id,
+          action: 'TableDetailUpdateRow',
+          chat: this.configService.account()['account']['name'] + ' update column',
+        }
+        this.socketService.sendMessage(msg);
+
+      },
+      e => {
+        console.log(e);
+      },
+    );
+  }
+
+  modalEditSelect(fx : string){  
+    const modalRef = this.modalService.open(TabletEditSelectComponent, { size: 'md' });
+    modalRef.componentInstance.field = 'f'+fx;
+    modalRef.componentInstance.journalId = this.id; 
+  }
+
+
+  offCanvasImages(row: any, fx: string, index: number) {
     this.clipboardImage = "";
     this.url = "";
     this.detailObject = row;
@@ -622,7 +692,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.router.navigate([], {
       queryParams: this.imageQueryParams,
       queryParamsHandling: 'merge',
-    }) 
+    })
     this.offcanvasService.open(this.canvasImages, { position: 'end' }).result.then(
       (result) => { this.images = []; this.imageQueryParams = [] },
       (reason) => { this.images = []; this.imageQueryParams = [] },
