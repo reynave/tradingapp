@@ -38,11 +38,11 @@ class Tables extends BaseController
             ORDER BY ja.sorting ASC, ja.input_date ASC";
 
             $items = $this->db->query($q1)->getResultArray();
-            $items[0]['picture'] =  base_url().'uploads/picture/'.$items[0]['picture'];
+            $items[0]['picture'] = base_url() . 'uploads/picture/' . $items[0]['picture'];
             $data = array(
                 "error" => false,
-                "id" => $id, 
-                "item" => $items[0], 
+                "id" => $id,
+                "item" => $items[0],
                 "permission" => $this->db->query("SELECT * from permission")->getResultArray(),
                 "backgroundColorOption" => $backgroundColorOption,
             );
@@ -90,6 +90,7 @@ class Tables extends BaseController
         );
 
         $accountId = model("Core")->accountId();
+
         $journalTableViewId = $data['request']['journalTableViewId'];
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
         if ($data['request']['id'] && $id) {
@@ -117,45 +118,10 @@ class Tables extends BaseController
                 FROM journal_select 
                 where journalId = '$id' and field = '$rec' and presence = 0 order by sorting ASC, id DESC";
 
-                $fieldsUser = "ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId', a.picture,
-                a.presence AS 'accountPresence' ";
-
-                $users = "SELECT $fieldsUser
-                FROM journal_access AS ja
-                LEFT join account AS a ON a.id = ja.accountId
-                WHERE ja.journalId = '$id' AND ja.presence = 1
-                ORDER BY a.name asc;";
-
-                $usersDelete = "SELECT $fieldsUser
-                FROM journal_access AS ja
-                LEFT join account AS a ON a.id = ja.accountId
-                WHERE ja.journalId = '$id' AND ja.presence = 0
-                ORDER BY a.name asc;";
-
-                $users = $this->db->query($users)->getResultArray();
-                $i = 0;
-                foreach ($users as $row) {
-                    $users[$i]['picture'] = model("Core")->isUrlValid($users[$i]['picture']) ? $users[$i]['picture'] : base_url() . 'uploads/picture/' . $users[$i]['picture'];
-                    $i++;
-                }
-
-                $usersDelete = $this->db->query($usersDelete)->getResultArray();
-                $i = 0;
-                foreach ($usersDelete as $row) {
-                    $usersDelete[$i]['picture'] = model("Core")->isUrlValid($usersDelete[$i]['picture']) ? $usersDelete[$i]['picture'] : base_url() . 'uploads/picture/' . $usersDelete[$i]['picture'];
-
-                    $i++;
-                }
-
-
                 $temp = array(
                     "field" => $rec,
                     "option" => $this->db->query($option)->getResultArray(),
                     "optionDelete" => $this->db->query($optionDelete)->getResultArray(),
-                    
-                    "users" => $users,
-                    "usersDelete" => $usersDelete,
-
                 );
                 array_push($select, $temp);
             }
@@ -166,29 +132,52 @@ class Tables extends BaseController
             $journalTable = model("Core")->journalTable($id, $journalTableViewId);
             $tableViewOnly = model("TableViewOnly")->journalTable($id, $journalTableViewId, "");
 
-            for($i = 0; $i < count($journalTable['detail']); $i++){
+            for ($i = 0; $i < count($journalTable['detail']); $i++) {
                 $journalTable['detail'][$i]['searchable'] = $tableViewOnly['detail'][$i];
             }
-            
-           // $journal_select = model("Core")->journal_select($id);
 
+            // $journal_select = model("Core")->journal_select($id);
+
+
+            $users = "SELECT ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId',
+             concat('" . base_url() . "uploads/picture/',a.picture) as 'picture',  
+            ja.presence AS 'presence' 
+            FROM journal_access AS ja
+            LEFT join account AS a ON a.id = ja.accountId
+            WHERE ja.journalId = '$id' AND ja.presence = 1
+            ORDER BY a.name asc;";
+            $users = $this->db->query($users)->getResultArray();
+
+            $usersHistory = "SELECT ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId',
+            concat('" . base_url() . "uploads/picture/',a.picture) as 'picture',  
+           ja.presence AS 'presence' 
+           FROM journal_access AS ja
+           LEFT join account AS a ON a.id = ja.accountId
+           WHERE ja.journalId = '$id'  
+           ORDER BY a.name asc;";
+            $usersHistory = $this->db->query($usersHistory)->getResultArray();
 
             $data = array(
                 "error" => false,
                 "id" => $id,
                 "backgroundColorOption" => $backgroundColorOption,
-                "select" => $select, 
+                "select" => $select,
                 //"customFieldKey" => $journalTable['customFieldKey'],
                 "customField" => $journalTable['journal_custom_field'],
                 "detail" => $journalTable['detail'],
-               
-                
-             //   "customFieldNo" => $journal_select['customFieldNo'],
-             //   "select2" => $journal_select['select'],
-             //   "customField2" => $journal_select['customField'],
-                 
+                "users" => $users,
+                "usersHistory" => $usersHistory,
+
+                //   "customFieldNo" => $journal_select['customFieldNo'],
+                //   "select2" => $journal_select['select'],
+                //   "customField2" => $journal_select['customField'],
+
                 "archives" => $journalTable['archives'],
 
+            );
+
+            $data23 = array(
+                "TableViewOnly" => model("TableViewOnly")->journalTable($id, $journalTableViewId, ""),
             );
 
 
@@ -214,7 +203,7 @@ class Tables extends BaseController
                 "journalId" => $journalId,
                 "journalTableViewId" => $journalTableViewId,
                 "presence" => 1,
-                "input_date"=> date("Y-m-d H:i:s"),
+                "input_date" => date("Y-m-d H:i:s"),
                 "accountId" => model("Core")->accountId(),
             ]);
 
@@ -224,23 +213,23 @@ class Tables extends BaseController
             );
         }
         return $this->response->setJSON($data);
-       
+
     }
     function exportCSV()
     {
-        
+
         $post = $this->request->getVar();
         $token = $post['t'];
         $data = [
-            "error" => true, 
-            "post" =>  $post, 
+            "error" => true,
+            "post" => $post,
         ];
 
-   
-        if ( (int)model("Core")->select("presence","journal_token","token = '$token' ") === 1) { 
 
-            $journalId = model("Core")->select("journalId","journal_token","token = '$token'");
-            $journalTableViewId = model("Core")->select("journalTableViewId","journal_token","token = '$token'");
+        if ((int) model("Core")->select("presence", "journal_token", "token = '$token' ") === 1) {
+
+            $journalId = model("Core")->select("journalId", "journal_token", "token = '$token'");
+            $journalTableViewId = model("Core")->select("journalTableViewId", "journal_token", "token = '$token'");
 
 
             $viewName = model("Core")->select("name", "journal_table_view", "journalId = '$journalId' AND  id= '$journalTableViewId' AND presence = 1 ");
@@ -255,7 +244,7 @@ class Tables extends BaseController
 
             $this->db->table("journal_token")->update([
                 "presence" => 0,
-                "update_date"=> date("Y-m-d H:i:s"),
+                "update_date" => date("Y-m-d H:i:s"),
                 "accountId" => model("Core")->accountId(),
             ], " token = '$token' ");
 
@@ -276,9 +265,9 @@ class Tables extends BaseController
 
             // Kembalikan respons
             return $this->response->setBody('');
-        } 
+        }
         return $this->response->setJSON($data);
-        
+
     }
 
     function httpDataFormula()
@@ -604,7 +593,7 @@ class Tables extends BaseController
                 "customField" => $journal_custom_field,
             );
         }
-        
+
         return $this->response->setJSON($data);
     }
     function table()

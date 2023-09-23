@@ -34,8 +34,9 @@ class Images extends BaseController
             "post" => $post,
         ];
         if ($post) { 
+            $id =  $post['id'];
             $this->db->table("journal_detail_images")->insert([
-                "journalDetailId" => $post['id'],
+                "journalDetailId" =>  $id,
                 "fn" => $post['fn'],
                 "source" => "external",
                 "presence" => 1, 
@@ -45,6 +46,10 @@ class Images extends BaseController
                 "input_by" => model("Core")->accountId(),
             ]);
 
+            $this->db->table("journal_detail")->update([
+                "f".$post['fn'] => model("Core")->select("count(id)","journal_detail_images","presence = 1 and journalDetailId = '$id'"),
+            ]," id =  ".$post['id']);
+ 
 
             $data = [
                 "error" => false,
@@ -66,7 +71,12 @@ class Images extends BaseController
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
             ]," id = '".$post['item']['id']."'"); 
- 
+            $journalDetailId = model("Core")->select("journalDetailId","journal_detail_images","id = '".$post['item']['id']."'");
+            $fn =  model("Core")->select("fn","journal_detail_images","id = '".$post['item']['id']."'");
+            $this->db->table("journal_detail")->update([
+                "f".$fn  => model("Core")->select("count(id)","journal_detail_images","presence = 1 and journalDetailId = '$journalDetailId' "),
+            ]," id =  ".$journalDetailId  );
+
             $data = [
                 "error" => false,
                 "post" => $post,

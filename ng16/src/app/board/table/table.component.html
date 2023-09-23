@@ -305,7 +305,9 @@
                                                     <div class="p-1 text-center">
                                                         <a href="javascript:;"
                                                             (click)="offCanvasImages(row,column['f'],i);">
-                                                            <small> <i class="bi bi-images"></i> Images</small>
+                                                            <small> {{row['f'+column['f']] > 1 ? '' :'No'}} 
+                                                                <i class="bi bi-images" *ngIf="row['f'+column['f']] > 1 "></i> 
+                                                                {{row['f'+column['f']]}} Image{{row['f'+column['f']] > 1 ? 's' :''}}  </small>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -348,26 +350,26 @@
                                                                         class="btn btn-outline-light border text-black mb-1 text-center"
                                                                         (click)="modalEditSelect(column['f']);"
                                                                         ngbDropdownItem><i class="bi bi-pencil"></i>
-                                                                        Edit
-                                                                        Select</button>
+                                                                        Edit  Select</button>
                                                                 </div>
 
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
                                                 <div *ngIf="column['iType']=='url'">
                                                     <div class="d-flex ">
-                                                        <div class="w-100"> 
+                                                        <div class="w-100">
                                                             <small class="cut-text  pt-1 px-1" style="width: inherit;"
                                                                 [hidden]="!row['f'+column['f']]">
                                                                 <a [href]="row['f'+column['f']]"
                                                                     target="_blank">{{row['f'+column['f']]}}</a>
-                                                            </small>  
+                                                            </small>
                                                         </div>
 
                                                         <div class="flex-shrink-1">
-                                                            <div *ngIf="row['ilock']!='1'" >
+                                                            <div *ngIf="row['ilock']!='1'">
                                                                 <div ngbDropdown container="body">
                                                                     <div id="dropdownForm3" ngbDropdownToggle>
                                                                         <i class="bi bi-pencil-square"></i>
@@ -392,6 +394,52 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div *ngIf="column['iType']=='user'"> 
+                                                    <div *ngIf="row['ilock']=='1'">
+                                                        <div class="select p-1">
+                                                            <span><img class="rounded-circle border me-1" height="20" [src]="selectUsers( row['f'+column['f']] )['picture']"></span>
+                                                            <small>{{selectUsers( row['f'+column['f']] )['value']}}</small> 
+                                                        </div>
+                                                    </div>
+                                                    <div *ngIf="row['ilock']!='1'">
+                                                        
+                                                        <div ngbDropdown container="body">
+                                                           
+                                                            <div id="dropdownForm2" class="select p-1  " ngbDropdownToggle>
+                                                                <span><img class="rounded-circle border me-1" height="20" [src]="selectUsers( row['f'+column['f']] )['picture']"></span>
+                                                                <small [ngClass]="{'text-danger ': selectUsers( row['f'+column['f']] )['presence'] != '1' ? true: false}">{{selectUsers( row['f'+column['f']] )['value']}} </small>
+                                                                <span class="text-danger" *ngIf="selectUsers( row['f'+column['f']] )['presence'] != '1'"> <i class="bi bi-exclamation-lg"></i></span>
+                                                            </div>
+                                                            <div ngbDropdownMenu aria-labelledby="dropdownForm2">
+                                                                <div style="width: 250px;" class="px-4 py-2">
+                                                                    <small>Select User</small> 
+                                                                   
+                                                                    <div style="overflow-y: auto; max-height: 200px;" class="my-2 pointer">
+                                                                        <div *ngFor="let x of users"  (click)="fnSelectDropdown(x.accountId, column['f'], column, row);"
+                                                                            ngbDropdownItem class="d-flex mb-1">
+                                                                            <div>
+                                                                                <img [src]="x.picture" class="rounded-circle border me-2" height="25">
+                                                                            </div>
+                                                                            <div class="align-self-center"> {{x.value}}  </div>
+                                                                        </div>
+                                                                    </div>
+                                                    
+                                                                   
+                                                    
+                                                                    <div class=" text-center d-grid">
+                                                                        <a href="javascript:;" class="btn">
+                                                                            <small><i class="bi bi-person-plus me-2"></i> Invite a new member with link</small>
+                                                                        </a>
+                                                                    </div>  
+                                                                    
+                                                                </div>
+                                                    
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <!-- END >> custom-field  -->
 
                                             </div>
@@ -497,7 +545,7 @@
                     </div>
 
                     <div class="col-9 align-self-center">
-                        <small>This is using external images</small>
+                        <small>This image is used by an external resource.</small>
                     </div>
                     <div class="col-3 text-end">
                         <button type="button" class="btn btn-success" (click)="onImagesSaveUrl();"><i

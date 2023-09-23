@@ -430,7 +430,7 @@ class Journal extends BaseController
                 // ], "presence  = 4 AND accountId =  '".model("Core")->accountId()."' "); 
             }
 
-            $q1 = "SELECT ja.*, a.name, a.email, a.picture
+            $q1 = "SELECT ja.*, a.name, a.email, concat('".base_url()."uploads/picture/',a.picture) as 'picture'
             FROM journal_access AS ja
             JOIN account AS a ON a.id = ja.accountId
             WHERE ja.presence = 1 and ja.journalId = '" . $post['item']['id'] . "'
@@ -444,6 +444,7 @@ class Journal extends BaseController
                 "duplicate" => $duplicate,
                 "journal_access" => $journal_access,
                 "note" => $note,
+                "q" =>   $q1 ,
             ];
 
         }
@@ -466,13 +467,17 @@ class Journal extends BaseController
                 "update_by" => model("Core")->accountId(),
             ], "id = '" . $post['access']['id'] . "' and accountId = '" . $post['access']['accountId'] . "' ");
 
-            $q1 = "SELECT ja.*, a.name, a.email, a.picture
+            $q1 = "SELECT ja.*, a.name, a.email, concat('".base_url()."uploads/picture/',a.picture) as 'picture'
             FROM journal_access AS ja
             JOIN account AS a ON a.id = ja.accountId
             WHERE ja.presence = 1 and ja.journalId = '" . $post['item']['id'] . "'
             ORDER BY  ja.owner DESC, ja.input_date  ASC ";
             $journal_access = $this->db->query($q1)->getResultArray();
 
+            // foreach ($teams as $row) {
+            //     $teams[$i]['picture'] = model("Core")->isUrlValid($teams[$i]['picture']) ? $teams[$i]['picture'] : base_url() . 'uploads/picture/' . $teams[$i]['picture'];
+            //     $i++;
+            // }
             $data = [
                 "error" => false,
                 "post" => $post,

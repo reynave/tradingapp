@@ -76,12 +76,14 @@ export class TableComponent implements OnInit, AfterViewInit {
   keyword: string = '';
   customFieldKey: any = [];
   users: any = [];
+  usersHistory : any = [];
   journalAccess: any = [];
   api: string = environment.api;
   images: any = [];
   imagesLoading: boolean = false;
   imagesIndex: number = 0;
-  imageQueryParams: any = [];
+  imageQueryParams: any = []; 
+  private _docSub: any;
   constructor(
     private http: HttpClient,
     public functionsService: FunctionsService,
@@ -92,11 +94,9 @@ export class TableComponent implements OnInit, AfterViewInit {
     private socketService: SocketService,
     private router: Router,
   ) {
-
     document.addEventListener('paste', this.handlePaste.bind(this));
   }
 
-  private _docSub: any;
   ngOnInit(): void {
 
     this.id = this.ativatedRoute.snapshot.params['id'];
@@ -198,7 +198,6 @@ export class TableComponent implements OnInit, AfterViewInit {
     );
   }
 
-
   public get inverseOfTranslation(): string {
     if (!this.viewPort || !this.viewPort["_renderedContentOffset"]) {
       return "-0px";
@@ -216,14 +215,11 @@ export class TableComponent implements OnInit, AfterViewInit {
     return `${offset}px`;
   }
 
-
-
   ngOnDestroy() {
     this._docSub.unsubscribe();
     document.removeEventListener('paste', this.handlePaste);
 
   }
-
 
   reload(newItem: any) {
     this.id = this.ativatedRoute.snapshot.params['id'];
@@ -278,7 +274,8 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.detailOrigin = data['detail'];
 
         this.select = data['select'];
-        this.users = data['select'];
+        this.users = data['users'];
+        this.usersHistory= data['usersHistory'];
 
 
         let self = this;
@@ -334,8 +331,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   getChange() {
     console.log(this.detail);
   }
-
-
+ 
   onSearchChange() {
     if (!this.keyword) {
       this.detail = this.detailOrigin;
@@ -614,6 +610,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       return 'auto';
     }
   }
+
   selectOption(id: string, fn: string) {
     //let data = "id : " + id + ", F : " + fn;
     var data: any = [];
@@ -625,20 +622,20 @@ export class TableComponent implements OnInit, AfterViewInit {
         let optionIndex = this.select[index].option.findIndex(((obj: { id: string; }) => obj.id == id));
         if (optionIndex > -1) {
           data = this.select[index].option[optionIndex];
-        }else {
+        } else {
 
           let objIndexHistory = this.select[index].optionDelete.findIndex(((obj: { id: string; }) => obj.id == id))
           if (objIndexHistory > -1) {
-           // let history = this.select[index].optionDelete[objIndexHistory];
-           // history =  this.select[index].optionDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
+            // let history = this.select[index].optionDelete[objIndexHistory];
+            // history =  this.select[index].optionDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
             data = {
-              value : '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small> REMOVED',
-              color : "none"
-            }; 
+              value: 'REMOVED <small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>',
+              color: "none"
+            };
           }
         }
       }
-      
+
     }
     return data;
   }
@@ -655,7 +652,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       id: this.id,
       column: column,
       row: row,
-      fx: fx,
+      fx: fx, 
     }
     console.log(body);
     this.http.post<any>(environment.api + 'CustomField/updateRow', body,
@@ -679,10 +676,27 @@ export class TableComponent implements OnInit, AfterViewInit {
     );
   }
 
+  usersDropdown(fn: string) {
+    let index = this.select.findIndex(((obj: { field: string; }) => obj.field == 'f' + fn));
+    return this.select[index].users;
+  } 
+
   modalEditSelect(fx: string) {
     const modalRef = this.modalService.open(TabletEditSelectComponent, { size: 'md' });
     modalRef.componentInstance.field = 'f' + fx;
     modalRef.componentInstance.journalId = this.id;
+  }
+
+  selectUsers(accountId: string) {
+    //let data = "id : " + id + ", F : " + fn;
+    var data: any = [];
+    let index = this.usersHistory.findIndex(((obj: { accountId: string; }) => obj.accountId == accountId));
+    if ((index > -1) ) {
+      data = this.usersHistory[index];
+    } else { 
+      data = []; 
+    }
+    return data;
   }
 
 
@@ -695,7 +709,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.imageQueryParams = {
       id: row['id'],
       fn: fx,
-      iLock : this.detail[index]['ilock'],
+      iLock: this.detail[index]['ilock'],
     }
     this.router.navigate([], {
       queryParams: this.imageQueryParams,

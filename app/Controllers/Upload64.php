@@ -48,9 +48,9 @@ class Upload64 extends BaseController
 
             // Mengembalikan URL gambar yang telah dibuat
             $image_url = base_url($upload_path . $file_name);
-
+            $id = $post['id'];
             $this->db->table("journal_detail_images")->insert([
-                "journalDetailId" => $post['id'],
+                "journalDetailId" => $id,
                 "fn" => $post['fn'],
                 "source" => "mirrel.com",
                 "path" => base_url().$upload_path,
@@ -60,6 +60,9 @@ class Upload64 extends BaseController
                 "input_by" => model("Core")->accountId(),
             ]);
 
+            $this->db->table("journal_detail")->update([
+                "f".$post['fn'] => model("Core")->select("count(id)","journal_detail_images","presence = 1 and journalDetailId = '$id'"),
+            ]," id =  ".$id  );
 
             $data = array(
                 "error" => false,

@@ -41,7 +41,7 @@ class TableViewOnly extends Model
 
     function journalTable($id = "", $journalTableViewId = "", $where = "", $order = 0, $limit = 10000)
     {
-        $cell = [];
+       // $cell = [];
         $journal_select = $this->db->query("SELECT id, value, color FROM journal_select WHERE journalId = '$id'  ");
         $journal_select = $journal_select->getResultArray();
 
@@ -99,19 +99,20 @@ class TableViewOnly extends Model
 
         $evaluateFormula = function ($data, $formula) {
             extract($data);
-            $result = @eval("return $formula;"); 
+            $result = @eval("return $formula;");
             return ($result !== false) ? $result : null;
         };
 
-        $index = 0;   $value = []; 
+        $index = 0;
+        $value = [];
         foreach ($detail as $rec) {
             $data = [];
             $culumn = [];
             $temp = "";
             foreach ($journal_custom_field as $field) {
-             
-                $val = [ 
-                    "value" => $rec[$field['key']], 
+                $i = 0;
+                $val = [
+                    "value" => $rec[$field['key']],
                     "suffix" => $field['suffix'],
                 ];
                 if ($field['iType'] == 'formula') {
@@ -124,37 +125,43 @@ class TableViewOnly extends Model
                 if ($field['iType'] == 'select') {
                     //$val = self::select("value","journal_select"," field = '".$field['key']."' and id =  '".$val."' ");  
                     if ($val['value'] != "") {
-                        $i = self::index2d($journal_select, $val['value']);
-                        $val['value'] = $journal_select[$i]['value'];
-                        $val['color'] = $journal_select[$i]['color'];
+                        // $i = self::index2d($journal_select, $val['value']);
+                        //  $val['value'] = $journal_select[$i]['value'];
+                        //  $val['color'] = $journal_select[$i]['color']; 
+                        $val['value'] = self::select("value", "journal_select", "id='" . $val['value'] . "' AND presence = 1 AND  journalId = '$id' ");
                     }
 
                 }
-                
+
                 if ($field['iType'] == 'user') {
                     // $val['value'] = self::select("username", "account", "  id =  '" . $val['value'] . "' ");
                     if ($val['value'] != "") {
-                        $i = self::index2d($account, $val['value']);
-                        $val['value'] = $account[$i]['value'];
+                        //    $i = self::index2d($account, $val['value']);
+                        //   $val['value'] = $account[$i]['value'];
+                        //    $val['value'] = self::select("value","account","id='".$val['value']."' AND presence = 1 AND  journalId = '$id' ");
+                        $val['value'] = self::select("username", "account", "  id =  '" . $val['value'] . "' ");
                     }
                 }
-                $temp .= strval($val['value'])." ";
-               // $detail[$index][$field['key']] = strval($val['value']);
+                if ($field['iType'] == 'image') { 
+                    $val['value'] = 'images';
+                }
+                $temp .=   strval($val['value']) . "   ";
+                // $detail[$index][$field['key']] = strval($val['value']);
                 $culumn[] = 0;
             }
-          
+
             $index++;
-            $value[] =  $temp;
-           // array_push($value, $temp);
-            array_push($cell, $culumn);
+            $value[] = preg_replace('/\s+/', ' ',  $temp);
+            // array_push($value, $temp);
+           // array_push($cell, $culumn);
         }
 
-       // self::transformDetailArray($detail);
+        // self::transformDetailArray($detail);
 
         $data = array(
             "detail" => $value,
-            "cell" => $cell,
-            "q" =>  $q,
+            //  "cell" => $cell,
+            "q" => $q,
         );
 
         return $data;
@@ -168,7 +175,7 @@ class TableViewOnly extends Model
                 $transformedItem[] = [
                     //     'key' => $key, 
                     'value' => $value['value'],
-                   // 'color' => $value['color'],
+                    // 'color' => $value['color'],
                     'suffix' => $value['suffix'],
                     //'iType' => $value['iType'],
 
