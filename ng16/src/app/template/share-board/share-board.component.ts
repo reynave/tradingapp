@@ -45,6 +45,7 @@ export class ShareBoardComponent implements OnInit {
   photos: any = [];
   photosTotal: number = 0;
   showSearchPhoto: boolean = false;
+  inviteLink : string = "";
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
@@ -53,11 +54,10 @@ export class ShareBoardComponent implements OnInit {
     private activeRouter : ActivatedRoute,
   ) { }
 
-  ngOnInit() {
-    console.log( " shear board", this.activeRouter.snapshot.queryParams['id']);
-    //this.childItem = { ...this.item }; 
-    console.log(this.item, this.permission);
+  ngOnInit() {  
+    console.log(this.item, this.permission,);
     this.unsplash();
+    this.inviteLink =  this.configService.account()['account']['inviteLink'];
     this.http.get<any>(environment.api + "journal/access", {
       headers: this.configService.headers(),
       params: {
@@ -131,35 +131,7 @@ export class ShareBoardComponent implements OnInit {
     )
   }
 
-  onSubmitUserDELETE() {
-    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (!this.addUser.match(mailformat)) {
-      alert("Valid email address!");
-    } else {
-      const body = {
-        addUser: this.addUser,
-        item: this.item,
-      }
-      this.http.post<any>(environment.api + "journal/onSubmitUser", body, {
-        headers: this.configService.headers()
-      }).subscribe(
-        data => {
-          console.log(data);
-          this.journalAccess = data['journal_access'];
-          if (data['duplicate'] == true) {
-            alert("Email already join.");
-          }
-          if (data['avaiable'] == true) {
-            this.addUser = "";
-          }
-          this.note = data['note'];
-        },
-        e => {
-          console.log(e);
-        }
-      )
-    }
-  }
+ 
 
   onSubmitUser() {
     this.addUser = this.model;

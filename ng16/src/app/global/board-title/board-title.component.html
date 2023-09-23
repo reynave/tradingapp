@@ -22,19 +22,19 @@
                         class="bi bi-person-plus"></i> Share</a>
             </div>
 
-            <div class="me-2" [hidden]="fnPermission(item.permissionId)['share'] != 1" placement="top" *ngIf="journal.owner != '0'"
+            <!-- <div class="me-2" [hidden]="fnPermission(item.permissionId)['share'] != 1" placement="top" *ngIf="journal.owner != '0'"
                 ngbTooltip="http://localhost:4200/#/board/{{journal.url}}">
                 <button [cdkCopyToClipboard]="'http://localhost:4200/#/board/{{journal.url}}'"
                     class="btn btn-sm text-dark mx-1"><i class="bi bi-link-45deg"></i> Copy</button>
-            </div>
+            </div> -->
 
             <div class="align-self-center me-3" style="margin-top: -8px;">
                 <div class="d-flex">
                     <div>
                         <img [src]="journal.picture" height="34" class="rounded-circle me-2"> 
                     </div>
-                    <div class="lh-sm text-start">
-                        <small style="font-size: 0.8rem;"><i class="bi bi-lock"></i></small>
+                    <div class="align-self-center">
+                        <!-- <small style="font-size: 0.8rem;"><i class="bi bi-lock"></i></small> -->
                         <div>{{journal.ownBy}} </div>
                     </div>
                 </div>

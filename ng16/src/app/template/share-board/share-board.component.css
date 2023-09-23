@@ -2,3 +2,8 @@
     max-height: 400px;
     overflow-y: auto;
 }
+
+.maxHeightUnsplash{
+    height: 68vh;
+    overflow-y: auto;
+}
