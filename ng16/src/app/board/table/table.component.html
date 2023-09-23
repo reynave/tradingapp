@@ -305,9 +305,10 @@
                                                     <div class="p-1 text-center">
                                                         <a href="javascript:;"
                                                             (click)="offCanvasImages(row,column['f'],i);">
-                                                            <small> {{row['f'+column['f']] > 1 ? '' :'No'}} 
-                                                                <i class="bi bi-images" *ngIf="row['f'+column['f']] > 1 "></i> 
-                                                                {{row['f'+column['f']]}} Image{{row['f'+column['f']] > 1 ? 's' :''}}  </small>
+                                                            <small> {{row['f'+column['f']] > 0 ? '' :'No'}} 
+                                                                <i class="bi bi-images" *ngIf="row['f'+column['f']] > 0 "></i> 
+                                                                {{row['f'+column['f']] > 0 ? row['f'+column['f']] :''}} 
+                                                                {{row['f'+column['f']] > 1 ? 'Images' :'Image'}}  </small>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -317,7 +318,7 @@
                                                     <div *ngIf="row['ilock']=='1'">
 
                                                         <div class="select p-1 text-center "
-                                                            [ngClass]="{'text-white': selectOption( row['f'+column['f']], column['f'] )['color'] != 'auto' }"
+                                                            [ngClass]="{'text-white': selectOption( row['f'+column['f']], column['f'] )['color'] != null }"
                                                             [ngStyle]="{'background': selectOption( row['f'+column['f']], column['f'] )['color'] }"
                                                             [innerHTML]="selectOption( row['f'+column['f']], column['f'] )['value']">
                                                         </div>

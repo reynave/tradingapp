@@ -91,7 +91,7 @@ class TableViewOnly extends Model
         }
 
 
-        $q = "SELECT    $customField  
+        $q = "SELECT  id,  $customField  
         FROM journal_detail 
         where journalId = '$id' $where
         AND presence = 1 order by sorting ASC limit $order, $limit ";
@@ -143,7 +143,7 @@ class TableViewOnly extends Model
                     }
                 }
                 if ($field['iType'] == 'image') { 
-                    $val['value'] = 'images';
+                    $val['value'] = self::select("count(id)", "journal_detail_images", " presence =1 and   journalDetailId =  '" . $rec['id']  . "' ") > 0 ? 'images' : '';
                 }
                 $temp .=   strval($val['value']) . "   ";
                 // $detail[$index][$field['key']] = strval($val['value']);

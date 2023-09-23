@@ -44,7 +44,9 @@ export class BoardTitleComponent implements OnInit {
     private configService: ConfigService,
     private ativatedRoute: ActivatedRoute,
     private modalService: NgbModal,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private router: Router,
+    
   ) { }
 
   ngOnInit() {
@@ -131,6 +133,15 @@ export class BoardTitleComponent implements OnInit {
 
   openComponent(componentName: string, item: any) {
     if (componentName == 'ShareBoardComponent') {
+      let queryParams = {
+        id: this.id
+      }
+      this.router.navigate([], {
+        queryParams: queryParams,
+        queryParamsHandling: 'merge',
+      })
+
+
       const modalRef = this.modalService.open(ShareBoardComponent, { size: 'lg' });
       modalRef.componentInstance.item = this.journal;
       modalRef.componentInstance.permission = this.permission;

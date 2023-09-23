@@ -6,7 +6,8 @@ import { environment } from 'src/environments/environment';
 import { JsonPipe } from '@angular/common';
 import { Observable, OperatorFunction } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SocketService } from 'src/app/service/socket.service';
 
 
 // const teams: { name: string; picture: string }[] = [
@@ -47,12 +48,13 @@ export class ShareBoardComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
-    private modalService: NgbModal,
-    private router: Router,
-    
+    private modalService: NgbModal, 
+    private socketService: SocketService,
+    private activeRouter : ActivatedRoute,
   ) { }
 
   ngOnInit() {
+    console.log( " shear board", this.activeRouter.snapshot.queryParams['id']);
     //this.childItem = { ...this.item }; 
     console.log(this.item, this.permission);
     this.unsplash();
@@ -94,6 +96,11 @@ export class ShareBoardComponent implements OnInit {
         this.item['permission'] = x.name;
 
         this.newItemEvent.emit(this.journalAccess);
+        const msg = {
+          action: 'journal/onUpdatePermission',
+          journalId : this.activeRouter.snapshot.queryParams['id'],
+        }
+        this.socketService.sendMessage(msg);
       },
       e => {
         console.log(e);
@@ -112,6 +119,11 @@ export class ShareBoardComponent implements OnInit {
       data => {
         console.log(data);
         this.journalAccess = data['journal_access'];
+        const msg = {
+          action: 'tableHttpUsers',
+          journalId : this.activeRouter.snapshot.queryParams['id'],
+        }
+        this.socketService.sendMessage(msg);
       },
       e => {
         console.log(e);
@@ -170,6 +182,11 @@ export class ShareBoardComponent implements OnInit {
           }
           if (data['avaiable'] == true) {
             this.addUser = "";
+            const msg = {
+              action: 'tableHttpUsers',
+              journalId : this.activeRouter.snapshot.queryParams['id'],
+            }
+            this.socketService.sendMessage(msg);
           }
           this.note = data['note'];
         },
@@ -196,7 +213,7 @@ export class ShareBoardComponent implements OnInit {
           : this.teams.filter((v) => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10),
 
       ),
-    );
+  );
 
   formatter = (x: { name: string }) => x.name;
 

@@ -115,8 +115,7 @@ export class TableComponent implements OnInit, AfterViewInit {
                 // console.log("f"+i, this.detail[index]['f'+i]);
                 if (this.detail[index]['f' + i] !== undefined) {
                   this.detail[index]['f' + i] = data['msg']['f' + i];
-                }
-
+                } 
               }
 
               ///    this.detail = this.detail.filter((x) => x != this.detail[index]);
@@ -144,6 +143,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           if (data['action'] === 'duplicate') {
             this.httpDetail();
           }
+
           if (data['action'] == 'lock') {
             data['msg'].forEach((el: { [x: string]: any; }) => {
               var objIndex = this.detail.findIndex(((obj: { id: any; }) => obj.id == el['id']));
@@ -184,13 +184,20 @@ export class TableComponent implements OnInit, AfterViewInit {
           if (data['action'] == 'reload') {
             this.reload([]);
           }
+
           if (data['action'] == 'httpDetail') {
             this.httpDetail();
           }
+
           if (data['action'] == 'tableReloadAddRow') {
             console.log("add arrow", data['data']);
             this.detail = [...this.detail, data['data']];
           }
+
+          if (data['action'] == 'tableHttpUsers') {
+            this.httpUsers()
+          }
+          
         }
         console.log(this.detail);
 
@@ -321,6 +328,25 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.startUpTable = true;
 
 
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
+
+  httpUsers(){
+    this.http.get<any>(environment.api + "Tables/detail", {
+      headers: this.configService.headers(),
+      params: {
+        id: this.id,
+        journalTableViewId: this.journalTableViewId,
+      }
+    }).subscribe(
+      data => {
+        console.log('httpUsers', data); 
+        this.users = data['users'];
+        this.usersHistory= data['usersHistory']; 
       },
       e => {
         console.log(e);
@@ -629,7 +655,7 @@ export class TableComponent implements OnInit, AfterViewInit {
             // let history = this.select[index].optionDelete[objIndexHistory];
             // history =  this.select[index].optionDelete[objIndexHistory]['value'] + '<small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>';
             data = {
-              value: 'REMOVED <small class="text-danger"><i class="bi bi-exclamation-lg"></i><small>',
+              value: '<small class="text-danger">REMOVED <i class="bi bi-exclamation-lg"></i><small> ',
               color: "none"
             };
           }

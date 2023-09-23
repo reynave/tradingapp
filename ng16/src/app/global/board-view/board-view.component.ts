@@ -20,6 +20,7 @@ export class BoardViewComponent implements OnInit {
   journalTableViewId: string = "";
   items: any = [];
   journalAccess: any = [];
+  private _docSub: any;
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
@@ -34,12 +35,11 @@ export class BoardViewComponent implements OnInit {
     config.backdrop = 'static';
     config.keyboard = false;
   }
-  private _docSub: any;
+
   ngOnInit(): void {
 
     this.id = this.ativatedRoute.snapshot.params['id'];
-    this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
-
+    this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId']; 
     const ab: any = localStorage.getItem(this.id);
     this.items = JSON.parse(ab);
     this.httpGet();
@@ -64,9 +64,11 @@ export class BoardViewComponent implements OnInit {
       }
     );
   }
+
   ngOnDestroy() {
     console.log("ngOnDestroy");
   }
+
   httpGet() {
     this.http.get<any>(environment.api + "Board/view", {
       headers: this.configService.headers(),
@@ -126,7 +128,6 @@ export class BoardViewComponent implements OnInit {
       }
     )
   }
-
 
   addView(board: string) {
     $('.divHiden').hide();
@@ -212,4 +213,5 @@ export class BoardViewComponent implements OnInit {
   open(content: any) {
     this.modalService.open(content);
   }
+
 }
