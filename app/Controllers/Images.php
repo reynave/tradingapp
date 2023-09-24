@@ -49,10 +49,22 @@ class Images extends BaseController
             $this->db->table("journal_detail")->update([
                 "f".$post['fn'] => model("Core")->select("count(id)","journal_detail_images","presence = 1 and journalDetailId = '$id'"),
             ]," id =  ".$post['id']);
- 
+
+
+            $newId = $id;
+            $journalId = model("Core")->select("journalId", "journal_detail", "id = '$newId' ");
+
+            $journalTable = model("Core")->journalTable($journalId, '', " AND  id = '$newId'  ");
+            $tableViewOnly = model("TableViewOnly")->journalTable($journalId, '', " AND  id = '$newId'  ");
+
+            for ($i = 0; $i < count($journalTable['detail']); $i++) {
+                $journalTable['detail'][$i]['searchable'] = $tableViewOnly['detail'][$i];
+            }
+            $detail =  $journalTable['detail'];
 
             $data = [
                 "error" => false,
+                "row" =>   $detail[0],
             ];
         }
         return $this->response->setJSON($data);
@@ -77,9 +89,22 @@ class Images extends BaseController
                 "f".$fn  => model("Core")->select("count(id)","journal_detail_images","presence = 1 and journalDetailId = '$journalDetailId' "),
             ]," id =  ".$journalDetailId  );
 
+
+            $newId = $journalDetailId;
+            $journalId = model("Core")->select("journalId", "journal_detail", "id = '$newId' ");
+
+            $journalTable = model("Core")->journalTable($journalId, '', " AND  id = '$newId'  ");
+            $tableViewOnly = model("TableViewOnly")->journalTable($journalId, '', " AND  id = '$newId'  ");
+
+            for ($i = 0; $i < count($journalTable['detail']); $i++) {
+                $journalTable['detail'][$i]['searchable'] = $tableViewOnly['detail'][$i];
+            }
+            $detail =  $journalTable['detail'];
+
             $data = [
                 "error" => false,
                 "post" => $post,
+                "row" =>   $detail[0],
             ];
         }
         return $this->response->setJSON($data);

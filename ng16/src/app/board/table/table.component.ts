@@ -111,20 +111,16 @@ export class TableComponent implements OnInit, AfterViewInit {
 
             const index = this.detail.findIndex((rec: { id: string; }) => rec.id === data['msg']['id']);
             if (index !== -1) {
-              for (let i = 0; i < 16; i++) {
+              for (let i = 0; i < 40; i++) {
                 // console.log("f"+i, this.detail[index]['f'+i]);
                 if (this.detail[index]['f' + i] !== undefined) {
                   this.detail[index]['f' + i] = data['msg']['f' + i];
                 } 
-              }
-
+              } 
               ///    this.detail = this.detail.filter((x) => x != this.detail[index]);
             }
-            console.log(data['msg']);
-
-            this.calculationFooter();
-
-
+            console.log(data['msg']);  
+            this.calculationFooter(); 
             //  this.httpDetail();
           }
 
@@ -1111,6 +1107,14 @@ export class TableComponent implements OnInit, AfterViewInit {
       data => {
         console.log(data);
         this.httpImages();
+        const msg = {
+          sender: localStorage.getItem("address.mirrel.com"),
+          msg: data['row'],
+          journalId: this.id,
+          action: 'TableDetailUpdateRow',
+          chat: this.configService.account()['account']['name'] + ' add image',
+        }
+        this.socketService.sendMessage(msg);
       },
       error => {
         console.log(error);
@@ -1136,6 +1140,14 @@ export class TableComponent implements OnInit, AfterViewInit {
       data => {
         console.log(data);
         this.httpImages();
+        const msg = {
+          sender: localStorage.getItem("address.mirrel.com"),
+          msg: data['row'],
+          journalId: this.id,
+          action: 'TableDetailUpdateRow',
+          chat: this.configService.account()['account']['name'] + ' add url image',
+        }
+        this.socketService.sendMessage(msg);
       },
       error => {
         console.log(error);
@@ -1162,16 +1174,26 @@ export class TableComponent implements OnInit, AfterViewInit {
     );
 
   }
+
   onImagesRemove(x: any) {
     const body = {
       item: x,
-    }
+    } 
+    console.log('onImagesRemove',body);
     this.http.post<any>(environment.api + "images/onImagesRemove", body, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
         console.log(data);
         this.httpImages();
+        const msg = {
+          sender: localStorage.getItem("address.mirrel.com"),
+          msg: data['row'],
+          journalId: this.id,
+          action: 'TableDetailUpdateRow',
+          chat: this.configService.account()['account']['name'] + ' remove image',
+        }
+        this.socketService.sendMessage(msg);
       },
       error => {
         console.log(error);

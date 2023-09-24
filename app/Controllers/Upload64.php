@@ -64,11 +64,26 @@ class Upload64 extends BaseController
                 "f".$post['fn'] => model("Core")->select("count(id)","journal_detail_images","presence = 1 and journalDetailId = '$id'"),
             ]," id =  ".$id  );
 
+
+
+            $newId = $id;
+            $journalId = model("Core")->select("journalId", "journal_detail", "id = '$newId' ");
+
+            $journalTable = model("Core")->journalTable($journalId, '', " AND  id = '$newId'  ");
+            $tableViewOnly = model("TableViewOnly")->journalTable($journalId, '', " AND  id = '$newId'  ");
+
+            for ($i = 0; $i < count($journalTable['detail']); $i++) {
+                $journalTable['detail'][$i]['searchable'] = $tableViewOnly['detail'][$i];
+            }
+            $detail =  $journalTable['detail'];
+
+
             $data = array(
                 "error" => false,
                 "file_name" => $file_name,
                 "image_url" => $image_url,
                 "base64_string " => $base64_string,
+                "row" =>   $detail[0],
             );
         }
         return $this->response->setJSON($data);
