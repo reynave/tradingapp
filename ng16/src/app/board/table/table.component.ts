@@ -336,11 +336,10 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   httpUsers(){
-    this.http.get<any>(environment.api + "Tables/detail", {
+    this.http.get<any>(environment.api + "Tables/users", {
       headers: this.configService.headers(),
       params: {
-        id: this.id,
-        journalTableViewId: this.journalTableViewId,
+        id: this.id, 
       }
     }).subscribe(
       data => {

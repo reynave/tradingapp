@@ -557,7 +557,8 @@
         </div>
 
 
-        <div class="canvasImagesMaxHeight  px-1" *ngIf="!clipboardImage && !url">
+        <div class=" px-1" *ngIf="!clipboardImage && !url" 
+        [ngClass]="{'canvasImagesMaxHeight': imageQueryParams['iLock'] == '0'}">
 
             <div class="row g-1">
                 <div class="col-6 mb-2" *ngFor="let x of images">
@@ -569,8 +570,8 @@
                     </div>
                     <div class="row">
                         <div class="col-7"><small>{{x.source}}</small></div>
-                        <div class="col-5 text-end">
-                            <button type="button" (click)="onImagesRemove(x)"
+                        <div class="col-5 text-end" *ngIf="imageQueryParams['iLock'] == '0'">
+                            <button type="button"  (click)="onImagesRemove(x)"
                                 class="btn btn-sm btn-danger py-0"><small>Remove</small></button>
                         </div>
                     </div>

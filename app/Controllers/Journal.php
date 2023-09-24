@@ -125,7 +125,7 @@ class Journal extends BaseController
     {
         // $accountId = model("Core")->accountId();
 
-        $q1 = "SELECT ja.*, a.name, a.email, a.picture
+        $q1 = "SELECT ja.*, a.name, a.email, concat('".base_url()."uploads/picture/',a.picture) as 'picture'
         FROM journal_access AS ja
         JOIN account AS a ON a.id = ja.accountId
         WHERE ja.presence = 1 and ja.journalId = '" . $this->request->getVar()['journalId'] . "'
@@ -138,7 +138,7 @@ class Journal extends BaseController
         }
 
         $accountId = model("Core")->accountId();
-        $q2 = "SELECT a.id, a.name, a.picture, a.email, t.accountId
+        $q2 = "SELECT a.id, a.name, concat('".base_url()."uploads/picture/',a.picture) as 'picture', a.email, t.accountId
         FROM account_team AS t
         LEFT JOIN account AS a ON a.id = t.invitedId 
         WHERE t.presence = 1 and  t.accountId = '$accountId' AND a.id != '$accountId' ";
@@ -387,27 +387,21 @@ class Journal extends BaseController
             "post" => $post,
         ];
         if ($post) {
-            $accountId = model("Core")->select("id", "account", "id = '" . $post['addUser']['id'] . "' and presence = 1 ");
-            $avaiable = $accountId ? true : false;
+            $journalId = $post['item']['id']; 
+            $addUserId = model("Core")->select("id", "account", "id = '" . $post['addUser']['id'] . "' and presence = 1 ");
+            $account_team = model("Core")->select("id", "account_team", "invitedId = '" . $post['addUser']['id'] . "' and presence = 1 ");
+            
+            $avaiable = $addUserId ? true : false;
             $duplicate = false;
             $journal_access = [];
             $note = "";
-            if ($avaiable == true) {
-
-                $duplicate = model("Core")->select("id", "journal_access", "accountId = '" . $accountId . "' and journalId = '" . $post['item']['id'] . "' and presence = 1 ") ? true : false;
-
-                if ($duplicate === false) {
-                    $this->db->table("journal_access")->update([
-                        "presence" => 0,
-                        "input_date" => date("Y-m-d H:i:s"),
-                        "input_by" => model("Core")->accountId(),
-                        "update_date" => date("Y-m-d H:i:s"),
-                        "update_by" => model("Core")->accountId(),
-                    ], " accountId = '$accountId' AND journalId = '" . $post['item']['id'] . "' ");
-
-
+            $addUser = model("Core")->select("name","account","id = '$addUserId' ");
+            if ($avaiable == true ) {
+                $id = model("Core")->select("id", "journal_access", "accountId = '" . $addUserId . "' and journalId = '" . $journalId . "'  ");
+              
+                if ( $id == '') { 
                     $this->db->table("journal_access")->insert([
-                        "accountId" => $accountId,
+                        "accountId" => $addUserId,
                         "journalId" => $post['item']['id'],
                         "owner" => 0,
                         "editable" => 1,
@@ -418,16 +412,21 @@ class Journal extends BaseController
                         "update_date" => date("Y-m-d H:i:s"),
                         "update_by" => model("Core")->accountId(),
                     ]);
-                } else {
-                    $note = "Account already join!";
+                } else { 
+                    $this->db->table("journal_access")->update([
+                        "presence" => 1,
+                        "input_date" => date("Y-m-d H:i:s"),
+                        "input_by" => model("Core")->accountId(),
+                        "update_date" => date("Y-m-d H:i:s"),
+                        "update_by" => model("Core")->accountId(),
+                    ], " id  = '$id' "); 
+                    $note =  $addUser." Add has joined the team"; 
                 }
+              
+             
             } else {
                 $note = "The email you entered has not been registered,<br> please invite via the link below ";
-                // $this->db->table("journal_access")->update([
-                //     "presence" => 0,
-                //     "update_date" => date("Y-m-d H:i:s"),
-                //     "update_by" => model("Core")->accountId(),
-                // ], "presence  = 4 AND accountId =  '".model("Core")->accountId()."' "); 
+                 
             }
 
             $q1 = "SELECT ja.*, a.name, a.email, concat('".base_url()."uploads/picture/',a.picture) as 'picture'
@@ -435,13 +434,12 @@ class Journal extends BaseController
             JOIN account AS a ON a.id = ja.accountId
             WHERE ja.presence = 1 and ja.journalId = '" . $post['item']['id'] . "'
             ORDER BY  ja.owner DESC, ja.input_date  ASC ";
+
+            
             $journal_access = $this->db->query($q1)->getResultArray();
 
             $data = [
-                "error" => false,
-                "avaiable" => $avaiable,
-                "post" => $post,
-                "duplicate" => $duplicate,
+                "error" => false, 
                 "journal_access" => $journal_access,
                 "note" => $note,
                 "q" =>   $q1 ,
@@ -462,7 +460,7 @@ class Journal extends BaseController
         ];
         if ($post) {
             $this->db->table("journal_access")->update([
-                "presence" => 4,
+                "presence" => 0,
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
             ], "id = '" . $post['access']['id'] . "' and accountId = '" . $post['access']['accountId'] . "' ");
@@ -472,12 +470,7 @@ class Journal extends BaseController
             JOIN account AS a ON a.id = ja.accountId
             WHERE ja.presence = 1 and ja.journalId = '" . $post['item']['id'] . "'
             ORDER BY  ja.owner DESC, ja.input_date  ASC ";
-            $journal_access = $this->db->query($q1)->getResultArray();
-
-            // foreach ($teams as $row) {
-            //     $teams[$i]['picture'] = model("Core")->isUrlValid($teams[$i]['picture']) ? $teams[$i]['picture'] : base_url() . 'uploads/picture/' . $teams[$i]['picture'];
-            //     $i++;
-            // }
+            $journal_access = $this->db->query($q1)->getResultArray(); 
             $data = [
                 "error" => false,
                 "post" => $post,

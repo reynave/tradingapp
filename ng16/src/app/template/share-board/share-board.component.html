@@ -141,70 +141,19 @@
                             </a>
                         </span>
                     </div>
-                </div>
-                <div class="row py-2 divHover pointer" *ngFor="let x of journalAccess">
-
-                    <div class="col-10">
-                        <div class="d-flex">
-                            <div>
-                                <img [src]="x.picture" height="35" class="me-2 rounded-circle">
-                            </div>
-                            <div>
-                                <div class="lh-1">
-                                    <strong> {{x.name}} </strong><sup>{{x.owner == '1' ? "Admin":""}}</sup>
-                                </div>
-                                <small>{{x.email}}</small>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col-2 align-self-center text-center">
-                        <span *ngIf="x.owner == '1'">
-                            Owner
-                        </span>
-                        <span *ngIf="x.owner != '1'">
-                            <a (click)="onRemoveAccess(x)" *ngIf="item.owner == '1' "> <i class="bi bi-x-circle"></i>
-                            </a>
-                        </span>
-                    </div>
-                </div>
-                <div class="row py-2 divHover pointer" *ngFor="let x of journalAccess">
-
-                    <div class="col-10">
-                        <div class="d-flex">
-                            <div>
-                                <img [src]="x.picture" height="35" class="me-2 rounded-circle">
-                            </div>
-                            <div>
-                                <div class="lh-1">
-                                    <strong> {{x.name}} </strong><sup>{{x.owner == '1' ? "Admin":""}}</sup>
-                                </div>
-                                <small>{{x.email}}</small>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="col-2 align-self-center text-center">
-                        <span *ngIf="x.owner == '1'">
-                            Owner
-                        </span>
-                        <span *ngIf="x.owner != '1'">
-                            <a (click)="onRemoveAccess(x)" *ngIf="item.owner == '1' "> <i class="bi bi-x-circle"></i>
-                            </a>
-                        </span>
-                    </div>
-                </div>
+                </div> 
             </div>
 
             <div class="row my-2" *ngIf="item.owner == '1' ">
+                <div class="col-12" *ngIf="note != ''">
+                    <div class="alert alert-warning" [innerHTML]="note"></div>
+                </div>
                 <div class="col-12 mb-3">
                     <input id="typeahead-template" type="text" class="form-control col" [(ngModel)]="model"
                         placeholder="Add Team by Name" [ngbTypeahead]="search" [resultTemplate]="rt"
                         [inputFormatter]="formatter" (keydown.enter)="onSubmitUser()" />
                 </div>
-                <div class="col-12" *ngIf="note != ''">
-                    <div class="alert alert-warning" [innerHTML]="note"></div>
-                </div>
+               
             </div>
 
             <ng-template #rt let-r="result" let-t="term">

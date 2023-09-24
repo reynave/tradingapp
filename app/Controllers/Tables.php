@@ -186,6 +186,49 @@ class Tables extends BaseController
     }
 
 
+    function users()
+    {
+        $data = array(
+            "error" => true,
+            "request" => $this->request->getVar(),
+        );
+
+        $accountId = model("Core")->accountId();
+ 
+        $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
+        if ($data['request']['id'] && $id) {
+ 
+            $users = "SELECT ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId',
+             concat('" . base_url() . "uploads/picture/',a.picture) as 'picture',  
+            ja.presence AS 'presence' 
+            FROM journal_access AS ja
+            LEFT join account AS a ON a.id = ja.accountId
+            WHERE ja.journalId = '$id' AND ja.presence = 1
+            ORDER BY a.name asc;";
+            $users = $this->db->query($users)->getResultArray();
+ 
+            $usersHistory = "SELECT ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId',
+            concat('" . base_url() . "uploads/picture/',a.picture) as 'picture',  
+           ja.presence AS 'presence' 
+           FROM journal_access AS ja
+           LEFT join account AS a ON a.id = ja.accountId
+           WHERE ja.journalId = '$id'  
+           ORDER BY a.name asc;";
+            $usersHistory = $this->db->query($usersHistory)->getResultArray();
+
+            $data = array(
+                "error" => false, 
+                "users" => $users,  
+                "usersHistory" => $usersHistory,
+
+
+            ); 
+
+        }
+        return $this->response->setJSON($data);
+    }
+
+
     function requestToken()
     {
         $json = file_get_contents('php://input');

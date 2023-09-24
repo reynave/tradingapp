@@ -140,20 +140,16 @@ export class ShareBoardComponent implements OnInit {
       addUser: this.addUser,
       item: this.item,
     }
-    console.log(body, this.model['id']);
-    if (this.model['id'] != undefined) {
-      console.log("MAUSK");
+    console.log("onSubmitUser : ",body);
+    if (this.model['id'] != undefined) { 
       this.http.post<any>(environment.api + "journal/onSubmitUser", body, {
         headers: this.configService.headers()
       }).subscribe(
         data => {
-          console.log(data);
-          this.journalAccess = data['journal_access'];
-          if (data['duplicate'] == true) {
-            alert("Account already join.");
-          }
-          if (data['avaiable'] == true) {
-            this.addUser = "";
+          this.model = "";
+          this.journalAccess = data['journal_access'];  
+          if (data['error'] == false) {
+            this.addUser = ""; 
             const msg = {
               action: 'tableHttpUsers',
               journalId : this.activeRouter.snapshot.queryParams['id'],
@@ -166,6 +162,8 @@ export class ShareBoardComponent implements OnInit {
           console.log(e);
         }
       )
+    }else{
+      this.note = this.addUser+ ' is not yet registered in your team list, please invite them to join you!';
     }
   }
 
