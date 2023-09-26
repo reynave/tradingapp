@@ -76,7 +76,7 @@ class Tables extends BaseController
                 "error" => false,
                 "id" => $id,
                 "customField" => $journal_custom_field,
-
+                "template" => model("Core")->select("templateCode","journal","id='$id'")
             );
         }
         return $this->response->setJSON($data);

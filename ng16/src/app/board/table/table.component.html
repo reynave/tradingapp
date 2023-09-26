@@ -134,11 +134,19 @@
                                     </a>
                                 </div>
                                 <div class="me-2">
+                                    <button type="button" class="btn btn-sm  btn-light"  (click)="modalUploadData()">
+                                        <i class="bi bi-cloud-upload"></i> Upload CSV
+                                    </button>
+                                </div>
+                                <div class="me-2">
                                     <a class="btn btn-sm btn-light"
                                         [routerLink]="[ '/board/tablePrintable/', id, journalTableViewId ]"
                                         target="_blank">
                                         <i class="bi bi-printer"></i> Printable
                                     </a>
+                                </div> 
+                                <div class="me-2">
+                                    <button type="button" class="btn btn-sm border"> {{template}}</button>
                                 </div>
                                 <div class="me-2">
                                     <button type="button" class="btn btn-sm border"> Total {{detail.length |number}}</button>
@@ -147,11 +155,7 @@
                                     <button type="button" class="btn btn-sm btn-light"> {{archives}} 
                                         <i class="bi bi-archive"></i></button>
                                 </div>
-                                <div class="me-2">
-                                    <button type="button" class="btn btn-sm border btn-light"  (click)="modalUploadData()">
-                                        <i class="bi bi-cloud-upload"></i> Upload CSV
-                                    </button>
-                                </div>
+                              
                                 <div class="me-2" *ngIf="loading">
                                     <img src="./assets/gif/sm-loading.gif" width="20">
                                 </div>
@@ -249,7 +253,8 @@
                                                         <div style="width: 100%;">
                                                             <input [type]="column['iType']"
                                                                 [(ngModel)]="row['f'+column['f']]" #customFieldText
-                                                                class="p-1 {{'text-'+column['textAlign']}}"
+                                                                class="p-1 {{'text-'+column['textAlign']}} " 
+                                                                [ngClass]="{'text-danger': (column['iType']=='number' && row['f'+column['f']] < 0)}"
                                                                 maxlength="250" [disabled]="row['ilock']=='1'"
                                                                 (keyup.enter)="customFieldText.blur()"
                                                                 (change)="updateRow(row,column['f'],column);">

@@ -62,7 +62,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   deleteAll: boolean = false;
   customField: any = [];
   customFieldForm: any = [];
-
+  template : string = "";
   resizableStatus: boolean = false;
   tools: boolean = false;
   detailImageUrl: string = "";
@@ -252,7 +252,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         // console.log("httpHeader", data);
         this.customFieldForm = data['customField'];
         this.journalAccess = data['journal_access'];
-
+        this.template = data['template'];
       },
       e => {
         console.log(e);
