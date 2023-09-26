@@ -65,7 +65,9 @@ class Chart extends BaseController
                 $temp = array(
                     "key" => $row['key'],
                     "name" => $row['name'],
-                    "iType" => $row['iType'],
+                    "iType" => $row['iType'], 
+                    "accumulation" => model("Core")->select("accumulation", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
+                 
                     "check" => model("Core")->select("status", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
                     "fill" => (bool) model("Core")->select("fill", "journal_chart_yaxis", "value= '" . $row['key'] . "' and journalTableViewId = $journalTableViewId "),
                     "presence" => $row['presence'],
@@ -160,6 +162,8 @@ class Chart extends BaseController
                 $array = [
                     "journalTableViewId" => $post['journalTableViewId'],
                     "value" => $row['key'],
+                    "accumulation" => $row['accumulation'],
+                    
                     "status" => $row['check'] == true ? 1 : 0,
                     "presence" => 1
                 ];

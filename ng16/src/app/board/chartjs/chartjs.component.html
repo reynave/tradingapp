@@ -17,7 +17,7 @@
                             <app-board-title></app-board-title>
                         </div>
                     </div>
-                  
+
                     <div class="row mb-2">
                         <div class="col-12 ">
                             <app-board-view (newItemEvent)="reload($event)"></app-board-view>
@@ -25,14 +25,14 @@
                         <div class="col-12">
                             <div class="d-flex">
                                 <a href="javascript:;" class="btn btn-outline-dark btn-sm" placement="top-right"
-                                (click)="openComponent('CustomFieldFormComponent')" (newItemEvent)="onChild($event)"
-                                ngbTooltip="Tooltip on top"><i class="bi bi-gear"></i></a>
+                                    (click)="openComponent('CustomFieldFormComponent')" (newItemEvent)="onChild($event)"
+                                    ngbTooltip="Tooltip on top"><i class="bi bi-gear"></i></a>
                             </div>
                         </div>
                     </div>
 
 
-                    <div class="row">
+                    <div class="row g-1">
                         <div class="col-md-9 col-12 order-2 order-md-1">
 
                             <div class="mx-lg-5" *ngIf="journalChart['chartjsTypeId'] == 0">
@@ -114,18 +114,29 @@
                                     <div class="form-control scrollarea">
                                         <div class="row g-1 mb-1 " [ngClass]="{'border-top': (i > 0) ? true : false}"
                                             *ngFor="let n of y; let i = index">
-                                            <div class="col-10"
+                                            <div class="col-9"
                                                 [ngClass]="{'text-decoration-line-through': n.presence == '0'}">
                                                 {{n.name}}
                                                 <small *ngIf="n.iType == 'number'"><i class="bi bi-123"></i></small>
                                                 <span *ngIf="n.iType == 'formula'"><img
                                                         src="./assets/icon/formula-30.png" class="icon"></span>
                                             </div>
-                                            <div class="col-2 text-end">
-                                                <i *ngIf="n.check == true" (click)="n.check = false;updateChartJs()"
-                                                    class="bi bi-check-square-fill"></i>
-                                                <i *ngIf="n.check != true" (click)="n.check = true;updateChartJs()"
-                                                    class="bi bi-square"></i>
+                                            <div class="col-3 text-end">
+                                                <span class="mx-1">
+                                                    <i *ngIf="n.check == true" (click)="n.check = false;updateChartJs()"
+                                                        class="bi bi-check-square-fill"></i>
+                                                    <i *ngIf="n.check != true" (click)="n.check = true;updateChartJs()"
+                                                        class="bi bi-square"></i>
+
+                                                </span>
+                                                <span class="mx-1">
+                                                    <i *ngIf="n.accumulation == true"
+                                                        (click)="n.accumulation = false;updateChartJs()"
+                                                        class="bi bi-check-square-fill"></i>
+                                                    <i *ngIf="n.accumulation != true"
+                                                        (click)="n.accumulation = true;updateChartJs()"
+                                                        class="bi bi-square"></i>
+                                                </span>
                                             </div>
 
                                         </div>
@@ -136,7 +147,7 @@
                             </div>
                         </div>
                     </div>
- 
+
                 </div>
             </div>
         </div>
@@ -144,4 +155,3 @@
     </div>
 
 </div>
- 

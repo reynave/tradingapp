@@ -451,6 +451,7 @@ class Core extends Model
                     }
                 }
                 $data = [];
+                $cal = 0;
                 foreach ($detail as $rec) {
                     $insert = false;
                     if (count($selectWhereOption) > 0) {
@@ -464,7 +465,8 @@ class Core extends Model
                     }
 
                     if ($insert == true) {
-                        array_push($data, (float) $rec[$row['value']]);
+                        $cal += (float) $rec[$row['value']];
+                        array_push($data, $row['accumulation'] == '1' ? $cal : (float) $rec[$row['value']] );
                     }
 
                 }

@@ -4,14 +4,14 @@ import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbOffcanvas, NgbModal, NgbModalConfig, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
 import { DetailInterface } from './table-interface';
-import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component';
-import { OffCanvasImagesComponent } from './off-canvas-images/off-canvas-images.component';
+import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component'; 
 import { SocketService } from 'src/app/service/socket.service';
 import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { ModalUploadDataComponent } from './modal-upload-data/modal-upload-data.component';
 declare var $: any;
 
 export class NewSelect {
@@ -93,7 +93,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     private offcanvasService: NgbOffcanvas,
     private socketService: SocketService,
     private router: Router,
-  ) {
+    config: NgbModalConfig
+  ) { 
     document.addEventListener('paste', this.handlePaste.bind(this));
   }
 
@@ -743,6 +744,15 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.httpImages();
   }
 
+  modalUploadData(){
+    let ngbModalOptions: NgbModalOptions = {
+      backdrop : true,
+      keyboard : false,
+      size : 'md',
+};
+    const modalRef = this.modalService.open(ModalUploadDataComponent, ngbModalOptions);
+		modalRef.componentInstance.journalId = this.id;
+  }
 
   addTask() {
     const body = {

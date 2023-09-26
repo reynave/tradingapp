@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h4 class="modal-title">Hi there!</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body">
+    <div class="container">
+        <h2>Upload File CSV</h2>
+        <input type="file" class="form-control" (change)="onFileChange($event)" />
+        
+    </div>
+</div>
+<div class="modal-footer">
+    <button (click)="uploadFile()" class="btn btn-primary">Upload</button>
+</div>

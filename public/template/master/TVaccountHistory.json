@@ -1,0 +1,35 @@
+{
+    "version":"1.0.0",
+    "field" :  [
+        {
+            "f":1,
+            "name": "Date",
+            "iType" : "date"
+        },
+        {
+            "f":2,
+            "name": "Time",
+            "iType" : "time"
+        },
+        {
+            "f":3,
+            "name": "Balance Before",
+            "iType" : "number"
+        },
+        {
+            "f":4,
+            "name": "Balance After",
+            "iType" : "number"
+        },
+        {
+            "f":5,
+            "name": "P&L",
+            "iType" : "number"
+        },
+        {
+            "f":6,
+            "name": "Action",
+            "iType" : "text"
+        }
+    ]
+}

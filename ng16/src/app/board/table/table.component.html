@@ -141,12 +141,16 @@
                                     </a>
                                 </div>
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm border"> Total {{detail.length
-                                        |number}}</button>
+                                    <button type="button" class="btn btn-sm border"> Total {{detail.length |number}}</button>
                                 </div>
                                 <div class="me-2" [hidden]="archives < 1">
-                                    <button type="button" class="btn btn-sm btn-light"> {{archives}} <i
-                                            class="bi bi-archive"></i></button>
+                                    <button type="button" class="btn btn-sm btn-light"> {{archives}} 
+                                        <i class="bi bi-archive"></i></button>
+                                </div>
+                                <div class="me-2">
+                                    <button type="button" class="btn btn-sm border btn-light"  (click)="modalUploadData()">
+                                        <i class="bi bi-cloud-upload"></i> Upload CSV
+                                    </button>
                                 </div>
                                 <div class="me-2" *ngIf="loading">
                                     <img src="./assets/gif/sm-loading.gif" width="20">
