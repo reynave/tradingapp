@@ -203,10 +203,12 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   public get inverseOfTranslation(): string {
+ 
     if (!this.viewPort || !this.viewPort["_renderedContentOffset"]) {
+     
       return "-0px";
     }
-    let offset = this.viewPort["_renderedContentOffset"];
+    let offset = this.viewPort["_renderedContentOffset"]; 
     return `-${offset}px`;
   }
 
@@ -1055,7 +1057,20 @@ export class TableComponent implements OnInit, AfterViewInit {
     });
     return formula;
   }
+  isX : number = 0;
+  onScroll(event: Event): void {
+    const dataContainer = event.target as HTMLElement;
+    const verticalScrollY = dataContainer.scrollTop; // Mendapatkan nilai Y
+    const horizontalScrollX = dataContainer.scrollLeft; // Mendapatkan nilai X
 
+    // Sekarang Anda dapat menggunakan nilai Y dan X sesuai kebutuhan
+   // console.log('Scroll Y:', verticalScrollY);
+   // console.log('Scroll X:', horizontalScrollX);
+    this.isX = horizontalScrollX;
+    //$('.isScollX').css("background-color", "#f4f4f4");
+    $('.isScollX').css("left", "-"+horizontalScrollX+"px");
+    
+  }
 
   clipboardImage: string = '';
   @ViewChild('imageInput', { static: false }) imageInput: ElementRef | any;

@@ -134,7 +134,7 @@
                                     </a>
                                 </div>
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm  btn-light"  (click)="modalUploadData()">
+                                    <button type="button" class="btn btn-sm  btn-light" (click)="modalUploadData()">
                                         <i class="bi bi-cloud-upload"></i> Upload CSV
                                     </button>
                                 </div>
@@ -144,18 +144,19 @@
                                         target="_blank">
                                         <i class="bi bi-printer"></i> Printable
                                     </a>
-                                </div> 
+                                </div>
                                 <div class="me-2">
                                     <button type="button" class="btn btn-sm border"> {{template}}</button>
                                 </div>
                                 <div class="me-2">
-                                    <button type="button" class="btn btn-sm border"> Total {{detail.length |number}}</button>
+                                    <button type="button" class="btn btn-sm border"> Total {{detail.length
+                                        |number}}</button>
                                 </div>
                                 <div class="me-2" [hidden]="archives < 1">
-                                    <button type="button" class="btn btn-sm btn-light"> {{archives}} 
+                                    <button type="button" class="btn btn-sm btn-light"> {{archives}}
                                         <i class="bi bi-archive"></i></button>
                                 </div>
-                              
+
                                 <div class="me-2" *ngIf="loading">
                                     <img src="./assets/gif/sm-loading.gif" width="20">
                                 </div>
@@ -174,7 +175,31 @@
                 <div class="ps-3 pt-0">
 
                     <div class="" *ngIf="startUpTable">
-                        <cdk-virtual-scroll-viewport itemSize="30" class="tables-body " #scrollViewport>
+                        <div style="position: absolute; width: 96.7vw; overflow-x: hidden; height: 33px;" > 
+                            <div class="border isScollX" style="position: absolute; ">
+                                
+                                <div class="d-flex tables-header-td " style="margin-left: 80px;"> 
+                                    <div class="order-{{n.sorting}} " *ngFor="let n of customField;  let a = index"
+                                        [hidden]="n.hide=='1'">
+                                        <div class="p-1 text-center orders resizable "
+                                            [ngStyle]="{'width': n.width+'px'}" data-id="{{n.id}}"
+                                            data-tabindex="{{a}}">
+                                            <b>{{n.name}} </b> <code>f{{n.f}}</code>
+                                            <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top"
+                                                ngbTooltip="{{evalDescription(n.eval,customField)}}" container="body">
+                                                <button class="btn btn-sm btn-light py-0">
+                                                    <img src="./assets/icon/formula-30.png" height="20px">
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <cdk-virtual-scroll-viewport itemSize="30" class="tables-body " (scroll)="onScroll($event)"
+                            #scrollViewport>
 
                             <div class="sticky-top border-bottom"
                                 [style.top]=" detail.length > 20 ?  inverseOfTranslation : '0px'">
@@ -211,7 +236,7 @@
                             </div>
 
                             <div class="sortable">
-                                <span *cdkVirtualFor="let row of detail; let i = index; ">
+                                <span *cdkVirtualFor="let row of detail;templateCacheSize: 0; let i = index; ">
                                     <div class="d-flex tables-body-td ">
                                         <div class="floating-div bg-white border-start table-body-td-first">
                                             <div class="py-1 px-3 position-relative orders-left-fixed">
@@ -237,7 +262,6 @@
                                             </div>
                                         </div>
 
-
                                         <div class="order-{{column.sorting}}"
                                             *ngFor="let column of customField;  let a = index"
                                             [hidden]="column.hide=='1'">
@@ -253,7 +277,7 @@
                                                         <div style="width: 100%;">
                                                             <input [type]="column['iType']"
                                                                 [(ngModel)]="row['f'+column['f']]" #customFieldText
-                                                                class="p-1 {{'text-'+column['textAlign']}} " 
+                                                                class="p-1 {{'text-'+column['textAlign']}} "
                                                                 [ngClass]="{'text-danger': (column['iType']=='number' && row['f'+column['f']] < 0)}"
                                                                 maxlength="250" [disabled]="row['ilock']=='1'"
                                                                 (keyup.enter)="customFieldText.blur()"
@@ -314,10 +338,12 @@
                                                     <div class="p-1 text-center">
                                                         <a href="javascript:;"
                                                             (click)="offCanvasImages(row,column['f'],i);">
-                                                            <small> {{row['f'+column['f']] > 0 ? '' :'No'}} 
-                                                                <i class="bi bi-images" *ngIf="row['f'+column['f']] > 0 "></i> 
-                                                                {{row['f'+column['f']] > 0 ? row['f'+column['f']] :''}} 
-                                                                {{row['f'+column['f']] > 1 ? 'Images' :'Image'}}  </small>
+                                                            <small> {{row['f'+column['f']] > 0 ? '' :'No'}}
+                                                                <i class="bi bi-images"
+                                                                    *ngIf="row['f'+column['f']] > 0 "></i>
+                                                                {{row['f'+column['f']] > 0 ? row['f'+column['f']] :''}}
+                                                                {{row['f'+column['f']] > 1 ? 'Images' :'Image'}}
+                                                            </small>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -360,7 +386,7 @@
                                                                         class="btn btn-outline-light border text-black mb-1 text-center"
                                                                         (click)="modalEditSelect(column['f']);"
                                                                         ngbDropdownItem><i class="bi bi-pencil"></i>
-                                                                        Edit  Select</button>
+                                                                        Edit Select</button>
                                                                 </div>
 
                                                             </div>
@@ -405,46 +431,62 @@
                                                     </div>
                                                 </div>
 
-                                                <div *ngIf="column['iType']=='user'"> 
+                                                <div *ngIf="column['iType']=='user'">
                                                     <div *ngIf="row['ilock']=='1'">
                                                         <div class="select p-1">
-                                                            <span><img class="rounded-circle border me-1" height="20" [src]="selectUsers( row['f'+column['f']] )['picture']"></span>
-                                                            <small>{{selectUsers( row['f'+column['f']] )['value']}}</small> 
+                                                            <span><img class="rounded-circle border me-1" height="20"
+                                                                    [src]="selectUsers( row['f'+column['f']] )['picture']"></span>
+                                                            <small>{{selectUsers( row['f'+column['f']]
+                                                                )['value']}}</small>
                                                         </div>
                                                     </div>
                                                     <div *ngIf="row['ilock']!='1'">
-                                                        
+
                                                         <div ngbDropdown container="body">
-                                                           
-                                                            <div id="dropdownForm2" class="select p-1  " ngbDropdownToggle>
-                                                                <span><img class="rounded-circle border me-1" height="20" [src]="selectUsers( row['f'+column['f']] )['picture']"></span>
-                                                                <small [ngClass]="{'text-danger ': selectUsers( row['f'+column['f']] )['presence'] != '1' ? true: false}">{{selectUsers( row['f'+column['f']] )['value']}} </small>
-                                                                <span class="text-danger" *ngIf="selectUsers( row['f'+column['f']] )['presence'] != '1'"> <i class="bi bi-exclamation-lg"></i></span>
+
+                                                            <div id="dropdownForm2" class="select p-1  "
+                                                                ngbDropdownToggle>
+                                                                <span><img class="rounded-circle border me-1"
+                                                                        height="20"
+                                                                        [src]="selectUsers( row['f'+column['f']] )['picture']"></span>
+                                                                <small
+                                                                    [ngClass]="{'text-danger ': selectUsers( row['f'+column['f']] )['presence'] != '1' ? true: false}">{{selectUsers(
+                                                                    row['f'+column['f']] )['value']}} </small>
+                                                                <span class="text-danger"
+                                                                    *ngIf="selectUsers( row['f'+column['f']] )['presence'] != '1'">
+                                                                    <i class="bi bi-exclamation-lg"></i></span>
                                                             </div>
                                                             <div ngbDropdownMenu aria-labelledby="dropdownForm2">
                                                                 <div style="width: 250px;" class="px-4 py-2">
-                                                                    <small>Select User</small> 
-                                                                   
-                                                                    <div style="overflow-y: auto; max-height: 200px;" class="my-2 pointer">
-                                                                        <div *ngFor="let x of users"  (click)="fnSelectDropdown(x.accountId, column['f'], column, row);"
+                                                                    <small>Select User</small>
+
+                                                                    <div style="overflow-y: auto; max-height: 200px;"
+                                                                        class="my-2 pointer">
+                                                                        <div *ngFor="let x of users"
+                                                                            (click)="fnSelectDropdown(x.accountId, column['f'], column, row);"
                                                                             ngbDropdownItem class="d-flex mb-1">
                                                                             <div>
-                                                                                <img [src]="x.picture" class="rounded-circle border me-2" height="25">
+                                                                                <img [src]="x.picture"
+                                                                                    class="rounded-circle border me-2"
+                                                                                    height="25">
                                                                             </div>
-                                                                            <div class="align-self-center"> {{x.value}}  </div>
+                                                                            <div class="align-self-center"> {{x.value}}
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                    
-                                                                   
-                                                    
+
+
+
                                                                     <div class=" text-center d-grid">
                                                                         <a href="javascript:;" class="btn">
-                                                                            <small><i class="bi bi-person-plus me-2"></i> Invite a new member with link</small>
+                                                                            <small><i
+                                                                                    class="bi bi-person-plus me-2"></i>
+                                                                                Invite a new member with link</small>
                                                                         </a>
-                                                                    </div>  
-                                                                    
+                                                                    </div>
+
                                                                 </div>
-                                                    
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -566,8 +608,8 @@
         </div>
 
 
-        <div class="px-1" *ngIf="!clipboardImage && !url" 
-        [ngClass]="{'canvasImagesMaxHeight': imageQueryParams['iLock'] == '0'}">
+        <div class="px-1" *ngIf="!clipboardImage && !url"
+            [ngClass]="{'canvasImagesMaxHeight': imageQueryParams['iLock'] == '0'}">
 
             <div class="row g-1">
                 <div class="col-6 mb-2" *ngFor="let x of images">
@@ -580,7 +622,7 @@
                     <div class="row">
                         <div class="col-7"><small>{{x.source}}</small></div>
                         <div class="col-5 text-end" *ngIf="imageQueryParams['iLock'] == '0'">
-                            <button type="button"  (click)="onImagesRemove(x)"
+                            <button type="button" (click)="onImagesRemove(x)"
                                 class="btn btn-sm btn-danger py-0"><small>Remove</small></button>
                         </div>
                     </div>

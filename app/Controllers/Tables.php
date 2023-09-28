@@ -70,13 +70,13 @@ class Tables extends BaseController
             FROM journal_access
             WHERE accountId = '$accountId' and journalId = '" . $data['request']['id'] . "' AND presence = 1";
             $journal_access = $this->db->query($d)->getResultArray()[0];
-
+            $templateCode =  model("Core")->select("templateCode","journal","id='$id'");
             $data = array(
                 "journal_access" => $journal_access,
                 "error" => false,
                 "id" => $id,
                 "customField" => $journal_custom_field,
-                "template" => model("Core")->select("templateCode","journal","id='$id'")
+                "template" => model("Core")->select("name","template","code='$templateCode'")
             );
         }
         return $this->response->setJSON($data);
