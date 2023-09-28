@@ -162,7 +162,7 @@ class Chart extends BaseController
                 $array = [
                     "journalTableViewId" => $post['journalTableViewId'],
                     "value" => $row['key'],
-                    "accumulation" => $row['accumulation'],
+                    "accumulation" => !$row['accumulation']  ? 0 : $row['accumulation'],
                     
                     "status" => $row['check'] == true ? 1 : 0,
                     "presence" => 1

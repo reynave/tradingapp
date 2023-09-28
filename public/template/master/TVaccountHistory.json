@@ -4,32 +4,38 @@
         {
             "f":1,
             "name": "Date",
-            "iType" : "date"
+            "iType" : "date",
+            "ilock" : 1
         },
         {
             "f":2,
             "name": "Time",
-            "iType" : "time"
+            "iType" : "time",
+            "ilock" : 1
         },
         {
             "f":3,
             "name": "Balance Before",
-            "iType" : "number"
+            "iType" : "number",
+            "ilock" : 1
         },
         {
             "f":4,
             "name": "Balance After",
-            "iType" : "number"
+            "iType" : "number",
+            "ilock" : 1
         },
         {
             "f":5,
             "name": "P&L",
-            "iType" : "number"
+            "iType" : "number",
+            "ilock" : 1
         },
         {
             "f":6,
             "name": "Action",
-            "iType" : "text"
+            "iType" : "text",
+            "ilock" : 1
         }
     ]
 }

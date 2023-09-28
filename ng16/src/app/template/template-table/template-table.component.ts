@@ -3,50 +3,37 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 @Component({
   selector: 'app-template-table',
   templateUrl: './template-table.component.html',
-  styleUrls: ['./template-table.component.css'], 
+  styleUrls: ['./template-table.component.css'],
 })
-export class TemplateTableComponent{
-  clipboardImage: string = '';
-  rows: string[] = [];
-  @ViewChild('imageInput', { static: false }) imageInput: ElementRef | any;
-  items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
+export class TemplateTableComponent {
+  data: string[][] = [];
+  headers: string[] = [];
+
   constructor() {
-    document.addEventListener('paste', this.handlePaste.bind(this));
-    for (let i = 0; i < 1000; i++) {
-      const row: string[] = [];
-      for (let j = 0; j < 26; j++) {
-        row.push(`Cell ${i + 1}-${String.fromCharCode(65 + j)}`);
+    // Generate headers (20 columns)
+    for (let i = 1; i <= 15; i++) {
+      this.headers.push(`Header ${i}`);
+    }
+
+    // Generate data (1000 rows x 20 columns)
+    for (let row = 1; row <= 1000; row++) {
+      const rowData: string[] = [];
+      for (let col = 1; col <= 20; col++) {
+        rowData.push(`Data ${row}-${col}`);
       }
-      this.rows.push(row.join(', '));
+      this.data.push(rowData);
     }
   }
-  removeRow(rowIndex: number) {
-    // Hapus elemen dari array berdasarkan indeks
-    this.rows.splice(rowIndex, 1);
-    console.log("rowIndex",rowIndex);
+
+  isScollX : number = 0;
+  onScroll(event: Event): void {
+    const dataContainer = event.target as HTMLElement;
+    const verticalScrollY = dataContainer.scrollTop; // Mendapatkan nilai Y
+    const horizontalScrollX = dataContainer.scrollLeft; // Mendapatkan nilai X
+
+    // Sekarang Anda dapat menggunakan nilai Y dan X sesuai kebutuhan
+    console.log('Scroll Y:', verticalScrollY);
+    console.log('Scroll X:', horizontalScrollX);
   }
-  handlePaste(event: ClipboardEvent) {
-    const items = event.clipboardData?.items;
 
-    if (items) {
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-
-        if (item.type.indexOf('image') !== -1) {
-          const blob = item.getAsFile();
-
-          if (blob) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              this.clipboardImage = e.target?.result as string;
-              console.log('Gambar di-Paste:', this.clipboardImage);
-            };
-
-            reader.readAsDataURL(blob);
-          }
-        }
-      }
-    }
-  }
-  
 }

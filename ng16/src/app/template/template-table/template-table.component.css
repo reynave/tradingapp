@@ -1,27 +1,22 @@
-
-
-.wrapper{
-    display: block;
-}
-.wrapper .wrapper-child{
-   
-    display: inline-block;
-}
-@media only screen and (max-width: 600px) {
-    .wrapper .wrapper-child{
-        
-        display: block;
-        width: 100% !important;
-    }
-}
-
-/* virtual-scroll.component.css */
-.virtual-viewport {
-    height: 50vh;
+/* Tambahkan gaya kustom sesuai kebutuhan */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff; /* Warna latar belakang header */
+  }
+  
+  .header-cell, .data-cell {
+    border: 1px solid #ccc;
+    text-align: center;
+    padding: 8px; /* Padding untuk sel */
+  }
+  
+  .data-container {
+    overflow: auto;
+    max-height: 400px; /* Tinggi maksimum kontainer data */
     border: 1px solid #ccc;
   }
   
-  .example-item {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-  }
+  /* Tambahkan lebih banyak gaya sesuai kebutuhan Anda */
+  

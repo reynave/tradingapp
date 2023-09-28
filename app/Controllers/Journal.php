@@ -239,6 +239,7 @@ class Journal extends BaseController
                         "f" => $rec['f'],
                         "name" => $rec['name'],
                         "iType" => $rec['iType'],
+                        "ilock" => $rec['ilock'], 
                         "suffix" => isset($rec['suffix']) ? $rec['suffix'] : "",
                         "width" => 150,
                         "eval" => $rec['iType'] == 'formula' ? $rec['eval'] : "",
