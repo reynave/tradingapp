@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
 import { Title } from '@angular/platform-browser';  
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { WidgetInviteComponent } from '../widget-invite/widget-invite.component';
 
 export class NewBook { 
   constructor( 
@@ -29,6 +31,7 @@ export class HeaderComponent implements OnInit, OnChanges {
   @Output() sendToParent = new EventEmitter<any>();
   @Input() item: any = [];
   account : any = [];
+  accountId : string = "";
   bookmark : string = environment.website;
   items: any = [];
   id : string = "";
@@ -47,6 +50,7 @@ export class HeaderComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {  
     this.account = this.configService.account();
+    this.accountId = this.configService.account()['account']['id'];
     this.picture = environment.api+'uploads/picture/'+this.configService.account()['account']['picture'];
     //console.log(this.configService.jti())
     //console.log(this.activatedRoute);
@@ -128,6 +132,11 @@ export class HeaderComponent implements OnInit, OnChanges {
 
   open(content: any) {
 		this.modalService.open(content, {size:'md'});
+	}
+
+  openCollab() {
+		const modalRef = this.modalService.open(WidgetInviteComponent);
+		modalRef.componentInstance.name = 'World';
 	}
 
   onSubmitNewBook(){

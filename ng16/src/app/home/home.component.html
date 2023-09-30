@@ -7,10 +7,8 @@
 
             <div class="col-lg-2 col-md-3 col-12">
                 <div class="bg-white rounded minHeight">
-                    <div class="p-3">
-
-                        <h5> Books Collection</h5>
-
+                    <div class="p-3"> 
+                        <h5> Books Collection</h5> 
                     </div>
                     <div class="p-2 mx-2 divHover pointer" *ngFor="let x of books">
                         <div class="row g-1 ">
@@ -21,7 +19,16 @@
                             </div> 
                         </div>
                     </div>
-
+                    <div class="p-2 mx-2 divHover pointer" (click)="open(contentNewBook)">
+                        <div class="row g-1 ">
+                            <div class="col-12">
+                                <i class="bi bi-plus me-2"></i> New Book
+                            </div>
+                        </div>
+                    </div> 
+                   <div class="px-2">
+                    <hr>
+                   </div>
                     <div class="p-2 mx-2 divHover pointer" [routerLink]="[ '/book' ]">
                         <div class="row g-1 ">
                             <div class="col-12">
@@ -30,13 +37,7 @@
                         </div>
                     </div> 
 
-                    <div class="p-2 mx-2 divHover pointer" (click)="open(contentNewBook)">
-                        <div class="row g-1 ">
-                            <div class="col-12">
-                                <i class="bi bi-folder-plus me-2"></i> New Book
-                            </div>
-                        </div>
-                    </div> 
+                 
 
                     <ng-template #contentNewBook let-modal>
 
