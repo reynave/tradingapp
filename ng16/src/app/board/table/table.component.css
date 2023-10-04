@@ -1,10 +1,11 @@
-.absolut-area{
+.absolut-area {
     position: absolute;
     top: 70px;
     left: -9px;
     z-index: 999;
 }
-.bg-lock{
+
+.bg-lock {
     background-color: #F0F0F0;
     opacity: 0.7;
 }
@@ -12,21 +13,27 @@
 .example-viewport {
     height: 50vh;
     border: 1px solid #ccc;
-  }
+}
 
 
-  input{
+input {
     background: none;
 }
-input:focus{
-    background:none !important;
+
+input:focus {
+    background: none !important;
 }
+
 /* set the unit abbreviation for each unit class */
 .customFieldArea {
     display: inline-block;
     position: relative;
 }
-.datepicker{z-index:9999 !important}
+
+.datepicker {
+    z-index: 9999 !important
+}
+
 /* position the unit to the right of the wrapper */
 .customFieldArea::after {
     position: absolute;
@@ -34,10 +41,12 @@ input:focus{
     right: 0em;
     transition: all .05s ease-in-out;
 }
+
 .form-control:focus {
     border-color: none;
     box-shadow: none;
 }
+
 .customFieldArea:hover::after,
 .customFieldArea:focus-within::after {
     right: 0em;
@@ -54,10 +63,17 @@ input:focus{
     content: '%';
 }
 
-.cut-text {  
+.cut-text {
     overflow: hidden;
     display: inline-block;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
- 
+
+.fix-header {
+    position: absolute;
+    width: 96.7vw;
+    overflow-x: hidden;
+    height: 33px;
+    z-index: 999;
+}

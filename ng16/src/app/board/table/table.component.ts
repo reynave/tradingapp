@@ -330,6 +330,8 @@ export class TableComponent implements OnInit, AfterViewInit {
       },
       e => {
         console.log(e);
+        alert(e.error.message);
+        this.openComponent("CustomFieldFormComponent","Warning : "+e.error.message);
       }
     )
   }
@@ -368,6 +370,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
     this.calculationFooter();
   }
+
   ngAfterViewInit() {
 
   }
@@ -474,15 +477,15 @@ export class TableComponent implements OnInit, AfterViewInit {
           // const OptIndex = select[fnIndex].option.findIndex((rec: { id: any; }) => rec.id === item[el['key']] );
           // if(OptIndex > -1){
           //   select[fnIndex].option[OptIndex]['total'] = parseInt(select[fnIndex].option[OptIndex]['total'])+ 1;
-          // }
-
-        }
-
+          // } 
+        } 
       });
 
 
       if (el['iType'] == 'number' || el['iType'] == 'formula') {
-        this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2)));
+        value = value / this.customField.length;
+
+        this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2)))+" <code>AVG</code> ";
       }
       if (el['iType'] == 'select') {
         this.customField[i]['total'] = "SOON";
@@ -1023,12 +1026,13 @@ export class TableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openComponent(componentName: string) {
+  openComponent(componentName: string, note:string = "") {
     if (componentName == 'CustomFieldFormComponent') {
       const modalRef = this.modalService.open(CustomFieldFormComponent, { fullscreen: true });
       //    modalRef.componentInstance.customFieldForm = this.customFieldForm;
       modalRef.componentInstance.id = this.id;
       modalRef.componentInstance.journalTableViewId = this.journalTableViewId;
+      modalRef.componentInstance.note = note;
 
       modalRef.componentInstance.newItemEvent.subscribe((data: any) => {
         console.log('CustomFieldFormComponent', data);

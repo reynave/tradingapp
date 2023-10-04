@@ -175,10 +175,22 @@
                 <div class="ps-3 pt-0">
 
                     <div class="" *ngIf="startUpTable">
-                        <div style="position: absolute; width: 96.7vw; overflow-x: hidden; height: 33px;" > 
-                            <div class="border isScollX" style="position: absolute; ">
+                        <div style="" class="border-start border-bottom fix-header"> 
+                            <div class=" isScollX bg-white" style="position: absolute; ">
                                 
-                                <div class="d-flex tables-header-td " style="margin-left: 80px;"> 
+                                <div class="d-flex tables-header-td " > 
+                                    <div class="floating-div bg-white ">
+                                        <div class="py-1 px-3">
+                                            <i class="bi bi-check-square-fill text-primary" *ngIf="isCheckBoxAll"
+                                                (click)="checkBoxAll(false)"></i>
+                                            <i class="bi bi-square" *ngIf="!isCheckBoxAll"
+                                                (click)="checkBoxAll(true)"></i>
+                                            <span class="px-1 text-end  d-inline-block" style="min-width: 30px;"> #
+                                            </span>
+                                        </div>
+
+                                    </div>
+
                                     <div class="order-{{n.sorting}} " *ngFor="let n of customField;  let a = index"
                                         [hidden]="n.hide=='1'">
                                         <div class="p-1 text-center orders resizable "
@@ -201,7 +213,7 @@
                         <cdk-virtual-scroll-viewport itemSize="30" class="tables-body " (scroll)="onScroll($event)"
                             #scrollViewport>
 
-                            <div class="sticky-top border-bottom"
+                            <!-- <div class="sticky-top border-bottom"
                                 [style.top]=" detail.length > 20 ?  inverseOfTranslation : '0px'">
                                 <div class="d-flex tables-header-td bg-white">
 
@@ -233,9 +245,9 @@
                                     </div>
 
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <div class="sortable">
+                            <div class="sortable" style="margin-top: 31px;">
                                 <span *cdkVirtualFor="let row of detail;templateCacheSize: 0; let i = index; ">
                                     <div class="d-flex tables-body-td ">
                                         <div class="floating-div bg-white border-start table-body-td-first">
@@ -512,7 +524,7 @@
                                         *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
                                         <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
                                             <!-- {{fnDetailTotal(n) }} -->
-                                            {{n.total}}
+                                           <span [innerHTML]="n.total"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -526,6 +538,8 @@
             </div>
 
         </div>
+
+        
 
     </div>
 </div>

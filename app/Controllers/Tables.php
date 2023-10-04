@@ -39,6 +39,8 @@ class Tables extends BaseController
 
             $items = $this->db->query($q1)->getResultArray();
             $items[0]['picture'] = base_url() . 'uploads/picture/' . $items[0]['picture'];
+            $items[0]['url_title'] = url_title( $items[0]['name']);
+            
             $data = array(
                 "error" => false,
                 "id" => $id,

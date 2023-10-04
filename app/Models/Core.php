@@ -173,10 +173,10 @@ class Core extends Model
 
         $evaluateFormula = function ($data, $formula) {
             extract($data);
-            $formula = preg_replace("/(SELECT|INSERT|UPDATE|DELETE|ALTER|DROP)/i", "", $formula);
+            $formula = preg_replace("/(EVAL|SELECT|INSERT|UPDATE|DELETE|ALTER|DROP)/i", "", $formula);
             
             $result = @eval("return $formula;"); 
-            return ($result !== false) ? $result : null;
+            return ($result !== false) ? $result : "!Error";
         };
 
         $index = 0;
@@ -185,7 +185,16 @@ class Core extends Model
             foreach ($journal_custom_field as $field) {
                 if ($field['iType'] == 'formula') {
                     foreach (array_keys($rec) as $key) {
-                        $data[$key] = (int) $rec[$key];
+
+                        if ((int)$rec[$key]== $rec[$key]) {
+                            $data[$key] = (int) $rec[$key];
+                        }else if($rec[$key] == ''){
+                            $data[$key] = 0;
+                        }else{
+                            $data[$key] =  $rec[$key];
+                        }
+ 
+                      
                     }
                     $detail[$index][$field['key']] = $evaluateFormula($data, $field['eval']);
                 }

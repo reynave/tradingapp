@@ -17,7 +17,7 @@
     </div>
 
 </div>
-
+<!-- SHARE MODAL -->
 <div class="modal-body " *ngIf="showSearchPhoto !== true">
     <div class="row pb-3">
         <div class="col-md-5 col-12">
@@ -61,9 +61,9 @@
                             <small>This journal can be accessed by everyone with this link</small>
                         </div>
                     </div>
-                    <div class="input-group input-group-sm ">
-                        <input type="text" class="form-control bg-light" [value]="env.shareLink+item.url" readonly>
-                        <button class="btn btn-outline-secondary" [cdkCopyToClipboard]="env.shareLink+item.url"
+                    <div class="input-group input-group-sm "> 
+                        <input type="text" class="form-control bg-light" [value]="env.shareLink+item.url+'/'+item.url_title" readonly>
+                        <button class="btn btn-outline-secondary" [cdkCopyToClipboard]="env.shareLink+item.url+'/'+item.url_title"
                             type="button" id="button-addon1"><i class="bi bi-link-45deg"></i> Copy</button>
                     </div>
                 </div>
@@ -165,6 +165,8 @@
     </div>
 </div>
 
+
+<!-- UNSPLASH -->
 <div class="modal-body" *ngIf="showSearchPhoto === true">
     <div class="row mb-3 g-1">
         <div class="col-10">
@@ -201,7 +203,7 @@
                 <div class="col-md-3 col-4 mb-2" *ngFor="let x of photos">
 
                     <img [src]="x.urls.raw+'&fit=crop&w=300&h=200&dpr=1'" width="100%" class="shadow-sm border"
-                        (click)="updatePhoto(x.urls.raw+'&fit=crop&w=300&h=200&dpr=1');">
+                        (click)="updatePhoto(x.urls.raw+'&fit=crop&w=900&h=600&dpr=1');">
 
                     <div class="lh-1 px-2">
                         <small>Photo by <a [href]="x.links.html" target="_blank"><u>{{x.user.name}}</u></a> </small>

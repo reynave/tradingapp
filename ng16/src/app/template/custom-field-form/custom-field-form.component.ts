@@ -21,6 +21,8 @@ export class CustomFieldFormComponent implements OnInit {
   // @Input() customFieldForm: any;
   @Input() id: any;
   @Input() journalTableViewId: any;
+  @Input() note: any;
+  
   @Output() newItemEvent = new EventEmitter<string>();
   customFieldForm: any = [];
   newCustomField = new NewCustomField("", "text");
@@ -167,7 +169,7 @@ export class CustomFieldFormComponent implements OnInit {
 
   fnShowFormulaDev(x: any, i: number) {
     console.log(x, i);
-    if (x.showEvalDev == '') {
+    if (x.showEvalDev == '' || !x.showEvalDev) {
       this.customFieldForm[i]['showEvalDev'] = true;
     }
     else if (x.showEvalDev == true) {

@@ -4,7 +4,7 @@ var root = "https://mirrel.com/";
 export const environment = {
     production: false,
     api : "https://mirrel.com/api/",
-    socket_url: 'http://128.199.94.89:3000',
+    socket_url: 'https://socket.mirrel.com',
     ver : "1.0",
     website : root,
     shareLink : root+"shared/",

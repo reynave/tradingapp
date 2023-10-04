@@ -1,7 +1,10 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-10">
-            <div class="modal-title"><b>Custom Fields Form</b></div>
+            <div class="modal-title">
+                <b>Custom Fields Form</b>
+                <span class="mx-3 text-danger">{{note}}</span>
+            </div>
         </div>
         <div class="col-2 text-end">
             <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()"></button>
@@ -62,7 +65,7 @@
                             <div class="mx-1" *ngIf="x.iType == 'formula'" [ngbTooltip]="tipContent">
                                 <button type="button" class="btn btn-light border " (click)="fnShowFormulaDev(x,i);">
                                     <img src="./assets/icon/formula-30.png" class="icon">
-                                    {{x.eval != "" ? x.eval : "Edit Formula"}}
+                                    {{x.eval != "" ? x.eval : "Edit Formula"}} 
                                 </button>
                             </div>
                             <div class="mx-1" *ngIf="x.iType == 'number'"> <input type="text" [(ngModel)]="x.suffix"

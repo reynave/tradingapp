@@ -15,6 +15,7 @@ import { ChartjsComponent } from './board/chartjs/chartjs.component';
 import { InvitedComponent } from './login/invited/invited.component';
 import { TablePrintableComponent } from './board/table-printable/table-printable.component'; 
 import { OffCanvasImagesComponent } from './board/table/off-canvas-images/off-canvas-images.component';
+import { CustomFieldFormComponent } from './template/custom-field-form/custom-field-form.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -30,7 +31,8 @@ const routes: Routes = [
   { path: "board/table/:id/:journalTableViewId", component: TableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   { path: "board/tablePrintable/:id/:journalTableViewId", component: TablePrintableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   { path: "board/chart/:id/:journalTableViewId", component: ChartjsComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
-
+  { path: "customField/:id", component: CustomFieldFormComponent, data: { active: "customFieldForm" },  canActivate:[authGuard]  }, 
+ 
    
  
   // TEMPLATE FOR "DEVELOPMENT" UX UI DESIGN
