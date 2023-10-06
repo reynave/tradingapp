@@ -52,7 +52,7 @@ class TableViewOnly extends Model
             GROUP BY c.accountId ");
         $account = $a->getResultArray();
 
-        $c = "SELECT id, ilock, hideDEL, name, f,iType, width, textAlign, suffix, sorting, eval, 
+        $c = "SELECT id, ilock, hide, name, f,iType, width, textAlign, suffix, sorting, eval, 
         CONCAT('f',f) AS 'key', '' as showEvalDev , '' as 'total'
         FROM journal_custom_field 
         WHERE journalId = '$id' AND presence = 1
