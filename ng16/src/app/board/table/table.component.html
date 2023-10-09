@@ -72,8 +72,7 @@
                             <div class="d-flex">
 
                                 <div class="me-2">
-                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New
-                                        Task</button>
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New Task</button>
                                 </div>
 
                                 <div class="me-2">
@@ -118,6 +117,38 @@
                                         class="btn btn-sm btn-{{resizableStatus ? 'dark':'light' }}">
                                         <i class="bi bi-aspect-ratio"></i> Resizable {{resizableStatus ? 'ON':'OFF'}}
                                     </button>
+                                </div>
+
+
+                                <div class="me-2">
+                                    
+                                    <div ngbDropdown class="d-inline-block" container="body">
+                                        <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide" ngbDropdownToggle>
+                                            <i class="bi bi-funnel"></i> Filter
+                                        </button>
+                                        <div ngbDropdownMenu aria-labelledby="dropdownFormHide" style="width: 250px;">
+                                            <div class="px-3">
+                                                <div *ngFor="let x of filterSelect; let i = index"  class="mb-2">
+                                                    <div> 
+                                                        <div>
+                                                            <small>{{x.name}}</small> {{x.selectId}}
+                                                        </div> 
+                                                        <div>
+                                                           <select class="form-control" [(ngModel)]="x.selectId">
+                                                                <option value="" >- All -</option>
+                                                                <option [value]="s.id" *ngFor="let s of x.select"> {{s.value}} </option>
+                                                           </select>
+                                                            <!-- {{x.select | json}} -->
+                                                        </div> 
+                                                    </div>
+                                                </div> 
+                                
+                                                <div class="d-grid mt-3">
+                                                    <button type="button" ngbDropdownItem class="btn bg-dark text-white" (click)="updateFilter();">Update filter</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="me-2" *ngIf="journalAccess.owner == '1' ">
@@ -175,10 +206,10 @@
                 <div class="ps-3 pt-0">
 
                     <div class="" *ngIf="startUpTable">
-                        <div style="" class="border-start border-bottom fix-header"> 
+                        <div style="" class="border-start border-bottom fix-header">
                             <div class=" isScollX bg-white" style="position: absolute; ">
-                                
-                                <div class="d-flex tables-header-td " > 
+
+                                <div class="d-flex tables-header-td ">
                                     <div class="floating-div bg-white ">
                                         <div class="py-1 px-3">
                                             <i class="bi bi-check-square-fill text-primary" *ngIf="isCheckBoxAll"
@@ -188,7 +219,6 @@
                                             <span class="px-1 text-end  d-inline-block" style="min-width: 30px;"> #
                                             </span>
                                         </div>
-
                                     </div>
 
                                     <div class="order-{{n.sorting}} " *ngFor="let n of customField;  let a = index"
@@ -205,7 +235,6 @@
                                             </span>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -524,7 +553,7 @@
                                         *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
                                         <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
                                             <!-- {{fnDetailTotal(n) }} -->
-                                           <span [innerHTML]="n.total"></span>
+                                            <span [innerHTML]="n.total"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -539,7 +568,7 @@
 
         </div>
 
-        
+
 
     </div>
 </div>

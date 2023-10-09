@@ -39,8 +39,8 @@ class Tables extends BaseController
 
             $items = $this->db->query($q1)->getResultArray();
             $items[0]['picture'] = base_url() . 'uploads/picture/' . $items[0]['picture'];
-            $items[0]['url_title'] = url_title( $items[0]['name']);
-            
+            $items[0]['url_title'] = url_title($items[0]['name']);
+
             $data = array(
                 "error" => false,
                 "id" => $id,
@@ -72,13 +72,13 @@ class Tables extends BaseController
             FROM journal_access
             WHERE accountId = '$accountId' and journalId = '" . $data['request']['id'] . "' AND presence = 1";
             $journal_access = $this->db->query($d)->getResultArray()[0];
-            $templateCode =  model("Core")->select("templateCode","journal","id='$id'");
+            $templateCode = model("Core")->select("templateCode", "journal", "id='$id'");
             $data = array(
                 "journal_access" => $journal_access,
                 "error" => false,
                 "id" => $id,
                 "customField" => $journal_custom_field,
-                "template" => model("Core")->select("name","template","code='$templateCode'")
+                "template" => model("Core")->select("name", "template", "code='$templateCode'")
             );
         }
         return $this->response->setJSON($data);
@@ -159,22 +159,25 @@ class Tables extends BaseController
            ORDER BY a.name asc;";
             $usersHistory = $this->db->query($usersHistory)->getResultArray();
 
+
+
             $data = array(
                 "error" => false,
                 "id" => $id,
                 "backgroundColorOption" => $backgroundColorOption,
                 "select" => $select,
-                //"customFieldKey" => $journalTable['customFieldKey'],
                 "customField" => $journalTable['journal_custom_field'],
                 "detail" => $journalTable['detail'],
                 "users" => $users,
                 "usersHistory" => $usersHistory,
-
+                "archives" => $journalTable['archives'],
+                "filterSelect" => $journalTable['filterSelect'],
+                //"customFieldKey" => $journalTable['customFieldKey'],
                 //   "customFieldNo" => $journal_select['customFieldNo'],
                 //   "select2" => $journal_select['select'],
                 //   "customField2" => $journal_select['customField'],
 
-                "archives" => $journalTable['archives'],
+
 
             );
 
@@ -196,10 +199,10 @@ class Tables extends BaseController
         );
 
         $accountId = model("Core")->accountId();
- 
+
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
         if ($data['request']['id'] && $id) {
- 
+
             $users = "SELECT ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId',
              concat('" . base_url() . "uploads/picture/',a.picture) as 'picture',  
             ja.presence AS 'presence' 
@@ -208,7 +211,7 @@ class Tables extends BaseController
             WHERE ja.journalId = '$id' AND ja.presence = 1
             ORDER BY a.name asc;";
             $users = $this->db->query($users)->getResultArray();
- 
+
             $usersHistory = "SELECT ja.id, ja.owner, ja.editable, a.name as 'value', a.id AS 'accountId',
             concat('" . base_url() . "uploads/picture/',a.picture) as 'picture',  
            ja.presence AS 'presence' 
@@ -219,12 +222,12 @@ class Tables extends BaseController
             $usersHistory = $this->db->query($usersHistory)->getResultArray();
 
             $data = array(
-                "error" => false, 
-                "users" => $users,  
+                "error" => false,
+                "users" => $users,
                 "usersHistory" => $usersHistory,
 
 
-            ); 
+            );
 
         }
         return $this->response->setJSON($data);
@@ -738,5 +741,50 @@ class Tables extends BaseController
         );
 
         return $this->response->setJSON($obj);
+    }
+
+
+    function updateFilter()
+    {
+        $json = file_get_contents('php://input');
+        $post = json_decode($json, true);
+        $data = [
+            "error" => true,
+            "post" => $post,
+        ];
+        if ($post) {
+            foreach ($post['filterItem'] as $row) {
+
+                $id = model("Core")->select("id","journal_table_view_filter","presence = 1 and journalTableViewId = '".$post['journalTableViewId']."' 
+                and journalCustomFieldId = '".$row['journalCustomFieldId']."' and field = '".$row['field']."' ");
+
+                if($id){
+                    $this->db->table("journal_table_view_filter")->update([  
+                        "selectId" => $row['selectId'], 
+                        "update_date" => date("Y-m-d H:i:s"),
+                        "update_by" => model("Core")->accountId(),
+                    ]," id = $id ");
+                }else{
+                    $this->db->table("journal_table_view_filter")->insert([
+                        "journalTableViewId" => $post['journalTableViewId'],
+                        "journalCustomFieldId" => $row['journalCustomFieldId'],
+                        "field" => $row['field'],
+                        "selectId" => $row['selectId'],
+                        "presence" => 1,
+                        "input_date" => date("Y-m-d H:i:s"),
+                        "input_by" => model("Core")->accountId(),
+                    ]);
+                }
+
+                
+            }
+
+
+            $data = [
+                "error" => false,
+                "post" => $post,
+            ];
+            return $this->response->setJSON($data);
+        }
     }
 }

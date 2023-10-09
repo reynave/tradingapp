@@ -18,9 +18,8 @@ export class NewBook {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  time: number = 1690267027;
-  date = new Date('2023-12-01 14:52:48 UTC').toString();
-  now = new Date().toString();
+ 
+  now = new Date().toLocaleString(undefined, { timeZoneName: 'short' });
     
   books: any = [];
   journals: any = [];

@@ -62,38 +62,23 @@
             "f" : 5,
             "name": "Entry",
             "iType" : "number",
-            "suffix" : "$" ,
+            "suffix" : "" ,
             "ilock" : 1
         },
         { 
             "f" : 6,
             "name": "Stop Loss",
             "iType" : "number",
-            "suffix" : "$" ,
             "ilock" : 1
         },
         {
             "f" : 7,
             "name": "Target",
             "iType" : "number",
-            "suffix" : "$" ,
-            "ilock" : 1
-        },
-       
-        { 
-            "f" :8,
-            "name": "Close Date",
-            "iType" : "date",
             "ilock" : 1
         },
         { 
-            "f" :9,
-            "name": "Close Time",
-            "iType" : "time",
-            "ilock" : 1
-        },
-        { 
-            "f" : 10,
+            "f" : 8,
             "name": "Setups",
             "iType" : "select",
             "journal_select" : [
@@ -102,11 +87,11 @@
                     "color" : "#35A29F"
                 },
                 { 
-                    "value" : "DOUBLE TOP",
+                    "value" : "Double Top",
                     "color" : "#35A29F"
                 },
                 { 
-                    "value" : "DOUBLE BOTTOM",
+                    "value" : "Double Bottom",
                     "color" : "#35A29F"
                 },
                 { 
@@ -121,39 +106,29 @@
             "ilock" : 1
         },
         { 
-            "f" :11,
-            "name": "Status",
-            "iType" : "select",
-            "ilock" : 1,
-            "journal_select" : [
-                { 
-                    "value" : "BEP",
-                    "color" : "#FFCD4B"
-                },
-                { 
-                    "value" : "WIN",
-                    "color" : "#1AACAC"
-                },
-                { 
-                    "value" : "LOSE",
-                    "color" : "#C70039"
-                }
-              
-            ]
+            "f" :9,
+            "name": "Close Date",
+            "iType" : "date",
+            "ilock" : 1
         },
         { 
-            "f" :12,
+            "f" :10,
+            "name": "Close Time",
+            "iType" : "time",
+            "ilock" : 1
+        },
+        { 
+            "f" :11,
             "name": "Trader Person",
             "iType" : "user",
             "ilock" : 1
         },
         { 
-            "f" :13,
+            "f" :12,
             "name": "Photo",
             "iType" : "image",
             "ilock" : 1
-        },
-        
+        }
          
     ]
 }

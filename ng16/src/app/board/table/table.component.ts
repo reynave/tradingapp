@@ -6,7 +6,7 @@ import { FunctionsService } from 'src/app/service/functions.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal, NgbModalConfig, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
-import { DetailInterface } from './table-interface';
+import { DetailInterface, FilterSelect } from './table-interface';
 import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component'; 
 import { SocketService } from 'src/app/service/socket.service';
 import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component';
@@ -39,10 +39,19 @@ export class NewCustomField {
 })
 export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild('contentEditSelect') contentEditSelect: any;
-  @ViewChild('canvasImages') canvasImages: any;
-
+  @ViewChild('canvasImages') canvasImages: any; 
   @ViewChild('viewport') viewportRef!: ElementRef;
   @ViewChild(CdkVirtualScrollViewport, { static: false }) viewPort: CdkVirtualScrollViewport | undefined;
+  allowEsc : boolean = true;
+  @HostListener('document:keydown.escape', ['$event']) onKeydownHandler(event: KeyboardEvent) {
+    console.log(event);
+    if(this.allowEsc == true){
+
+      this.modalService.dismissAll();
+    }
+  }
+
+ 
   prod = environment.production;
   scrollX = 0;
   fields: any = [];
@@ -83,6 +92,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   imagesLoading: boolean = false;
   imagesIndex: number = 0;
   imageQueryParams: any = []; 
+  filterSelect : FilterSelect[] = [];
   private _docSub: any;
   constructor(
     private http: HttpClient,
@@ -278,12 +288,11 @@ export class TableComponent implements OnInit, AfterViewInit {
         //this.customFieldKey = data['customFieldKey'];
         this.detail = data['detail'];
         this.detailOrigin = data['detail'];
-
+        this.filterSelect = data['filterSelect'];
         this.select = data['select'];
         this.users = data['users'];
         this.usersHistory= data['usersHistory'];
-
-
+ 
         let self = this;
         $(function () {
           $(".sortable").sortable({
@@ -331,6 +340,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       e => {
         console.log(e);
         alert(e.error.message);
+        this.allowEsc = false;
         this.openComponent("CustomFieldFormComponent","Warning : "+e.error.message);
       }
     )
@@ -597,6 +607,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     }
   }
+
   updateRow(row: any, fx: string, column: any) {
     console.log(row);
 
@@ -1228,5 +1239,24 @@ export class TableComponent implements OnInit, AfterViewInit {
         console.log(error);
       }
     );
+  }
+
+  // FILTER 
+  updateFilter(){
+    const body = {
+      filterItem : this.filterSelect,
+      journalTableViewId : this.journalTableViewId, 
+    }
+    console.log(body);
+    this.http.post<any>(environment.api+"Tables/updateFilter",body,{
+      headers : this.configService.headers(),
+    }).subscribe(
+      data=>{
+        console.log(data);
+      },
+      error=>{
+        console.log(error);
+      }
+    )
   }
 }

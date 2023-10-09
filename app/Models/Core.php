@@ -174,8 +174,8 @@ class Core extends Model
         $evaluateFormula = function ($data, $formula) {
             extract($data);
             $formula = preg_replace("/(EVAL|SELECT|INSERT|UPDATE|DELETE|ALTER|DROP)/i", "", $formula);
-            
-            $result = @eval("return $formula;"); 
+
+            $result = @eval("return $formula;");
             return ($result !== false) ? $result : "!Error";
         };
 
@@ -186,15 +186,15 @@ class Core extends Model
                 if ($field['iType'] == 'formula') {
                     foreach (array_keys($rec) as $key) {
 
-                        if ((int)$rec[$key]== $rec[$key]) {
+                        if ((int) $rec[$key] == $rec[$key]) {
                             $data[$key] = (int) $rec[$key];
-                        }else if($rec[$key] == ''){
+                        } else if ($rec[$key] == '') {
                             $data[$key] = 0;
-                        }else{
-                            $data[$key] =  $rec[$key];
+                        } else {
+                            $data[$key] = $rec[$key];
                         }
- 
-                      
+
+
                     }
                     $detail[$index][$field['key']] = $evaluateFormula($data, $field['eval']);
                 }
@@ -202,11 +202,47 @@ class Core extends Model
             $index++;
         }
 
+
+
+        $users = "SELECT   a.id, a.name as 'value',
+             concat('" . base_url() . "uploads/picture/',a.picture) as 'picture' 
+            FROM journal_access AS ja
+            LEFT join account AS a ON a.id = ja.accountId
+            WHERE ja.journalId = '$id' AND ja.presence = 1
+            ORDER BY a.name asc;";
+            $users = $this->db->query($users)->getResultArray();
+
+
+        $d = "SELECT id as 'journalCustomFieldId', name, iType, CONCAT('f',f) AS 'field', '' as selectId
+        FROM journal_custom_field 
+        WHERE journalId = '$id' AND presence = 1 AND (iType = 'select' OR  iType = 'user') 
+        ORDER BY sorting ASC ";
+        $filterSelect = [];
+        foreach ($this->db->query($d)->getResultArray() as $rec) {
+            $select = [];
+            if ($rec['iType'] == 'select') {
+                $g = "SELECT id, color, value
+                FROM journal_select 
+                WHERE journalId = '$id' AND presence = 1 AND field = '" . $rec['field'] . "'
+                ORDER BY sorting ASC ";
+                $select  = $this->db->query($g)->getResultArray();
+            }
+
+            if ($rec['iType'] == 'user') {
+                $select =  $users; 
+            } 
+
+            $filterSelect[] = array_merge($rec, [
+                "select" => $select,
+            ]);
+        }
+
         $data = array(
             "customFieldKey" => $customFieldNo,
             "journal_custom_field" => $journal_custom_field,
             "detail" => $detail,
             "archives" => (int) self::select("count(id)", "journal_detail", "presence = 1 and archives = 1 and journalId = '$id' "),
+            "filterSelect" => $filterSelect,
         );
 
         return $data;
@@ -475,7 +511,7 @@ class Core extends Model
 
                     if ($insert == true) {
                         $cal += (float) $rec[$row['value']];
-                        array_push($data, $row['accumulation'] == '1' ? $cal : (float) $rec[$row['value']] );
+                        array_push($data, $row['accumulation'] == '1' ? $cal : (float) $rec[$row['value']]);
                     }
 
                 }
@@ -512,7 +548,7 @@ class Core extends Model
      */
     function journal_select($id = '')
     {
- 
+
         $c = "SELECT * FROM journal_custom_field
              WHERE journalId = '$id'  and presence = 1 
              ORDER BY sorting ASC ";

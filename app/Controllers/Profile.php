@@ -29,8 +29,7 @@ class Profile extends BaseController
         LEFT JOIN journal AS j ON j.id = a.journalId
         LEFT JOIN book AS b ON b.id = a.bookId
         LEFT JOIN account AS c ON c.id = j.accountId
-        WHERE a.presence = 1 AND a.accountId = '". $id ."' AND c.id = '$accountId'
-        GROUP BY j.id ";
+        WHERE a.presence = 1 AND a.accountId = '". $id ."' ";
         $journals = $this->db->query($q)->getResultArray();
 
             $data = [

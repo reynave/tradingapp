@@ -43,3 +43,12 @@ export interface DetailInterface {
 export interface BackgroundColorOption{
     color: string;
 }
+
+export interface FilterSelect{
+    iType: string;
+    id: string;
+    key: string;
+    name: string;
+    selectId : string;
+    select: any[]; 
+}
