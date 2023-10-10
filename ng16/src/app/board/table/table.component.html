@@ -72,7 +72,8 @@
                             <div class="d-flex">
 
                                 <div class="me-2">
-                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New Task</button>
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New
+                                        Task</button>
                                 </div>
 
                                 <div class="me-2">
@@ -81,6 +82,7 @@
                                         (ngModelChange)="onSearchChange()">
                                 </div>
 
+                                <!-- Hide -->
                                 <div class="me-2">
                                     <div ngbDropdown class="d-inline-block" container="body">
                                         <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide"
@@ -109,72 +111,139 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
 
-                                <div class="me-2">
-                                    <button type="button" (click)="jqueryResizable()"
-                                        class="btn btn-sm btn-{{resizableStatus ? 'dark':'light' }}">
-                                        <i class="bi bi-aspect-ratio"></i> Resizable {{resizableStatus ? 'ON':'OFF'}}
-                                    </button>
-                                </div>
-
-
-                                <div class="me-2">
-                                    
+                                <!-- Filter -->
+                                <div class="me-2" *ngIf="filterSelect.length > 0">
                                     <div ngbDropdown class="d-inline-block" container="body">
-                                        <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide" ngbDropdownToggle>
+                                        <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide"
+                                            ngbDropdownToggle>
                                             <i class="bi bi-funnel"></i> Filter
                                         </button>
                                         <div ngbDropdownMenu aria-labelledby="dropdownFormHide" style="width: 250px;">
                                             <div class="px-3">
-                                                <div *ngFor="let x of filterSelect; let i = index"  class="mb-2">
-                                                    <div> 
+                                                <div *ngFor="let x of filterSelect; let i = index" class="mb-2">
+                                                    <div>
                                                         <div>
-                                                            <small>{{x.name}}</small> {{x.selectId}}
-                                                        </div> 
+                                                            <small>{{x.name}}</small>
+                                                        </div>
                                                         <div>
-                                                           <select class="form-control" [(ngModel)]="x.selectId">
-                                                                <option value="" >- All -</option>
-                                                                <option [value]="s.id" *ngFor="let s of x.select"> {{s.value}} </option>
-                                                           </select>
+                                                            <select class="form-control" [(ngModel)]="x.selectId">
+                                                                <option value="">- All -</option>
+                                                                <option [value]="s.id" *ngFor="let s of x.select">
+                                                                    {{s.value}} </option>
+                                                            </select>
                                                             <!-- {{x.select | json}} -->
-                                                        </div> 
+                                                        </div>
                                                     </div>
-                                                </div> 
-                                
-                                                <div class="d-grid mt-3">
-                                                    <button type="button" ngbDropdownItem class="btn bg-dark text-white" (click)="updateFilter();">Update filter</button>
+                                                </div>
+
+                                                <div class="d-grid my-3">
+                                                    <button type="button" ngbDropdownItem
+                                                        class="btn bg-dark text-white py-2"
+                                                        (click)="updateFilter();">Update filter</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="me-2" *ngIf="journalAccess.owner == '1' ">
-                                    <a href="javascript:;" class="btn btn-sm btn-light" placement="top-right"
-                                        (click)="openComponent('CustomFieldFormComponent')"
-                                        (newItemEvent)="onChild($event)" ngbTooltip="Custom Field">
-                                        <i class="bi bi-ui-checks"></i> Custom Fields
-                                    </a>
+                                <div class="me-2">
+                                    <div ngbDropdown class="d-inline-block" container="body">
+                                        <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide"
+                                            ngbDropdownToggle>
+                                            <i class="bi bi-gear"></i> Setting
+                                        </button>
+                                        <div ngbDropdownMenu aria-labelledby="dropdownFormHide" style="width: 200px;">
+                                            <div class="px-3 py-2">
+                                                <div class="d-grid mb-2">
+                                                    <button type="button" (click)="jqueryResizable()" ngbDropdownItem
+                                                        class="btn btn-sm btn-{{resizableStatus ? 'dark':'light' }}">
+                                                        <i class="bi bi-aspect-ratio"></i> Resizable {{resizableStatus ?
+                                                        'ON':'OFF'}}
+                                                    </button>
+                                                </div>
+                                                <div class="d-grid mb-2" *ngIf="journalAccess.owner == '1' ">
+                                                    <a href="javascript:;" class="btn btn-sm btn-light"
+                                                        placement="top-right" ngbDropdownItem
+                                                        (click)="openComponent('CustomFieldFormComponent')"
+                                                        (newItemEvent)="onChild($event)" ngbTooltip="Custom Field">
+                                                        <i class="bi bi-ui-checks"></i> Custom Fields
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="me-2 ">
-                                    <a class="btn btn-sm btn-light" (click)="requestToken();" target="_blank">
-                                        <i class="bi bi-cloud-download"></i> Export CSV
-                                    </a>
-                                </div>
-                                <div class="me-2">
-                                    <button type="button" class="btn btn-sm  btn-light" (click)="modalUploadData()">
-                                        <i class="bi bi-cloud-upload"></i> Upload CSV
+
+
+                                <div class="me-2" *ngIf="resizableStatus">
+                                    <button type="button" (click)="jqueryResizable()"
+                                        class="btn btn-sm btn-{{resizableStatus ? 'dark':'light' }}">
+                                        <i class="bi bi-aspect-ratio"></i> Finish Resizable
                                     </button>
                                 </div>
+
+                                <div class="me-2">
+                                    <div ngbDropdown class="d-inline-block" container="body">
+                                        <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide"
+                                            ngbDropdownToggle>
+                                            <i class="bi bi-filetype-csv"></i> CSV
+                                        </button>
+                                        <div ngbDropdownMenu aria-labelledby="dropdownFormHide" style="width: 200px;">
+                                            <div class="px-3 py-2">
+                                                <div class="d-grid mb-2">
+                                                    <a class="btn btn-sm btn-light" (click)="requestToken();"
+                                                        target="_blank">
+                                                        <i class="bi bi-cloud-download"></i> Export CSV
+                                                    </a>
+                                                </div>
+                                                <div class="d-grid mb-2">
+                                                    <button type="button" class="btn btn-sm  btn-light"
+                                                        (click)="modalUploadData()">
+                                                        <i class="bi bi-cloud-upload"></i> Upload CSV
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="me-2">
                                     <a class="btn btn-sm btn-light"
                                         [routerLink]="[ '/board/tablePrintable/', id, journalTableViewId ]"
                                         target="_blank">
-                                        <i class="bi bi-printer"></i> Printable
+                                        <i class="bi bi-printer"></i>
                                     </a>
+                                </div>
+                                <div class="me-2">
+                                    <div ngbDropdown class="d-inline-block" container="body">
+                                        <button type="button" class="btn btn-sm btn-light" id="dropdownFormHide"
+                                            ngbDropdownToggle>  <i class="bi bi-info-lg"></i>  Info
+                                        </button>
+                                        <div ngbDropdownMenu aria-labelledby="dropdownFormHide" style="width: 200px;">
+                                            <div class="px-3 py-2">
+                                                <div class="row">
+                                                    <div class="col-12 mb-3">
+                                                        <div><b>{{template}}</b></div>
+                                                        <small>template</small>
+                                                    </div>
+                                                    <div class="col-6 text-center">
+                                                        <h3>{{detail.length | number}}</h3>
+                                                        <small><i class="bi bi-database-check"></i> Total</small>
+                                                    </div>
+                                                    <div class="col-6 text-center">
+                                                        <h3> {{archives | number }}</h3>
+                                                        <small><i class="bi bi-archive"></i> Archived</small>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                 
                                 </div>
                                 <div class="me-2">
                                     <button type="button" class="btn btn-sm border"> {{template}}</button>
@@ -193,6 +262,15 @@
                                 </div>
 
 
+                            </div>
+                        </div>
+                        <div class="col-1 text-end">
+                            <div>
+                                <a class="btn btn-sm btn-light"
+                                    [routerLink]="[ '/board/tablePrintable/', id, journalTableViewId ]"
+                                    target="_blank">
+                                    <i class="bi bi-printer"></i>
+                                </a>
                             </div>
                         </div>
                     </div>

@@ -190,8 +190,8 @@ export class TableComponent implements OnInit, AfterViewInit {
 
           if (data['action'] == 'reload') {
             this.reload([]);
-          }
-
+          } 
+          
           if (data['action'] == 'httpDetail') {
             this.httpDetail();
           }
@@ -206,7 +206,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           }
           
         }
-        console.log(this.detail);
+      //  console.log(this.detail);
 
       }
     );
@@ -335,7 +335,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.calculationFooter();
         this.startUpTable = true;
 
-
+        this.loading = false;
       },
       e => {
         console.log(e);
@@ -1243,6 +1243,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   // FILTER 
   updateFilter(){
+    this.loading = true;
     const body = {
       filterItem : this.filterSelect,
       journalTableViewId : this.journalTableViewId, 
@@ -1253,6 +1254,14 @@ export class TableComponent implements OnInit, AfterViewInit {
     }).subscribe(
       data=>{
         console.log(data);
+        this.httpDetail();
+        const msg = {
+          sender: localStorage.getItem("address.mirrel.com"), 
+          journalId: this.id,
+          action: 'httpDetail',
+          chat: this.configService.account()['account']['name'] + ' update filter',
+        }
+        this.socketService.sendMessage(msg);
       },
       error=>{
         console.log(error);

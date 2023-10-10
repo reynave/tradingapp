@@ -58,7 +58,7 @@ export class ChartjsComponent implements OnInit {
   iWhere: any = [];
   whereOption: any = [];
   chart: any = [];
-
+  totalData :number = 0;
   permission: any = [];
   startUpTable: boolean = false;
   detailObject: any = [];
@@ -138,7 +138,7 @@ export class ChartjsComponent implements OnInit {
         }
         this.startUpTable = true;
         this.chartJsData = data['chartJsData'];
-
+        this.totalData = data['totalData'];
         // if (this.journalChart.chartjsTypeId == 1) {
         this.initChartJs();
 
@@ -185,6 +185,11 @@ export class ChartjsComponent implements OnInit {
               }
             }
           },
+          plugins: {
+            tooltip: {
+              enabled: this.totalData > 100 ? false : true // <-- this option disables tooltips
+            }
+          }
         },
       });
       this.chartJsUpdate();

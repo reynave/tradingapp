@@ -172,6 +172,9 @@ class Tables extends BaseController
                 "usersHistory" => $usersHistory,
                 "archives" => $journalTable['archives'],
                 "filterSelect" => $journalTable['filterSelect'],
+                "filterDetail" => $journalTable['filterDetail'],
+                "q" => $journalTable['q'],
+                
                 //"customFieldKey" => $journalTable['customFieldKey'],
                 //   "customFieldNo" => $journal_select['customFieldNo'],
                 //   "select2" => $journal_select['select'],
@@ -769,7 +772,7 @@ class Tables extends BaseController
                         "journalTableViewId" => $post['journalTableViewId'],
                         "journalCustomFieldId" => $row['journalCustomFieldId'],
                         "field" => $row['field'],
-                        "selectId" => $row['selectId'],
+                        "selectId" => isset($row['selectId']) ? $row['selectId'] : "",
                         "presence" => 1,
                         "input_date" => date("Y-m-d H:i:s"),
                         "input_by" => model("Core")->accountId(),

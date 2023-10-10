@@ -18,8 +18,7 @@ class Chart extends BaseController
         $journalTableViewId = $data['request']['journalTableViewId'];
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
         if ($data['request']['id'] && $id) {
-
-
+ 
             $journalTable = model("Core")->journalChart($id, $journalTableViewId);
             $customField = $journalTable['journal_custom_field'];
             $x = [];
@@ -135,9 +134,9 @@ class Chart extends BaseController
                 //"c" => count($journal_chart['idWhere']),
 
                  "chartJsData" => $startup == false ? model("Core")->chartJsData($journal_chart, $journalTable['detail'], $y,$selectWhereOption) : [],
-               
                 
                 "detail" => $journalTable['detail'],
+                "totalDetail" => (int)count($journalTable['detail']),
             );
 
 

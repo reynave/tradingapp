@@ -17,24 +17,41 @@ class UnitTest extends BaseController
     }
 
 
-    public function faker()
+    public function faker($journalId)
     {
         $faker = \Faker\Factory::create();
        
-        $winrate = [-1,-1,-1,2.4,3];
-
-        for ($i = 0; $i < 200; $i++) {
-            $this->db->table("journal_detail")->insert([
-                'journalId' => 'J23000065',
-                'f1' => '2023-' . $faker->date('m-d'),
-                 'f2' => $faker->date('H:i'),
-                // 'f3' => rand(101, 104),
-                // 'f4' => rand(106, 109),
-                // 'f5' => rand(30, 50),
-                 'f6' => $winrate[rand(0, 4)],
-                 'f9' => '2023-' . $faker->date('m-d'),
-                 'f10' => $faker->date('H:i'),
-            ]);
+        $max = 2000;
+        $where = " and journalId = '$journalId' ORDER BY RAND()";
+        $total = model("Core")->select("count(id)", "journal_detail", "journalId =  '$journalId' and presence = 1 ");
+        for ($i = 0; $i < 3000; $i++) {
+            $total++;
+            
+            if ($total <= $max) { 
+                $f13 = model("Core")->select("id","journal_select", " field = 'f13' ".$where );
+                $f13Label = model("Core")->select("value","journal_select", " id = $f13 ");
+                $date = '2023-' . $faker->date('m-d'); 
+                $this->db->table("journal_detail")->insert([
+                    'journalId' => $journalId,
+                    'f1' => $date,
+                    'f2' => rand(1, 11) . ":" . rand(0, 59),
+                    'f3' => model("Core")->select("id","journal_select", " field = 'f3' ".$where ),
+                    'f4' => model("Core")->select("id","journal_select", " field = 'f4' ".$where ),
+                    'f5' => "1.0" . rand(4000, 6000),
+                    'f6' => "1.0" . rand(4000, 6000),
+                    'f7' => "1.0" . rand(4000, 6000),
+                    'f8' => $date,
+                    'f9' => rand(12, 24) . ":" . rand(0, 59),
+                    'f10' =>  model("Core")->select("id","journal_select", " field = 'f10' ".$where ),
+                    'f11' =>  $f13Label == 'LOSE' ?  -100 : rand(100, 300),
+                    'f12' => '',
+                    'f13' =>  $f13,
+                    'f14' => "230809.000006",
+                    'f15' => "",
+                ]);
+            }else{
+                break;
+            }
         }
         $data = array(
             "error" => false,
