@@ -24,7 +24,7 @@ class UnitTest extends BaseController
         $max = 2000;
         $where = " and journalId = '$journalId' ORDER BY RAND()";
         $total = model("Core")->select("count(id)", "journal_detail", "journalId =  '$journalId' and presence = 1 ");
-        for ($i = 0; $i < 3000; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $total++;
             
             if ($total <= $max) { 

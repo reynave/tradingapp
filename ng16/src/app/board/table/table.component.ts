@@ -71,7 +71,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   deleteAll: boolean = false;
   customField: any = [];
   customFieldForm: any = [];
-  template : string = "";
+  template : string = "Loading...";
   resizableStatus: boolean = false;
   tools: boolean = false;
   detailImageUrl: string = "";
@@ -93,6 +93,9 @@ export class TableComponent implements OnInit, AfterViewInit {
   imagesIndex: number = 0;
   imageQueryParams: any = []; 
   filterSelect : FilterSelect[] = [];
+
+  childDetail  = "";
+
   private _docSub: any;
   constructor(
     private http: HttpClient,
@@ -253,7 +256,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.httpDetail();
   }
 
-  httpHeader() {
+  httpHeader() { 
     this.http.get<any>(environment.api + "Tables/header", {
       headers: this.configService.headers(),
       params: {
@@ -261,7 +264,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     }).subscribe(
       data => {
-        // console.log("httpHeader", data);
+        
         this.customFieldForm = data['customField'];
         this.journalAccess = data['journal_access'];
         this.template = data['template'];
@@ -271,8 +274,9 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     )
   }
-
+ 
   httpDetail(startUpTable: boolean = false) {
+   
     this.http.get<any>(environment.api + "Tables/detail", {
       headers: this.configService.headers(),
       params: {
@@ -287,6 +291,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.customField = data['customField'];
         //this.customFieldKey = data['customFieldKey'];
         this.detail = data['detail'];
+        this.childDetail =  data['detail'];
         this.detailOrigin = data['detail'];
         this.filterSelect = data['filterSelect'];
         this.select = data['select'];
@@ -382,7 +387,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-
+   
   }
 
 
