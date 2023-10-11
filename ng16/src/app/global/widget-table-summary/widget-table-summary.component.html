@@ -46,7 +46,7 @@
 
     <div class="col-md-6">
         <small>Fast Trade</small>
-        <h4>{{avg.fasterTradingTime | number}} <small>H</small> </h4>
+        <h4> <small>{{ avg.fasterTradingTime == 0 ? 'Less then ' : ''}}</small>  {{avg.fasterTradingTime | number}} <small>H</small> </h4>
     </div>
     <div class="col-md-6">
         <small>Long Trade</small>

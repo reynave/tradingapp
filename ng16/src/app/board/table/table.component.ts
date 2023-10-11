@@ -93,7 +93,7 @@ export class TableComponent implements OnInit, OnChanges {
   imageQueryParams: any = [];
   filterSelect: FilterSelect[] = [];
   templateCode: string = "";
-  childDetail : any[] | undefined ;
+  childDetail: any[] | undefined;
 
   private _docSub: any;
   constructor(
@@ -208,10 +208,10 @@ export class TableComponent implements OnInit, OnChanges {
           }
 
         }
-
-          this.childDetail = [...this.detail]; 
-       // this.childDetail?.push(this.detail);
-     //   console.log(this.childDetail);
+        this.childDetail = [];
+        this.childDetail = [...this.detail];
+        // this.childDetail?.push(this.detail);
+        //   console.log(this.childDetail);
       }
     );
   }
