@@ -1,60 +1,102 @@
  
 <div class="row g-1">
+   
+
     <div class="col-12 mb-2">
-        <b>Summary</b>
-    </div>
-    <div class="col-md-6">
-        <small>Total Trade</small>
-        <h4>{{sum.row | number}}</h4>
-    </div>
-    <div class="col-md-6">
-        <small>Win Rate</small>
-        <h4>{{avg.winRate | number}}%</h4>
-    </div>
-    <div class="col-md-6">
-        <small>Total Win</small>
-        <h4>{{sum.win | number}}</h4>
-    </div>
-    <div class="col-md-6">
-        <small>Total Loss</small>
-        <h4 class="text-danger">{{sum.loss | number}}</h4>
+       <div class="p-2 bg-{{ sum.profit < 0 ? 'danger':'success'}} rounded" [ngClass]="{'text-white':  sum.profit < 0  }">
+            <h4 class="mb-0 pb-0 lh-1">$ {{sum.profit | number}}</h4>
+            <small>Accumulation Profit</small>
+       </div> 
+     
     </div>
 
-    <div class="col-md-12">
-        <small>Accumulation Profit</small>
-        <h4>{{sum.profit | number}}</h4>
-    </div>
-    <div class="col-md-6">
-        <small>Best Profit</small>
-        <h4>{{sum.bestProfit | number}}</h4>
-    </div>
-    <div class="col-md-6">
-        <small>Worst Loss</small>
-        <h4 class="text-danger">{{sum.worstLoss | number}}</h4>
+    <div class="col-12 mb-2">
+       
+            <ngb-progressbar type="success"   [showValue]="true" [value]="avg.winRate"></ngb-progressbar>
+            <div class="row">
+                <div class="col">
+                    <small>Win Rate</small> 
+                </div>
+                <div class="col text-end"><small> {{avg.winRate | number}}%</small></div>
+            </div> 
     </div>
 
+    <div class="col-12 mb-2">
+        <table>
+            <tbody > 
+                <tr>
+                    <td colspan="2">
+                        <strong>Summary Trade </strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td> <small>Total Trade</small></td>
+                    <td class="text-end"><b>{{sum.row | number}}</b></td>
+                </tr>
+              
+                <tr>
+                    <td> <small>Total Win</small></td>
+                    <td class="text-end"><b>{{sum.win | number}}</b></td>
+                </tr>
+                <tr>
+                    <td> <small>Total Loss</small></td>
+                    <td class="text-end text-danger"><b>{{sum.loss | number}}</b></td>
+                </tr>
+              
+                <tr>
+                    <td> <small>Best Profit</small></td>
+                    <td class="text-end"><b>$ {{sum.bestProfit | number}}</b></td>
+                </tr>
+                <tr>
+                    <td> <small>Worst Loss</small></td>
+                    <td class="text-end text-danger"><b>$ {{sum.worstLoss | number}}</b></td>
+                </tr>
 
-    <div class="col-md-6">
-        <small>Cons. Win</small>
-        <h4  >{{avg.consecutiveWin | number}}</h4>
-    </div>
-    <div class="col-md-6">
-        <small>Cons. Loss</small>
-        <h4 class="text-danger">{{avg.consecutiveLoss | number}}</h4>
-    </div>
+                <tr>
+                    <td colspan="2" class="pt-2">
+                        <strong>Consecutive </strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td> <small>Cons. Win</small></td>
+                    <td class="text-end"><b>{{avg.consecutiveWin | number}}</b></td>
+                </tr>
+                <tr>
+                    <td> <small>Cons. Loss</small></td>
+                    <td class="text-end text-danger"><b>{{avg.consecutiveLoss | number}}</b></td>
+                </tr>
 
 
-    <div class="col-md-6">
-        <small>Fast Trade</small>
-        <h4> <small>{{ avg.fasterTradingTime == 0 ? 'Less then ' : ''}}</small>  {{avg.fasterTradingTime | number}} <small>H</small> </h4>
-    </div>
-    <div class="col-md-6">
-        <small>Long Trade</small>
-        <h4>{{avg.longestTradingTime | number}} <small>H</small></h4>
+                <tr>
+                    <td colspan="2" class="pt-2">
+                        <strong>Trading Time</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td> <small>Faster Trade</small></td>
+                    <td class="text-end"><b>{{ avg.fasterTradingTime == 0 ? '<' : ''}}  {{avg.fasterTradingTime | number}} <small>H</small></b></td>
+                </tr>
+
+                <tr>
+                    <td> <small>Long Trade</small></td>
+                    <td class="text-end"><b>{{avg.longestTradingTime | number}} <small>H</small></b></td>
+                </tr>
+                <tr>
+                    <td> <small>Avg. Trading Time</small></td>
+                    <td class="text-end"><b>± {{avg.tradingTime | number}} <small>H</small></b></td>
+                </tr>
+            </tbody>
+           
+        </table>
     </div>
 
-    <div class="col-md-12">
-        <small>Avg. Trading Time</small>
-        <h4>± {{avg.tradingTime | number}} <small>H</small> </h4>
+    <div class="col-12 mb-2">
+        <b>Market</b>
+        <div class=" ">
+            <div class="py-3  bg-secondary d-inline-block" placement="top" ngbTooltip="Tooltip on top"  style="width: 30%;"> </div>
+            <div class="py-3  bg-info d-inline-block" style="width: 70%;"> </div> 
+            
+        </div>
     </div>
+  
 </div>

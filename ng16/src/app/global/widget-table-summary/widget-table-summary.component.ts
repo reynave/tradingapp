@@ -1,5 +1,8 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core'; // First, import Input
-import { DetailInterface } from 'src/app/board/table/table-interface';
+//import { DetailInterface } from 'src/app/board/table/table-interface';
+import { NgbProgressbarConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap'; 
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-widget-table-summary',
   templateUrl: './widget-table-summary.component.html',
@@ -17,7 +20,7 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
   }
   avg = {
     profit: 0,
-    winRate: "",
+    winRate: 0,
     consecutiveWin: 0,
     consecutiveLoss: 0,
     tradingTime: 0,
@@ -25,7 +28,13 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
     longestTradingTime: 0,
   }
   @Input() detail: any;
-
+  constructor(config: NgbProgressbarConfig) {
+		// customize default values of progress bars used by this component tree
+		config.max = 100;
+		config.striped = true;
+		config.animated = true; 
+		config.height = '24px';
+	}
   ngOnInit(): void {
     this.reset();
     this.fnCalculation();
@@ -43,7 +52,7 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
     }
     this.avg = {
       profit: 0,
-      winRate: "",
+      winRate: 0,
       consecutiveWin: 0,
       consecutiveLoss: 0,
       tradingTime: 0,
@@ -109,7 +118,7 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
 
     this.avg.tradingTime = Math.floor(this.sum.tradingTime / isNotNan);
     this.avg.profit = this.sum.profit / this.sum.row;
-    this.avg.winRate = String((this.sum.win / this.sum.row) * 100);
+    this.avg.winRate = ((this.sum.win / this.sum.row) * 100 );
   }
 
 }
