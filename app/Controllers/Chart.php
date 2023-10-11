@@ -14,7 +14,8 @@ class Chart extends BaseController
             "error" => true,
             "request" => $this->request->getVar(),
         );
-        $accountId = model("Core")->accountId(); 
+        //$accountId = model("Core")->accountId(); 
+         $accountId = '230809.000006';
         $journalTableViewId = $data['request']['journalTableViewId'];
         $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '$accountId'  and presence = 1");
         if ($data['request']['id'] && $id) {

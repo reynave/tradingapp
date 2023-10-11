@@ -50,12 +50,15 @@
 <div class="container-fluid body-margin-top">
 
     <div class="row g-2">
-        <div class="col-12">
-            <div *ngIf="childDetail"> 
-                <app-widget-table-summary [detail]="childDetail"></app-widget-table-summary>
+        <div class="col-lg-2 col-md-3 col-12" *ngIf="templateCode=='journalTrading'">
+            <div class="bg-white rounded p-2"  style="height: 93.7vh;">
+                <div *ngIf="childDetail">
+                    <app-widget-table-summary [detail]="childDetail"></app-widget-table-summary>
+                </div>
             </div>
         </div>
-        <div class="col-lg-12">
+
+        <div class="col-lg-10 col-md-9 col-12">
             <div class="bg-white rounded" style="border-left: 5px solid rgb(114, 194, 254);">
 
                 <div class="px-3 py-2">
@@ -637,7 +640,7 @@
 
 
     </div>
-     
+
 </div>
 
 

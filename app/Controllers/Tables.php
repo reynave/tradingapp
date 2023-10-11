@@ -58,8 +58,8 @@ class Tables extends BaseController
             "error" => true,
             "request" => $this->request->getVar(),
         );
-
-        $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . model("Core")->accountId() . "'  and presence = 1");
+        $accountId = model("Core")->accountId();
+        $id = model("Core")->select("journalId", "journal_access", "journalId = '" . $data['request']['id'] . "' and accountId = '" . $accountId . "'  and presence = 1");
         if ($data['request']['id'] && $id) {
 
             $c = "SELECT *, '' as showEvalDev  FROM journal_custom_field 
@@ -67,7 +67,8 @@ class Tables extends BaseController
             ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
 
-            $accountId = model("Core")->accountId();
+          
+          
             $d = "SELECT * 
             FROM journal_access
             WHERE accountId = '$accountId' and journalId = '" . $data['request']['id'] . "' AND presence = 1";
@@ -78,7 +79,8 @@ class Tables extends BaseController
                 "error" => false,
                 "id" => $id,
                 "customField" => $journal_custom_field,
-                "template" => model("Core")->select("name", "template", "code='$templateCode'")
+                "template" => model("Core")->select("name", "template", "code='$templateCode'"),
+                "templateCode" => $templateCode
             );
         }
         return $this->response->setJSON($data);

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, HostListener, ChangeDetectorRef, ChangeDetectionStrategy, NgZone } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, HostListener, ChangeDetectorRef, ChangeDetectionStrategy, NgZone, OnChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbOffcanvas, NgbModal, NgbModalConfig, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
 import { DetailInterface, FilterSelect } from './table-interface';
-import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component'; 
+import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component';
 import { SocketService } from 'src/app/service/socket.service';
 import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
@@ -37,21 +37,20 @@ export class NewCustomField {
   styleUrls: ['./table.component.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TableComponent implements OnInit, AfterViewInit {
+export class TableComponent implements OnInit, OnChanges {
   @ViewChild('contentEditSelect') contentEditSelect: any;
-  @ViewChild('canvasImages') canvasImages: any; 
+  @ViewChild('canvasImages') canvasImages: any;
   @ViewChild('viewport') viewportRef!: ElementRef;
   @ViewChild(CdkVirtualScrollViewport, { static: false }) viewPort: CdkVirtualScrollViewport | undefined;
-  allowEsc : boolean = true;
+  allowEsc: boolean = true;
   @HostListener('document:keydown.escape', ['$event']) onKeydownHandler(event: KeyboardEvent) {
     console.log(event);
-    if(this.allowEsc == true){
-
+    if (this.allowEsc == true) {
       this.modalService.dismissAll();
     }
   }
 
- 
+
   prod = environment.production;
   scrollX = 0;
   fields: any = [];
@@ -71,7 +70,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   deleteAll: boolean = false;
   customField: any = [];
   customFieldForm: any = [];
-  template : string = "Loading...";
+  template: string = "Loading...";
   resizableStatus: boolean = false;
   tools: boolean = false;
   detailImageUrl: string = "";
@@ -85,16 +84,16 @@ export class TableComponent implements OnInit, AfterViewInit {
   keyword: string = '';
   customFieldKey: any = [];
   users: any = [];
-  usersHistory : any = [];
+  usersHistory: any = [];
   journalAccess: any = [];
   api: string = environment.api;
   images: any = [];
   imagesLoading: boolean = false;
   imagesIndex: number = 0;
-  imageQueryParams: any = []; 
-  filterSelect : FilterSelect[] = [];
-
-  childDetail  = "";
+  imageQueryParams: any = [];
+  filterSelect: FilterSelect[] = [];
+  templateCode: string = "";
+  childDetail : any[] | undefined ;
 
   private _docSub: any;
   constructor(
@@ -107,7 +106,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     private socketService: SocketService,
     private router: Router,
     config: NgbModalConfig
-  ) { 
+  ) {
     document.addEventListener('paste', this.handlePaste.bind(this));
   }
 
@@ -119,7 +118,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.httpDetail(true);
     this._docSub = this.socketService.getMessage().subscribe(
       (data: { [x: string]: any; }) => {
-        console.log(data);
+        console.log('socketService', data);
         if (data['journalId'] == this.id) {
           if (data['action'] === 'TableDetailUpdateRow') {
 
@@ -129,12 +128,12 @@ export class TableComponent implements OnInit, AfterViewInit {
                 // console.log("f"+i, this.detail[index]['f'+i]);
                 if (this.detail[index]['f' + i] !== undefined) {
                   this.detail[index]['f' + i] = data['msg']['f' + i];
-                } 
-              } 
+                }
+              }
               ///    this.detail = this.detail.filter((x) => x != this.detail[index]);
             }
-            console.log(data['msg']);  
-            this.calculationFooter(); 
+            // console.log(data['msg']);  
+            this.calculationFooter();
             //  this.httpDetail();
           }
 
@@ -184,7 +183,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           if (data['action'] == 'tableDetailFnHide') {
             let index = data['index'];
             let n = data['n'];
-            console.log('tableDetailFnHide', n, index);
+            //  console.log('tableDetailFnHide', n, index);
             if (this.journalTableViewId == data['journalTableViewId']) {
               this.customField[index]['hide'] = n == 1 ? 0 : 1;
             }
@@ -193,35 +192,37 @@ export class TableComponent implements OnInit, AfterViewInit {
 
           if (data['action'] == 'reload') {
             this.reload([]);
-          } 
-          
+          }
+
           if (data['action'] == 'httpDetail') {
             this.httpDetail();
           }
 
           if (data['action'] == 'tableReloadAddRow') {
-            console.log("add arrow", data['data']);
+            //  console.log("add arrow", data['data']);
             this.detail = [...this.detail, data['data']];
           }
 
           if (data['action'] == 'tableHttpUsers') {
             this.httpUsers()
           }
-          
-        }
-      //  console.log(this.detail);
 
+        }
+
+          this.childDetail = [...this.detail]; 
+       // this.childDetail?.push(this.detail);
+     //   console.log(this.childDetail);
       }
     );
   }
 
   public get inverseOfTranslation(): string {
- 
+
     if (!this.viewPort || !this.viewPort["_renderedContentOffset"]) {
-     
+
       return "-0px";
     }
-    let offset = this.viewPort["_renderedContentOffset"]; 
+    let offset = this.viewPort["_renderedContentOffset"];
     return `-${offset}px`;
   }
 
@@ -233,7 +234,9 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     return `${offset}px`;
   }
-
+  ngOnChanges() {
+    console.log("OnChanges ")
+  }
   ngOnDestroy() {
     this._docSub.unsubscribe();
     document.removeEventListener('paste', this.handlePaste);
@@ -256,7 +259,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.httpDetail();
   }
 
-  httpHeader() { 
+  httpHeader() {
     this.http.get<any>(environment.api + "Tables/header", {
       headers: this.configService.headers(),
       params: {
@@ -264,19 +267,20 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     }).subscribe(
       data => {
-        
+        //   console.log('Tables/header',data);
         this.customFieldForm = data['customField'];
         this.journalAccess = data['journal_access'];
         this.template = data['template'];
+        this.templateCode = data['templateCode'];
       },
       e => {
         console.log(e);
       }
     )
   }
- 
+
   httpDetail(startUpTable: boolean = false) {
-   
+
     this.http.get<any>(environment.api + "Tables/detail", {
       headers: this.configService.headers(),
       params: {
@@ -285,19 +289,19 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     }).subscribe(
       data => {
-        console.log('httpDetail', data);
+        // console.log('httpDetail', data);
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
         //this.customFieldKey = data['customFieldKey'];
         this.detail = data['detail'];
-        this.childDetail =  data['detail'];
+        this.childDetail = data['detail'];
         this.detailOrigin = data['detail'];
         this.filterSelect = data['filterSelect'];
         this.select = data['select'];
         this.users = data['users'];
-        this.usersHistory= data['usersHistory'];
- 
+        this.usersHistory = data['usersHistory'];
+
         let self = this;
         $(function () {
           $(".sortable").sortable({
@@ -346,22 +350,22 @@ export class TableComponent implements OnInit, AfterViewInit {
         console.log(e);
         alert(e.error.message);
         this.allowEsc = false;
-        this.openComponent("CustomFieldFormComponent","Warning : "+e.error.message);
+        this.openComponent("CustomFieldFormComponent", "Warning : " + e.error.message);
       }
     )
   }
 
-  httpUsers(){
+  httpUsers() {
     this.http.get<any>(environment.api + "Tables/users", {
       headers: this.configService.headers(),
       params: {
-        id: this.id, 
+        id: this.id,
       }
     }).subscribe(
       data => {
-        console.log('httpUsers', data); 
+        console.log('httpUsers', data);
         this.users = data['users'];
-        this.usersHistory= data['usersHistory']; 
+        this.usersHistory = data['usersHistory'];
       },
       e => {
         console.log(e);
@@ -372,7 +376,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   getChange() {
     console.log(this.detail);
   }
- 
+
   onSearchChange() {
     if (!this.keyword) {
       this.detail = this.detailOrigin;
@@ -386,9 +390,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.calculationFooter();
   }
 
-  ngAfterViewInit() {
-   
-  }
+
 
 
   sortByOrder(order: any) {
@@ -493,14 +495,14 @@ export class TableComponent implements OnInit, AfterViewInit {
           // if(OptIndex > -1){
           //   select[fnIndex].option[OptIndex]['total'] = parseInt(select[fnIndex].option[OptIndex]['total'])+ 1;
           // } 
-        } 
+        }
       });
 
 
       if (el['iType'] == 'number' || el['iType'] == 'formula') {
         value = value / this.customField.length;
 
-        this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2)))+" <code>AVG</code> ";
+        this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2))) + " <code>AVG</code> ";
       }
       if (el['iType'] == 'select') {
         this.customField[i]['total'] = "SOON";
@@ -614,7 +616,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   updateRow(row: any, fx: string, column: any) {
-    console.log(row);
+
 
     const body = {
       id: this.id,
@@ -622,13 +624,10 @@ export class TableComponent implements OnInit, AfterViewInit {
       fx: fx,
       column: column,
     }
-    console.log('updateRow', body);
     this.http.post<any>(environment.api + 'CustomField/updateRow', body,
       { headers: this.configService.headers() }
     ).subscribe(
       data => {
-        console.log("CustomField/updateRow ", data);
-
         const msg = {
           sender: localStorage.getItem("address.mirrel.com"),
           msg: data['row'],
@@ -695,7 +694,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       id: this.id,
       column: column,
       row: row,
-      fx: fx, 
+      fx: fx,
     }
     console.log(body);
     this.http.post<any>(environment.api + 'CustomField/updateRow', body,
@@ -722,7 +721,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   usersDropdown(fn: string) {
     let index = this.select.findIndex(((obj: { field: string; }) => obj.field == 'f' + fn));
     return this.select[index].users;
-  } 
+  }
 
   modalEditSelect(fx: string) {
     const modalRef = this.modalService.open(TabletEditSelectComponent, { size: 'md' });
@@ -734,10 +733,10 @@ export class TableComponent implements OnInit, AfterViewInit {
     //let data = "id : " + id + ", F : " + fn;
     var data: any = [];
     let index = this.usersHistory.findIndex(((obj: { accountId: string; }) => obj.accountId == accountId));
-    if ((index > -1) ) {
+    if ((index > -1)) {
       data = this.usersHistory[index];
-    } else { 
-      data = []; 
+    } else {
+      data = [];
     }
     return data;
   }
@@ -765,14 +764,14 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.httpImages();
   }
 
-  modalUploadData(){
+  modalUploadData() {
     let ngbModalOptions: NgbModalOptions = {
-      backdrop : true,
-      keyboard : false,
-      size : 'md',
-};
+      backdrop: true,
+      keyboard: false,
+      size: 'md',
+    };
     const modalRef = this.modalService.open(ModalUploadDataComponent, ngbModalOptions);
-		modalRef.componentInstance.journalId = this.id;
+    modalRef.componentInstance.journalId = this.id;
   }
 
   addTask() {
@@ -1042,7 +1041,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openComponent(componentName: string, note:string = "") {
+  openComponent(componentName: string, note: string = "") {
     if (componentName == 'CustomFieldFormComponent') {
       const modalRef = this.modalService.open(CustomFieldFormComponent, { fullscreen: true });
       //    modalRef.componentInstance.customFieldForm = this.customFieldForm;
@@ -1077,19 +1076,19 @@ export class TableComponent implements OnInit, AfterViewInit {
     });
     return formula;
   }
-  isX : number = 0;
+  isX: number = 0;
   onScroll(event: Event): void {
     const dataContainer = event.target as HTMLElement;
     const verticalScrollY = dataContainer.scrollTop; // Mendapatkan nilai Y
     const horizontalScrollX = dataContainer.scrollLeft; // Mendapatkan nilai X
 
     // Sekarang Anda dapat menggunakan nilai Y dan X sesuai kebutuhan
-   // console.log('Scroll Y:', verticalScrollY);
-   // console.log('Scroll X:', horizontalScrollX);
+    // console.log('Scroll Y:', verticalScrollY);
+    // console.log('Scroll X:', horizontalScrollX);
     this.isX = horizontalScrollX;
     //$('.isScollX').css("background-color", "#f4f4f4");
-    $('.isScollX').css("left", "-"+horizontalScrollX+"px");
-    
+    $('.isScollX').css("left", "-" + horizontalScrollX + "px");
+
   }
 
   clipboardImage: string = '';
@@ -1223,8 +1222,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   onImagesRemove(x: any) {
     const body = {
       item: x,
-    } 
-    console.log('onImagesRemove',body);
+    }
+    console.log('onImagesRemove', body);
     this.http.post<any>(environment.api + "images/onImagesRemove", body, {
       headers: this.configService.headers(),
     }).subscribe(
@@ -1247,28 +1246,28 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   // FILTER 
-  updateFilter(){
+  updateFilter() {
     this.loading = true;
     const body = {
-      filterItem : this.filterSelect,
-      journalTableViewId : this.journalTableViewId, 
+      filterItem: this.filterSelect,
+      journalTableViewId: this.journalTableViewId,
     }
     console.log(body);
-    this.http.post<any>(environment.api+"Tables/updateFilter",body,{
-      headers : this.configService.headers(),
+    this.http.post<any>(environment.api + "Tables/updateFilter", body, {
+      headers: this.configService.headers(),
     }).subscribe(
-      data=>{
+      data => {
         console.log(data);
         this.httpDetail();
         const msg = {
-          sender: localStorage.getItem("address.mirrel.com"), 
+          sender: localStorage.getItem("address.mirrel.com"),
           journalId: this.id,
           action: 'httpDetail',
           chat: this.configService.account()['account']['name'] + ' update filter',
         }
         this.socketService.sendMessage(msg);
       },
-      error=>{
+      error => {
         console.log(error);
       }
     )

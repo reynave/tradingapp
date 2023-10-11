@@ -1,19 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core'; // First, import Input
+import { Component, Input, OnChanges, OnInit } from '@angular/core'; // First, import Input
 import { DetailInterface } from 'src/app/board/table/table-interface';
 @Component({
   selector: 'app-widget-table-summary',
   templateUrl: './widget-table-summary.component.html',
   styleUrls: ['./widget-table-summary.component.css']
 })
-export class WidgetTableSummaryComponent implements OnInit {
+export class WidgetTableSummaryComponent implements OnInit, OnChanges {
   sum = {
     row: 0,
     profit: 0,
     win: 0,
     loss: 0,
     bestProfit: 0,
-    worstLoss: 0,
-
+    worstLoss: 0, 
     tradingTime: 0,
   }
   avg = {
@@ -30,6 +29,11 @@ export class WidgetTableSummaryComponent implements OnInit {
   ngOnInit(): void {
     this.fnCalculation();
     // console.log(this.detail);
+  }
+
+  ngOnChanges() {
+    console.log("ngOnChanges",this.detail);
+    this.fnCalculation();
   }
 
   fnCalculation() {
@@ -61,7 +65,7 @@ export class WidgetTableSummaryComponent implements OnInit {
       else { tempLoss = 0; }
       if (tempLoss > this.avg.consecutiveWin) this.avg.consecutiveLoss = tempLoss;
 
-      if ( this.detail[i]['f1'] != "" || this.detail[i]['f8']  != "") {
+      if (this.detail[i]['f1'] != "" || this.detail[i]['f8'] != "") {
         dateA = new Date(a);
         dateB = new Date(b);
         timeDifference = dateB - dateA;
@@ -72,19 +76,17 @@ export class WidgetTableSummaryComponent implements OnInit {
         if (!Number.isNaN(totalTime) && (totalTime <= this.avg.fasterTradingTime)) {
           this.avg.fasterTradingTime = Math.floor(totalTime);
         }
-      } 
-      
+      }
+
       if (!Number.isNaN(totalTime) && (totalTime >= this.avg.longestTradingTime)) {
         this.avg.longestTradingTime = Math.floor(totalTime)
       }
 
-      
-
     }
-    console.log(isNotNan);
+
     this.avg.tradingTime = Math.floor(this.sum.tradingTime / isNotNan);
     this.avg.profit = this.sum.profit / this.sum.row;
-    this.avg.winRate = String((this.sum.win / this.sum.row) * 100) + "%";
+    this.avg.winRate = String((this.sum.win / this.sum.row) * 100);
   }
 
 }

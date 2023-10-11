@@ -1,2 +1,60 @@
-<p>widget-table-summary works!</p>
-{{sum | json}} {{avg | json}}
+ 
+<div class="row g-1">
+    <div class="col-12 mb-2">
+        <b>Summary</b>
+    </div>
+    <div class="col-md-6">
+        <small>Total Trade</small>
+        <h4>{{sum.row | number}}</h4>
+    </div>
+    <div class="col-md-6">
+        <small>Win Rate</small>
+        <h4>{{avg.winRate | number}}%</h4>
+    </div>
+    <div class="col-md-6">
+        <small>Total Win</small>
+        <h4>{{sum.win | number}}</h4>
+    </div>
+    <div class="col-md-6">
+        <small>Total Loss</small>
+        <h4 class="text-danger">{{sum.loss | number}}</h4>
+    </div>
+
+    <div class="col-md-12">
+        <small>Accumulation Profit</small>
+        <h4>{{sum.profit | number}}</h4>
+    </div>
+    <div class="col-md-6">
+        <small>Best Profit</small>
+        <h4>{{sum.bestProfit | number}}</h4>
+    </div>
+    <div class="col-md-6">
+        <small>Worst Loss</small>
+        <h4 class="text-danger">{{sum.worstLoss | number}}</h4>
+    </div>
+
+
+    <div class="col-md-6">
+        <small>Cons. Win</small>
+        <h4  >{{avg.consecutiveWin | number}}</h4>
+    </div>
+    <div class="col-md-6">
+        <small>Cons. Loss</small>
+        <h4 class="text-danger">{{avg.consecutiveLoss | number}}</h4>
+    </div>
+
+
+    <div class="col-md-6">
+        <small>Fast Trade</small>
+        <h4>{{avg.fasterTradingTime | number}} <small>H</small> </h4>
+    </div>
+    <div class="col-md-6">
+        <small>Long Trade</small>
+        <h4>{{avg.longestTradingTime | number}} <small>H</small></h4>
+    </div>
+
+    <div class="col-md-12">
+        <small>Avg. Trading Time</small>
+        <h4>± {{avg.tradingTime | number}} <small>H</small> </h4>
+    </div>
+</div>

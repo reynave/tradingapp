@@ -69,6 +69,7 @@
                                         <option *ngFor="let n of typeOfChart" [value]="n.id">{{n.label}}</option>
                                     </select>
                                 </div>
+
                                 <div class="mb-3" *ngIf="journalChart.chartjsTypeId != 0 ">
                                     <label class="mb-1 mx-3"><b>Label (X Axis) <div class="text-warning"
                                                 *ngIf="journalChart.xAxis == '' ">Please select Label X Axis</div>
@@ -82,34 +83,7 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="mb-3" *ngIf="iWhere.length > 0">
-                                    <label class="mb-1 mx-3"><b>Where</b></label>
-                                    <select class="form-control" [(ngModel)]="journalChart.idWhere"
-                                        (change)="updateChartJs()">
-                                        <option value="">Show All</option>
-                                        <option *ngFor="let n of iWhere" [value]="n.key">{{n.name}}</option>
-                                    </select>
-
-                                    <div class="form-control scrollarea mt-1" [hidden]="journalChart.idWhere == ''">
-                                        <div class="row g-1 mb-1 " [ngClass]="{'border-top': (i > 0) ? true : false}"
-                                            *ngFor="let n of returniWhereOption(); let i = index">
-
-                                            <div class="col-10">
-                                                {{n.value}}
-                                            </div>
-                                            <div class="col-2 text-end">
-                                                <i *ngIf="n.checkbox == true"
-                                                    (click)="n.checkbox = false;updateChartJs()"
-                                                    class="bi bi-check-square-fill"></i>
-                                                <i *ngIf="n.checkbox != true"
-                                                    (click)="n.checkbox = true;updateChartJs()"
-                                                    class="bi bi-square"></i>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                </div>
+ 
                                 <div class="mb-3">
                                     <label class="mb-1 mx-3"><b>Data Sets (Y Axis)</b></label>
 
@@ -155,6 +129,35 @@
 
                                     </div>
 
+                                </div>
+ 
+                                <div class="mb-3" *ngIf="iWhere.length > 0">
+                                    <label class="mb-1 mx-3"><b>Filter</b></label>
+                                    <select class="form-control" [(ngModel)]="journalChart.idWhere"
+                                        (change)="updateChartJs()">
+                                        <option value="">Show All</option>
+                                        <option *ngFor="let n of iWhere" [value]="n.key">{{n.name}}</option>
+                                    </select>
+
+                                    <div class="form-control scrollarea mt-1" [hidden]="journalChart.idWhere == ''">
+                                        <div class="row g-1 mb-1 " [ngClass]="{'border-top': (i > 0) ? true : false}"
+                                            *ngFor="let n of returniWhereOption(); let i = index">
+
+                                            <div class="col-10">
+                                                {{n.value}}
+                                            </div>
+                                            <div class="col-2 text-end">
+                                                <i *ngIf="n.checkbox == true"
+                                                    (click)="n.checkbox = false;updateChartJs()"
+                                                    class="bi bi-check-square-fill"></i>
+                                                <i *ngIf="n.checkbox != true"
+                                                    (click)="n.checkbox = true;updateChartJs()"
+                                                    class="bi bi-square"></i>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>

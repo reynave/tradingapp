@@ -293,10 +293,12 @@ class Core extends Model
             $data = [];
             foreach ($journal_custom_field as $field) {
                 if ($field['iType'] == 'formula') {
+                      
                     foreach (array_keys($rec) as $key) {
-                        $data[$key] = (int) $rec[$key];
+                        $data[$key] = $rec[$key];
                     }
                     $detail[$index][$field['key']] = $evaluateFormula($data, $field['eval']);
+   
                 }
             }
             $index++;
