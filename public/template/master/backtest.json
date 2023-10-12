@@ -1,5 +1,5 @@
 {
-    "version":"1.0.3",
+    "version":"1.0.6",
     "field" :  [
         { 
             "f" : 1,
@@ -62,37 +62,52 @@
             "f" : 5,
             "name": "Entry",
             "iType" : "number",
-            "suffix" : "" ,
+            "suffix" : "$" ,
             "ilock" : 1
         },
         { 
             "f" : 6,
             "name": "Stop Loss",
             "iType" : "number",
+            "suffix" : "$" ,
             "ilock" : 1
         },
         {
             "f" : 7,
             "name": "Target",
             "iType" : "number",
+            "suffix" : "$" ,
+            "ilock" : 1
+        },
+        
+        { 
+            "f" :8,
+            "name": "Close Date",
+            "iType" : "date",
             "ilock" : 1
         },
         { 
-            "f" : 8,
+            "f" :9,
+            "name": "Close Time",
+            "iType" : "time",
+            "ilock" : 1
+        },
+        { 
+            "f" : 10,
             "name": "Setups",
             "iType" : "select",
             "journal_select" : [
                 { 
                     "value" : "KEY LEVEL",
-                    "color" : "#35A29F"
+                    "color" : "#F99417"
                 },
                 { 
-                    "value" : "Double Top",
-                    "color" : "#35A29F"
+                    "value" : "DOUBLE TOP",
+                    "color" : "#0802A3"
                 },
                 { 
-                    "value" : "Double Bottom",
-                    "color" : "#35A29F"
+                    "value" : "DOUBLE BOTTOM",
+                    "color" : "#F99417"
                 },
                 { 
                     "value" : "FIBONACCI 68%",
@@ -100,35 +115,72 @@
                 }, 
                 { 
                     "value" : "ENGULFING",
-                    "color" : "#35A29F"
+                    "color" : "#008170"
                 }
             ],
             "ilock" : 1
         },
-        { 
-            "f" :9,
-            "name": "Close Date",
-            "iType" : "date",
+        {
+            "f" : 11,
+            "name": "Profit",
+            "iType" : "number",
+            "suffix" : "$" ,
+            "ilock" : 1
+        },
+        {
+            "f" : 12,
+            "name": "Avg Hour",
+            "iType" : "formula",
+            "eval" :  "($f8 != '' && $f9 != '') ? (int)abs((strtotime($f8.' '.$f9) - strtotime($f1.' '.$f2)) / (60 * 60)) : 0",
+            "suffix" : " hour" ,
             "ilock" : 1
         },
         { 
-            "f" :10,
-            "name": "Close Time",
-            "iType" : "time",
-            "ilock" : 1
+            "f" :13,
+            "name": "Status",
+            "iType" : "formula",
+            "ilock" : 1,
+            "eval" : "($f11 < 0)? '<div class=bg-loss>LOSS</div>':'<div class=bg-win>WIN</div>'"
         },
+       
         { 
-            "f" :11,
+            "f" :14,
             "name": "Trader Person",
             "iType" : "user",
             "ilock" : 1
         },
         { 
-            "f" :12,
+            "f" :15,
             "name": "Photo",
             "iType" : "image",
             "ilock" : 1
+        },
+
+        { 
+            "f" :16,
+            "name": "Description",
+            "iType" : "text",
+            "ilock" : 1
         }
-         
+    ], 
+    "view" : [
+        {
+            "name" : "simple Trade",
+            "share" : 1,
+            "field" : [
+                { 
+                    "f" : 1,
+                    "name": "Order date"
+                },
+                { 
+                    "f" : 2,
+                    "name": "Order Time" 
+                },
+                {
+                    "f" : 11,
+                    "name": "Profit"
+                }
+            ]
+        }
     ]
 }

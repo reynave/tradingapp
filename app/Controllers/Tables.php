@@ -66,8 +66,7 @@ class Tables extends BaseController
             WHERE journalId = '$id' and presence = 1
             ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
-
-          
+ 
           
             $d = "SELECT * 
             FROM journal_access
@@ -80,7 +79,8 @@ class Tables extends BaseController
                 "id" => $id,
                 "customField" => $journal_custom_field,
                 "template" => model("Core")->select("name", "template", "code='$templateCode'"),
-                "templateCode" => $templateCode
+                "templateCode" => $templateCode,
+                "startBalance" => (int) model("Core")->select("startBalance", "journal", "id='$id'"),
             );
         }
         return $this->response->setJSON($data);

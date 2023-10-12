@@ -19,12 +19,12 @@ class Journal extends BaseController
         $book = [];
         $items = [];
 
-        $itemFields = " ja.id as journal_accessID, 
-        ja.bookId, 
-        p.name AS 'permission', 
-        p.fontIcon, 
+        $itemFields = " ja.id as journal_accessID,
+        ja.bookId,
+        p.name AS 'permission',
+        p.fontIcon,
         a.name AS 'ownBy',
-        j.*, 
+        j.*,
         ja.owner,  '' AS checkbox , ja.presence, ja.admin, ja.star";
 
         if ($id == 'undefined' || !$id) {
@@ -52,7 +52,7 @@ class Journal extends BaseController
                 LEFT JOIN journal AS j ON j.id = ja.journalId
                 LEFT JOIN permission AS p ON p.id = j.permissionId
                 JOIN account AS a ON a.id = j.accountId
-                WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$bookId' 
+                WHERE ja.accountId = '$accountId' and (ja.presence = 1 OR ja.presence = 4) and ja.bookId = '$bookId'
                 ORDER BY ja.sorting ASC, ja.input_date ASC";
 
                 $items = $this->db->query($q1)->getResultArray();
@@ -77,10 +77,10 @@ class Journal extends BaseController
         $templatejson = $this->db->query($templatejson)->getResultArray();
 
         $items = [];
-        foreach($itemJoin as $rec){
-            array_push( $items, array_merge($rec,[
-                "rows" => model("Core")->select("count(id)","journal_detail","journalId = '".$rec['id']."' and presence = 1"),
-                "template" => model("Core")->select("name","template","code = '".$rec['templateCode']."' and presence = 1"),
+        foreach ($itemJoin as $rec) {
+            array_push($items, array_merge($rec, [
+                "rows" => model("Core")->select("count(id)", "journal_detail", "journalId = '" . $rec['id'] . "' and presence = 1"),
+                "template" => model("Core")->select("name", "template", "code = '" . $rec['templateCode'] . "' and presence = 1"),
             ]));
         }
 
@@ -92,7 +92,7 @@ class Journal extends BaseController
             "permission" => $permission,
             "header" => model("Core")->header(),
             "templatejson" => $templatejson,
-            "q" => $q1 ,
+            "q" => $q1,
         );
         return $this->response->setJSON($data);
     }
@@ -125,7 +125,7 @@ class Journal extends BaseController
     {
         // $accountId = model("Core")->accountId();
 
-        $q1 = "SELECT ja.*, a.name, a.email, concat('".base_url()."uploads/picture/',a.picture) as 'picture'
+        $q1 = "SELECT ja.*, a.name, a.email, concat('" . base_url() . "uploads/picture/',a.picture) as 'picture'
         FROM journal_access AS ja
         JOIN account AS a ON a.id = ja.accountId
         WHERE ja.presence = 1 and ja.journalId = '" . $this->request->getVar()['journalId'] . "'
@@ -138,9 +138,9 @@ class Journal extends BaseController
         }
 
         $accountId = model("Core")->accountId();
-        $q2 = "SELECT a.id, a.name, concat('".base_url()."uploads/picture/',a.picture) as 'picture', a.email, t.accountId
+        $q2 = "SELECT a.id, a.name, concat('" . base_url() . "uploads/picture/',a.picture) as 'picture', a.email, t.accountId
         FROM account_team AS t
-        LEFT JOIN account AS a ON a.id = t.invitedId 
+        LEFT JOIN account AS a ON a.id = t.invitedId
         WHERE t.presence = 1 and  t.accountId = '$accountId' AND a.id != '$accountId' ";
         $teams = $this->db->query($q2)->getResultArray();
 
@@ -168,7 +168,7 @@ class Journal extends BaseController
             "post" => $post,
         ];
         if ($post && $post['model']['name'] != "") {
-            $this->db->transStart();
+            //$this->db->transStart();
             $journalId = model("Core")->number("backtest");
 
             $this->db->table("journal")->insert([
@@ -177,9 +177,8 @@ class Journal extends BaseController
                 "permissionId" => $post['model']['permissionId'],
                 "url" => uniqid(),
                 "templateCode" => $post['model']['template'],
-                "image" => base_url()."uploads/share/books.jpg",
-                // "borderColor" => "#3AA6B9",
-                // "backgroundColor" => "#C1ECE4",
+                "startBalance" => $post['model']['startBalance'],
+                "image" => base_url() . "uploads/share/books.jpg",
                 "accountId" => model("Core")->accountId(),
                 "presence" => 1,
                 "version" => 1,
@@ -228,7 +227,7 @@ class Journal extends BaseController
             ]);
 
             if ($post['model']['template'] != "") {
-                $path = './template/master/' . $post['model']['template'] . '.json'; 
+                $path = './template/master/' . $post['model']['template'] . '.json';
                 $jsonString = file_get_contents($path);
                 $jsonData = json_decode($jsonString, true);
                 $i = 0;
@@ -239,41 +238,118 @@ class Journal extends BaseController
                         "f" => $rec['f'],
                         "name" => $rec['name'],
                         "iType" => $rec['iType'],
-                        "ilock" => isset($rec['ilock']) ? $rec['ilock'] : 0, 
+                        "ilock" => isset($rec['ilock']) ? $rec['ilock'] : 0,
                         "suffix" => isset($rec['suffix']) ? $rec['suffix'] : "",
                         "width" => 150,
                         "eval" => $rec['iType'] == 'formula' ? $rec['eval'] : "",
-                        "sorting" => $i,
+                        "sorting" => isset($rec['sorting']) ? $rec['sorting'] : $i,
                         "input_date" => date("Y-m-d H:i:s")
                     ]);
                     if (!empty($rec['journal_select'])) {
                         $n = 0;
-                        foreach ($rec['journal_select'] as $a) { 
+                        foreach ($rec['journal_select'] as $a) {
                             $this->db->table("journal_select")->insert([
                                 "journalId" => $journalId,
-                                "field" => 'f'.$rec['f'],
-                                "value" => $a['value'],  
-                                "color" => $a['color'], 
+                                "field" => 'f' . $rec['f'],
+                                "value" => $a['value'],
+                                "color" => $a['color'],
+                                "ilock" => isset($a['ilock']) ? $a['ilock'] : 0,
                                 "sorting" => $n,
                                 "input_date" => date("Y-m-d H:i:s")
                             ]);
                             $n++;
                         }
                     }
- 
-                }
-            }
-           
 
-            $this->db->transComplete();
-            if ($this->db->transStatus() === false) {
-                $this->db->transRollback();
-            } else {
-                $this->db->transCommit();
+                }
+
+                foreach ($jsonData['view'] as $rec) {
+                    $this->db->table("journal_table_view")->insert([
+                        "journalId" => $journalId,
+                        "name" => $rec['name'],
+                        "board" => $rec['board'],
+                        "share" => $rec['share'],
+                        "presence" => 1,
+                        "ilock" => 0,
+                        "input_date" => date("Y-m-d H:i:s"),
+                        "input_by" => model("Core")->accountId(),
+                    ]);
+
+
+
+                    $q3 = "SELECT * FROM journal_table_view WHERE journalId = '$journalId' and ilock = 0 ";
+                    $journal_table_view = $this->db->query($q3)->getResultArray();
+                    foreach ($journal_table_view as $row) {
+                        $journalTableViewId = $row['id'];
+
+                        if ($rec['board'] == 'table') {
+
+                            $q2 = "SELECT * from journal_custom_field WHERE journalId = '$journalId' ";
+                            foreach ($this->db->query($q2)->getResultArray() as $c) {
+                                $insert = [
+                                    "journalCustomFieldId" => $c['id'],
+                                    "journalTableViewId" => $journalTableViewId,
+                                    "hide" => 1,
+                                    "presence" => 1,
+                                ];
+                                $this->db->table("journal_table_view_show")->insert($insert);
+                            }
+
+                            foreach ($rec['field'] as $a) {
+                                $f = $a['f'];
+                                $journalCustomFieldId = model("Core")->select("id", "journal_custom_field", "journalId = '$journalId' and f = $f ");
+
+                                $this->db->table("journal_table_view_show")->update([
+                                    "hide" => 0,
+                                    "presence" => 1,
+                                ], " journalCustomFieldId = '$journalCustomFieldId' and journalTableViewId = '$journalTableViewId' ");
+
+                            }
+                        } else if ($rec['board'] == 'chart') {
+                            $this->db->table("journal_chart_type")->insert([
+                                "journalTableViewId" => $journalTableViewId,
+                                "chartjsTypeId" => $rec['chart_type_id'],
+                                "presence" => 1,
+                                "input_date" => date("Y-m-d H:i:s"),
+                                "input_by" => model("Core")->accountId(),
+                            ]);
+                            $this->db->table("journal_chart_xaxis")->insert([
+                                "journalTableViewId" => $journalTableViewId,
+                                "value" => $rec['chart_xasis'],
+                                "presence" => 1,
+                                "input_date" => date("Y-m-d H:i:s"),
+                                "input_by" => model("Core")->accountId(),
+                            ]);
+
+                            foreach ($rec['chart_yaxis'] as $y) {
+                                $this->db->table("journal_chart_yaxis")->insert([
+                                    "journalTableViewId" => $journalTableViewId,
+                                    "value" => $y['value'],
+                                    "accumulation" => $y['accumulation'],
+                                    "fill" => $y['fill'],
+                                    "presence" => 1,
+                                    "input_date" => date("Y-m-d H:i:s"),
+                                    "input_by" => model("Core")->accountId(),
+                                ]);
+                            }
+
+                        }
+                    }
+
+                }
+
             }
+
+
+            // $this->db->transComplete();
+            // if ($this->db->transStatus() === false) {
+            //     $this->db->transRollback();
+            // } else {
+            //     $this->db->transCommit();
+            // }
 
             $data = array(
-              //  "error" => false,
+                //  "error" => false,
                 "transStatus" => $this->db->transStatus(),
             );
 
@@ -388,19 +464,19 @@ class Journal extends BaseController
             "post" => $post,
         ];
         if ($post) {
-            $journalId = $post['item']['id']; 
+            $journalId = $post['item']['id'];
             $addUserId = model("Core")->select("id", "account", "id = '" . $post['addUser']['id'] . "' and presence = 1 ");
             $account_team = model("Core")->select("id", "account_team", "invitedId = '" . $post['addUser']['id'] . "' and presence = 1 ");
-            
+
             $avaiable = $addUserId ? true : false;
             $duplicate = false;
             $journal_access = [];
             $note = "";
-            $addUser = model("Core")->select("name","account","id = '$addUserId' ");
-            if ($avaiable == true ) {
+            $addUser = model("Core")->select("name", "account", "id = '$addUserId' ");
+            if ($avaiable == true) {
                 $id = model("Core")->select("id", "journal_access", "accountId = '" . $addUserId . "' and journalId = '" . $journalId . "'  ");
-              
-                if ( $id == '') { 
+
+                if ($id == '') {
                     $this->db->table("journal_access")->insert([
                         "accountId" => $addUserId,
                         "journalId" => $post['item']['id'],
@@ -413,37 +489,37 @@ class Journal extends BaseController
                         "update_date" => date("Y-m-d H:i:s"),
                         "update_by" => model("Core")->accountId(),
                     ]);
-                } else { 
+                } else {
                     $this->db->table("journal_access")->update([
                         "presence" => 1,
                         "input_date" => date("Y-m-d H:i:s"),
                         "input_by" => model("Core")->accountId(),
                         "update_date" => date("Y-m-d H:i:s"),
                         "update_by" => model("Core")->accountId(),
-                    ], " id  = '$id' "); 
-                    $note =  $addUser." Add has joined the team"; 
+                    ], " id  = '$id' ");
+                    $note = $addUser . " Add has joined the team";
                 }
-              
-             
+
+
             } else {
                 $note = "The email you entered has not been registered,<br> please invite via the link below ";
-                 
+
             }
 
-            $q1 = "SELECT ja.*, a.name, a.email, concat('".base_url()."uploads/picture/',a.picture) as 'picture'
+            $q1 = "SELECT ja.*, a.name, a.email, concat('" . base_url() . "uploads/picture/',a.picture) as 'picture'
             FROM journal_access AS ja
             JOIN account AS a ON a.id = ja.accountId
             WHERE ja.presence = 1 and ja.journalId = '" . $post['item']['id'] . "'
             ORDER BY  ja.owner DESC, ja.input_date  ASC ";
 
-            
+
             $journal_access = $this->db->query($q1)->getResultArray();
 
             $data = [
-                "error" => false, 
+                "error" => false,
                 "journal_access" => $journal_access,
                 "note" => $note,
-                "q" =>   $q1 ,
+                "q" => $q1,
             ];
 
         }
@@ -466,12 +542,12 @@ class Journal extends BaseController
                 "update_by" => model("Core")->accountId(),
             ], "id = '" . $post['access']['id'] . "' and accountId = '" . $post['access']['accountId'] . "' ");
 
-            $q1 = "SELECT ja.*, a.name, a.email, concat('".base_url()."uploads/picture/',a.picture) as 'picture'
+            $q1 = "SELECT ja.*, a.name, a.email, concat('" . base_url() . "uploads/picture/',a.picture) as 'picture'
             FROM journal_access AS ja
             JOIN account AS a ON a.id = ja.accountId
             WHERE ja.presence = 1 and ja.journalId = '" . $post['item']['id'] . "'
             ORDER BY  ja.owner DESC, ja.input_date  ASC ";
-            $journal_access = $this->db->query($q1)->getResultArray(); 
+            $journal_access = $this->db->query($q1)->getResultArray();
             $data = [
                 "error" => false,
                 "post" => $post,

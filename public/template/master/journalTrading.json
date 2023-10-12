@@ -1,5 +1,5 @@
 {
-    "version":"1.0.5",
+    "version":"1.0.6",
     "field" :  [
         { 
             "f" : 1,
@@ -138,19 +138,9 @@
         { 
             "f" :13,
             "name": "Status",
-            "iType" : "select",
+            "iType" : "formula",
             "ilock" : 1,
-            "journal_select" : [ 
-                { 
-                    "value" : "WIN",
-                    "color" : "#1AACAC"
-                },
-                { 
-                    "value" : "LOSE",
-                    "color" : "#C70039"
-                }
-              
-            ]
+            "eval" : "($f11 < 0)? '<div class=bg-loss>LOSS</div>':'<div class=bg-win>WIN</div>'"
         },
        
         { 
@@ -164,6 +154,49 @@
             "name": "Photo",
             "iType" : "image",
             "ilock" : 1
+        },
+
+        { 
+            "f" :16,
+            "name": "Description",
+            "iType" : "text",
+            "ilock" : 1
+        }
+    ], 
+    "view" : [
+        {
+            "name" : "simple Trade",
+            "board" : "table",
+            "share" : 0,
+            "field" : [
+                { 
+                    "f" : 1,
+                    "name": "Order date"
+                },
+                { 
+                    "f" : 2,
+                    "name": "Order Time" 
+                },
+                {
+                    "f" : 11,
+                    "name": "Profit"
+                }
+            ]
+        },
+        {
+            "name" : "Chart Profit",
+            "board" : "chart",
+            "share" : 1,
+            "chart_type_id" : 3,
+            "chart_xasis" : "f1",
+            "chart_yaxis" :  [
+                {
+                    "value" : "f11",
+                    "fill" : 1,
+                    "accumulation" : 1
+                }
+            ]
+            
         }
     ]
 }

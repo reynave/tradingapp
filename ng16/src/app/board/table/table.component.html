@@ -53,7 +53,7 @@
         <div class="col-lg-2 col-md-3 col-12" *ngIf="templateCode=='journalTrading'">
             <div class="bg-white rounded p-2"  style="height: 93.7vh;">
                 <div *ngIf="childDetail">
-                    <app-widget-table-summary [detail]="childDetail"></app-widget-table-summary>
+                    <app-widget-table-summary [startBalance]="startBalance" [detail]="childDetail"></app-widget-table-summary>
                 </div>
             </div>
         </div>
@@ -206,12 +206,12 @@
                                                         <i class="bi bi-cloud-download"></i> Export CSV
                                                     </a>
                                                 </div>
-                                                <div class="d-grid mb-2">
+                                                <!-- <div class="d-grid mb-2">
                                                     <button type="button" class="btn btn-sm  btn-light"
                                                         (click)="modalUploadData()">
                                                         <i class="bi bi-cloud-upload"></i> Upload CSV
                                                     </button>
-                                                </div>
+                                                </div> -->
 
                                             </div>
                                         </div>
@@ -402,10 +402,8 @@
                                                 </div>
 
                                                 <div *ngIf="column['iType']=='formula'">
-                                                    <div class="p-1 {{'text-'+column['textAlign']}} ">
-                                                        <small><b>{{functionsService.isNumber(row['f'+column['f']])
-                                                                }}</b></small>
-                                                    </div>
+                                                    <div class="p-1 {{'text-'+column['textAlign']}} " 
+                                                    [innerHTML]="functionsService.isNumber(row['f'+column['f']])"></div>
                                                 </div>
 
                                                 <div *ngIf="column['iType']=='date'">

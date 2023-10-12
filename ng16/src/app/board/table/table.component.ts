@@ -50,7 +50,7 @@ export class TableComponent implements OnInit, OnChanges {
     }
   }
 
-
+  startBalance :number = 0;
   prod = environment.production;
   scrollX = 0;
   fields: any = [];
@@ -272,6 +272,7 @@ export class TableComponent implements OnInit, OnChanges {
         this.journalAccess = data['journal_access'];
         this.template = data['template'];
         this.templateCode = data['templateCode'];
+        this.startBalance = data['startBalance'];
       },
       e => {
         console.log(e);

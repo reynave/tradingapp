@@ -8,7 +8,8 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './widget-table-summary.component.html',
   styleUrls: ['./widget-table-summary.component.css']
 })
-export class WidgetTableSummaryComponent implements OnInit, OnChanges {
+export class WidgetTableSummaryComponent implements OnInit, OnChanges { 
+  accumulationBalance :number = 100;
   sum = {
     row: 0,
     profit: 0,
@@ -24,10 +25,11 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
     consecutiveWin: 0,
     consecutiveLoss: 0,
     tradingTime: 0,
-    fasterTradingTime: 1000000,
+    fasterTradingTime: 9999999,
     longestTradingTime: 0,
   }
   @Input() detail: any;
+  @Input() startBalance: number = 0;
   constructor(config: NgbProgressbarConfig) {
 		// customize default values of progress bars used by this component tree
 		config.max = 100;
@@ -56,7 +58,7 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
       consecutiveWin: 0,
       consecutiveLoss: 0,
       tradingTime: 0,
-      fasterTradingTime: 1000000,
+      fasterTradingTime: 9999999,
       longestTradingTime: 0,
     }
   }
@@ -66,8 +68,9 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
     this.reset();
     this.fnCalculation();
   }
-
+  growthBalance : number = 100;
   fnCalculation() {
+
     let profit = 0;
     let isNotNan = 0;
     let tempWin = 0;
@@ -77,14 +80,14 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
     let timeDifference: number = 0;
     this.sum.row = this.detail.length;
     for (let i = 0; i < this.detail.length; i++) {
+      
       profit = parseInt(this.detail[i]['f11']);
       a = this.detail[i]['f1'] + " " + this.detail[i]['f2'] + ":00";
       b = this.detail[i]['f8'] + " " + this.detail[i]['f9'] + ":00";
-
-  
+ 
       this.sum.profit += !Number.isNaN(profit) ? profit : 0;
       if (profit > 0) this.sum.win++;
-      else { this.sum.loss++; }
+      else if(profit < 0)   { this.sum.loss++; }
 
       if (profit >= this.sum.bestProfit) this.sum.bestProfit = profit;
       if (profit <= this.sum.worstLoss) this.sum.worstLoss = profit;
@@ -97,7 +100,8 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
       else { tempLoss = 0; }
       if (tempLoss > this.avg.consecutiveWin) this.avg.consecutiveLoss = tempLoss;
 
-      if (this.detail[i]['f1'] != "" || this.detail[i]['f8'] != "") {
+      if (this.detail[i]['f1'] != "" && this.detail[i]['f8'] != "") {
+        console.log("f1:",this.detail[i]['f1']," f8:",this.detail[i]['f8'])
         dateA = new Date(a);
         dateB = new Date(b);
         timeDifference = dateB - dateA;
@@ -108,17 +112,48 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
         if (!Number.isNaN(totalTime) && (totalTime <= this.avg.fasterTradingTime)) {
           this.avg.fasterTradingTime = Math.floor(totalTime);
         }
+      }else{
+
+        console.log("f1: null" );
       }
+
 
       if (!Number.isNaN(totalTime) && (totalTime >= this.avg.longestTradingTime)) {
         this.avg.longestTradingTime = Math.floor(totalTime)
       }
 
     }
-
+   
     this.avg.tradingTime = Math.floor(this.sum.tradingTime / isNotNan);
     this.avg.profit = this.sum.profit / this.sum.row;
     this.avg.winRate = ((this.sum.win / this.sum.row) * 100 );
+
+   // this.startBalance 
+    if((this.startBalance + this.sum.profit) < this.startBalance){
+      this.accumulationBalance  = Math.round(((this.startBalance + this.sum.profit) / this.startBalance) * 100);
+    }else{
+      this.accumulationBalance = Math.round(((this.startBalance + this.sum.profit) / this.startBalance ) * 100) ;
+      //this.gr
+    }
+    this.avg.fasterTradingTime = this.avg.fasterTradingTime == 9999999 ? NaN :this.avg.fasterTradingTime ; 
+   
   }
 
+  fnColorProgress(val : number){
+    let color = "danger";
+    if(val > 100){
+      color = "primary";
+    } 
+
+    if(val <= 100){
+      color = "success";
+    }
+    if(val <= 50){
+      color = "warning";
+    }
+    if(val < 40){
+      color = "danger";
+    }
+    return color;
+  }
 }

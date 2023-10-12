@@ -12,7 +12,9 @@ export class Hero {
   constructor( 
     public name: string,
     public permissionId: string,
-    public template: string
+    public template: string,
+    public startBalance: number,
+    
   ) {  }
 }
 @Component({
@@ -36,7 +38,7 @@ export class BookComponent implements OnInit {
     title : false,
   }
   templatejson : any = [];
-  model = new Hero("","1","general");
+  model = new Hero("","1","journalTrading",0);
 
   constructor(
     private activatedRoute: ActivatedRoute, 

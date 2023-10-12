@@ -214,10 +214,15 @@
                 <label for="template" class="mb-1">Select Tamplate</label>
                 <select id="template" class="form-control" required [(ngModel)]="model.template" name="template"
                     #template="ngModel">
-                    <option [value]="x.code" *ngFor="let x of templatejson">{{x.name}}</option>
-
-
+                    <option [value]="x.code" *ngFor="let x of templatejson">{{x.name}}</option> 
                 </select>
+            </div>
+
+            
+            <div class="mb-3">
+                <label for="starBalance" class="mb-1">Start Balance (optinal)</label>
+                <input type="number" id="starBalance" class="form-control" required [(ngModel)]="model.startBalance" name="starBalance"  />
+               
             </div>
 
         </div>
