@@ -29,7 +29,6 @@ class UnitTest extends BaseController
             
             if ($total <= $max) { 
                 $f13 = model("Core")->select("id","journal_select", " field = 'f13' ".$where );
-                $f13Label = model("Core")->select("value","journal_select", " id = $f13 ");
                 $date = '2023-' . $faker->date('m-d'); 
                 $this->db->table("journal_detail")->insert([
                     'journalId' => $journalId,
@@ -43,10 +42,10 @@ class UnitTest extends BaseController
                     'f8' => $date,
                     'f9' => rand(12, 24) . ":" . rand(0, 59),
                     'f10' =>  model("Core")->select("id","journal_select", " field = 'f10' ".$where ),
-                    'f11' =>  $f13Label == 'LOSE' ?  -100 : rand(100, 300),
+                    'f11' =>  rand(-100, 300),
                     'f12' => '',
-                    'f13' =>  $f13,
-                    'f14' => "230809.000006",
+                    'f13' =>  '',
+                    'f14' => "",
                     'f15' => "",
                 ]);
             }else{
