@@ -168,7 +168,7 @@ class Journal extends BaseController
             "post" => $post,
         ];
         if ($post && $post['model']['name'] != "") {
-            //$this->db->transStart();
+            $this->db->transStart();
             $journalId = model("Core")->number("backtest");
 
             $this->db->table("journal")->insert([
@@ -341,12 +341,12 @@ class Journal extends BaseController
             }
 
 
-            // $this->db->transComplete();
-            // if ($this->db->transStatus() === false) {
-            //     $this->db->transRollback();
-            // } else {
-            //     $this->db->transCommit();
-            // }
+            $this->db->transComplete();
+            if ($this->db->transStatus() === false) {
+                $this->db->transRollback();
+            } else {
+                $this->db->transCommit();
+            }
 
             $data = array(
                 //  "error" => false,
