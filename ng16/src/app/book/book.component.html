@@ -216,15 +216,18 @@
                     #template="ngModel">
                     <option [value]="x.code" *ngFor="let x of templatejson">{{x.name}}</option> 
                 </select>
+                <div class="mt-2">
+                    <span class="me-1"><input type="checkbox" id="sample" [(ngModel)]="model.sample" name="sample"></span>
+                    <label for="starBalance" for="sample" class="mb-1">add 100 Sample Data</label>
+                </div>
             </div>
-
             
             <div class="mb-3">
                 <label for="starBalance" class="mb-1">Start Balance (optinal)</label>
                 <input type="number" id="starBalance" class="form-control" required [(ngModel)]="model.startBalance" name="starBalance"  />
                
             </div>
-
+            {{model | json}}
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close </button>

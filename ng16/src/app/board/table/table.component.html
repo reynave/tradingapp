@@ -277,7 +277,7 @@
                 <div class="ps-3 pt-0">
 
                     <div class="" *ngIf="startUpTable">
-                        <div style="" class="border-start border-bottom fix-header">
+                        <div style="" class="border-start fix-header" [ngClass]="{'border-bottom': detail.length <= 0}">
                             <div class=" isScollX bg-white" style="position: absolute; ">
 
                                 <div class="d-flex tables-header-td ">
@@ -347,7 +347,7 @@
                                 </div>
                             </div> -->
 
-                            <div class="sortable" style="margin-top: 31px;">
+                            <div class="sortable border-start" style="margin-top: 31px;">
                                 <span *cdkVirtualFor="let row of detail;templateCacheSize: 0; let i = index; ">
                                     <div class="d-flex tables-body-td ">
                                         <div class="floating-div bg-white border-start table-body-td-first">
@@ -611,18 +611,21 @@
                                 </span>
                             </div>
 
-                            <div class="sticky-bottom " [style.bottom]="inverseOfTranslationBottom">
-                                <div class="d-flex tables-header-td  ">
-                                    <div class="floating-div  text-light  border-end ">
+                            <div class="sticky-bottom  " [style.bottom]="inverseOfTranslationBottom">
+                                <div class="d-flex tables-footer-td ">
+                                    <div class="floating-div  text-light ">
                                         <div class="py-1 px-3">
                                             <i class="bi bi-file-spreadsheet text-white"></i>
                                         </div>
                                     </div>
-                                    <div class=" order-{{n.sorting}} bg-light border-bottom "
+                                    <div class=" order-{{n.sorting}}  "
                                         *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
-                                        <div class="p-1 text-center orders " [ngStyle]="{'width': n.width+'px'}">
+                                        <div class="p-1 text-center" [ngStyle]="{'width': n.width+'px'}">
                                             <!-- {{fnDetailTotal(n) }} -->
-                                            <span [innerHTML]="n.total"></span>
+                                            <div class="mx-1 bg-white rounded shadow-sm border" [hidden]="!n.total">
+                                                <span [innerHTML]="n.total"></span>
+                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </div>

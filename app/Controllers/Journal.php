@@ -216,15 +216,18 @@ class Journal extends BaseController
                 "input_by" => model("Core")->accountId(),
             ]);
 
-            $this->db->table("journal_detail")->insert([
-                "journalId" => $journalId,
-                "presence" => 1,
-                "sorting" => 1,
-                "update_date" => date("Y-m-d H:i:s"),
-                "update_by" => model("Core")->accountId(),
-                "input_date" => date("Y-m-d H:i:s"),
-                "input_by" => model("Core")->accountId(),
-            ]);
+            if ($post['model']['sample'] != 'true') {
+                $this->db->table("journal_detail")->insert([
+                    "journalId" => $journalId,
+                    "presence" => 1,
+                    "sorting" => 1,
+                    "update_date" => date("Y-m-d H:i:s"),
+                    "update_by" => model("Core")->accountId(),
+                    "input_date" => date("Y-m-d H:i:s"),
+                    "input_by" => model("Core")->accountId(),
+                ]);
+            }
+
 
             if ($post['model']['template'] != "") {
                 $path = './template/master/' . $post['model']['template'] . '.json';
@@ -338,6 +341,11 @@ class Journal extends BaseController
 
                 }
 
+            }
+
+
+            if ($post['model']['sample'] == 'true') {
+                model("Dummy")->faker($journalId);
             }
 
 

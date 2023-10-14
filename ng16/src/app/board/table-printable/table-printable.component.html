@@ -17,7 +17,9 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let x of table">
-                        <td *ngFor="let i of x">{{i }}</td>
+                        <td *ngFor="let val of x">
+                            <span [innerHTML]="val"></span>
+                        </td>
                     </tr>
                 </tbody>
 

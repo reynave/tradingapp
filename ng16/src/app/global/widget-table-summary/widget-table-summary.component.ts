@@ -63,8 +63,7 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges() {
-    console.log("ngOnChanges",this.detail);
+  ngOnChanges() { 
     this.reset();
     this.fnCalculation();
   }
@@ -98,10 +97,10 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
 
       if (profit < 0) { tempLoss++ }
       else { tempLoss = 0; }
-      if (tempLoss > this.avg.consecutiveWin) this.avg.consecutiveLoss = tempLoss;
+      if (tempLoss > this.avg.consecutiveLoss) this.avg.consecutiveLoss = tempLoss;
 
       if (this.detail[i]['f1'] != "" && this.detail[i]['f8'] != "") {
-        console.log("f1:",this.detail[i]['f1']," f8:",this.detail[i]['f8'])
+    //    console.log("f1:",this.detail[i]['f1']," f8:",this.detail[i]['f8'])
         dateA = new Date(a);
         dateB = new Date(b);
         timeDifference = dateB - dateA;
@@ -114,7 +113,7 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
         }
       }else{
 
-        console.log("f1: null" );
+      //  console.log("f1: null" ); 
       }
 
 

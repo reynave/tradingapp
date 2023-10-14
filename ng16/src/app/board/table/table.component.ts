@@ -244,17 +244,13 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   reload(newItem: any) {
+    this.startUpTable = false;
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
-    // this.startUpTable = false;
+    
     if (newItem['id']) {
       this.journalTableViewId = newItem['id'];
-    }
-    // const msg = {
-    //   sender: localStorage.getItem("address.mirrel.com"), 
-    //   action: "RELOAD",
-    // }
-    // this.socketService.sendMessage(msg);
+    } 
     this.httpHeader();
     this.httpDetail();
   }
