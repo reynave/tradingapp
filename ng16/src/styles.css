@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
+  --font-bebas : 'Bebas Neue', sans-serif;
   --font-manrope: 'Manrope', sans-serif;
   --font-poppins: 'Poppins', sans-serif;  
   --bg-body-1: rgb(234 242 253);
@@ -108,6 +109,9 @@ body{
 
 .offcanvas-backdrop.show {
   opacity: .1;
+}
+h1{
+  font-family: var(--font-bebas);
 }
 
 a {

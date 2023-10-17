@@ -39,6 +39,7 @@ import { TabletEditSelectComponent } from './board/table/tablet-edit-select/tabl
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ModalUploadDataComponent } from './board/table/modal-upload-data/modal-upload-data.component';
 import { WidgetTableSummaryComponent } from './global/widget-table-summary/widget-table-summary.component';
+import { BoardComponent } from './board/board.component';
 const config: SocketIoConfig = { 
   url: environment.socket_url, 
   options: { transports: ['websocket'] } 
@@ -72,7 +73,8 @@ const config: SocketIoConfig = {
     OffCanvasImagesComponent,
     TabletEditSelectComponent,
     ModalUploadDataComponent,
-    WidgetTableSummaryComponent
+    WidgetTableSummaryComponent,
+    BoardComponent
   ],
   imports: [
     BrowserModule,
