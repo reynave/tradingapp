@@ -15,6 +15,41 @@
             
         },
         { 
+            "f" :3,
+            "name": "Close Date",
+            "iType" : "date",
+            "ilock" : 1
+        },
+        { 
+            "f" :4,
+            "name": "Close Time",
+            "iType" : "time",
+            "ilock" : 1
+        }, 
+        {
+            "f" : 5,
+            "name": "Avg Hour",
+            "iType" : "formula",
+            "eval" :  "($f3 != '' && $f4 != '') ? (int)abs((strtotime($f3.' '.$f4) - strtotime($f1.' '.$f2)) / (60 * 60)) : 0",
+            "suffix" : " hour" ,
+            "ilock" : 1
+        },
+        {
+            "f" : 6,
+            "name": "Profit",
+            "iType" : "number",
+            "suffix" : "$" ,
+            "ilock" : 1
+        },
+        { 
+            "f" :7,
+            "name": "Status",
+            "iType" : "formula",
+            "ilock" : 1,
+            "eval" : "($f6 < 0)? '<div class=bg-loss>LOSS</div>':'<div class=bg-win>WIN</div>'"
+        },
+
+        { 
             "f" : 3,
             "name": "Market",
             "iType" : "select",
@@ -48,11 +83,11 @@
             "iType" : "select",
             "journal_select" : [
                 { 
-                    "value" : "LONG",
+                    "value" : "BUY",
                     "color" : "#8ECDDD"
                 }, 
                 { 
-                    "value" : "SHORT",
+                    "value" : "SELL",
                     "color" : "#35A29F"
                 }
             ],
@@ -80,18 +115,7 @@
             "ilock" : 1
         },
         
-        { 
-            "f" :8,
-            "name": "Close Date",
-            "iType" : "date",
-            "ilock" : 1
-        },
-        { 
-            "f" :9,
-            "name": "Close Time",
-            "iType" : "time",
-            "ilock" : 1
-        },
+       
         { 
             "f" : 10,
             "name": "Setups",
@@ -120,28 +144,8 @@
             ],
             "ilock" : 1
         },
-        {
-            "f" : 11,
-            "name": "Profit",
-            "iType" : "number",
-            "suffix" : "$" ,
-            "ilock" : 1
-        },
-        {
-            "f" : 12,
-            "name": "Avg Hour",
-            "iType" : "formula",
-            "eval" :  "($f8 != '' && $f9 != '') ? (int)abs((strtotime($f8.' '.$f9) - strtotime($f1.' '.$f2)) / (60 * 60)) : 0",
-            "suffix" : " hour" ,
-            "ilock" : 1
-        },
-        { 
-            "f" :13,
-            "name": "Status",
-            "iType" : "formula",
-            "ilock" : 1,
-            "eval" : "($f11 < 0)? '<div class=bg-loss>LOSS</div>':'<div class=bg-win>WIN</div>'"
-        },
+        
+      
        
         { 
             "f" :14,

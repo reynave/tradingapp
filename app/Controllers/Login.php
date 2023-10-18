@@ -50,7 +50,7 @@ class Login extends BaseController
             }
 
             if ($id) {
-
+                $savePicture  = "";
                 $this->db->table("account_login")->insert([
                     "accountId" => $id,
                     "jti" => $user['jti'],
@@ -60,24 +60,35 @@ class Login extends BaseController
                     "getUserAgent" => $this->request->getUserAgent(),
                     "input_date" => date("Y-m-d H:i:s"),
                 ]);
-
-
+                
             } else {
                 $id = date("ymd") . "." . model("Core")->number('account');
+               
+                $url = $user['picture'];
+                $destinationFolder = './uploads/picture/'; // path folder tujuan 
+                $fileName = basename($url).'.jpg';
+                $destinationPath = $destinationFolder . $fileName; 
+                if (copy($url, $destinationPath)) {
+                    $savePicture =  'Gambar berhasil disalin.';
+                } else {
+                    $savePicture = 'Gagal menyalin gambar.';
+                }
                 $this->db->table("account")->insert([
                     "id" => $id,
                     "googleSub" => $user['sub'],
                     "email" => $user['email'],
                     "name" => $user['name'],
-                    "picture" => $user['picture'],
+                    "imgPath" => $destinationFolder,
+                    "picture" =>  $fileName, 
                     "input_date" => date("Y-m-d H:i:s"),
                 ]);
+
 
                 $this->db->table("account_login")->insert([
                     "accountId" => $id,
                     "jti" => $user['jti'],
                     "expDate" => date("Y-m-d H:i:s", $user['exp']),
-                    "iss" => $user->iss,
+                    "iss" => $user['iss'],
                     "ip" => $this->request->getIPAddress(),
                     "getUserAgent" => $this->request->getUserAgent(),
                     "input_date" => date("Y-m-d H:i:s"),
@@ -101,6 +112,7 @@ class Login extends BaseController
                 "token" => $jwt,
                 "user" => $user,
                 "accountTokenId" => $accountTokenId,
+                "savePicture" => $savePicture ,
             ];
 
         }
