@@ -27,26 +27,20 @@ class UnitTest extends BaseController
         for ($i = 0; $i < 100; $i++) {
             $total++;
             
-            if ($total <= $max) { 
-                $f13 = model("Core")->select("id","journal_select", " field = 'f13' ".$where );
+            if ($total <= $max) {  
                 $date = '2023-' . $faker->date('m-d'); 
                 $this->db->table("journal_detail")->insert([
                     'journalId' => $journalId,
                     'f1' => $date,
                     'f2' => rand(1, 11) . ":" . rand(0, 59),
-                    'f3' => model("Core")->select("id","journal_select", " field = 'f3' ".$where ),
-                    'f4' => model("Core")->select("id","journal_select", " field = 'f4' ".$where ),
-                    'f5' => "1.0" . rand(4000, 6000),
-                    'f6' => "1.0" . rand(4000, 6000),
-                    'f7' => "1.0" . rand(4000, 6000),
-                    'f8' => $date,
-                    'f9' => rand(12, 24) . ":" . rand(0, 59),
-                    'f10' =>  model("Core")->select("id","journal_select", " field = 'f10' ".$where ),
-                    'f11' =>  rand(-100, 300),
-                    'f12' => '',
-                    'f13' =>  '',
-                    'f14' => "",
-                    'f15' => "",
+                    'f8' => model("Core")->select("id","journal_select", " field = 'f8' ".$where ),
+                    'f10' => "1.0" . rand(4000, 6000),
+                    'f11' => "1.0" . rand(4000, 6000),
+                    'f12' => "1.0" . rand(4000, 6000),
+                    'f6' =>  (rand(1,3) % 2) == 1 ? rand(200, 300)  :  -100 ,
+                    'f9' =>  model("Core")->select("id","journal_select", " field = 'f9' ".$where ),
+                    'f3' => $date,
+                    'f4' => rand(12, 24) . ":" . rand(0, 59), 
                 ]);
             }else{
                 break;

@@ -46,6 +46,7 @@ class Chart extends BaseController
 
                     foreach($optionMaster  as $res){
                         $this->db->table('journal_chart_where_select')->insert([
+                            "journalId" => $data['request']['id'],
                             "journalTableViewId" => $journalTableViewId,
                             "journalSelectId" => $res['id'],
                             "status" => 0,
@@ -160,6 +161,7 @@ class Chart extends BaseController
             foreach ($post['journalChart']['yAxis'] as $row) {
                 $id = model("Core")->select("id", "journal_chart_yaxis", "presence = 1 and  journalTableViewId = '" . $post['journalTableViewId'] . "' AND value =  '" . $row['key'] . "' ");
                 $array = [
+                    "journalId" => $post['id'],
                     "journalTableViewId" => $post['journalTableViewId'],
                     "value" => $row['key'],
                     "accumulation" => !$row['accumulation']  ? 0 : $row['accumulation'],
@@ -180,10 +182,11 @@ class Chart extends BaseController
                 }
                 array_push($yAxisObj, $array);
             }
-
+          
             $id_journal_chart_type = model("Core")->select("id", "journal_chart_type", "presence = 1 and  journalTableViewId = '" . $post['journalTableViewId'] . "'  and presence = 1 ");
             if (!$id_journal_chart_type) {
                 $this->db->table("journal_chart_type")->insert([
+                    "journalId" => $post['id'],
                     "journalTableViewId" => $post['journalTableViewId'],
                     "presence" => 1,
                     "status" => 1,
@@ -207,6 +210,7 @@ class Chart extends BaseController
             $id_journal_chart_xaxis = model("Core")->select("id", "journal_chart_xaxis", "presence = 1 and  journalTableViewId = '" . $post['journalTableViewId'] . "'  and presence = 1 ");
             if (!$id_journal_chart_xaxis) {
                 $this->db->table("journal_chart_xaxis")->insert([
+                    "journalId" => $post['id'],
                     "journalTableViewId" => $post['journalTableViewId'],
                     "presence" => 1,
                     "status" => 1,
@@ -231,6 +235,7 @@ class Chart extends BaseController
   
             if (!$id_journal_chart_where) {
                 $this->db->table("journal_chart_where")->insert([
+                    "journalId" => $post['id'],
                     "journalTableViewId" => $post['journalTableViewId'],
                     "presence" => 1,
                     "status" => 1,
@@ -249,39 +254,14 @@ class Chart extends BaseController
                     "update_by" => model("Core")->accountId(),
                 ], " id =  $id_journal_chart_where ");
             } 
-
-            // $this->db->table("journal_chart_where_select")->update([
-            //     "presence" => 0,
-            // ], " journalTableViewId = '" . $post['journalTableViewId'] . "' ");
  
-            // foreach ($post['journalChart']['whereOption'] as $row) {
-            //     $id1 = model("Core")->select(
-            //         "id",
-            //         "journal_chart_where_select",
-            //         "journalTableViewId = '" . $post['journalTableViewId'] . "' and journalSelectId = '" . $row['id'] . "'"
-            //     );
-            //     if ($id1) {
-            //         $this->db->table("journal_chart_where_select")->update([
-            //             "journalTableViewId" => $post['journalTableViewId'],
-            //             "journalSelectId" => $row['id'],
-            //             "status" => $row['checkbox'] == true ? 1 : 0,
-            //             "presence" => 1,
-            //         ], " id = $id1 ");
-            //     } else {
-            //         $this->db->table("journal_chart_where_select")->insert([
-            //             "journalTableViewId" => $post['journalTableViewId'],
-            //             "journalSelectId" => $row['id'],
-            //             "presence" => 1,
-            //             "status" => $row['checkbox'] == true ? 1 : 0,
-            //         ]);
-            //     }
-
-            // }
             $this->db->table("journal_chart_where_select")->delete([
                 "journalTableViewId" => $post['journalTableViewId'],
             ]);
+
             foreach ($post['journalChart']['whereOption'] as $row) {
                 $this->db->table("journal_chart_where_select")->insert([
+                    "journalId" => $post['id'],
                     "journalTableViewId" => $post['journalTableViewId'],
                     "journalSelectId" => $row['id'],
                     "status" => $row['checkbox'] == true ? 1 : 0,

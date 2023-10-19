@@ -44,8 +44,8 @@ export class ShareBoardComponent implements OnInit {
   searchPhotos: string = "";
   photos: any = [];
   photosTotal: number = 0;
-  showSearchPhoto: boolean = false;
-  inviteLink : string = "";
+  invitedLink : string = "";
+  showSearchPhoto: boolean = false; 
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
@@ -56,8 +56,8 @@ export class ShareBoardComponent implements OnInit {
 
   ngOnInit() {  
     console.log(this.item, this.permission,);
-    this.unsplash();
-    this.inviteLink =  this.configService.account()['account']['inviteLink'];
+    this.unsplash(); 
+    this.fnInvetedLink();
     this.http.get<any>(environment.api + "journal/access", {
       headers: this.configService.headers(),
       params: {
@@ -68,6 +68,23 @@ export class ShareBoardComponent implements OnInit {
         console.log(data);
         this.journalAccess = data['journal_access'];
         this.teams = data['teams'];
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
+
+  fnInvetedLink(){
+    this.http.get<any>(environment.api + "journal/fnInvetedLink", {
+      headers: this.configService.headers(),
+      params: {
+        journalId: this.item.id,
+      }
+    }).subscribe(
+      data => {
+        console.log(data); 
+        this.invitedLink = data['invitedLink'];
       },
       e => {
         console.log(e);

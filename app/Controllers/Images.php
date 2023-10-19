@@ -36,6 +36,7 @@ class Images extends BaseController
         if ($post) { 
             $id =  $post['id'];
             $this->db->table("journal_detail_images")->insert([
+                "journalId" =>  $post['journalId'],
                 "journalDetailId" =>  $id,
                 "fn" => $post['fn'],
                 "source" => "external",

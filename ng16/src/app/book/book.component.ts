@@ -39,7 +39,7 @@ export class BookComponent implements OnInit {
     title : false,
   }
   templatejson : any = [];
-  model = new Hero("","1","journalTrading",0,"");
+  model = new Hero("","1","journalFXTrading",0,"");
 
   constructor(
     private activatedRoute: ActivatedRoute, 

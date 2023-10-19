@@ -1,0 +1,268 @@
+{
+    "version":"1.0.7",
+    "field" :  [
+        { 
+            "f" : 1,
+            "name": "Order date",
+            "iType" : "date",
+            "ilock" : 1
+        },
+        { 
+            "f" : 2,
+            "name": "Order Time",
+            "iType" : "time",
+            "ilock" : 1
+        },
+        { 
+            "f" :9,
+            "name": "Order Type",
+            "iType" : "select",
+            "journal_select" : [
+                { 
+                    "value" : "BUY",
+                    "color" : "#3876BF"
+                }, 
+                { 
+                    "value" : "SELL",
+                    "color" : "#35A29F"
+                }
+            ],
+            "ilock" : 1
+        },
+        { 
+            "f" :8,
+            "name": "Market",
+            "iType" : "select",
+            "journal_select" : [
+                { 
+                    "value" : "AUDUSD",
+                    "color" : "#ED7D31"
+                }, 
+                { 
+                    "value" : "EURUSD",
+                    "color" : "#3876BF"
+                },
+                { 
+                    "value" : "GBPUSD",
+                    "color" : "#940B92"
+                }, 
+                { 
+                    "value" : "NZDUSD",
+                    "color" : "#4D4C7D"
+                },
+                { 
+                    "value" : "CADJPY",
+                    "color" : "#A2678A"
+                }, 
+                { 
+                    "value" : "CHFJPY",
+                    "color" : "#BEADFA"
+                },
+                { 
+                    "value" : "EURJPY",
+                    "color" : "#008170"
+                },
+                { 
+                    "value" : "GBPJPY",
+                    "color" : "#FF4B91"
+                },
+                { 
+                    "value" : "NZDJPY",
+                    "color" : "#EBE76C"
+                },
+                { 
+                    "value" : "USDJPY",
+                    "color" : "#F1B4BB"
+                }, 
+                { 
+                    "value" : "USDCAD",
+                    "color" : "#6499E9"
+                },  
+                { 
+                    "value" : "EURGBP",
+                    "color" : "#D83F31"
+                },
+                { 
+                    "value" : "EURNZD",
+                    "color" : "#618264"
+                },
+                { 
+                    "value" : "XAUUSD",
+                    "color" : "#F4CE14"
+                }
+
+
+            ],
+            "ilock" : 1
+        },
+        {
+            "f" :10,
+            "name": "Entry",
+            "iType" : "number",
+            "suffix" : "$" ,
+            "ilock" : 1
+        },
+        { 
+            "f" :11,
+            "name": "Stop Loss",
+            "iType" : "number",
+            "suffix" : "$" ,
+            "ilock" : 1
+        },
+        {
+            "f" :12,
+            "name": "Target",
+            "iType" : "number",
+            "suffix" : "$" ,
+            "ilock" : 1
+        },
+        {
+            "f" : 6,
+            "name": "Profit",
+            "iType" : "number",
+            "suffix" : "$" ,
+            "ilock" : 1
+        },
+          
+       
+       
+        { 
+            "f" :3,
+            "name": "Close Date",
+            "iType" : "date",
+            "ilock" : 1
+        },
+        { 
+            "f" :4,
+            "name": "Close Time",
+            "iType" : "time",
+            "ilock" : 1
+        }, 
+        {
+            "f" : 5,
+            "name": "Avg Hour",
+            "iType" : "formula",
+            "eval" :  "($f3 != '' && $f4 != '') ? (int)abs((strtotime($f3.' '.$f4) - strtotime($f1.' '.$f2)) / (60 * 60)) : 0",
+            "suffix" : " hour" ,
+            "ilock" : 1
+        },
+      
+        { 
+            "f" :7,
+            "name": "Status",
+            "iType" : "formula",
+            "ilock" : 1,
+            "eval" : "($f6 < 0)? '<div class=bg-loss>LOSS</div>':'<div class=bg-win>WIN</div>'"
+        },
+
+         
+        { 
+            "f" :13,
+            "name": "Setups",
+            "iType" : "select",
+            "journal_select" : [
+                { 
+                    "value" : "KEY LEVEL",
+                    "color" : "#F99417"
+                },
+                { 
+                    "value" : "DOUBLE TOP",
+                    "color" : "#0802A3"
+                },
+                { 
+                    "value" : "DOUBLE BOTTOM",
+                    "color" : "#940B92"
+                },
+                { 
+                    "value" : "FIBONACCI 68%",
+                    "color" : "#8ECDDD"
+                }, 
+                { 
+                    "value" : "SUPPLY DAN DEMAND",
+                    "color" : "#F4CE14"
+                }
+            ],
+            "ilock" : 1
+        },
+         
+        { 
+            "f" :14,
+            "name": "Trader Person",
+            "iType" : "user",
+            "ilock" : 1
+        },
+        { 
+            "f" :15,
+            "name": "Photo",
+            "iType" : "image",
+            "ilock" : 12
+        },
+
+        { 
+            "f" :16,
+            "name": "Description",
+            "iType" : "text",
+            "ilock" : 1
+        }
+    ], 
+    "view" : [
+        {
+            "name" : "Simple Trade",
+            "board" : "table",
+            "share" : 0,
+            "field" : [
+                {
+                    "f" : 9,
+                    "name": "Order Type"
+                },
+                { 
+                    "f" : 1,
+                    "name": "Order date"
+                },
+                { 
+                    "f" : 2,
+                    "name": "Order Time" 
+                },
+                { 
+                    "f" : 3,
+                    "name": "Order date"
+                },
+                { 
+                    "f" : 4,
+                    "name": "Order Time" 
+                },
+                {
+                    "f" : 6,
+                    "name": "Profit"
+                },
+                {
+                    "f" : 5,
+                    "name": "Avg Hour"
+                },
+                {
+                    "f" : 7,
+                    "name": "Status"
+                },
+                {
+                    "f" : 13,
+                    "name": "Setups"
+                }
+            ]
+        },
+        {
+            "name" : "Chart Profit",
+            "board" : "chart",
+            "share" : 1,
+            "chart_type_id" : 3,
+            "chart_xasis" : "f1",
+            "chart_yaxis" :  [
+                {
+                    "value" : "f6",
+                    "fill" : 1,
+                    "accumulation" : 1
+                }
+            ]
+            
+        }
+    ]
+}

@@ -39,8 +39,8 @@
                                         <tr>
                                             <th width="30px" *ngIf="book.id != 0"></th>
                                             <th width="40px"></th>
-                                            <th>Title</th>
-                                            <th  class="text-center">Records</th>
+                                            <th  width="200px">Title</th>
+                                            <th  class="text-center">Row</th>
                                             <th>Template</th>
                                             <th>Update Date</th>
                                             <th>Owner</th>
@@ -125,26 +125,7 @@
                                                                 <span class="mx-1"> {{n.name}}</span>
                                                             </div>
                                                         </div>
-                                                        <!-- <button ngbDropdownItem *ngFor="let n of bookSelect"
-                                                            (click)="onChangesBook(n, x);">
-        
-                                                            <span *ngIf="book.id === 0">
-                                                                <span *ngIf="x.bookId == n.id "> <i
-                                                                        class="bi bi-check-square-fill"></i> </span>
-                                                                <span *ngIf="x.bookId != n.id"> <i class="bi bi-square"></i>
-                                                                </span>
-                                                            </span>
-        
-                                                            <span *ngIf="book.id !== 0">
-                                                                <span *ngIf="book.id == n.id "> <i
-                                                                        class="bi bi-check-square-fill"></i> </span>
-                                                                <span *ngIf="book.id != n.id"> <i class="bi bi-square"></i>
-                                                                </span>
-                                                            </span>
-        
-        
-                                                            <span class="mx-1"> {{n.name}}</span>
-                                                        </button> -->
+                                                        
                                                     </div>
                                                 </div>
                                             </td>
@@ -178,8 +159,7 @@
 
                     </div>
                 </div>
-            </div>
-            <!-- <div class="col-lg-1 col-12">広告のために</div> -->
+            </div> 
 
         </div>
 
@@ -218,7 +198,7 @@
                 </select>
                 <div class="mt-2">
                     <span class="me-1"><input type="checkbox" id="sample" [(ngModel)]="model.sample" name="sample"></span>
-                    <label for="starBalance" for="sample" class="mb-1">add 100 Sample Data</label>
+                    <label for="starBalance" for="sample" class="mb-1">Add 100 Sample Data</label>
                 </div>
             </div>
             
@@ -226,8 +206,7 @@
                 <label for="starBalance" class="mb-1">Start Balance (optinal)</label>
                 <input type="number" id="starBalance" class="form-control" required [(ngModel)]="model.startBalance" name="starBalance"  />
                
-            </div>
-            {{model | json}}
+            </div> 
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close </button>

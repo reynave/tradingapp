@@ -65,7 +65,7 @@
                         <input type="text" class="form-control bg-light" [value]="env.shareLink+item.url+'/'+item.url_title" readonly>
                         <button class="btn btn-outline-secondary" [cdkCopyToClipboard]="env.shareLink+item.url+'/'+item.url_title"
                             type="button" id="button-addon1"><i class="bi bi-link-45deg"></i> Copy</button>
-                    </div>
+                    </div> 
                 </div>
             </div>
         </div>
@@ -88,10 +88,10 @@
                     <strong>Invite a new member with link to collaboration this board</strong>
                 </div>
                 <div class="col-12 mb-2">
-                    <div class="input-group input-group-sm ">
-                        <input type="text" class="form-control bg-light" [value]="env.inviteLink+inviteLink" readonly>
+                    <div class="input-group input-group-sm " *ngIf="invitedLink!='' ">
+                        <input type="text" class="form-control bg-light" [value]="env.inviteLink+item.invitedLink" readonly>
                         <button class="btn btn-outline-secondary" (click)="fnCb2();"
-                            [cdkCopyToClipboard]="env.inviteLink+inviteLink" type="button" id="button-addon1"><i
+                            [cdkCopyToClipboard]="env.inviteLink+item.invitedLink" type="button" id="button-addon1"><i
                                 class="bi bi-link-45deg"></i> Copy Invite Link</button>
                     </div>
                 </div>

@@ -121,6 +121,15 @@ class Journal extends BaseController
         return $this->response->setJSON($data);
     }
 
+    function fnInvetedLink(){
+        $journalId =  $this->request->getVar()['journalId'];
+        $data = array(
+            "invitedLink" => model("Core")->select("invitedLink","journal"," id='$journalId' and presence = 1 "),
+            "error" => false, 
+        );
+        return $this->response->setJSON($data);
+    }
+
     function access()
     {
         // $accountId = model("Core")->accountId();
@@ -290,6 +299,7 @@ class Journal extends BaseController
                             $q2 = "SELECT * from journal_custom_field WHERE journalId = '$journalId' ";
                             foreach ($this->db->query($q2)->getResultArray() as $c) {
                                 $insert = [
+                                    "journalId" => $journalId,
                                     "journalCustomFieldId" => $c['id'],
                                     "journalTableViewId" => $journalTableViewId,
                                     "hide" => 1,
@@ -310,6 +320,7 @@ class Journal extends BaseController
                             }
                         } else if ($rec['board'] == 'chart') {
                             $this->db->table("journal_chart_type")->insert([
+                                "journalId" => $journalId,
                                 "journalTableViewId" => $journalTableViewId,
                                 "chartjsTypeId" => $rec['chart_type_id'],
                                 "presence" => 1,
@@ -317,6 +328,7 @@ class Journal extends BaseController
                                 "input_by" => model("Core")->accountId(),
                             ]);
                             $this->db->table("journal_chart_xaxis")->insert([
+                                "journalId" => $journalId,
                                 "journalTableViewId" => $journalTableViewId,
                                 "value" => $rec['chart_xasis'],
                                 "presence" => 1,
@@ -326,6 +338,7 @@ class Journal extends BaseController
 
                             foreach ($rec['chart_yaxis'] as $y) {
                                 $this->db->table("journal_chart_yaxis")->insert([
+                                    "journalId" => $journalId,
                                     "journalTableViewId" => $journalTableViewId,
                                     "value" => $y['value'],
                                     "accumulation" => $y['accumulation'],
@@ -345,7 +358,7 @@ class Journal extends BaseController
 
 
             if ($post['model']['sample'] == 'true') {
-                model("Dummy")->faker($journalId);
+                model("Dummy")->faker($journalId,$post['model']['startBalance']);
             }
 
 
@@ -423,25 +436,37 @@ class Journal extends BaseController
             "post" => $post,
         ];
         if ($post) {
-            $data = [
-                "error" => false,
-                "post" => $post,
-            ];
+           
+            $this->db->transStart();
+
             foreach ($post['items'] as $row) {
                 if ($row['checkbox'] === true) {
                     if ($row['owner'] == 1) {
-                        $this->db->table("journal")->update([
+                        $delete = [
                             "presence" => 0,
                             "update_date" => date("Y-m-d H:i:s"),
                             "update_by" => model("Core")->accountId(),
-                        ], "id = '" . $row['id'] . "' ");
+                        ];
+                        $whereJournalId = "journalId = '" . $row['id'] . "' ";
+                        $this->db->table("journal")->update($delete, "id = '" . $row['id'] . "' ");
+                        $this->db->table("journal_detail")->update($delete,  $whereJournalId  ); 
+                        $this->db->table("journal_detail_images")->update($delete, $whereJournalId );
+                        $this->db->table("journal_select")->update($delete, $whereJournalId );
+                        $this->db->table("journal_table_view")->update($delete, $whereJournalId );
+                        $this->db->table("journal_custom_field")->update($delete, $whereJournalId );
+                        
+                        $this->db->table("journal_table_view_filter")->update($delete, $whereJournalId );
+                        $this->db->table("journal_table_view_show")->update([
+                            "presence" => 0,  
+                        ], $whereJournalId );
 
-                        $this->db->table("journal_detail")->update([
-                            "presence" => 0,
-                            "update_date" => date("Y-m-d H:i:s"),
-                            "update_by" => model("Core")->accountId(),
-                        ], "journalId = '" . $row['id'] . "' ");
-                        //journal_detail_images
+                        $this->db->table("journal_chart_type")->update($delete, $whereJournalId );
+                        $this->db->table("journal_chart_where")->update($delete, $whereJournalId );
+                        $this->db->table("journal_chart_where_select")->update($delete, $whereJournalId );
+                        $this->db->table("journal_chart_xaxis")->update($delete, $whereJournalId );
+                        $this->db->table("journal_chart_yaxis")->update($delete, $whereJournalId );
+
+
                         //journal_custom_field
                         $this->db->table("journal_access")->update([
                             "presence" => 4,
@@ -458,6 +483,18 @@ class Journal extends BaseController
                     }
                 }
             }
+
+            $this->db->transComplete();
+            if ($this->db->transStatus() === false) {
+                $this->db->transRollback();
+            } else {
+                $this->db->transCommit();
+            }
+            $data = [
+                "error" => false,
+                "post" => $post,
+                "transStatus" => $this->db->transStatus(),
+            ];
         }
 
         return $this->response->setJSON($data);

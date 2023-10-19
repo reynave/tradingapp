@@ -50,6 +50,7 @@ class Upload64 extends BaseController
             $image_url = base_url($upload_path . $file_name);
             $id = $post['id'];
             $this->db->table("journal_detail_images")->insert([
+                "journalId" => $post['journalId'],
                 "journalDetailId" => $id,
                 "fn" => $post['fn'],
                 "source" => "mirrel.com",

@@ -80,9 +80,9 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
     this.sum.row = this.detail.length;
     for (let i = 0; i < this.detail.length; i++) {
       
-      profit = parseInt(this.detail[i]['f11']);
+      profit = parseInt(this.detail[i]['f6']);
       a = this.detail[i]['f1'] + " " + this.detail[i]['f2'] + ":00";
-      b = this.detail[i]['f8'] + " " + this.detail[i]['f9'] + ":00";
+      b = this.detail[i]['f3'] + " " + this.detail[i]['f4'] + ":00";
  
       this.sum.profit += !Number.isNaN(profit) ? profit : 0;
       if (profit > 0) this.sum.win++;

@@ -47,10 +47,28 @@
     </div>
 </div>
 
+<div class="popup-bottom" *ngIf="showWarning">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-warning border rounded shadow">
+                  
+                    <div class="d-flex">
+                        <div class="p-2 w-100"><span [innerHTML]="noteWarning"></span></div>
+                        <div class="p-2 flex-shrink-1">
+                            <a href="javascript:;" (click)="showWarning=false"><i class="bi bi-x-lg"></i></a>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid body-margin-top">
 
     <div class="row g-2">
-        <div class="col-lg-2 col-md-3 col-12" *ngIf="templateCode=='journalTrading'">
+        <div class="col-lg-2 col-md-3 col-12" *ngIf="templateCode=='journalFXTrading'">
             <div class="bg-white rounded p-2"  style="height: 93.7vh;">
                 <div *ngIf="childDetail">
                     <app-widget-table-summary [startBalance]="startBalance" [detail]="childDetail"></app-widget-table-summary>
@@ -70,7 +88,8 @@
                     </div>
 
 
-                    <div class="row mb-2">
+                    <div class="row mb-2"> 
+
                         <div class="col-12 ">
                             <app-board-view (newItemEvent)="reload($event)"></app-board-view>
                         </div>
@@ -79,9 +98,10 @@
                             <div class="d-flex">
 
                                 <div class="me-2">
-                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">New
-                                        Task</button>
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">Add Row</button>
                                 </div>
+
+                                
 
                                 <div class="me-2">
                                     <input type="text" class="form-control form-control-sm" [disabled]="!startUpTable"

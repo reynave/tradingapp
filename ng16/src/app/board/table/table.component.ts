@@ -50,7 +50,7 @@ export class TableComponent implements OnInit, OnChanges {
     }
   }
 
-  startBalance :number = 0;
+  startBalance: number = 0;
   prod = environment.production;
   scrollX = 0;
   fields: any = [];
@@ -94,7 +94,7 @@ export class TableComponent implements OnInit, OnChanges {
   filterSelect: FilterSelect[] = [];
   templateCode: string = "";
   childDetail: any[] | undefined;
-
+  showWarning : boolean = false;
   private _docSub: any;
   constructor(
     private http: HttpClient,
@@ -234,6 +234,7 @@ export class TableComponent implements OnInit, OnChanges {
 
     return `${offset}px`;
   }
+
   ngOnChanges() {
     console.log("OnChanges ")
   }
@@ -247,10 +248,10 @@ export class TableComponent implements OnInit, OnChanges {
     this.startUpTable = false;
     this.id = this.ativatedRoute.snapshot.params['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
-    
+
     if (newItem['id']) {
       this.journalTableViewId = newItem['id'];
-    } 
+    }
     this.httpHeader();
     this.httpDetail();
   }
@@ -771,7 +772,9 @@ export class TableComponent implements OnInit, OnChanges {
     modalRef.componentInstance.journalId = this.id;
   }
 
+  noteWarning : string = "";
   addTask() {
+    this.noteWarning = "";
     const body = {
       journalId: this.id,
     }
@@ -781,13 +784,21 @@ export class TableComponent implements OnInit, OnChanges {
       data => {
         console.log(data);
         // this.reloadAddRow(data['detail'][0]);
-        const msg = {
-          data: data['detail'][0],
-          action: 'tableReloadAddRow',
-          journalId: this.id,
-          chat: this.configService.account()["account"]['name'] + " add task",
+        if (data['error'] == false) { 
+          const msg = {
+            data: data['detail'][0],
+            action: 'tableReloadAddRow',
+            journalId: this.id,
+            chat: this.configService.account()["account"]['name'] + " add task",
+          }
+          this.socketService.sendMessage(msg);
+        }else{
+          this.noteWarning = data['note'];
+          this.showWarning = true;
+          setTimeout(()=>{
+            this.showWarning = false;
+          },5000);
         }
-        this.socketService.sendMessage(msg);
       },
       e => {
         console.log(e);
@@ -1166,6 +1177,7 @@ export class TableComponent implements OnInit, OnChanges {
   onImagesSaveUrl() {
     const body = {
       caption: this.caption,
+      journalId : this.id,
       id: this.imageQueryParams.id,
       fn: this.imageQueryParams.fn,
       url: this.url,
@@ -1246,6 +1258,7 @@ export class TableComponent implements OnInit, OnChanges {
   updateFilter() {
     this.loading = true;
     const body = {
+      journalId : this.id,
       filterItem: this.filterSelect,
       journalTableViewId: this.journalTableViewId,
     }

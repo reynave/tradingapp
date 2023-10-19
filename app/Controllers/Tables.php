@@ -66,8 +66,8 @@ class Tables extends BaseController
             WHERE journalId = '$id' and presence = 1
             ORDER BY sorting ASC ";
             $journal_custom_field = $this->db->query($c)->getResultArray();
- 
-          
+
+
             $d = "SELECT * 
             FROM journal_access
             WHERE accountId = '$accountId' and journalId = '" . $data['request']['id'] . "' AND presence = 1";
@@ -176,7 +176,7 @@ class Tables extends BaseController
                 "filterSelect" => $journalTable['filterSelect'],
                 "filterDetail" => $journalTable['filterDetail'],
                 "q" => $journalTable['q'],
-                
+
                 //"customFieldKey" => $journalTable['customFieldKey'],
                 //   "customFieldNo" => $journal_select['customFieldNo'],
                 //   "select2" => $journal_select['select'],
@@ -189,8 +189,6 @@ class Tables extends BaseController
             $data23 = array(
                 "TableViewOnly" => model("TableViewOnly")->journalTable($id, $journalTableViewId, ""),
             );
-
-
         }
         return $this->response->setJSON($data);
     }
@@ -233,7 +231,6 @@ class Tables extends BaseController
 
 
             );
-
         }
         return $this->response->setJSON($data);
     }
@@ -266,7 +263,6 @@ class Tables extends BaseController
             );
         }
         return $this->response->setJSON($data);
-
     }
     function exportCSV()
     {
@@ -320,7 +316,6 @@ class Tables extends BaseController
             return $this->response->setBody('');
         }
         return $this->response->setJSON($data);
-
     }
 
     function httpDataFormula()
@@ -353,38 +348,52 @@ class Tables extends BaseController
         ];
         if ($post) {
             $id = $post['journalId'];
-            $this->db->table("journal_detail")->insert([
-                "sorting" => model("Core")->select("count(id)", "journal_detail", "journalId = '$id' and presence = 1 "),
-                'journalId' => $post['journalId'],
-                'presence' => 1,
-                "input_by" => model("Core")->accountId(),
-                "input_date" => date("Y-m-d H:i:s"),
-            ]);
+            $plansId = model("Core")->select("plansId","account","id = '".model("Core")->accountId()."' ");
+            $maxRow = model("Core")->select("maxRow","plans"," id = '$plansId' ");
+        //$maxRow = 200;
+            if (model("Core")->select("count(id)", "journal_detail", "journalId = '$id' and presence = 1 ") < $maxRow) {
+ 
+                $this->db->table("journal_detail")->insert([
+                    "sorting" => model("Core")->select("count(id)", "journal_detail", "journalId = '$id' and presence = 1 "),
+                    'journalId' => $post['journalId'],
+                    'presence' => 1,
+                    "input_by" => model("Core")->accountId(),
+                    "input_date" => date("Y-m-d H:i:s"),
+                ]);
 
-            $newId = model("Core")->select("id", "journal_detail", "journalId = '$id' ORDER BY input_date desc");
+                $newId = model("Core")->select("id", "journal_detail", "journalId = '$id' ORDER BY input_date desc");
 
-            $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field 
-            WHERE journalId = '$id' and presence = 1
-            ORDER BY sorting ASC ";
-            $journal_custom_field = $this->db->query($c)->getResultArray();
+                $c = "SELECT *, CONCAT('f',f) AS 'key' FROM journal_custom_field 
+                WHERE journalId = '$id' and presence = 1
+                ORDER BY sorting ASC ";
+                $journal_custom_field = $this->db->query($c)->getResultArray();
 
-            $customField = "";
-            $customFieldNo = [];
-            foreach ($journal_custom_field as $r) {
-                $customField .= ", f" . $r['f'];
-                array_push($customFieldNo, "f" . $r['f']);
+                $customField = "";
+                $customFieldNo = [];
+                foreach ($journal_custom_field as $r) {
+                    $customField .= ", f" . $r['f'];
+                    array_push($customFieldNo, "f" . $r['f']);
+                }
+
+                $q = "SELECT id, ilock, journalId, false AS 'checkbox' $customField 
+                FROM journal_detail 
+                where journalId = '$id' and id = '$newId' and presence = 1 order by sorting DESC";
+                $detail = $this->db->query($q)->getResultArray();
+
+                $data = array(
+                    "error" => false,
+                    "note" => "",
+                    "post" => $post,
+                    "detail" => $detail,
+                );
+            } else {
+                $data = array(
+                    "error" => true,
+                    "note" => "The number of rows in his account is only 100 per journal.",
+                    "post" => $post,
+                    "detail" => [],
+                );
             }
-
-            $q = "SELECT id, ilock, journalId, false AS 'checkbox' $customField 
-            FROM journal_detail 
-            where journalId = '$id' and id = '$newId' and presence = 1 order by sorting DESC";
-            $detail = $this->db->query($q)->getResultArray();
-
-            $data = array(
-                "error" => false,
-                "post" => $post,
-                "detail" => $detail,
-            );
         }
         return $this->response->setJSON($data);
     }
@@ -401,9 +410,17 @@ class Tables extends BaseController
             foreach ($post['detail'] as $row) {
                 $this->db->table("journal_detail")->update([
                     'presence' => 0,
-                    "input_by" => model("Core")->accountId(),
-                    "input_date" => date("Y-m-d H:i:s"),
+                    "update_by" => model("Core")->accountId(),
+                    "update_date" => date("Y-m-d H:i:s"),
                 ], " id = '" . $row['id'] . "' ");
+
+                $this->db->table("journal_detail_images")->update([
+                    'presence' => 0,
+                    "update_by" => model("Core")->accountId(),
+                    "update_date" => date("Y-m-d H:i:s"),
+                ], " journalDetailId = '" . $row['id'] . "' ");
+
+                
             }
             $data = array(
                 "error" => false,
@@ -442,7 +459,6 @@ class Tables extends BaseController
                         ], " id = '$newId' ");
                     }
                 }
-
             }
 
             $data = array(
@@ -561,6 +577,7 @@ class Tables extends BaseController
                 ], " id = '$id' ");
             } else {
                 $this->db->table("journal_table_view_show")->insert([
+                    "journalId" => $post['id'],
                     'hide' => (int) $post['hide'],
                     'journalTableViewId' => $post['journalTableViewId'],
                     'journalCustomFieldId' => $post['item']['id'],
@@ -760,17 +777,18 @@ class Tables extends BaseController
         if ($post) {
             foreach ($post['filterItem'] as $row) {
 
-                $id = model("Core")->select("id","journal_table_view_filter","presence = 1 and journalTableViewId = '".$post['journalTableViewId']."' 
-                and journalCustomFieldId = '".$row['journalCustomFieldId']."' and field = '".$row['field']."' ");
+                $id = model("Core")->select("id", "journal_table_view_filter", "presence = 1 and journalTableViewId = '" . $post['journalTableViewId'] . "' 
+                and journalCustomFieldId = '" . $row['journalCustomFieldId'] . "' and field = '" . $row['field'] . "' ");
 
-                if($id){
-                    $this->db->table("journal_table_view_filter")->update([  
-                        "selectId" => $row['selectId'], 
+                if ($id) {
+                    $this->db->table("journal_table_view_filter")->update([
+                        "selectId" => $row['selectId'],
                         "update_date" => date("Y-m-d H:i:s"),
                         "update_by" => model("Core")->accountId(),
-                    ]," id = $id ");
-                }else{
+                    ], " id = $id ");
+                } else {
                     $this->db->table("journal_table_view_filter")->insert([
+                        "journalId" => $post['journalId'],
                         "journalTableViewId" => $post['journalTableViewId'],
                         "journalCustomFieldId" => $row['journalCustomFieldId'],
                         "field" => $row['field'],
@@ -780,8 +798,6 @@ class Tables extends BaseController
                         "input_by" => model("Core")->accountId(),
                     ]);
                 }
-
-                
             }
 
 
