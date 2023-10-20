@@ -70,8 +70,10 @@
                                             </td>
 
                                             <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
-                                                <a class="text-primary"
-                                                    [routerLink]="[ '/board/table/', x.id, x.viewId ]"><b>{{x.name}}</b></a>
+                                                <a class="text-primary" *ngIf="x.presence=='1' "  [routerLink]="[ '/board/table/', x.id, x.viewId ]"><b>{{x.name}}</b></a>
+
+                                                <b *ngIf="x.presence!='1'" >{{x.name}}</b>
+                                                
                                             </td>
                                             <td class="text-center">
                                                 <div>

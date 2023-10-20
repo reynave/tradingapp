@@ -230,6 +230,7 @@ export class BookComponent implements OnInit {
   fnClearTrashBin() {
     const body = {
       remove: true,
+      bookId : this.book.id,
     }
     this.http.post<any>(environment.api + "journal/fnClearTrashBin", body, {
       headers: this.configService.headers()

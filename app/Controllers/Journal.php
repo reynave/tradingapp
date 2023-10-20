@@ -116,16 +116,16 @@ class Journal extends BaseController
                 "error" => false,
                 "post" => $post,
             );
-
         }
         return $this->response->setJSON($data);
     }
 
-    function fnInvetedLink(){
+    function fnInvetedLink()
+    {
         $journalId =  $this->request->getVar()['journalId'];
         $data = array(
-            "invitedLink" => model("Core")->select("invitedLink","journal"," id='$journalId' and presence = 1 "),
-            "error" => false, 
+            "invitedLink" => model("Core")->select("invitedLink", "journal", " id='$journalId' and presence = 1 "),
+            "error" => false,
         );
         return $this->response->setJSON($data);
     }
@@ -272,7 +272,6 @@ class Journal extends BaseController
                             $n++;
                         }
                     }
-
                 }
 
                 foreach ($jsonData['view'] as $rec) {
@@ -316,7 +315,6 @@ class Journal extends BaseController
                                     "hide" => 0,
                                     "presence" => 1,
                                 ], " journalCustomFieldId = '$journalCustomFieldId' and journalTableViewId = '$journalTableViewId' ");
-
                             }
                         } else if ($rec['board'] == 'chart') {
                             $this->db->table("journal_chart_type")->insert([
@@ -348,17 +346,14 @@ class Journal extends BaseController
                                     "input_by" => model("Core")->accountId(),
                                 ]);
                             }
-
                         }
                     }
-
                 }
-
             }
 
 
             if ($post['model']['sample'] == 'true') {
-                model("Dummy")->faker($journalId,$post['model']['startBalance']);
+                model("Dummy")->faker($journalId, $post['model']['startBalance']);
             }
 
 
@@ -373,7 +368,6 @@ class Journal extends BaseController
                 //  "error" => false,
                 "transStatus" => $this->db->transStatus(),
             );
-
         }
         return $this->response->setJSON($data);
     }
@@ -397,7 +391,6 @@ class Journal extends BaseController
             $data = array(
                 "error" => false,
             );
-
         }
         return $this->response->setJSON($data);
     }
@@ -436,7 +429,7 @@ class Journal extends BaseController
             "post" => $post,
         ];
         if ($post) {
-           
+
             $this->db->transStart();
 
             foreach ($post['items'] as $row) {
@@ -449,22 +442,22 @@ class Journal extends BaseController
                         ];
                         $whereJournalId = "journalId = '" . $row['id'] . "' ";
                         $this->db->table("journal")->update($delete, "id = '" . $row['id'] . "' ");
-                        $this->db->table("journal_detail")->update($delete,  $whereJournalId  ); 
-                        $this->db->table("journal_detail_images")->update($delete, $whereJournalId );
-                        $this->db->table("journal_select")->update($delete, $whereJournalId );
-                        $this->db->table("journal_table_view")->update($delete, $whereJournalId );
-                        $this->db->table("journal_custom_field")->update($delete, $whereJournalId );
-                        
-                        $this->db->table("journal_table_view_filter")->update($delete, $whereJournalId );
-                        $this->db->table("journal_table_view_show")->update([
-                            "presence" => 0,  
-                        ], $whereJournalId );
+                        $this->db->table("journal_detail")->update($delete,  $whereJournalId);
+                        $this->db->table("journal_detail_images")->update($delete, $whereJournalId);
+                        $this->db->table("journal_select")->update($delete, $whereJournalId);
+                        $this->db->table("journal_table_view")->update($delete, $whereJournalId);
+                        $this->db->table("journal_custom_field")->update($delete, $whereJournalId);
 
-                        $this->db->table("journal_chart_type")->update($delete, $whereJournalId );
-                        $this->db->table("journal_chart_where")->update($delete, $whereJournalId );
-                        $this->db->table("journal_chart_where_select")->update($delete, $whereJournalId );
-                        $this->db->table("journal_chart_xaxis")->update($delete, $whereJournalId );
-                        $this->db->table("journal_chart_yaxis")->update($delete, $whereJournalId );
+                        $this->db->table("journal_table_view_filter")->update($delete, $whereJournalId);
+                        $this->db->table("journal_table_view_show")->update([
+                            "presence" => 0,
+                        ], $whereJournalId);
+
+                        $this->db->table("journal_chart_type")->update($delete, $whereJournalId);
+                        $this->db->table("journal_chart_where")->update($delete, $whereJournalId);
+                        $this->db->table("journal_chart_where_select")->update($delete, $whereJournalId);
+                        $this->db->table("journal_chart_xaxis")->update($delete, $whereJournalId);
+                        $this->db->table("journal_chart_yaxis")->update($delete, $whereJournalId);
 
 
                         //journal_custom_field
@@ -473,7 +466,6 @@ class Journal extends BaseController
                             "update_date" => date("Y-m-d H:i:s"),
                             "update_by" => model("Core")->accountId(),
                         ], "journalId = '" . $row['id'] . "' ");
-
                     } else {
                         $this->db->table("journal_access")->update([
                             "bookId" => "",
@@ -544,11 +536,8 @@ class Journal extends BaseController
                     ], " id  = '$id' ");
                     $note = $addUser . " Add has joined the team";
                 }
-
-
             } else {
                 $note = "The email you entered has not been registered,<br> please invite via the link below ";
-
             }
 
             $q1 = "SELECT ja.*, a.name, a.email, concat('" . base_url() . "uploads/picture/',a.picture) as 'picture'
@@ -566,7 +555,6 @@ class Journal extends BaseController
                 "note" => $note,
                 "q" => $q1,
             ];
-
         }
 
         return $this->response->setJSON($data);
@@ -598,7 +586,6 @@ class Journal extends BaseController
                 "post" => $post,
                 "journal_access" => $journal_access,
             ];
-
         }
 
         return $this->response->setJSON($data);
@@ -617,12 +604,51 @@ class Journal extends BaseController
                 "error" => false,
                 "post" => $post,
             ];
+            $bookId = $post['bookId'];
             $this->db->table("journal_access")->update([
                 "presence" => 0,
                 "update_date" => date("Y-m-d H:i:s"),
                 "update_by" => model("Core")->accountId(),
-            ], "presence  = 4 AND accountId =  '" . model("Core")->accountId() . "' ");
+            ], "presence  = 4 AND accountId =  '" . model("Core")->accountId() . "' AND bookId =  '$bookId' ");
 
+
+            $this->db->transStart();
+
+
+            $q3 = "SELECT * FROM journal_access WHERE accountId =  '" . model("Core")->accountId() . "'  AND  presence = 0 ";
+            $journal_table_view = $this->db->query($q3)->getResultArray();
+
+            foreach ($journal_table_view as $row) {
+                $journalId = $row['journalId'];
+                $this->db->query("DELETE FROM journal WHERE id = '$journalId' "); 
+                $this->db->query(" DELETE FROM    journal_access WHERE journalId = '$journalId' ");
+                $this->db->query(" DELETE FROM    journal_chart_where WHERE journalId = '$journalId' ");
+                $this->db->query(" DELETE FROM    journal_chart_where_select WHERE journalId = '$journalId' ");
+                $this->db->query(" DELETE FROM    journal_chart_xaxis WHERE journalId = '$journalId' ");
+                $this->db->query(" DELETE FROM    journal_chart_yaxis WHERE journalId = '$journalId' ");
+                $this->db->query(" DELETE FROM    journal_chart_type WHERE journalId = '$journalId' ");
+               
+                $this->db->query(" DELETE FROM    journal_custom_field WHERE journalId = '$journalId'");
+                $this->db->query(" DELETE FROM    journal_detail WHERE journalId = '$journalId' ");
+            //    $this->db->query(" DELETE FROM    journal_detail_images WHERE journalId = '$journalId' ");
+                $this->db->query(" DELETE FROM    journal_select WHERE journalId = '$journalId' ");
+                $this->db->query(" DELETE FROM    journal_table_view WHERE journalId = '$journalId' ");
+                $this->db->query(" DELETE FROM    journal_table_view_filter WHERE journalId = '$journalId' ");
+                $this->db->query(" DELETE FROM    journal_table_view_show WHERE journalId = '$journalId' ");
+                $this->db->query(" DELETE FROM    journal_token WHERE journalId = '$journalId' ");
+            }
+
+            $this->db->transComplete();
+            if ($this->db->transStatus() === false) {
+                $this->db->transRollback();
+            } else {
+                $this->db->transCommit();
+            }
+            $data = [
+                "error" => false,
+                "post" => $post,
+                "transStatus" => $this->db->transStatus(),
+            ];
         }
 
         return $this->response->setJSON($data);

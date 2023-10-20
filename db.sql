@@ -153,8 +153,8 @@ CREATE TABLE IF NOT EXISTS `auto_number` (
 -- Dumping data for table tradingapp.auto_number: ~3 rows (approximately)
 INSERT INTO `auto_number` (`id`, `name`, `prefix`, `digit`, `runningNumber`, `updateDate`) VALUES
 	(1, 'account', '', 6, 12, '0000-00-00 00:00:00'),
-	(10, 'backtest', 'J23', 6, 125, '0000-00-00 00:00:00'),
-	(11, 'book', 'B23', 4, 15, '0000-00-00 00:00:00');
+	(10, 'backtest', 'J23', 6, 131, '0000-00-00 00:00:00'),
+	(11, 'book', 'B23', 4, 16, '0000-00-00 00:00:00');
 
 -- Dumping structure for table tradingapp.book
 CREATE TABLE IF NOT EXISTS `book` (
@@ -171,9 +171,10 @@ CREATE TABLE IF NOT EXISTS `book` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Dumping data for table tradingapp.book: ~0 rows (approximately)
+-- Dumping data for table tradingapp.book: ~2 rows (approximately)
 INSERT INTO `book` (`id`, `accountId`, `name`, `ilock`, `sorting`, `presence`, `input_date`, `input_by`, `update_date`, `update_by`) VALUES
-	('B230015', '231018.000012', 'UAT', 0, 1, 1, '2023-10-19 04:43:38', '231018.000012', '2023-01-01 00:00:00', NULL);
+	('B230015', '231018.000012', 'UAT', 0, 1, 1, '2023-10-19 04:43:38', '231018.000012', '2023-01-01 00:00:00', NULL),
+	('B230016', '231018.000012', 'UAT2', 0, 2, 1, '2023-10-20 06:11:38', '231018.000012', '2023-01-01 00:00:00', NULL);
 
 -- Dumping structure for table tradingapp.chartjs_type
 CREATE TABLE IF NOT EXISTS `chartjs_type` (
@@ -253,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `journal` (
   UNIQUE KEY `url` (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table tradingapp.journal: ~5 rows (approximately)
+-- Dumping data for table tradingapp.journal: ~0 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_access
 CREATE TABLE IF NOT EXISTS `journal_access` (
@@ -273,9 +274,9 @@ CREATE TABLE IF NOT EXISTS `journal_access` (
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_by` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingapp.journal_access: ~5 rows (approximately)
+-- Dumping data for table tradingapp.journal_access: ~0 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_chart_type
 CREATE TABLE IF NOT EXISTS `journal_chart_type` (
@@ -290,9 +291,9 @@ CREATE TABLE IF NOT EXISTS `journal_chart_type` (
   `input_by` varchar(50) NOT NULL DEFAULT '',
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingapp.journal_chart_type: ~11 rows (approximately)
+-- Dumping data for table tradingapp.journal_chart_type: ~0 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_chart_where
 CREATE TABLE IF NOT EXISTS `journal_chart_where` (
@@ -309,7 +310,7 @@ CREATE TABLE IF NOT EXISTS `journal_chart_where` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingapp.journal_chart_where: ~2 rows (approximately)
+-- Dumping data for table tradingapp.journal_chart_where: ~0 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_chart_where_select
 CREATE TABLE IF NOT EXISTS `journal_chart_where_select` (
@@ -326,7 +327,7 @@ CREATE TABLE IF NOT EXISTS `journal_chart_where_select` (
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingapp.journal_chart_where_select: ~42 rows (approximately)
+-- Dumping data for table tradingapp.journal_chart_where_select: ~21 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_chart_xaxis
 CREATE TABLE IF NOT EXISTS `journal_chart_xaxis` (
@@ -341,9 +342,9 @@ CREATE TABLE IF NOT EXISTS `journal_chart_xaxis` (
   `input_by` varchar(50) NOT NULL DEFAULT '',
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingapp.journal_chart_xaxis: ~11 rows (approximately)
+-- Dumping data for table tradingapp.journal_chart_xaxis: ~0 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_chart_yaxis
 CREATE TABLE IF NOT EXISTS `journal_chart_yaxis` (
@@ -360,9 +361,9 @@ CREATE TABLE IF NOT EXISTS `journal_chart_yaxis` (
   `input_by` varchar(50) NOT NULL DEFAULT '',
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingapp.journal_chart_yaxis: ~21 rows (approximately)
+-- Dumping data for table tradingapp.journal_chart_yaxis: ~0 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_custom_field
 CREATE TABLE IF NOT EXISTS `journal_custom_field` (
@@ -385,9 +386,9 @@ CREATE TABLE IF NOT EXISTS `journal_custom_field` (
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_by` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingapp.journal_custom_field: ~64 rows (approximately)
+-- Dumping data for table tradingapp.journal_custom_field: ~0 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_detail
 CREATE TABLE IF NOT EXISTS `journal_detail` (
@@ -435,9 +436,9 @@ CREATE TABLE IF NOT EXISTS `journal_detail` (
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_by` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=202 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- Dumping data for table tradingapp.journal_detail: ~401 rows (approximately)
+-- Dumping data for table tradingapp.journal_detail: ~100 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_detail_images
 CREATE TABLE IF NOT EXISTS `journal_detail_images` (
@@ -475,9 +476,9 @@ CREATE TABLE IF NOT EXISTS `journal_select` (
   `input_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `input_by` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingapp.journal_select: ~105 rows (approximately)
+-- Dumping data for table tradingapp.journal_select: ~21 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_table_view
 CREATE TABLE IF NOT EXISTS `journal_table_view` (
@@ -493,9 +494,9 @@ CREATE TABLE IF NOT EXISTS `journal_table_view` (
   `update_date` datetime NOT NULL DEFAULT '2023-01-01 00:00:00',
   `update_by` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingapp.journal_table_view: ~17 rows (approximately)
+-- Dumping data for table tradingapp.journal_table_view: ~4 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_table_view_filter
 CREATE TABLE IF NOT EXISTS `journal_table_view_filter` (
@@ -524,9 +525,9 @@ CREATE TABLE IF NOT EXISTS `journal_table_view_show` (
   `hide` int(1) NOT NULL DEFAULT 0,
   `presence` int(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table tradingapp.journal_table_view_show: ~0 rows (approximately)
+-- Dumping data for table tradingapp.journal_table_view_show: ~22 rows (approximately)
 
 -- Dumping structure for table tradingapp.journal_token
 CREATE TABLE IF NOT EXISTS `journal_token` (
