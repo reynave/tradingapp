@@ -177,7 +177,7 @@ class Journal extends BaseController
             "post" => $post,
         ];
         if ($post && $post['model']['name'] != "") {
-            $this->db->transStart();
+           $this->db->transStart();
             $journalId = model("Core")->number("backtest");
 
             $this->db->table("journal")->insert([

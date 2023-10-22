@@ -2,34 +2,6 @@
     "version":"1.0.7",
     "field" :  [
         { 
-            "f" : 1,
-            "name": "Order date",
-            "iType" : "date",
-            "ilock" : 1
-        },
-        { 
-            "f" : 2,
-            "name": "Order Time",
-            "iType" : "time",
-            "ilock" : 1
-        },
-        { 
-            "f" :9,
-            "name": "Order Type",
-            "iType" : "select",
-            "journal_select" : [
-                { 
-                    "value" : "BUY",
-                    "color" : "#3876BF"
-                }, 
-                { 
-                    "value" : "SELL",
-                    "color" : "#35A29F"
-                }
-            ],
-            "ilock" : 1
-        },
-        { 
             "f" :8,
             "name": "Market",
             "iType" : "select",
@@ -95,37 +67,58 @@
             ],
             "ilock" : 1
         },
-        {
-            "f" :10,
-            "name": "Entry",
-            "iType" : "number",
-            "suffix" : "$" ,
+        { 
+            "f" :9,
+            "name": "Order Type",
+            "iType" : "select",
+            "journal_select" : [
+                { 
+                    "value" : "BUY",
+                    "color" : "#3876BF"
+                }, 
+                { 
+                    "value" : "SELL",
+                    "color" : "#35A29F"
+                }
+            ],
             "ilock" : 1
         },
         { 
-            "f" :11,
+            "f" : 1,
+            "name": "Order date",
+            "iType" : "date",
+            "ilock" : 1
+        },
+        { 
+            "f" : 2,
+            "name": "Order Time",
+            "iType" : "time",
+            "ilock" : 1
+        },
+        { 
+            "f" :10,
             "name": "Stop Loss",
             "iType" : "number",
             "suffix" : "$" ,
             "ilock" : 1
         },
+      
         {
-            "f" :12,
-            "name": "Target",
+            "f" :11,
+            "name": "Reward (RR)",
             "iType" : "number",
-            "suffix" : "$" ,
+            "suffix" : "" ,
             "ilock" : 1
         },
+    
         {
             "f" : 6,
             "name": "Profit",
-            "iType" : "number",
+            "iType" : "formula",
+            "eval" : "$f10 * $f11",
             "suffix" : "$" ,
             "ilock" : 1
         },
-          
-       
-       
         { 
             "f" :3,
             "name": "Close Date",
@@ -152,12 +145,12 @@
             "name": "Status",
             "iType" : "formula",
             "ilock" : 1,
-            "eval" : "($f6 < 0)? '<div class=bg-loss>LOSS</div>':'<div class=bg-win>WIN</div>'"
+            "eval" : "(($f10 * $f11) < 0)? '<div class=bg-loss>LOSS</div>':'<div class=bg-win>WIN</div>'"
         },
 
          
         { 
-            "f" :13,
+            "f" :12,
             "name": "Setups",
             "iType" : "select",
             "journal_select" : [
@@ -186,20 +179,20 @@
         },
          
         { 
-            "f" :14,
+            "f" :13,
             "name": "Trader Person",
             "iType" : "user",
             "ilock" : 1
         },
         { 
-            "f" :15,
+            "f" :14,
             "name": "Photo",
             "iType" : "image",
             "ilock" : 12
         },
 
         { 
-            "f" :16,
+            "f" :15,
             "name": "Description",
             "iType" : "text",
             "ilock" : 1
@@ -207,7 +200,7 @@
     ], 
     "view" : [
         {
-            "name" : "Simple Trade",
+            "name" : "Simple Backtest",
             "board" : "table",
             "share" : 0,
             "field" : [

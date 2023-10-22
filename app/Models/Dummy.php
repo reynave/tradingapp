@@ -49,14 +49,16 @@ class Dummy extends Model
                     'f1' => $date,
                     'f2' => rand(1, 11) . ":" . rand(0, 59),
                     'f8' => model("Core")->select("id","journal_select", " field = 'f8' ".$where ),
-                    'f10' => "1.0" . rand(4000, 6000),
-                    'f11' => "1.0" . rand(4000, 6000),
-                    'f12' => "1.0" . rand(4000, 6000),
-                    'f6' =>  $balance * (  ((rand(1,3) % 2) == 0 ? rand(2, 3)  :  -1) / 100),
+                    'f10' => rand(30, 60),
+                    'f11' => (rand(1,3) % 2) == 0 ? rand(3, 4)  :  -1,
+                   
+                   // 'f6' =>  for cal,
+                   // 'f' =>  $balance * (  ((rand(1,3) % 2) == 0 ? rand(2, 3)  :  -1) / 100),
+                   
                     'f9' =>  model("Core")->select("id","journal_select", " field = 'f9' ".$where ),
                     'f3' => $date,
                     'f4' => rand(12, 24) . ":" . rand(0, 59), 
-                    'f13' =>  model("Core")->select("id","journal_select", " field = 'f13' ".$where ),
+                    'f12' =>  model("Core")->select("id","journal_select", " field = 'f12' ".$where ),
                 ]);
             }else{
                 break;
