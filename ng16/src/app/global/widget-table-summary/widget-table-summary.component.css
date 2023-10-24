@@ -11,4 +11,5 @@ table td{
 .maxHight1{
     height: 92vh;
     overflow-y: auto;
+    overflow-x: hidden;
 }

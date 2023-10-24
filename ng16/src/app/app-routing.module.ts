@@ -16,6 +16,7 @@ import { InvitedComponent } from './login/invited/invited.component';
 import { TablePrintableComponent } from './board/table-printable/table-printable.component'; 
 import { OffCanvasImagesComponent } from './board/table/off-canvas-images/off-canvas-images.component';
 import { CustomFieldFormComponent } from './template/custom-field-form/custom-field-form.component';
+import { BoardComponent } from './board/board.component';
 
 const routes: Routes = [
   { path: "", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
@@ -28,6 +29,8 @@ const routes: Routes = [
   { path: "home", component: HomeComponent, data: { active: "home" },  canActivate:[authGuard]  }, 
   { path: "book", component: BookComponent, data: { active: "book", name :'shareToMe' },  canActivate:[authGuard]  }, 
   { path: "book/:id", component: BookComponent, data: { active: "book" },  canActivate:[authGuard]  },
+  
+  { path: "board", component: BoardComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   { path: "board/table/:id/:journalTableViewId", component: TableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   { path: "board/tablePrintable/:id/:journalTableViewId", component: TablePrintableComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
   { path: "board/chart/:id/:journalTableViewId", component: ChartjsComponent, data: { active: "board" },  canActivate:[authGuard]  }, 
