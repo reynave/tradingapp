@@ -77,8 +77,8 @@ export class ChartjsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.id = this.ativatedRoute.snapshot.params['id'];
-    this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
+    this.id = this.ativatedRoute.snapshot.queryParams['id'];
+    this.journalTableViewId = this.ativatedRoute.snapshot.queryParams['journalTableViewId'];
 
     this.httpHeader();
     this.httpGet(true);

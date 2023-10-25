@@ -67,8 +67,11 @@
 
     <div class="row g-1">
         <div class="col-lg-2 col-md-3 col-12" *ngIf="showTableLeftWidget">
-            <div class="bg-white rounded " *ngIf="templateCode=='journalFXTrading'">
-                <a href="javascript:;" (click)="fnHideLeftWidget(false)">OfLeftWidget</a>
+            <div class="bg-white rounded post1" *ngIf="templateCode=='journalFXTrading'">
+                <div class="post2   text-end ">
+                    <a href="javascript:;" (click)="fnHideLeftWidget(false)" class="me-2"><i class="bi bi-x-square-fill"></i></a>
+                </div>
+                
                 <div *ngIf="childDetail">
                     <app-widget-table-summary [startBalance]="startBalance" [detail]="childDetail"></app-widget-table-summary>
                 </div>
@@ -76,7 +79,7 @@
         </div>  
 
         <div class=" col-12" [ngClass]="{'col-lg-10 col-md-9': showTableLeftWidget == true }">
-            <div class="bg-white rounded" style="border-left: 5px solid rgb(114, 194, 254);">
+            <div class="bg-white rounded">
 
                 <div class="px-3 py-2"> 
 
