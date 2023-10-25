@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, HostListener, ChangeDetectorRef, ChangeDetectionStrategy, NgZone, OnChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, HostListener, ChangeDetectorRef, ChangeDetectionStrategy, NgZone, OnChanges, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
@@ -38,6 +38,7 @@ export class NewCustomField {
   encapsulation: ViewEncapsulation.None,
 })
 export class TableComponent implements OnInit, OnChanges {
+  @Input() changeParams: any;
   @ViewChild('contentEditSelect') contentEditSelect: any;
   @ViewChild('canvasImages') canvasImages: any;
   @ViewChild('viewport') viewportRef!: ElementRef;
@@ -94,7 +95,8 @@ export class TableComponent implements OnInit, OnChanges {
   filterSelect: FilterSelect[] = [];
   templateCode: string = "";
   childDetail: any[] | undefined;
-  showWarning : boolean = false;
+  showWarning: boolean = false;
+  showTableLeftWidget: boolean = localStorage.getItem("showTableLeftWidget") == '1' ? true : false;
   private _docSub: any;
   constructor(
     private http: HttpClient,
@@ -112,8 +114,18 @@ export class TableComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
 
-    this.id = this.ativatedRoute.snapshot.params['id'];
-    this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
+    if (localStorage.getItem("showTableLeftWidget") == '' || localStorage.getItem("showTableLeftWidget") == undefined) {
+      localStorage.setItem("showTableLeftWidget", "1");
+    }
+    this.showTableLeftWidget = localStorage.getItem("showTableLeftWidget") == '1' ? true : false;
+
+
+    this.ativatedRoute.paramMap.subscribe(params => {
+      console.log('params', params);
+      // Do more processing here if needed
+    });
+    this.id = this.ativatedRoute.snapshot.queryParams['id'];
+    this.journalTableViewId = this.ativatedRoute.snapshot.queryParams['journalTableViewId'];
     this.httpHeader();
     this.httpDetail(true);
     this._docSub = this.socketService.getMessage().subscribe(
@@ -214,7 +226,10 @@ export class TableComponent implements OnInit, OnChanges {
         //   console.log(this.childDetail);
       }
     );
+
+    console.log('changeParams : ', this.changeParams);
   }
+
 
   public get inverseOfTranslation(): string {
 
@@ -236,8 +251,11 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    console.log("OnChanges ")
+    console.log("OnChanges ");
+    console.log('changeParams : ', this.changeParams);
+    this.reload([]);
   }
+
   ngOnDestroy() {
     this._docSub.unsubscribe();
     document.removeEventListener('paste', this.handlePaste);
@@ -246,8 +264,8 @@ export class TableComponent implements OnInit, OnChanges {
 
   reload(newItem: any) {
     this.startUpTable = false;
-    this.id = this.ativatedRoute.snapshot.params['id'];
-    this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId'];
+    this.id = this.ativatedRoute.snapshot.queryParams['id'];
+    this.journalTableViewId = this.ativatedRoute.snapshot.queryParams['journalTableViewId'];
 
     if (newItem['id']) {
       this.journalTableViewId = newItem['id'];
@@ -287,7 +305,7 @@ export class TableComponent implements OnInit, OnChanges {
       }
     }).subscribe(
       data => {
-        // console.log('httpDetail', data);
+        console.log('httpDetail', data);
         this.archives = data['archives'];
         this.backgroundColorOption = data['backgroundColorOption'];
         this.customField = data['customField'];
@@ -387,9 +405,6 @@ export class TableComponent implements OnInit, OnChanges {
     }
     this.calculationFooter();
   }
-
-
-
 
   sortByOrder(order: any) {
     // const order = ['59', '54', '72', '23', '24', '108', '55', '19', '73', '22', '60']; 
@@ -772,7 +787,7 @@ export class TableComponent implements OnInit, OnChanges {
     modalRef.componentInstance.journalId = this.id;
   }
 
-  noteWarning : string = "";
+  noteWarning: string = "";
   addTask() {
     this.noteWarning = "";
     const body = {
@@ -784,7 +799,7 @@ export class TableComponent implements OnInit, OnChanges {
       data => {
         console.log(data);
         // this.reloadAddRow(data['detail'][0]);
-        if (data['error'] == false) { 
+        if (data['error'] == false) {
           const msg = {
             data: data['detail'][0],
             action: 'tableReloadAddRow',
@@ -792,12 +807,12 @@ export class TableComponent implements OnInit, OnChanges {
             chat: this.configService.account()["account"]['name'] + " add task",
           }
           this.socketService.sendMessage(msg);
-        }else{
+        } else {
           this.noteWarning = data['note'];
           this.showWarning = true;
-          setTimeout(()=>{
+          setTimeout(() => {
             this.showWarning = false;
-          },5000);
+          }, 5000);
         }
       },
       e => {
@@ -1177,7 +1192,7 @@ export class TableComponent implements OnInit, OnChanges {
   onImagesSaveUrl() {
     const body = {
       caption: this.caption,
-      journalId : this.id,
+      journalId: this.id,
       id: this.imageQueryParams.id,
       fn: this.imageQueryParams.fn,
       url: this.url,
@@ -1258,7 +1273,7 @@ export class TableComponent implements OnInit, OnChanges {
   updateFilter() {
     this.loading = true;
     const body = {
-      journalId : this.id,
+      journalId: this.id,
       filterItem: this.filterSelect,
       journalTableViewId: this.journalTableViewId,
     }
@@ -1281,5 +1296,18 @@ export class TableComponent implements OnInit, OnChanges {
         console.log(error);
       }
     )
+  }
+
+
+  //siteLeft Widget
+  fnHideLeftWidget(val : boolean) {
+    if(val == true){
+      this.showTableLeftWidget = true;
+      localStorage.setItem("showTableLeftWidget", '1');
+    }else{
+      this.showTableLeftWidget = false;
+      localStorage.setItem("showTableLeftWidget", '0');
+    }
+    
   }
 }

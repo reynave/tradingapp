@@ -38,8 +38,8 @@ export class BoardViewComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.id = this.ativatedRoute.snapshot.params['id'];
-    this.journalTableViewId = this.ativatedRoute.snapshot.params['journalTableViewId']; 
+    this.id = this.ativatedRoute.snapshot.queryParams['id'];
+    this.journalTableViewId = this.ativatedRoute.snapshot.queryParams['journalTableViewId']; 
     const ab: any = localStorage.getItem(this.id);
     this.items = JSON.parse(ab);
     this.httpGet();
@@ -122,9 +122,19 @@ export class BoardViewComponent implements OnInit {
   goToView(x: any) {
     // console.log(x);
     this.journalTableViewId = x.id;
-    this.router.navigate(['board', x.board, x.journalId, x.id]).then(
-      () => {
-        this.newItemEvent.emit(x);
+    // this.router.navigate(['board', x.board, x.journalId, x.id]).then(
+    //   () => {
+    //     this.newItemEvent.emit(x);
+    //   }
+    // )
+    const params = {
+      id : x.journalId,
+      journalTableViewId : x.id,
+      board : x.board,
+    }
+    this.router.navigate(['board'],{queryParams:params}).then(
+     () => {
+       this.newItemEvent.emit(x);
       }
     )
   }

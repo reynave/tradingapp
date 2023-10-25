@@ -1,1 +1,22 @@
-<p>board works!</p>
+<app-header></app-header>
+
+
+<div class="container-fluid body-margin-top">
+    <div class="row">
+        <div class="col-12">
+            <app-board-title></app-board-title>
+        </div>
+        <div class="col-12">
+            <app-board-view (newItemEvent)="reload($event)"></app-board-view>
+
+        </div>
+    </div>
+</div>
+
+<div *ngIf="board == 'table'">
+    <app-table  [changeParams]="queryParams"></app-table>
+</div>
+
+<div *ngIf="board == 'chart'">
+    <app-chartjs></app-chartjs>
+</div>

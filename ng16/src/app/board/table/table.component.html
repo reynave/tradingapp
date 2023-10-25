@@ -1,5 +1,3 @@
-<app-header></app-header>
-
 <div class="popup-floating-top" [hidden]="!tools">
     <div class="border bg-white popup-floating-top-content shadow rounded p-3">
         <div class="d-flex">
@@ -65,44 +63,33 @@
     </div>
 </div>
 
-<div class="container-fluid body-margin-top">
+<div class="container-fluid">
 
     <div class="row g-1">
-        <div class="col-lg-2 col-md-3 col-12" *ngIf="templateCode=='journalFXTrading'">
-            <div class="bg-white rounded " >
+        <div class="col-lg-2 col-md-3 col-12" *ngIf="showTableLeftWidget">
+            <div class="bg-white rounded " *ngIf="templateCode=='journalFXTrading'">
+                <a href="javascript:;" (click)="fnHideLeftWidget(false)">OfLeftWidget</a>
                 <div *ngIf="childDetail">
                     <app-widget-table-summary [startBalance]="startBalance" [detail]="childDetail"></app-widget-table-summary>
                 </div>
             </div>
-        </div>
+        </div>  
 
-        <div class="col-lg-10 col-md-9 col-12">
+        <div class=" col-12" [ngClass]="{'col-lg-10 col-md-9': showTableLeftWidget == true }">
             <div class="bg-white rounded" style="border-left: 5px solid rgb(114, 194, 254);">
 
-                <div class="px-3 py-2">
+                <div class="px-3 py-2"> 
 
-                    <div class="row g-0">
-                        <div class="col-12">
-                            <app-board-title></app-board-title>
-                        </div>
-                    </div>
-
-
-                    <div class="row mb-2"> 
-
-                        <div class="col-12 ">
-                            <app-board-view (newItemEvent)="reload($event)"></app-board-view>
-                        </div>
-
+                    <div class="row mb-2">  
                         <div class="col-11">
                             <div class="d-flex">
-
+                                <div class="me-2" *ngIf="showTableLeftWidget == false">
+                                    <button type="button" (click)="fnHideLeftWidget(true)" class="btn btn-sm btn-secondary"><i class="bi bi-arrow-right"></i> Show Summary</button>
+                                </div>
                                 <div class="me-2">
                                     <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">Add Row</button>
                                 </div>
-
-                                
-
+ 
                                 <div class="me-2">
                                     <input type="text" class="form-control form-control-sm" [disabled]="!startUpTable"
                                         [placeholder]=" startUpTable ? 'Search' : 'loading'" [(ngModel)]="keyword"
@@ -286,7 +273,7 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
+                    </div> 
 
                 </div>
 
@@ -296,8 +283,8 @@
 
                 <div class="ps-3 pt-0">
 
-                    <div class="" *ngIf="startUpTable">
-                        <div style="" class="border-start fix-header" [ngClass]="{'border-bottom': detail.length <= 0}">
+                    <div *ngIf="startUpTable">
+                        <div class="border-start fix-header" [ngClass]="{'border-bottom': detail.length <= 0}">
                             <div class=" isScollX bg-white" style="position: absolute; ">
 
                                 <div class="d-flex tables-header-td ">
@@ -330,7 +317,7 @@
                             </div>
                         </div>
 
-                        <cdk-virtual-scroll-viewport itemSize="30" class="tables-body " (scroll)="onScroll($event)"
+                        <cdk-virtual-scroll-viewport itemSize="30" minBufferPx="200" maxBufferPx="400" class="tables-body " (scroll)="onScroll($event)"
                             #scrollViewport>
 
                             <!-- <div class="sticky-top border-bottom"
@@ -368,7 +355,7 @@
                             </div> -->
 
                             <div class="sortable border-start" style="margin-top: 31px;">
-                                <span *cdkVirtualFor="let row of detail;templateCacheSize: 0; let i = index; ">
+                                <span *cdkVirtualFor="let row of detail; let i = index; ">
                                     <div class="d-flex tables-body-td ">
                                         <div class="floating-div bg-white border-start table-body-td-first">
                                             <div class="py-1 px-3 position-relative orders-left-fixed">
@@ -389,7 +376,7 @@
                                                     <i class="bi bi-square"></i>
                                                 </span>
                                                 <span class="px-1 text-end  d-inline-block" style="min-width: 30px;">
-                                                    {{i+1}}
+                                                    {{i+1 }}
                                                 </span>
                                             </div>
                                         </div>
@@ -422,7 +409,7 @@
                                                 </div>
 
                                                 <div *ngIf="column['iType']=='formula'">
-                                                    <div class="p-1 {{'text-'+column['textAlign']}} " 
+                                                    <div class="p-1 {{'text-'+column['textAlign']}} " [ngClass]="{'text-danger':  row['f'+column['f']] < 0 }" 
                                                     [innerHTML]="functionsService.isNumber(row['f'+column['f']])"></div>
                                                 </div>
 
@@ -479,7 +466,7 @@
                                                 </div>
 
                                                 <div *ngIf="column['iType']=='select'">
-
+                                                   
                                                     <div *ngIf="row['ilock']=='1'">
 
                                                         <div class="select p-1 text-center "
