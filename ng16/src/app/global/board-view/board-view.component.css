@@ -1,6 +1,6 @@
 .btn-active{
     border-radius: 0px;
-    border-bottom: 5px solid rgb(2, 120, 174);
+    border-bottom: 5px solid var(--color-style-2);
 }
 
 .max{

@@ -8,10 +8,10 @@
         </div>
     </div>
     <div class="px-2">
-        <div class="align-self-center me-3" >
+        <div class="align-self-center me-3 mt-1" >
             <div class="d-flex">
                 <div>
-                    <img [src]="journal.picture" height="34" class="rounded-circle me-2">
+                    <img [src]="journal.picture" height="30" class="rounded-circle me-2 ">
                 </div>
                 <div class="align-self-center">
                     <!-- <small style="font-size: 0.8rem;"><i class="bi bi-lock"></i></small> -->
@@ -22,6 +22,6 @@
         </div>
     </div>
     <div class="align-self-center">
-        <a href="javascript:;" class="btn btn-outline-dark btn-sm me-1" (click)="openComponent('ShareBoardComponent','')" (newItemEvent)="onChild($event)"><i class="bi bi-person-plus"></i> Share</a>
+        <a href="javascript:;" class="btn btn-dark btn-sm me-1" (click)="openComponent('ShareBoardComponent','')" (newItemEvent)="onChild($event)"><i class="bi bi-person-plus"></i> Share</a>
     </div>
 </div>

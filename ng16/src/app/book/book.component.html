@@ -20,7 +20,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-3 rounded shadow-md border">
+                <div class="bg-white p-3 rounded shadow-sm  ">
 
                     <div class="row">
                         <div class="col-12 text-end align-self-center">
@@ -28,7 +28,7 @@
                                 class="btn btn-sm  btn-light mx-1">Clear Trash Bin </button>
                             <button type="button" *ngIf="tools == true " (click)="fnDeleteAll();"
                                 class="btn btn-sm  btn-danger mx-1">Delete </button>
-                            <button class="btn btn-sm  btn-info mx-1 text-white" *ngIf="book.id !== 0"
+                            <button class="btn btn-sm  btn-primary mx-1 text-white" *ngIf="book.id !== 0"
                                 (click)="open(content)">New Journal</button>
                         </div>
                         <div class="col-12">
@@ -70,7 +70,8 @@
                                             </td>
 
                                             <td [ngClass]="{'text-decoration-line-through': x.presence == '4'}">
-                                                <a class="text-primary" *ngIf="x.presence=='1' "  [routerLink]="[ '/board/table/', x.id, x.viewId ]"><b>{{x.name}}</b></a>
+                                                <a class="text-primary" *ngIf="x.presence=='1' "  [routerLink]="[ '/board/']" 
+                                                [queryParams]="{id : x.id, journalTableViewId : x.viewId, board : 'table'}"><b>{{x.name}}</b></a>
 
                                                 <b *ngIf="x.presence!='1'" >{{x.name}}</b>
                                                 

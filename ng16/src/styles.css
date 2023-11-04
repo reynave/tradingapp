@@ -3,9 +3,9 @@
   --font-bebas : 'Bebas Neue', sans-serif;
   --font-manrope: 'Manrope', sans-serif;
   --font-poppins: 'Poppins', sans-serif;  
-  --bg-body-1: rgb(234 242 253);
+  --bg-body-1: #f2eee7;
   
-  --bg-gray: #f4f4f4;
+  --bg-gray: #BCA37F;
 
   --color-white: #fff;
   --color-light-1: #ecf8ef;
@@ -16,7 +16,42 @@
   --scroll-color-active: #aab7b8;
 
   --color-style-1: #a3e2e2;
+  --color-style-2: #BCA37F;
+  /*
+  https://colorhunt.co/palette/fff2d8ead7bbbca37f113946
+  */
+  --color-dark-1:#113946
+}
+.border{
+  border-color: #BCA37F !important;
+}
+b{
+  color:var(--color-dark-1);
+}
+ 
+.btn-primary {
+  background-color: #BCA37F;
+  color: #ffffff;
+  border-color: #BCA37F;
+}
+.btn-primary:hover {
+  background-color: #b5915f; 
+  border-color: #b5915f;
+}
 
+.btn-dark {
+  background-color: #113946;
+  color: #ffffff;
+  border-color: #113946;
+}
+.btn-dark:hover {
+  background-color: #071d25; 
+  border-color: #071d25;
+}
+
+
+.table th{
+  color: #113946 !important; 
 }
 
 /* Firefox */

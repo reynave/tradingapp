@@ -75,15 +75,11 @@ export class ChartjsComponent implements OnInit {
     private offcanvasService: NgbOffcanvas,
   ) { }
 
-  ngOnInit(): void {
-
+  ngOnInit(): void { 
     this.id = this.ativatedRoute.snapshot.queryParams['id'];
-    this.journalTableViewId = this.ativatedRoute.snapshot.queryParams['journalTableViewId'];
-
+    this.journalTableViewId = this.ativatedRoute.snapshot.queryParams['journalTableViewId']; 
     this.httpHeader();
-    this.httpGet(true);
-
-
+    this.httpGet(true); 
   }
 
   reload(newItem: any) {

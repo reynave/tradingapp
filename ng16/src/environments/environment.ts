@@ -3,7 +3,7 @@ var root = "https://mirrel.com/";
 
 export const environment = {
     production: true,
-    api : "https://mirrel.com/app/",
+    api : "https://mirrel.com/api/",
     socket_url: 'https://socket.mirrel.com',
     ver : "1.0",
     website : root,

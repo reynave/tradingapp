@@ -57,7 +57,12 @@ export class HomeComponent implements OnInit {
   }
 
   goToJournal(x:any){
-    this.router.navigate(['board/table/',x.journalId,x.viewId]);
+    const params = {
+      id :  x.journalId,
+      journalTableViewId : x.viewId,
+      board: 'table'
+    }
+    this.router.navigate(['board'], { queryParams:params});
   }
   goToBook(x:any){
     this.router.navigate(['book/',x.id]);
