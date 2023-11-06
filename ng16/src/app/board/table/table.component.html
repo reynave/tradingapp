@@ -419,7 +419,15 @@
 
                                                 <div *ngIf="column['iType']=='date'">
                                                     <div class="d-flex">
-                                                        <div>
+                                                        <!-- {{row['f'+column['f']]}}-->
+                                                        <input type="date" class="p-1 text-center" 
+                                                            [disabled]="row['ilock']=='1'"  #customFieldText
+                                                            (keyup.enter)="customFieldText.blur()"
+                                                            (change)="updateRow(row,column['f'],column);"
+                                                         [(ngModel)]="row['f'+column['f']]"  /> 
+                                                          <!-- <div>
+                                                            {{row['f'+column['f']]}}
+                                                            
                                                             <input type="text" class="p-1 text-center" name="dp"
                                                                 readonly [(ngModel)]="row['f'+column['f']]"
                                                                 [placeholder]="functionsService.formatDate(row['f'+column['f']])"
@@ -438,14 +446,15 @@
                                                                     type="button"></button>
                                                             </span>
 
-                                                        </div>
-                                                    </div>
+                                                        </div> 
+                                                        -->
+                                                    </div> 
                                                 </div>
 
                                                 <div *ngIf="column['iType']=='time'">
                                                     <div class="mx-2">
                                                         <div class="d-flex justify-content-center">
-                                                            <input type="text" class="p-1 text-center" maxlength="250"
+                                                            <input type="time" class="p-1 text-center" maxlength="250"
                                                                 [(ngModel)]="row['f'+column['f']]" #customFieldText
                                                                 [disabled]="row['ilock']=='1'"
                                                                 (keyup.enter)="customFieldText.blur()"

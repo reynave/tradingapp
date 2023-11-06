@@ -116,10 +116,11 @@ class CustomField extends BaseController
 
             // $row = $post['newItem']['value'];
             if ($post['column']['iType'] == 'date') {
-                $value = $value['year'] . '-' . $value['month'] . '-' . $value['day'];
+                //$value = $value['year'] . '-' . $value['month'] . '-' . $value['day'];
+
             } 
             else if ($post['column']['iType'] == 'time') {
-                $value = self::validateAndConvertTime($value);
+               // $value = self::validateAndConvertTime($value);
             }
            
 

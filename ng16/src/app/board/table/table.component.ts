@@ -513,7 +513,7 @@ export class TableComponent implements OnInit, OnChanges {
 
 
       if (el['iType'] == 'number' || el['iType'] == 'formula') {
-        value = value / this.customField.length;
+        value = value / this.detail.length;
 
         this.customField[i]['total'] = new Intl.NumberFormat('en-US').format(parseFloat(value.toFixed(2))) + " <code>AVG</code> ";
       }

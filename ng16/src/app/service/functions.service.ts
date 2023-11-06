@@ -59,6 +59,7 @@ export class FunctionsService {
   isNumber(str: string) {
     return str ? str.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") : '';
   }
+ 
   formatDate(variable: any) {
     if(variable == ''){
       return '';

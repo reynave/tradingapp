@@ -187,7 +187,8 @@ class Core extends Model
                 $temp = array(
                     "hide" => 0,
                 );
-            } else {
+            } 
+            else {
                 $temp = array(
                     "hide" => model("Core")->select("hide", "journal_table_view_show", "journalTableViewId = '$journalTableViewId'  AND journalCustomFieldId = '" . $r['id'] . "' ") ? 1 : 0,
                 );
