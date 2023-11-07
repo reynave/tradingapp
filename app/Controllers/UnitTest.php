@@ -16,6 +16,23 @@ class UnitTest extends BaseController
         return $this->response->setJSON($data);
     }
 
+    function dateFix(){
+        $q1 = "SELECT f1, f3, id FROM journal_detail
+        WHERE  presence = 1";
+        $items = $this->db->query($q1)->getResultArray();
+        $this->response->setHeader('Content-Type', 'application/json');
+        foreach($items as $row){
+            echo $row['id'].' '.date("Y-m-d", strtotime($row['f1'])).' | '.date("Y-m-d", strtotime($row['f3'])).' | ';
+            
+            $this->db->table("journal_detail")->update([   
+                "f1" => date("Y-m-d", strtotime($row['f1'])), 
+                "f3" => date("Y-m-d", strtotime($row['f3'])),  
+            ]," id = ".$row['id'] ); 
+
+            echo "\n";
+        }
+
+    }
 
     public function faker($journalId)
     {
@@ -29,19 +46,7 @@ class UnitTest extends BaseController
             
             if ($total <= $max) {  
                 $date = '2023-' . $faker->date('m-d'); 
-                $this->db->table("journal_detail")->insert([
-                    'journalId' => $journalId,
-                    'f1' => $date,
-                    'f2' => rand(1, 11) . ":" . rand(0, 59),
-                    'f8' => model("Core")->select("id","journal_select", " field = 'f8' ".$where ),
-                    'f10' => "1.0" . rand(4000, 6000),
-                    'f11' => "1.0" . rand(4000, 6000),
-                    'f12' => "1.0" . rand(4000, 6000),
-                    'f6' =>  (rand(1,3) % 2) == 1 ? rand(200, 300)  :  -100 ,
-                    'f9' =>  model("Core")->select("id","journal_select", " field = 'f9' ".$where ),
-                    'f3' => $date,
-                    'f4' => rand(12, 24) . ":" . rand(0, 59), 
-                ]);
+                
             }else{
                 break;
             }
