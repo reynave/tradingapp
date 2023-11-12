@@ -280,7 +280,8 @@ class Core extends Model
 
         $q = "SELECT id, ilock, journalId, archives,  archives as 'historyArchives', false AS 'checkbox' $customField 
         FROM journal_detail 
-        where journalId = '$id' $where
+        where journalId = '$id' and f10 != '' AND f11 != ''
+         $where
         AND presence = 1 and archives = 0 order by sorting ASC";
         $detail = $this->db->query($q)->getResultArray();
 
@@ -297,7 +298,7 @@ class Core extends Model
                       
                     foreach (array_keys($rec) as $key) {
                         $data[$key] = $rec[$key];
-                    }
+                    } 
                     $detail[$index][$field['key']] = $evaluateFormula($data, $field['eval']);
    
                 }

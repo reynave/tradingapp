@@ -135,7 +135,7 @@ class Chart extends BaseController
                 "selectWhereOption" => $selectWhereOption,
                 //"c" => count($journal_chart['idWhere']),
 
-                 "chartJsData" => $startup == false ? model("Core")->chartJsData($journal_chart, $journalTable['detail'], $y,$selectWhereOption) : [],
+                "chartJsData" => $startup == false ? model("Core")->chartJsData($journal_chart, $journalTable['detail'], $y,$selectWhereOption) : [],
                 
                 "detail" => $journalTable['detail'],
                 "totalDetail" => (int)count($journalTable['detail']),

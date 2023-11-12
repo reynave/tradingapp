@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core'; // First, import Input
 //import { DetailInterface } from 'src/app/board/table/table-interface';
-import { NgbProgressbarConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap'; 
+import { NgbProgressbarConfig, NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -8,15 +8,18 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './widget-table-summary.component.html',
   styleUrls: ['./widget-table-summary.component.css']
 })
-export class WidgetTableSummaryComponent implements OnInit, OnChanges { 
-  accumulationBalance :number = 100;
+export class WidgetTableSummaryComponent implements OnInit, OnChanges {
+  accumulationBalance: number = 100;
   sum = {
     row: 0,
     profit: 0,
+    totalProfit: 0,
+    totalLoss: 0,
+
     win: 0,
     loss: 0,
     bestProfit: 0,
-    worstLoss: 0, 
+    worstLoss: 0,
     tradingTime: 0,
   }
   avg = {
@@ -31,25 +34,27 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
   @Input() detail: any;
   @Input() startBalance: number = 0;
   constructor(config: NgbProgressbarConfig) {
-		// customize default values of progress bars used by this component tree
-		config.max = 100;
-		config.striped = true;
-		config.animated = true; 
-		config.height = '24px';
-	}
+    // customize default values of progress bars used by this component tree
+    config.max = 100;
+    config.striped = true;
+    config.animated = true;
+    config.height = '24px';
+  }
   ngOnInit(): void {
     this.reset();
     this.fnCalculation();
     // console.log(this.detail);
   }
-  reset(){
+  reset() {
     this.sum = {
       row: 0,
       profit: 0,
+      totalProfit: 0,
+      totalLoss: 0,
       win: 0,
       loss: 0,
       bestProfit: 0,
-      worstLoss: 0, 
+      worstLoss: 0,
       tradingTime: 0,
     }
     this.avg = {
@@ -63,11 +68,11 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges() { 
+  ngOnChanges() {
     this.reset();
     this.fnCalculation();
   }
-  growthBalance : number = 100;
+  growthBalance: number = 100;
   fnCalculation() {
 
     let profit = 0;
@@ -79,14 +84,20 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
     let timeDifference: number = 0;
     this.sum.row = this.detail.length;
     for (let i = 0; i < this.detail.length; i++) {
-      
+
       profit = parseInt(this.detail[i]['f6']);
       a = this.detail[i]['f1'] + " " + this.detail[i]['f2'] + ":00";
       b = this.detail[i]['f3'] + " " + this.detail[i]['f4'] + ":00";
- 
+
       this.sum.profit += !Number.isNaN(profit) ? profit : 0;
-      if (profit > 0) this.sum.win++;
-      else if(profit < 0)   { this.sum.loss++; }
+      if (profit > 0) {
+        this.sum.win++;
+        this.sum.totalProfit = this.sum.totalProfit + profit;
+      }
+      else if (profit < 0) {
+        this.sum.loss++;
+        this.sum.totalLoss = this.sum.totalLoss + profit;
+      }
 
       if (profit >= this.sum.bestProfit) this.sum.bestProfit = profit;
       if (profit <= this.sum.worstLoss) this.sum.worstLoss = profit;
@@ -100,7 +111,7 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
       if (tempLoss > this.avg.consecutiveLoss) this.avg.consecutiveLoss = tempLoss;
 
       if (this.detail[i]['f1'] != "" && this.detail[i]['f8'] != "") {
-    //    console.log("f1:",this.detail[i]['f1']," f8:",this.detail[i]['f8'])
+        //    console.log("f1:",this.detail[i]['f1']," f8:",this.detail[i]['f8'])
         dateA = new Date(a);
         dateB = new Date(b);
         timeDifference = dateB - dateA;
@@ -111,9 +122,9 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
         if (!Number.isNaN(totalTime) && (totalTime <= this.avg.fasterTradingTime)) {
           this.avg.fasterTradingTime = Math.floor(totalTime);
         }
-      }else{
+      } else {
 
-      //  console.log("f1: null" ); 
+        //  console.log("f1: null" ); 
       }
 
 
@@ -122,35 +133,35 @@ export class WidgetTableSummaryComponent implements OnInit, OnChanges {
       }
 
     }
-   
+
     this.avg.tradingTime = Math.floor(this.sum.tradingTime / isNotNan);
     this.avg.profit = this.sum.profit / this.sum.row;
-    this.avg.winRate = ((this.sum.win / this.sum.row) * 100 );
+    this.avg.winRate = ((this.sum.win / this.sum.row) * 100);
 
-   // this.startBalance 
-    if((this.startBalance + this.sum.profit) < this.startBalance){
-      this.accumulationBalance  = Math.round(((this.startBalance + this.sum.profit) / this.startBalance) * 100);
-    }else{
-      this.accumulationBalance = Math.round(((this.startBalance + this.sum.profit) / this.startBalance ) * 100) ;
+    // this.startBalance 
+    if ((this.startBalance + this.sum.profit) < this.startBalance) {
+      this.accumulationBalance = Math.round(((this.startBalance + this.sum.profit) / this.startBalance) * 100);
+    } else {
+      this.accumulationBalance = Math.round(((this.startBalance + this.sum.profit) / this.startBalance) * 100);
       //this.gr
     }
-    this.avg.fasterTradingTime = this.avg.fasterTradingTime == 9999999 ? NaN :this.avg.fasterTradingTime ; 
-   
+    this.avg.fasterTradingTime = this.avg.fasterTradingTime == 9999999 ? NaN : this.avg.fasterTradingTime;
+
   }
 
-  fnColorProgress(val : number){
+  fnColorProgress(val: number) {
     let color = "danger";
-    if(val > 100){
+    if (val > 100) {
       color = "primary";
-    } 
+    }
 
-    if(val <= 100){
+    if (val <= 100) {
       color = "success";
     }
-    if(val <= 50){
+    if (val <= 50) {
       color = "warning";
     }
-    if(val < 40){
+    if (val < 40) {
       color = "danger";
     }
     return color;

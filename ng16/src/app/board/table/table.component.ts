@@ -121,13 +121,13 @@ export class TableComponent implements OnInit, OnChanges {
 
 
     this.ativatedRoute.paramMap.subscribe(params => {
-      console.log('params', params);
+    //  console.log('params', params);
       // Do more processing here if needed
     });
     this.id = this.ativatedRoute.snapshot.queryParams['id'];
     this.journalTableViewId = this.ativatedRoute.snapshot.queryParams['journalTableViewId'];
     this.httpHeader();
-    this.httpDetail(true);
+   // this.httpDetail(true);
     this._docSub = this.socketService.getMessage().subscribe(
       (data: { [x: string]: any; }) => {
         console.log('socketService', data);
@@ -137,16 +137,12 @@ export class TableComponent implements OnInit, OnChanges {
             const index = this.detail.findIndex((rec: { id: string; }) => rec.id === data['msg']['id']);
             if (index !== -1) {
               for (let i = 0; i < 40; i++) {
-                // console.log("f"+i, this.detail[index]['f'+i]);
                 if (this.detail[index]['f' + i] !== undefined) {
                   this.detail[index]['f' + i] = data['msg']['f' + i];
                 }
               }
-              ///    this.detail = this.detail.filter((x) => x != this.detail[index]);
             }
-            // console.log(data['msg']);  
             this.calculationFooter();
-            //  this.httpDetail();
           }
 
           if (data['action'] === 'delete' || data['action'] == 'archives') {
@@ -227,7 +223,7 @@ export class TableComponent implements OnInit, OnChanges {
       }
     );
 
-    console.log('changeParams : ', this.changeParams);
+  //  console.log('changeParams : ', this.changeParams);
   }
 
 
@@ -251,8 +247,8 @@ export class TableComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    console.log("OnChanges ");
-    console.log('changeParams : ', this.changeParams);
+    //console.log("OnChanges ");
+   // console.log('changeParams : ', this.changeParams);
     this.reload([]);
   }
 
