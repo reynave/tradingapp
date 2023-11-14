@@ -1,5 +1,5 @@
 <div class="modal-header" *ngIf="showSearchPhoto !== true">
-    <strong>{{item.name}}</strong>
+    <img src="./assets/icon/collaboration-50.png" width="25" class="me-2"> Collaboration
     <button type="button" class="btn-close" aria-label="Close" (click)="close();"></button>
 </div>
 <div class="p-4 pb-2" *ngIf="showSearchPhoto === true">
@@ -8,20 +8,18 @@
             <span (click)="showSearchPhoto=false" class="h4"><i class="bi bi-arrow-left"></i></span>
         </div>
         <div class="col-10 text-center">
-            <h6>Photos by <a href="https://unsplash.com/?utm_source=mirrel&utm_medium=referral"
-                    target="_blank"><b>Unsplash.com</b></a></h6>
+            <h6>Photos by <a href="https://unsplash.com/?utm_source=mirrel&utm_medium=referral" target="_blank"><b>Unsplash.com</b></a></h6>
         </div>
         <div class="col-1 text-end align-self-center">
             <button type="button" class="btn-close" aria-label="Close" (click)="close();"></button>
         </div>
-    </div>
-
+    </div> 
 </div>
 <!-- SHARE MODAL -->
 <div class="modal-body " *ngIf="showSearchPhoto !== true">
     <div class="row pb-3">
         <div class="col-md-5 col-12">
-            <div class="p-3 border rounded shadow-sm">
+           
                 <div class="mb-3 pointer">
                     <img *ngIf="item.owner == '1' " [src]="item.image" width="100%" (click)="showSearchPhoto=true"
                         placement="top" ngbTooltip="Change photos">
@@ -66,33 +64,28 @@
                         <button class="btn btn-outline-secondary" [cdkCopyToClipboard]="env.shareLink+item.url+'/'+item.url_title"
                             type="button" id="button-addon1"><i class="bi bi-link-45deg"></i> Copy</button>
                     </div> 
-                </div>
-            </div>
+                </div> 
         </div>
 
         <div class="col-md-7 col-12 border-start">
 
-            <div class="row mb-2">
-                <div class="col-6 mb-2">
-                    <h5>
-                        <img src="./assets/icon/collaboration-50.png" width="25" class="me-2"> Collaboration
-                    </h5>
-                </div>
-                <div class="col-6 text-end">
-                    <small class="mx-2">{{cb2note}}</small>
-                </div>
-            </div>
+          
 
             <div class="row">
                 <div class="col-12 mb-2">
                     <strong>Invite a new member with link to collaboration this board</strong>
                 </div>
                 <div class="col-12 mb-2">
-                    <div class="input-group input-group-sm " *ngIf="invitedLink!='' ">
+                    <!-- <div class="input-group input-group-sm " *ngIf="invitedLink!='' ">
                         <input type="text" class="form-control bg-light" [value]="env.inviteLink+item.invitedLink" readonly>
                         <button class="btn btn-outline-secondary" (click)="fnCb2();"
                             [cdkCopyToClipboard]="env.inviteLink+item.invitedLink" type="button" id="button-addon1"><i
                                 class="bi bi-link-45deg"></i> Copy Invite Link</button>
+                    </div>
+                    <small class="mx-2">{{cb2note}}</small> -->
+                    <div class="input-group" >
+                        <input type="email" class="form-control" [(ngModel)]="email" required placeholder="Email address">
+                        <button class="btn btn-outline-secondary" [disabled]="email==''" (click)="fnInvited()" type="button">Send</button>
                     </div>
                 </div>
             </div>
@@ -116,12 +109,12 @@
 
 
             <div class="cmaxHeight px-3">
-                <div class="row py-2 divHover pointer" *ngFor="let x of journalAccess">
+                <div class="row py-2  pointer" *ngFor="let x of journalAccess">
 
                     <div class="col-10">
                         <div class="d-flex">
                             <div>
-                                <img [src]="x.picture" height="35" class="me-2 rounded-circle">
+                                <img [src]="x.picture" height="35" class="me-2 rounded-circle border shadow-sm">
                             </div>
                             <div>
                                 <div class="lh-1">

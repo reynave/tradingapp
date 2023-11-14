@@ -8,20 +8,7 @@ import { Observable, OperatorFunction } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocketService } from 'src/app/service/socket.service';
-
-
-// const teams: { name: string; picture: string }[] = [
-// 	{ name: 'Alabama', picture: '5/5c/picture_of_Alabama.svg/45px-picture_of_Alabama.svg.png' },
-// 	{ name: 'Alaska', picture: 'e/e6/picture_of_Alaska.svg/43px-picture_of_Alaska.svg.png' },
-// 	{ name: 'Arizona', picture: '9/9d/picture_of_Arizona.svg/45px-picture_of_Arizona.svg.png' },
-// 	{ name: 'Arkansas', picture: '9/9d/picture_of_Arkansas.svg/45px-picture_of_Arkansas.svg.png' },
-// 	{ name: 'California', picture: '0/01/picture_of_California.svg/45px-picture_of_California.svg.png' },
-// 	{ name: 'Colorado', picture: '4/46/picture_of_Colorado.svg/45px-picture_of_Colorado.svg.png' },
-// 	{ name: 'Connecticut', picture: '9/96/picture_of_Connecticut.svg/39px-picture_of_Connecticut.svg.png' },
-// 	{ name: 'Delaware', picture: 'c/c6/picture_of_Delaware.svg/45px-picture_of_Delaware.svg.png' }, 
-// ];
-
-
+ 
 
 @Component({
   selector: 'app-share-board',
@@ -260,4 +247,22 @@ export class ShareBoardComponent implements OnInit {
     )
   }
 
+  email : string = "";
+  fnInvited(){
+    const body = { 
+      email: this.email,
+      journal_id : this.item.id,
+    }
+    
+    this.http.post<any>(environment.api + "invited/fnInvited", body, {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log(data); 
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  }
 }
