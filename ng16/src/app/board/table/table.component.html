@@ -50,13 +50,13 @@
         <div class="row">
             <div class="col-12">
                 <div class="alert alert-warning border rounded shadow">
-                  
+
                     <div class="d-flex">
                         <div class="p-2 w-100"><span [innerHTML]="noteWarning"></span></div>
                         <div class="p-2 flex-shrink-1">
                             <a href="javascript:;" (click)="showWarning=false"><i class="bi bi-x-lg"></i></a>
                         </div>
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,30 +69,35 @@
         <div class="col-lg-2 col-md-3 col-12" *ngIf="showTableLeftWidget">
             <div class="bg-white rounded post1" *ngIf="templateCode=='journalFXTrading'">
                 <div class="post2   text-end ">
-                    <a href="javascript:;" (click)="fnHideLeftWidget(false)" class="me-2"><i class="bi bi-x-square-fill"></i></a>
+                    <a href="javascript:;" (click)="fnHideLeftWidget(false)" class="me-2"><i
+                            class="bi bi-x-square-fill"></i></a>
                 </div>
-                
+
                 <div *ngIf="childDetail">
-                    <app-widget-table-summary [startBalance]="startBalance" [detail]="childDetail"></app-widget-table-summary>
+                    <app-widget-table-summary [startBalance]="startBalance"
+                        [detail]="childDetail"></app-widget-table-summary>
                 </div>
             </div>
-        </div>  
+        </div>
 
         <div class=" col-12" [ngClass]="{'col-lg-10 col-md-9': showTableLeftWidget == true }">
             <div class="bg-white rounded">
 
-                <div class="px-3 py-2"> 
+                <div class="px-3 py-2">
 
-                    <div class="row mb-2">  
+                    <div class="row mb-2">
                         <div class="col-11">
                             <div class="d-flex">
                                 <div class="me-2" *ngIf="showTableLeftWidget == false">
-                                    <button type="button" (click)="fnHideLeftWidget(true)" class="btn btn-sm btn-secondary"><i class="bi bi-arrow-right"></i> Show Summary</button>
+                                    <button type="button" (click)="fnHideLeftWidget(true)"
+                                        class="btn btn-sm btn-secondary"><i class="bi bi-arrow-right"></i> Show
+                                        Summary</button>
                                 </div>
                                 <div class="me-2">
-                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">Add Row</button>
+                                    <button type="button" (click)="addTask()" class="btn btn-sm btn-primary">Add
+                                        Row</button>
                                 </div>
- 
+
                                 <div class="me-2">
                                     <input type="text" class="form-control form-control-sm" [disabled]="!startUpTable"
                                         [placeholder]=" startUpTable ? 'Search' : 'loading'" [(ngModel)]="keyword"
@@ -275,9 +280,9 @@
                                     <i class="bi bi-printer"></i>
                                 </a>
                             </div>
- 
+
                         </div>
-                    </div> 
+                    </div>
 
                 </div>
 
@@ -321,8 +326,8 @@
                             </div>
                         </div>
 
-                        <cdk-virtual-scroll-viewport itemSize="30" minBufferPx="200" maxBufferPx="400" class="tables-body " (scroll)="onScroll($event)"
-                            #scrollViewport>
+                        <cdk-virtual-scroll-viewport itemSize="30" minBufferPx="200" maxBufferPx="400"
+                            class="tables-body " (scroll)="onScroll($event)" #scrollViewport>
 
                             <!-- <div class="sticky-top border-bottom"
                                 [style.top]=" detail.length > 20 ?  inverseOfTranslation : '0px'">
@@ -413,19 +418,50 @@
                                                 </div>
 
                                                 <div *ngIf="column['iType']=='formula'">
-                                                    <div class="p-1 {{'text-'+column['textAlign']}} " [ngClass]="{'text-danger':  row['f'+column['f']] < 0 }" 
-                                                    [innerHTML]="functionsService.isNumber(row['f'+column['f']])"></div>
+                                                    <div class="p-1 {{'text-'+column['textAlign']}} "
+                                                        [ngClass]="{'text-danger':  row['f'+column['f']] < 0 }"
+                                                        [innerHTML]="functionsService.isNumber(row['f'+column['f']])">
+                                                    </div>
                                                 </div>
+                                                <div *ngIf="column['iType']=='datetime'">
+                                                    <div class="d-flex p-1">
+                                                        <div class="flex-grow-1 text-center">
+                                                          <input type="text" readonly value="{{row['f'+column['f']] }}">
+                                                        </div>
+                                                        <div>
+                                                            <div ngbDropdown container="body">
+                                                                <div id="dropdownForm2"   ngbDropdownToggle >
+                                                                    <i class="bi bi-calendar-date"></i>
+                                                                </div>
+                                                                <div ngbDropdownMenu aria-labelledby="dropdownForm2">
+                                                                    <div style="width: auto;" class="p-1">
+                                                                       
+                                                                        <ngb-datepicker #dp [(ngModel)]="datetime['date']"  /> 
 
+                                                                        <div class="d-flex">
+                                                                            <div class="align-self-center">
+                                                                                <i class="bi bi-clock"></i>
+                                                                            </div>
+                                                                            <div>
+                                                                                <ngb-timepicker [(ngModel)]="datetime['time']" /> 
+                                                                            </div>
+                                                                            
+                                                                        </div>
+                                                                    </div> 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>  
+                                                </div>
                                                 <div *ngIf="column['iType']=='date'">
                                                     <div class="d-flex">
                                                         <!-- {{row['f'+column['f']]}}-->
-                                                        <input type="date" class="p-1 text-center" 
-                                                            [disabled]="row['ilock']=='1'"  #customFieldText
+                                                        <input type="date" class="p-1 text-center"
+                                                            [disabled]="row['ilock']=='1'" #customFieldText
                                                             (keyup.enter)="customFieldText.blur()"
                                                             (change)="updateRow(row,column['f'],column);"
-                                                         [(ngModel)]="row['f'+column['f']]"  /> 
-                                                          <!-- <div>
+                                                            [(ngModel)]="row['f'+column['f']]" />
+                                                        <!-- <div>
                                                             {{row['f'+column['f']]}}
                                                             
                                                             <input type="text" class="p-1 text-center" name="dp"
@@ -448,7 +484,7 @@
 
                                                         </div> 
                                                         -->
-                                                    </div> 
+                                                    </div>
                                                 </div>
 
                                                 <div *ngIf="column['iType']=='time'">
@@ -479,7 +515,7 @@
                                                 </div>
 
                                                 <div *ngIf="column['iType']=='select'">
-                                                   
+
                                                     <div *ngIf="row['ilock']=='1'">
 
                                                         <div class="select p-1 text-center "
@@ -638,14 +674,14 @@
                                             <i class="bi bi-file-spreadsheet text-white"></i>
                                         </div>
                                     </div>
-                                    <div class=" order-{{n.sorting}}  "
-                                        *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
+                                    <div class=" order-{{n.sorting}}  " *ngFor="let n of customField;  let a = index"
+                                        [hidden]="n.hide=='1'">
                                         <div class="p-1 text-center" [ngStyle]="{'width': n.width+'px'}">
                                             <!-- {{fnDetailTotal(n) }} -->
                                             <div class="mx-1 bg-white rounded shadow-sm border" [hidden]="!n.total">
                                                 <span [innerHTML]="n.total"></span>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>

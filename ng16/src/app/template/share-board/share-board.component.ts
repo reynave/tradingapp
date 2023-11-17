@@ -33,6 +33,7 @@ export class ShareBoardComponent implements OnInit {
   photosTotal: number = 0;
   invitedLink : string = "";
   showSearchPhoto: boolean = false; 
+  pendingUser : any = [];
   constructor(
     private http: HttpClient,
     private configService: ConfigService,
@@ -45,6 +46,11 @@ export class ShareBoardComponent implements OnInit {
     console.log(this.item, this.permission,);
     this.unsplash(); 
     this.fnInvetedLink();
+    this.httpJournalAccess(); 
+    this.httpInviteJournal(); 
+  }
+
+  httpJournalAccess(){
     this.http.get<any>(environment.api + "journal/access", {
       headers: this.configService.headers(),
       params: {
@@ -55,6 +61,22 @@ export class ShareBoardComponent implements OnInit {
         console.log(data);
         this.journalAccess = data['journal_access'];
         this.teams = data['teams'];
+      },
+      e => {
+        console.log(e);
+      }
+    )
+  } 
+  httpInviteJournal(){
+    this.http.get<any>(environment.api + "invited/journal", {
+      headers: this.configService.headers(),
+      params: {
+        journalId: this.item.id,
+      }
+    }).subscribe(
+      data => {
+        this.pendingUser = data['items'];
+        console.log('httpInviteJournal',data); 
       },
       e => {
         console.log(e);
@@ -259,6 +281,8 @@ export class ShareBoardComponent implements OnInit {
     }).subscribe(
       data => {
         console.log(data); 
+        this.email = "";
+        this.httpInviteJournal(); 
       },
       e => {
         console.log(e);

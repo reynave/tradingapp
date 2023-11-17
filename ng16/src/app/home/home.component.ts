@@ -33,6 +33,23 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.httpGet();
+    this.httpInvited();
+  }
+
+  invited : any = [];
+  httpInvited(){
+    this.http.get<any>(environment.api + "invited/waitingApproved", {
+      headers: this.configService.headers()
+    }).subscribe(
+      data => {
+        console.log(data);  
+        this.invited = data['items'];
+      },
+      error => {
+        console.log(error);
+      }
+
+    )
   }
 
   httpGet() {
@@ -87,6 +104,26 @@ export class HomeComponent implements OnInit {
         this.router.navigate(['./book',data['id']]).then(()=>{
           this.modalService.dismissAll();
         })
+      },
+      error=>{
+        console.log(error);
+      }
+    )
+  }
+
+
+  fnRejectInvited(x: any, approved : number){
+    const body = {
+      item : x,
+      approved : approved,
+    }
+   // console.log(body);
+    this.http.post<any>(environment.api+"invited/fnRejectInvited", body,{
+      headers: this.configService.headers(),
+    }).subscribe(
+      data=>{
+        console.log(data); 
+        this.httpInvited();
       },
       error=>{
         console.log(error);

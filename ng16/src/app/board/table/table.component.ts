@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { ConfigService } from 'src/app/service/config.service';
 import { FunctionsService } from 'src/app/service/functions.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbOffcanvas, NgbModal, NgbModalConfig, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { NgbOffcanvas, NgbModal, NgbModalConfig, NgbModalOptions, NgbTimepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import { CustomFieldFormComponent } from 'src/app/template/custom-field-form/custom-field-form.component';
 import { DetailInterface, FilterSelect } from './table-interface';
 import { OffCanvasNotesComponent } from './off-canvas-notes/off-canvas-notes.component';
@@ -96,6 +96,10 @@ export class TableComponent implements OnInit, OnChanges {
   templateCode: string = "";
   childDetail: any[] | undefined;
   showWarning: boolean = false;
+  datetime : any = {
+    date : "",
+    time : ""
+  }
   showTableLeftWidget: boolean = localStorage.getItem("showTableLeftWidget") == '1' ? true : false;
   private _docSub: any;
   constructor(
@@ -107,9 +111,12 @@ export class TableComponent implements OnInit, OnChanges {
     private offcanvasService: NgbOffcanvas,
     private socketService: SocketService,
     private router: Router,
-    config: NgbModalConfig
+    config: NgbModalConfig,
+    configDate: NgbTimepickerConfig
   ) {
     document.addEventListener('paste', this.handlePaste.bind(this));
+    configDate.seconds = false;
+		configDate.spinners = false;
   }
 
   ngOnInit(): void {
@@ -637,6 +644,8 @@ export class TableComponent implements OnInit, OnChanges {
       { headers: this.configService.headers() }
     ).subscribe(
       data => {
+        console.log('CustomField/updateRow',data);
+
         const msg = {
           sender: localStorage.getItem("address.mirrel.com"),
           msg: data['row'],

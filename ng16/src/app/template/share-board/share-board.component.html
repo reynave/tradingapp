@@ -8,68 +8,69 @@
             <span (click)="showSearchPhoto=false" class="h4"><i class="bi bi-arrow-left"></i></span>
         </div>
         <div class="col-10 text-center">
-            <h6>Photos by <a href="https://unsplash.com/?utm_source=mirrel&utm_medium=referral" target="_blank"><b>Unsplash.com</b></a></h6>
+            <h6>Photos by <a href="https://unsplash.com/?utm_source=mirrel&utm_medium=referral"
+                    target="_blank"><b>Unsplash.com</b></a></h6>
         </div>
         <div class="col-1 text-end align-self-center">
             <button type="button" class="btn-close" aria-label="Close" (click)="close();"></button>
         </div>
-    </div> 
+    </div>
 </div>
+
 <!-- SHARE MODAL -->
 <div class="modal-body " *ngIf="showSearchPhoto !== true">
     <div class="row pb-3">
         <div class="col-md-5 col-12">
-           
-                <div class="mb-3 pointer">
-                    <img *ngIf="item.owner == '1' " [src]="item.image" width="100%" (click)="showSearchPhoto=true"
-                        placement="top" ngbTooltip="Change photos">
-                    <img *ngIf="item.owner == '0' " [src]="item.image" width="100%">
-                </div>
-                <div class="mb-3">
-                    <div class="row">
-                        <div class="col-6 align-self-center ">
-                            <strong>General access :</strong>
+
+            <div class="mb-3 pointer">
+                <img *ngIf="item.owner == '1' " [src]="item.image" width="100%" (click)="showSearchPhoto=true"
+                    placement="top" ngbTooltip="Change photos">
+                <img *ngIf="item.owner == '0' " [src]="item.image" width="100%">
+            </div>
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col-6 align-self-center ">
+                        <strong>General access :</strong>
+                    </div>
+                    <div class="col-6 align-self-center ">
+                        <div *ngIf="item.owner == '0' " class="form-control bg-light">
+                            <span [innerHTML]="item.fontIcon" class="mx-2"></span> {{item.permission}}
                         </div>
-                        <div class="col-6 align-self-center ">
-                            <div *ngIf="item.owner == '0' " class="form-control bg-light">
+                        <div ngbDropdown *ngIf="item.owner == '1' ">
+                            <button type="button" class="btn btn-light" id="dropdownBasic1" ngbDropdownToggle>
                                 <span [innerHTML]="item.fontIcon" class="mx-2"></span> {{item.permission}}
-                            </div>
-                            <div ngbDropdown *ngIf="item.owner == '1' ">
-                                <button type="button" class="btn btn-light" id="dropdownBasic1" ngbDropdownToggle>
-                                    <span [innerHTML]="item.fontIcon" class="mx-2"></span> {{item.permission}}
+                            </button>
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                <button ngbDropdownItem (click)="onUpdatePermission(x)" *ngFor="let x of permission">
+                                    <span [innerHTML]="x.fontIcon" class="me-2"></span> {{x.name}}
                                 </button>
-                                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                                    <button ngbDropdownItem (click)="onUpdatePermission(x)"
-                                        *ngFor="let x of permission">
-                                        <span [innerHTML]="x.fontIcon" class="me-2"></span> {{x.name}}
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
-                <div class="mb-2" *ngIf="item.permissionId == '20'">
-                    <div class="mb-1">
-                        <h5>
-                            <img src="./assets/icon/share-50.png" width="25"> Share
-                        </h5>
-                        <div class="lh-sm mb-2">
-                            <small>This journal can be accessed by everyone with this link</small>
-                        </div>
+            </div>
+
+            <div class="mb-2" *ngIf="item.permissionId == '20'">
+                <div class="mb-1">
+                    <h5>
+                        <img src="./assets/icon/share-50.png" width="25"> Share
+                    </h5>
+                    <div class="lh-sm mb-2">
+                        <small>This journal can be accessed by everyone with this link</small>
                     </div>
-                    <div class="input-group input-group-sm "> 
-                        <input type="text" class="form-control bg-light" [value]="env.shareLink+item.url+'/'+item.url_title" readonly>
-                        <button class="btn btn-outline-secondary" [cdkCopyToClipboard]="env.shareLink+item.url+'/'+item.url_title"
-                            type="button" id="button-addon1"><i class="bi bi-link-45deg"></i> Copy</button>
-                    </div> 
-                </div> 
+                </div>
+                <div class="input-group input-group-sm ">
+                    <input type="text" class="form-control bg-light" [value]="env.shareLink+item.url+'/'+item.url_title"
+                        readonly>
+                    <button class="btn btn-outline-secondary"
+                        [cdkCopyToClipboard]="env.shareLink+item.url+'/'+item.url_title" type="button"
+                        id="button-addon1"><i class="bi bi-link-45deg"></i> Copy</button>
+                </div>
+            </div>
         </div>
 
         <div class="col-md-7 col-12 border-start">
-
-          
 
             <div class="row">
                 <div class="col-12 mb-2">
@@ -83,9 +84,20 @@
                                 class="bi bi-link-45deg"></i> Copy Invite Link</button>
                     </div>
                     <small class="mx-2">{{cb2note}}</small> -->
-                    <div class="input-group" >
-                        <input type="email" class="form-control" [(ngModel)]="email" required placeholder="Email address">
-                        <button class="btn btn-outline-secondary" [disabled]="email==''" (click)="fnInvited()" type="button">Send</button>
+                    <div class="input-group mb-2">
+                        <input type="email" class="form-control" [(ngModel)]="email" required
+                            placeholder="Email address" (keydown.enter)="fnInvited()">
+                        <button class="btn btn-outline-secondary" [disabled]="email==''" (click)="fnInvited()"
+                            type="button">Send</button>
+                    </div>
+                    <div *ngIf="pendingUser.length > 0"> 
+                        <div class="mb-1">
+                            <small>  Waiting Approved </small>
+                        </div>
+                        <div>
+                            <small *ngFor="let x of pendingUser" class="py-1 px-2 me-1 bg-dark text-white font-weight-light">{{x.email}}</small>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -134,7 +146,7 @@
                             </a>
                         </span>
                     </div>
-                </div> 
+                </div>
             </div>
 
             <div class="row my-2" *ngIf="item.owner == '1' ">
@@ -146,7 +158,7 @@
                         placeholder="Add Team by Name" [ngbTypeahead]="search" [resultTemplate]="rt"
                         [inputFormatter]="formatter" (keydown.enter)="onSubmitUser()" />
                 </div>
-               
+
             </div>
 
             <ng-template #rt let-r="result" let-t="term">

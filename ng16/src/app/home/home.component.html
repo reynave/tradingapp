@@ -7,8 +7,8 @@
 
             <div class="col-lg-2 col-md-3 col-12">
                 <div class="bg-white rounded minHeight">
-                    <div class="p-3"> 
-                        <h5> Books Collection</h5> 
+                    <div class="p-3">
+                        <h5> Books Collection</h5>
                     </div>
                     <div class="p-2 mx-2 divHover pointer" *ngFor="let x of books">
                         <div class="row g-1 ">
@@ -16,7 +16,7 @@
                                 <div (click)="goToBook(x);">
                                     <i class="bi bi-folder me-2"></i> {{x.name}}
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                     <div class="p-2 mx-2 divHover pointer" (click)="open(contentNewBook)">
@@ -25,19 +25,19 @@
                                 <i class="bi bi-plus me-2"></i> New Book
                             </div>
                         </div>
-                    </div> 
-                   <div class="px-2">
-                    <hr>
-                   </div>
+                    </div>
+                    <div class="px-2">
+                        <hr>
+                    </div>
                     <div class="p-2 mx-2 divHover pointer" [routerLink]="[ '/book' ]">
                         <div class="row g-1 ">
                             <div class="col-12">
                                 <i class="bi bi-share me-2"></i> Share to Me
                             </div>
                         </div>
-                    </div> 
+                    </div>
 
-                 
+
 
                     <ng-template #contentNewBook let-modal>
 
@@ -81,7 +81,27 @@
             </div>
 
             <div class="col-lg-7 col-md-6 col-12">
-                <div class="bg-white rounded p-3 minHeight">
+                <div class="bg-white rounded p-3 minHeight"> 
+                    <div class="alert alert-warning " *ngIf="invited.length != 0">
+ 
+                        <span *ngFor="let x of invited">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <div>
+                                        <strong>{{x.name}}</strong> invites you to join the <strong>"{{x.journal}}"</strong>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button (click)="fnRejectInvited(x,4);" class="btn btn-sm btn-light mx-1"><i class="bi bi-x-lg"></i> Reject</button>
+                                </div>
+                                <div>
+                                    <button (click)="fnRejectInvited(x,1);" class="btn btn-sm btn-light mx-1"><i class="bi bi-check-lg"></i> Approved</button>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+
+
                     <div class="mb-3">
                         <div>
                             <i class="bi bi-star-fill me-2 text-warning"></i> Quickly access your Favorit boards
@@ -110,18 +130,16 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12"> 
+                        <div class="col-12">
                             {{now}}<br>
-                        </div> 
+                        </div>
                     </div>
                 </div>
 
             </div>
 
             <div class="col-md-3 col-12">
-             
-                    <app-widget-teams></app-widget-teams>
-                
+                <app-widget-teams></app-widget-teams>
             </div>
 
         </div>

@@ -43,6 +43,7 @@
                         <span class="mx-2" *ngIf="x.iType == 'url'"> <i class="bi bi-link-45deg"></i> </span>
                         <span class="mx-2" *ngIf="x.iType == 'image'"> <i class="bi bi-images"></i> </span>
                         <span class="mx-2" *ngIf="x.iType == 'user'"> <i class="bi bi-person-circle"></i> </span>
+                        <span class="mx-2" *ngIf="x.iType == 'datetime'"><i class="bi bi-calendar-date"></i> </span>
 
                         <small> {{x.iType | uppercase}}</small>
 
@@ -126,7 +127,9 @@
                                 <option value="number">Number</option>
                                 <option value="text">Text</option>
                                 <option value="select">Select</option>
-                                <option value="date">Date</option>
+                                <!-- <option value="datetime">Date & Time</option> -->
+                                
+                                <option value="date">Date</option> 
                                 <option value="time">Time</option>
                                 <option value="url">Url</option>
                                 <option value="note">Note</option>

@@ -122,6 +122,22 @@ class CustomField extends BaseController
             else if ($post['column']['iType'] == 'time') {
                // $value = self::validateAndConvertTime($value);
             }
+
+          
+            $this->db->table("journal_detail")->update([
+                "f" . $post['fx'] => $value,
+                "update_by" => model("Core")->accountId(),
+                "update_date" => date("Y-m-d H:i:s"),
+            ], "id = '" . $post['row']['id'] . "' ");
+
+
+            if((int)$post['fx'] == 10 || (int)$post['fx'] == 11){
+                $this->db->table("journal_detail")->update([
+                    "f6"  => (int)$post['row']['f10'] * (int)$post['row']['f11'],
+                    "update_by" => model("Core")->accountId(),
+                    "update_date" => date("Y-m-d H:i:s"),
+                ], "id = '" . $post['row']['id'] . "' ");
+            } 
            
 
             $this->db->table("journal_detail")->update([
@@ -146,6 +162,7 @@ class CustomField extends BaseController
                 "post" => $post, 
                 "value" => $post['row']['f'.$post['fx']],
                 "row" =>   $detail[0],
+                "f" => $post['fx'],
             ];
         }
 

@@ -3,7 +3,7 @@
         <input class="form-control form-control-lg border-0" placeholder="" 
         *ngIf="journal.owner != '0'" [(ngModel)]="item.name" (change)="onSubmit()" #itemName (keyup.enter)="itemName.blur()">
 
-        <div class="form-control form-control-lg border-0 p-0" *ngIf="journal.owner == '0'">
+        <div  class="form-control form-control-lg border-0" *ngIf="journal.owner == '0'">
             {{ item.name}}
         </div>
     </div>
