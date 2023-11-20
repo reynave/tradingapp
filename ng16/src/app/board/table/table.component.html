@@ -423,7 +423,7 @@
                                                         [innerHTML]="functionsService.isNumber(row['f'+column['f']])">
                                                     </div>
                                                 </div>
-                                                <div *ngIf="column['iType']=='datetime'">
+                                                <div *ngIf="column['iType']=='datetime'" class="dropdown-toggle-null ">
                                                     <div class="d-flex p-1">
                                                         <div class="flex-grow-1 text-center">
                                                           <input type="text" readonly value="{{row['f'+column['f']] }}">

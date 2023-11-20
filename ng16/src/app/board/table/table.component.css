@@ -95,6 +95,7 @@ input:focus {
     width: 100%;
 }
 
-.dropdown-toggle::after { 
+ 
+.dropdown-toggle-null .dropdown-toggle::after { 
     content: none !important; 
-} 
+}  

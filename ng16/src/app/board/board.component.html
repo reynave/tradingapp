@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
 
 <div *ngIf="board == 'table'">
     <app-table [changeParams]="queryParams"></app-table>
@@ -22,4 +22,9 @@
 
 <div *ngIf="board == 'chart'">
     <app-chartjs></app-chartjs>
+</div>
+
+
+<div *ngIf="board == 'calendar'">
+   <app-board-timeline></app-board-timeline>
 </div>
