@@ -151,10 +151,80 @@ class Calendar extends BaseController
                 $firstDay = strtotime('+1 day', $firstDay);
             }
 
+            if (date('D', $firstDay) == 'Wed') {   
+                for($i =0 ; $i< 6; $i++) { 
+                    $weeklyData[] = array(
+                        'day' => $i,
+                        'date' => '-',
+                        'yyyymmdd' => '',
+                        'data' => "",
+                    );
+                }  
+            }
+
+            if (date('D', $firstDay) == 'Thu') {   
+                for($i =0 ; $i< 5; $i++) { 
+                    $weeklyData[] = array(
+                        'day' => $i,
+                        'date' => '-',
+                        'yyyymmdd' => '',
+                        'data' => "",
+                    );
+                }  
+            }
+
+            if (date('D', $firstDay) == 'Fri') {   
+                for($i =0 ; $i< 4; $i++) { 
+                    $weeklyData[] = array(
+                        'day' => $i,
+                        'date' => '-',
+                        'yyyymmdd' => '',
+                        'data' => "",
+                    );
+                }  
+            }
+
+            if (date('D', $firstDay) == 'Sat') {   
+                for($i =0 ; $i< 3; $i++) { 
+                    $weeklyData[] = array(
+                        'day' => $i,
+                        'date' => '-',
+                        'yyyymmdd' => '',
+                        'data' => "",
+                    );
+                }  
+            }
+
+            if (date('D', $firstDay) == 'Sun') {   
+                for($i =0 ; $i< 2; $i++) { 
+                    $weeklyData[] = array(
+                        'day' => $i,
+                        'date' => '-',
+                        'yyyymmdd' => '',
+                        'data' => "",
+                    );
+                }  
+            }
+
+            
+            if (date('D', $firstDay) == 'Mon') {   
+                
+                    $weeklyData[] = array(
+                        'day' => 1,
+                        'date' => '-',
+                        'yyyymmdd' => '',
+                        'data' => "",
+                    );
+                
+            }
+
+
             $timeline[] = array(
                 'date' => $monthName,
                 'weekly' => $weeklyData,
             );
+
+            
 
             // Move to the next month
             if ($currentMonth == 12) {

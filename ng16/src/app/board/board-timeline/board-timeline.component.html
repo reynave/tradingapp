@@ -1,12 +1,12 @@
 <div class="container-fluid">
     <div class="row g-1">
         <div class="col-12">
-            <div class="bg-white rounded px-3 py-2">  
+            <div class="bg-white rounded px-3 py-2">
 
-                <table class="table table-sm table-bordered">
-                    <thead>
+                <table class="table table-sm table-bordered table1">
+                    <thead class="sticky-top">
                         <tr>
-                            <th>  </th>
+                            <th> </th>
                             <th>SUN</th>
                             <th>Mon</th>
                             <th>Tue</th>
@@ -40,7 +40,7 @@
                             <th>Fri</th>
                             <th>Sat</th>
 
-                             
+
                             <th>SUN</th>
                             <th>Mon</th>
                             <th>Tue</th>
@@ -49,6 +49,9 @@
                             <th>Fri</th>
                             <th>Sat</th>
                             
+                            <th>SUN</th>
+                            <th>MON</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -56,9 +59,12 @@
                             <td>
                                 <div style="width: 70px;">
                                     {{x['date']}}
-                                  </div>
+                                </div>
                             </td>
-                            <td *ngFor="let item of x['weekly']"> 
+
+                            <td *ngFor="let item of x['weekly']" 
+                            class="bg-{{item.data.profit < 0 ? 'danger text-white' : ''}}  bg-{{item.data.profit > 0 ? 'success text-white' : ''}} 
+                            bg-{{item.day == 'Sat' || item.day == 'Sun' ? 'light' : ''}}  "   >
                                 <small> {{item.date}}</small>
                                 <div>{{item.data.profit | number}}</div>
                             </td>
@@ -66,9 +72,9 @@
                     </tbody>
                 </table>
 
-                
+
 
             </div>
         </div>
     </div>
-</div> 
+</div>
