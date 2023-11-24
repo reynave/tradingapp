@@ -1,9 +1,13 @@
 <div class="container-fluid">
     <div class="row g-1">
         <div class="col-12">
-            <div class="bg-white rounded px-3 py-2">
+            <div class="bg-white rounded px-3 py-2"> 
+  
+                <div class="text-center my-5" *ngIf="loading">
+                    <img src="./assets/gif/loading-timeline.gif" width="200">
+                </div>
 
-                <table class="table table-sm table-bordered table1">
+                <table class="table table-sm table-bordered table-timeline" *ngIf="!loading">
                     <thead class="sticky-top">
                         <tr>
                             <th> </th>
@@ -56,17 +60,22 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let x of timeline">
-                            <td>
-                                <div style="width: 70px;">
+                            <td class="bg-{{x['data']['profit'] < 0 ? 'danger text-white' : ''}}  bg-{{x['data']['profit'] > 0 ? 'success text-white' : ''}} 
+                                  bg-{{x['data']['profit'] == 0 ? 'warning text-white' : ''}}" >
+                                <small>
                                     {{x['date']}}
-                                </div>
+                                </small>
+                                <div class="text-end me-2">{{x['data']['profit'] | number}}</div>
+                                
                             </td>
 
                             <td *ngFor="let item of x['weekly']" 
                             class="bg-{{item.data.profit < 0 ? 'danger text-white' : ''}}  bg-{{item.data.profit > 0 ? 'success text-white' : ''}} 
-                            bg-{{item.day == 'Sat' || item.day == 'Sun' ? 'light' : ''}}  "   >
+                            bg-{{item.day == 'Sat' || item.day == 'Sun' ? 'light' : ''}}  bg-{{item.data.profit == 0 ? 'warning text-white' : ''}}"   >
                                 <small> {{item.date}}</small>
-                                <div>{{item.data.profit | number}}</div>
+                                <div>
+                                    <input type="text" class="xs-input"  value="{{item.data.profit | number}}" readonly>
+                                </div>
                             </td>
                         </tr>
                     </tbody>

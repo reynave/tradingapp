@@ -1,8 +1,44 @@
-.table1 th{
+.table-timeline{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    line-height: 100%;
+}
+.table-timeline th{
     text-transform: uppercase;
     font-size: 0.8rem;
 }
 
-.table1 small{
+.table-timeline small{
     font-size: 0.7rem;
 }
+
+.table-timeline td{
+    line-height: 100%f;
+}
+
+.xs-input,.xs-input:focus {
+    width: 35px;
+    font-size: 0.9rem;
+    background-color:  rgba(255,255,255,0)  !important;
+    color: #fff;
+    border:none;
+    outline: none;
+}
+
+.table-timeline th:nth-child(1),
+.table-timeline td:nth-child(1) {
+    position: sticky;
+    left: 0; 
+    width: 140px;
+    min-width: 140px;
+    
+}
+/* https://adriancs.com/html-css-js/298/html-table-freeze-row-and-column-with-css/
+.table-timeline th:nth-child(2),
+.table-timeline td:nth-child(2) {
+    position: sticky;
+    left: 153px; 
+    width: 100px;
+} 
+*/

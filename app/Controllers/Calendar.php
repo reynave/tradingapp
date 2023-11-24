@@ -134,19 +134,22 @@ class Calendar extends BaseController
 
             }
 
-
+            $profit = 0;
             while ($firstDay <= $lastDay) {
                 $dayOfWeek = date('D', $firstDay);
                 $dayOfMonth = date('d', $firstDay);
                 $strTime = $currentYear . "-" . str_pad($currentMonth, 2, "0", STR_PAD_LEFT) . '-' . $dayOfMonth;
+
+                $subProfit = model("Core")->select("sum(f6)","journal_detail","journalId = '$journalId' and f1 = '$strTime' and presence = 1 and archives = 0 ");
                 $weeklyData[] = array(
                     'day' => $dayOfWeek,
                     'date' => $dayOfMonth,
                     'strtime' => $strTime,
                     'data' => array(
-                        "profit" =>  model("Core")->select("sum(f6)","journal_detail","journalId = '$journalId' and f1 = '$strTime' and presence = 1 and archives = 0 "),
+                        "profit" =>   $subProfit,
                     ),
                 );
+                $profit +=  $subProfit;
 
                 $firstDay = strtotime('+1 day', $firstDay);
             }
@@ -222,6 +225,9 @@ class Calendar extends BaseController
             $timeline[] = array(
                 'date' => $monthName,
                 'weekly' => $weeklyData,
+                "data" => array(
+                    "profit"=>    $profit,
+                ),
             );
 
             

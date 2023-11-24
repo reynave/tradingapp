@@ -18,6 +18,7 @@ interface WeeklyData {
 interface Timeline { 
   date : string;
   weekly: WeeklyData[]; 
+  data : any;
 }
 
 @Component({
@@ -29,6 +30,7 @@ export class BoardTimelineComponent implements OnInit {
 
   timeline : Timeline[] = [];
   journalId : string = "";
+  loading : boolean = false;
   constructor(
     private http:HttpClient,
     private configService :ConfigService,
@@ -42,6 +44,7 @@ export class BoardTimelineComponent implements OnInit {
   }
   
   httpGet(){
+    this.loading = true;
     this.http.get<any>(environment.api+'calendar',{
       headers : this.configService.headers(),
       params : {
@@ -49,8 +52,12 @@ export class BoardTimelineComponent implements OnInit {
       }
     }).subscribe(
       data=>{
+        this.loading = false;
         this.timeline = data['timeline']['data'];
         console.log(this.timeline );
+      },
+      error=>{
+        console.log(error);
       }
     )
   }
