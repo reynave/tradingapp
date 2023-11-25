@@ -12,7 +12,7 @@ import { SocketService } from 'src/app/service/socket.service';
 import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { ModalUploadDataComponent } from './modal-upload-data/modal-upload-data.component';
-import { IDayCalendarConfig } from 'ng2-date-picker';
+import { DatePickerComponent, IDayCalendarConfig } from 'ng2-date-picker';
 declare var $: any;
 
 export class NewSelect {
@@ -106,6 +106,7 @@ export class TableComponent implements OnInit, OnChanges {
   datePickerConfig : IDayCalendarConfig  = {
     format : "YYYY-MM-DD"
   }
+  
   constructor(
     private http: HttpClient,
     public functionsService: FunctionsService,
@@ -237,8 +238,11 @@ export class TableComponent implements OnInit, OnChanges {
   //  console.log('changeParams : ', this.changeParams);
   }
   haha(){
-    console.log("asdf")
+    console.log("haha");
+   /// $('.tables-body').css("background","#f01");
+   
   }
+
 
   public get inverseOfTranslation(): string {
 
@@ -1111,7 +1115,9 @@ export class TableComponent implements OnInit, OnChanges {
     return formula;
   }
   isX: number = 0;
+
   onScroll(event: Event): void {
+    
     const dataContainer = event.target as HTMLElement;
     const verticalScrollY = dataContainer.scrollTop; // Mendapatkan nilai Y
     const horizontalScrollX = dataContainer.scrollLeft; // Mendapatkan nilai X
@@ -1124,6 +1130,9 @@ export class TableComponent implements OnInit, OnChanges {
     $('.isScollX').css("left", "-" + horizontalScrollX + "px");
 
   }
+
+
+  
 
   clipboardImage: string = '';
   @ViewChild('imageInput', { static: false }) imageInput: ElementRef | any;

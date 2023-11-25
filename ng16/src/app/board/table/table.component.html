@@ -291,7 +291,7 @@
                 </div>
 
                 <div class="ps-3 pt-0">
-
+                 
                     <div *ngIf="startUpTable">
                         <div class="border-start fix-header" [ngClass]="{'border-bottom': detail.length <= 0}">
                             <div class=" isScollX bg-white" style="position: absolute; ">
@@ -328,40 +328,6 @@
 
                         <cdk-virtual-scroll-viewport itemSize="30" minBufferPx="200" maxBufferPx="400"
                             class="tables-body " (scroll)="onScroll($event)" #scrollViewport>
-
-                            <!-- <div class="sticky-top border-bottom"
-                                [style.top]=" detail.length > 20 ?  inverseOfTranslation : '0px'">
-                                <div class="d-flex tables-header-td bg-white">
-
-                                    <div class="floating-div bg-white  border-start">
-                                        <div class="py-1 px-3">
-                                            <i class="bi bi-check-square-fill text-primary" *ngIf="isCheckBoxAll"
-                                                (click)="checkBoxAll(false)"></i>
-                                            <i class="bi bi-square" *ngIf="!isCheckBoxAll"
-                                                (click)="checkBoxAll(true)"></i>
-                                            <span class="px-1 text-end  d-inline-block" style="min-width: 30px;"> #
-                                            </span>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="order-{{n.sorting}} bg-white "
-                                        *ngFor="let n of customField;  let a = index" [hidden]="n.hide=='1'">
-                                        <div class="p-1 text-center orders resizable "
-                                            [ngStyle]="{'width': n.width+'px'}" data-id="{{n.id}}"
-                                            data-tabindex="{{a}}">
-                                            <b>{{n.name}} </b> <code>f{{n.f}}</code>
-                                            <span *ngIf="n.iType === 'formula'" class="mx-1" placement="top"
-                                                ngbTooltip="{{evalDescription(n.eval,customField)}}" container="body">
-                                                <button class="btn btn-sm btn-light py-0">
-                                                    <img src="./assets/icon/formula-30.png" height="20px">
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div> -->
 
                             <div class="sortable border-start" style="margin-top: 31px;">
                                 <span *cdkVirtualFor="let row of detail; let i = index; ">
@@ -457,8 +423,8 @@
                                                 <div *ngIf="column['iType']=='date'">
                                                   
                                                         <dp-date-picker [(ngModel)]="row['f'+column['f']]" theme="dp-material"  (onSelect)="updateRow(row,column['f'],column);"
-                                                         [config]="datePickerConfig" (change)="updateRow(row,column['f'],column);"></dp-date-picker>  
-                                                        
+                                                         [config]="datePickerConfig" (open)="haha()" (close)="haha()" (change)="updateRow(row,column['f'],column);"></dp-date-picker>  
+                                                       
                                                         <!-- <input type="date" class="p-1 text-center"
                                                             [disabled]="row['ilock']=='1'" #customFieldText
                                                             (keyup.enter)="customFieldText.blur()"

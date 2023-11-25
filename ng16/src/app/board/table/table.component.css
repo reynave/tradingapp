@@ -102,6 +102,6 @@ input:focus {
 
 
 dp-date-picker.dp-material .dp-picker-input {
- 
-    width: 113px !important; 
+    text-align: center;
+    width: 100% !important; 
 }
