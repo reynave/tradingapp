@@ -99,3 +99,9 @@ input:focus {
 .dropdown-toggle-null .dropdown-toggle::after { 
     content: none !important; 
 }  
+
+
+dp-date-picker.dp-material .dp-picker-input {
+ 
+    width: 113px !important; 
+}

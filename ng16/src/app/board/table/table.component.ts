@@ -12,6 +12,7 @@ import { SocketService } from 'src/app/service/socket.service';
 import { TabletEditSelectComponent } from './tablet-edit-select/tablet-edit-select.component';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { ModalUploadDataComponent } from './modal-upload-data/modal-upload-data.component';
+import { IDayCalendarConfig } from 'ng2-date-picker';
 declare var $: any;
 
 export class NewSelect {
@@ -102,6 +103,9 @@ export class TableComponent implements OnInit, OnChanges {
   }
   showTableLeftWidget: boolean = localStorage.getItem("showTableLeftWidget") == '1' ? true : false;
   private _docSub: any;
+  datePickerConfig : IDayCalendarConfig  = {
+    format : "YYYY-MM-DD"
+  }
   constructor(
     private http: HttpClient,
     public functionsService: FunctionsService,
@@ -232,7 +236,9 @@ export class TableComponent implements OnInit, OnChanges {
 
   //  console.log('changeParams : ', this.changeParams);
   }
-
+  haha(){
+    console.log("asdf")
+  }
 
   public get inverseOfTranslation(): string {
 

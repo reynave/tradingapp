@@ -423,6 +423,7 @@
                                                         [innerHTML]="functionsService.isNumber(row['f'+column['f']])">
                                                     </div>
                                                 </div>
+
                                                 <div *ngIf="column['iType']=='datetime'" class="dropdown-toggle-null ">
                                                     <div class="d-flex p-1">
                                                         <div class="flex-grow-1 text-center">
@@ -454,37 +455,17 @@
                                                     </div>  
                                                 </div>
                                                 <div *ngIf="column['iType']=='date'">
-                                                    <div class="d-flex">
-                                                        <!-- {{row['f'+column['f']]}}-->
-                                                        <input type="date" class="p-1 text-center"
+                                                  
+                                                        <dp-date-picker [(ngModel)]="row['f'+column['f']]" theme="dp-material"  (onSelect)="updateRow(row,column['f'],column);"
+                                                         [config]="datePickerConfig" (change)="updateRow(row,column['f'],column);"></dp-date-picker>  
+                                                        
+                                                        <!-- <input type="date" class="p-1 text-center"
                                                             [disabled]="row['ilock']=='1'" #customFieldText
                                                             (keyup.enter)="customFieldText.blur()"
                                                             (change)="updateRow(row,column['f'],column);"
                                                             [(ngModel)]="row['f'+column['f']]" />
-                                                        <!-- <div>
-                                                            {{row['f'+column['f']]}}
-                                                            
-                                                            <input type="text" class="p-1 text-center" name="dp"
-                                                                readonly [(ngModel)]="row['f'+column['f']]"
-                                                                [placeholder]="functionsService.formatDate(row['f'+column['f']])"
-                                                                container="body"
-                                                                (ngModelChange)="updateRow(row,column['f'],column);"
-                                                                ngbDatepicker #d="ngbDatepicker" />
-
-                                                        </div>
-                                                        <div>
-                                                            <span *ngIf="row['ilock']!='1'"> <button
-                                                                    class="btn btn-sm bi bi-calendar3"
-                                                                    (click)="d.toggle()" type="button"></button></span>
-
-                                                            <span *ngIf="row['ilock']=='1'">
-                                                                <button class="btn btn-sm bi bi-calendar-x"
-                                                                    type="button"></button>
-                                                            </span>
-
-                                                        </div> 
-                                                        -->
-                                                    </div>
+                                                         -->
+                                                   
                                                 </div>
 
                                                 <div *ngIf="column['iType']=='time'">

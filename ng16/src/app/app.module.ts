@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { GoogleChartsModule } from 'angular-google-charts';
+//import { GoogleChartsModule } from 'angular-google-charts';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import {DpDatePickerModule} from 'ng2-date-picker';
 
 import { NotFoundComponent } from './not-found/not-found.component';
 import { LoginComponent } from './login/login.component';
@@ -84,12 +85,13 @@ const config: SocketIoConfig = {
     NgbModule,
     FormsModule,
     HttpClientModule,
-    GoogleChartsModule,
+    //GoogleChartsModule,
     EditorModule,
     NgbDatepickerModule,
     ClipboardModule,
     SocketIoModule.forRoot(config),
-    ScrollingModule
+    ScrollingModule,
+    DpDatePickerModule 
   ],
   providers: [],
   bootstrap: [AppComponent]
