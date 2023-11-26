@@ -133,7 +133,7 @@ class CustomField extends BaseController
 
             if((int)$post['fx'] == 10 || (int)$post['fx'] == 11){
                 $this->db->table("journal_detail")->update([
-                    "f6"  => (int)$post['row']['f10'] * (int)$post['row']['f11'],
+                    "f6"  => (float)$post['row']['f10'] * (float)$post['row']['f11'],
                     "update_by" => model("Core")->accountId(),
                     "update_date" => date("Y-m-d H:i:s"),
                 ], "id = '" . $post['row']['id'] . "' ");

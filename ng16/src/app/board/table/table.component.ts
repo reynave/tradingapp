@@ -781,10 +781,10 @@ export class TableComponent implements OnInit, OnChanges {
       fn: fx,
       iLock: this.detail[index]['ilock'],
     }
-    this.router.navigate([], {
-      queryParams: this.imageQueryParams,
-      queryParamsHandling: 'merge',
-    })
+    // this.router.navigate([], {
+    //   queryParams: this.imageQueryParams,
+    //   queryParamsHandling: 'merge',
+    // })
     this.offcanvasService.open(this.canvasImages, { position: 'end' }).result.then(
       (result) => { this.images = []; this.imageQueryParams = [] },
       (reason) => { this.images = []; this.imageQueryParams = [] },
